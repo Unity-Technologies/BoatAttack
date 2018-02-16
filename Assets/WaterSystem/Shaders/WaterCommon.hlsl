@@ -157,14 +157,14 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	half3 spec = Highlights(IN.posWS, 0.01, normalWS, IN.viewDir) * shadow;	
 
 	// Do reflections
-	half3 reflection = SampleReflections(normalWS, IN.viewDir.xyz, screenUV, fresnelTerm, 0.01);
+	half3 reflection = SampleReflections(normalWS, IN.viewDir.xyz, screenUV, fresnelTerm, 0.0);
 	reflection = max(reflection, spec);
 
 	// Do Refractions
 	half3 refraction = _CameraColorTexture.Sample(sampler_CameraColorTexture, screenUV);
 
 	// Do Foam
-	half3 foamMap = _FoamMap.Sample(sampler_FoamMap, IN.uv.zw * 0.025); //r=thick, g=medium, b=light
+	half3 foamMap = _FoamMap.Sample(sampler_FoamMap, (IN.uv.zw * 0.025) + (detailBump.xy * 0.0025)); //r=thick, g=medium, b=light
 	half shoreMask = saturate((1-depth.y + 1.25) * 0.35);//shore foam
 	
 	half foamMask = IN.posWS.y - 0.25;

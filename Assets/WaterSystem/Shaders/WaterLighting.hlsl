@@ -94,11 +94,11 @@ half3 SampleReflections(half3 normalWS, half3 viewDirectionWS, half2 screenUV, h
     //create view normal
     half3 viewNormal = mul( UNITY_MATRIX_V, float4(normalWS,0) ).xyz;
     //calculate screen-spaced UV offset for planar reflections
-    refOffset.x = viewNormal.x * 0.1;
+    refOffset.x = viewNormal.x * 0.05;
     refOffset.y = dot(viewDir, normalWS) * 0.25;
     half rimFade = (1-fresnelTerm) - 0.5;//value to smooth out reflection distortion on glancing/distant angles
     screenUV = half2(screenUV.x, 1-screenUV.y);
-    half2 reflectionUV = screenUV + refOffset * rimFade;
+    half2 reflectionUV = screenUV + refOffset;// * rimFade;
     reflection += _PlanarReflectionTexture.SampleLevel(sampler_PlanarReflectionTexture, reflectionUV, 6 * roughness).rgb;//planar reflection
 #endif
     //do backup
