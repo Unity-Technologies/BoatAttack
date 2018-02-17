@@ -46,7 +46,8 @@ WaveStruct GerstnerWave(half2 pos, int numWaves, float amplitude, half direction
 		// calculate the offsets for the current point
 		wave.x = qi * amplitude * windDir.x * cosCalc;
 		wave.z = qi * amplitude * windDir.y * cosCalc;
-		wave.y = (((sinCalc * 0.5 + 0.5) * amplitude) - amplitude * 0.5)/numWaves;// the height is divided by the number of waves 
+		wave.y = (((sinCalc * 0.5 + 0.5) * amplitude))/numWaves;// the height is divided by the number of waves 
+		// - amplitude * 0.5 ^^ made the wave -0.5 >> 0.5 not 0 >> 1
 		
 		////////////////////////////normal output calculations/////////////////////////
 		half wa = w * amplitude;

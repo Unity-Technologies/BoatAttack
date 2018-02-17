@@ -33,6 +33,9 @@ namespace WaterSystem
         public Gradient _absorptionRampRaw;
         public Gradient _scatterRampRaw;
         [SerializeField]
+        private Texture2D _peakRamp;
+        public Gradient _peakRampRaw;
+        [SerializeField]
         public List<Wave> _waves = new List<Wave>();
         [SerializeField]
         private Wave[] _backupWaves;
@@ -74,6 +77,7 @@ namespace WaterSystem
             SetWaves();
             GenerateVertexColors();
             GenerateColorRamp();
+            GeneratePeakRamp();
             CaptureDepthMap();
             CreateFXCam();
         }
@@ -232,6 +236,23 @@ namespace WaterSystem
             _colorRamp.SetPixels(cols);
             _colorRamp.Apply();
             Shader.SetGlobalTexture("_AbsorptionScatteringRamp", _colorRamp);
+        }
+
+        [ContextMenu("Generate new peakmap")]
+        public void GeneratePeakRamp()
+        {
+
+            _peakRamp = new Texture2D(128, 1, TextureFormat.ARGB32, false, false);
+            _peakRamp.wrapMode = TextureWrapMode.Clamp;
+
+            Color[] cols = new Color[256];
+            for (int i = 0; i < 128; i++)
+            {
+                cols[i] = _peakRampRaw.Evaluate((float)i / 128f);
+            }
+            _peakRamp.SetPixels(cols);
+            _peakRamp.Apply();
+            Shader.SetGlobalTexture("_PeakMap", _peakRamp);
         }
 
         GerstnerWaves.WaveStruct tempWave = new GerstnerWaves.WaveStruct();

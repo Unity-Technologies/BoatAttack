@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Sea
-  m_Shader: {fileID: 4800000, guid: a94edd303261140cf9e6ce8c90d7a99a, type: 3}
+  m_Name: Sea_Tess
+  m_Shader: {fileID: 4800000, guid: 4d4deeba0d8a64503964c2f653931109, type: 3}
   m_ShaderKeywords: GERSTNER_WAVES _DEBUGPASS_REFLECTION _NORMALMAP _PERF_COL _PERF_DEPTH
     _PERF_FOAM _PERF_FRESNEL _PERF_GERSTNER _PERF_GESTNER _PERF_LIGHTING _PERF_REF
     _PERF_VERT _REFLECTION_PLANARREFLECTION
@@ -69,10 +69,6 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _PeakMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -109,7 +105,7 @@ Material:
     - _Tess: 4
     - _TessEdge: 14.4
     - _Tessellation: 0
-    - _TessellationEdgeLength: 11.9
+    - _TessellationEdgeLength: 5
     - _UVSec: 0
     - _WorkflowMode: 1
     - _ZWrite: 1

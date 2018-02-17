@@ -16,6 +16,7 @@
 CBUFFER_START(MaterialProperties)
 half _BumpScale;
 half _MaxDepth;
+int _DebugPass;
 half4 _depthCamZParams;
 CBUFFER_END
 
@@ -24,7 +25,9 @@ TEXTURE2D(_PlanarReflectionTexture); SAMPLER(sampler_PlanarReflectionTexture);
 TEXTURE2D(_WaterFXMap); SAMPLER(sampler_WaterFXMap);
 TEXTURE2D(_CameraDepthTexture); SAMPLER(sampler_CameraDepthTexture);
 TEXTURE2D(_WaterDepthMap); SAMPLER(sampler_WaterDepthMap);
-TEXTURE2D(_CameraColorTexture); SAMPLER(sampler_CameraColorTexture); // TODO - Grabpass temp replacement 
+//TEXTURE2D(_CameraColorTexture); SAMPLER(sampler_CameraColorTexture); // TODO - Grabpass temp replacement 
+TEXTURE2D(_PeakMap); SAMPLER(sampler_PeakMap);
+
 
 
 // Surface textures
