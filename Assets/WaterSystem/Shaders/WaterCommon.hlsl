@@ -66,7 +66,7 @@ half2 WaterDepth(half3 posWS, half3 viewDir, half2 texcoords, half4 additionalDa
 //temp
 inline float3 ObjSpaceViewDir( in float4 v )
 {
-    float3 objSpaceCameraPos = mul(GetWorldToObjectMatrix(), float4(GetCameraPositionWS(), 1)).xyz;
+    float3 objSpaceCameraPos = GetCameraPositionWS(); //mul(GetWorldToObjectMatrix(), float4(GetCameraPositionWS(), 1)).xyz;
     return objSpaceCameraPos - v.xyz;
 }
 
@@ -86,9 +86,20 @@ WaterVertexOutput WaterVertex(WaterVertexInput v)
 
     o.posWS = TransformObjectToWorld(v.vertex.xyz);
 	o.uv.zw = o.posWS.xz;
-    o.clipPos = TransformWorldToHClip(o.posWS);
-    o.viewDir = SafeNormalize(_WorldSpaceCameraPos - o.posWS);
 	o.vertColor = v.color;
+
+	//Gerstner here
+#if defined (_PERF_GERSTNER) // PERF
+	WaveStruct wave;
+	SampleWaves(o.posWS, 1, wave);
+	o.normal = normalize(wave.normal.xzy);
+	o.posWS += wave.position;
+#endif
+
+
+	//after waves
+	o.clipPos = TransformWorldToHClip(o.posWS);
+    o.viewDir = SafeNormalize(_WorldSpaceCameraPos - o.posWS);
 
     // We either sample GI from lightmap or SH. lightmap UV and vertex SH coefficients
     // are packed in lightmapUVOrVertexSH to save interpolator.
@@ -99,7 +110,9 @@ WaterVertexOutput WaterVertex(WaterVertexInput v)
     o.fogFactorAndVertexLight = VertexLightingAndFog(o.normal, o.posWS, o.clipPos);
 
 	// Additional data
-	//o.additionalData.y = length(ObjSpaceViewDir(v.vertex));
+    //float3 viewPos = TransformWorldToView(o.posWS.xyz);
+	//o.additionalData.x = length(viewPos / viewPos.z);// distance to surface
+    o.additionalData.y = length(ObjSpaceViewDir(half4(o.posWS, 1)));
 
     return o;
 }
@@ -114,29 +127,10 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 
 	half4 waterFX = _WaterFXMap.Sample(sampler_WaterFXMap, float2(screenUV.x, screenUV.y));
 
-#if _TESSELLATION
-	half3 normalWS = normalize(IN.normal);
-#else
-	//Do the gerstner waves in the pixel shader
-	WaveStruct wave;
-#if defined (_PERF_GERSTNER) // PERF
-	SampleWaves(IN.posWS, 1, wave);
-	//IN.posWS.xz -= wave.position.xz;
-	IN.uv.zw -= wave.position.xz;
-	SampleWaves(IN.posWS, 1, wave);
-#else
-	wave.position = 0;
-	wave.normal = float3(0, 0, 1);
-#endif
-
-	IN.additionalData.y = length(ObjSpaceViewDir(half4(IN.posWS + wave.position, 1)));
-
-	half3 normalWS = normalize(wave.normal.xzy);
-	//half thing = (length(wave.position.xz) * (wave.position.y + 0.25)) / _WaveCount;
-	//half thing = _PeakMap.Sample(sampler_PeakMap, float2(wave.position.y, 0));
-	IN.posWS.y += wave.position.y; //thing;
+	half3 normalWS = IN.normal;
 	
 	// Additional data(in vertex otherwise)
+#if !_TESSELLATION // additionalData.y needs more acuracy when not tessellated
 	float3 viewPos = TransformWorldToView(IN.posWS);
 	IN.additionalData.x = length(viewPos / viewPos.z);// distance to surface
 #endif
@@ -150,7 +144,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 
 	// Depth
 #if defined (_PERF_DEPTH) // PERF
-	half2 depth = WaterDepth(IN.posWS, IN.viewDir, IN.uv.xy, IN.additionalData, half2(screenUV.x, screenUV.y));
+	half2 depth = WaterDepth(IN.posWS, IN.viewDir, (IN.posWS.xz * 0.001) + 0.5, IN.additionalData, half2(screenUV.x, screenUV.y));// TODO - hardcoded shore depth UVs
 #else
 	half2 depth = 100;
 #endif
@@ -190,7 +184,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	//half3 refraction = _CameraColorTexture.Sample(sampler_CameraColorTexture, screenUV);
 
 	// Do Foam
-#if defined (_PERF_FOAM) // PERF
+#if defined (_PERF_FOAM) // PERFpth.y
 	half3 foamMap = _FoamMap.Sample(sampler_FoamMap, (IN.uv.zw * 0.025) + (detailBump.xy * 0.0025)); //r=thick, g=medium, b=light
 	half shoreMask = saturate((1-depth.y + 1.25) * 0.35);//shore foam
 	
@@ -252,7 +246,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	}
 	else if(_DebugPass == 8) // Temp debug
 	{
-		return half4(frac(IN.uv.zw), 0, 1);
+		return half4(frac(IN.additionalData.y), 0, 0, 1);
 	}
 	else // fallback to output
 	{

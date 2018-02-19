@@ -8,7 +8,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: Sea
   m_Shader: {fileID: 4800000, guid: a94edd303261140cf9e6ce8c90d7a99a, type: 3}
-  m_ShaderKeywords: GERSTNER_WAVES _DEBUGPASS_REFLECTION _NORMALMAP _PERF_COL _PERF_DEPTH
+  m_ShaderKeywords: GERSTNER_WAVES _DEBUGPASS_TEMPORARY _NORMALMAP _PERF_COL _PERF_DEPTH
     _PERF_FOAM _PERF_FRESNEL _PERF_GERSTNER _PERF_GESTNER _PERF_LIGHTING _PERF_REF
     _PERF_VERT _REFLECTION_PLANARREFLECTION
   m_LightmapFlags: 4
@@ -82,7 +82,7 @@ Material:
     - _BumpValue: 0.5
     - _Cutoff: 0.5
     - _Debug: 0
-    - _DebugPass: 1
+    - _DebugPass: 8
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _FragWaves: 0

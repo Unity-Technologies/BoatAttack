@@ -280,7 +280,7 @@ namespace WaterSystem
             _depthCam.transform.up = Vector3.forward;//face teh camera down
             _depthCam.enabled = true;
             _depthCam.orthographic = true;
-            _depthCam.orthographicSize = 500;//hardcoded - TODO
+            _depthCam.orthographicSize = 500;//hardcoded = 1k area - TODO
             _depthCam.depthTextureMode = DepthTextureMode.Depth;
             _depthCam.nearClipPlane =0.1f;
             _depthCam.farClipPlane = _waterMaxDepth;
