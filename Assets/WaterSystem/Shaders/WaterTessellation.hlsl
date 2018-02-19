@@ -99,6 +99,7 @@ WaterVertexOutput Domain( HS_ConstantOutput HSConstantData, const OutputPatch<Te
     //o.uv.zw -= wave.position.xz;
 
     o.clipPos = TransformWorldToHClip(o.posWS);
+    o.shadowCoord = ComputeScreenPos(o.clipPos);
     o.viewDir = SafeNormalize(_WorldSpaceCameraPos - o.posWS);
 
     // We either sample GI from lightmap or SH. lightmap UV and vertex SH coefficients

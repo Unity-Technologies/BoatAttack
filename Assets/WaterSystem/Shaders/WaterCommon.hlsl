@@ -4,6 +4,7 @@
 #define _SHADOWS_SOFT
 #define _SHADOWS_ENABLED
 
+#include "LWRP/ShaderLibrary/Core.hlsl"
 #include "WaterInput.hlsl"
 #include "CommonUtilities.hlsl"
 #include "GerstnerWaves.cginc"
@@ -34,6 +35,7 @@ struct WaterVertexOutput // fragment struct
 
 	half4	additionalData			: TEXCOORD6;	// x = distance to surface, y = distance to surface??
 	half4	vertColor				: TEXCOORD7;
+	half4	shadowCoord				: TEXCOORD8;	// for ssshadows
 
 	float4	clipPos					: SV_POSITION;
 };
@@ -44,12 +46,12 @@ struct WaterVertexOutput // fragment struct
 
 half3 Scattering(half depth)
 {
-	return _AbsorptionScatteringRamp.Sample(sampler_AbsorptionScatteringRamp, float2(saturate(depth * 0.01), 0.75));
+	return _AbsorptionScatteringRamp.Sample(sampler_AbsorptionScatteringRamp, half2(saturate(depth * 0.01), 1));
 }
 
 half3 Absorption(half depth)
 {
-	return _AbsorptionScatteringRamp.Sample(sampler_AbsorptionScatteringRamp, float2(saturate(depth * 0.01), 0.25));
+	return _AbsorptionScatteringRamp.Sample(sampler_AbsorptionScatteringRamp, half2(saturate(depth * 0.01), 0));
 }
 
 half2 WaterDepth(half3 posWS, half3 viewDir, half2 texcoords, half4 additionalData, half2 screenUVs)// x = seafloor depth, y = water depth
@@ -59,7 +61,6 @@ half2 WaterDepth(half3 posWS, half3 viewDir, half2 texcoords, half4 additionalDa
 	outDepth.x = LinearEyeDepth(d, _ZBufferParams) * additionalData.x - additionalData.y;
 	half wd = 1-_WaterDepthMap.Sample(sampler_WaterDepthMap, texcoords).r;
 	outDepth.y = ((wd * _depthCamZParams.y) - 4 - _depthCamZParams.x) + posWS.y;
-	//outDepth.y += posWS.y;
 	return outDepth;
 }
 
@@ -99,6 +100,7 @@ WaterVertexOutput WaterVertex(WaterVertexInput v)
 
 	//after waves
 	o.clipPos = TransformWorldToHClip(o.posWS);
+	o.shadowCoord = ComputeScreenPos(o.clipPos);
     o.viewDir = SafeNormalize(_WorldSpaceCameraPos - o.posWS);
 
     // We either sample GI from lightmap or SH. lightmap UV and vertex SH coefficients
@@ -121,17 +123,17 @@ WaterVertexOutput WaterVertex(WaterVertexInput v)
 half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 {
 #if defined (_PERF_VERT) // PERF
-	half2 screenUV = ComputeNormalizedDeviceCoordinates(IN.clipPos);//screen UVs
-	screenUV /= half2(_ScreenParams.x * 0.5, -_ScreenParams.y * 0.5);// TODO - might be a SRP fix
+	half4 screenUV = IN.shadowCoord;//screen UVs
+	screenUV.xyz /= screenUV.w;
 	half3 prePosWS = IN.posWS;
 
-	half4 waterFX = _WaterFXMap.Sample(sampler_WaterFXMap, float2(screenUV.x, screenUV.y));
+	half4 waterFX = _WaterFXMap.Sample(sampler_WaterFXMap, screenUV.xy);
 
 	half3 normalWS = IN.normal;
 	
 	// Additional data(in vertex otherwise)
-#if !_TESSELLATION // additionalData.y needs more acuracy when not tessellated
-	float3 viewPos = TransformWorldToView(IN.posWS);
+#if !_TESSELLATION // additionalData.x needs more acuracy when not tessellated
+	half3 viewPos = TransformWorldToView(IN.posWS);
 	IN.additionalData.x = length(viewPos / viewPos.z);// distance to surface
 #endif
 
@@ -144,7 +146,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 
 	// Depth
 #if defined (_PERF_DEPTH) // PERF
-	half2 depth = WaterDepth(IN.posWS, IN.viewDir, (IN.posWS.xz * 0.001) + 0.5, IN.additionalData, half2(screenUV.x, screenUV.y));// TODO - hardcoded shore depth UVs
+	half2 depth = WaterDepth(IN.posWS, IN.viewDir, (IN.posWS.xz * 0.001) + 0.5, IN.additionalData, screenUV.xy);// TODO - hardcoded shore depth UVs
 #else
 	half2 depth = 100;
 #endif
@@ -157,12 +159,10 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 #endif
 
 	// Shadows
-
-	//float4 shadowCoord = ComputeShadowCoord(prePosWS);
-	half shadow = RealtimeShadowAttenuation(prePosWS); //SampleShadowmap(shadowCoord);
+	half shadow = SampleShadowmap(ComputeScreenSpaceShadowCoords(IN.posWS));
 
 	// Do diffuse/fog?
-    half3 indirectDiffuse = SampleGI(IN.lightmapUVOrVertexSH, normalWS);
+    //half3 indirectDiffuse = SampleGI(IN.lightmapUVOrVertexSH, normalWS);
     float fogFactor = IN.fogFactorAndVertexLight.x;
 	
 	// Do specular
@@ -189,12 +189,10 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	half shoreMask = saturate((1-depth.y + 1.25) * 0.35);//shore foam
 	
 	half foamMask = IN.posWS.y - 0.5;
-
 	foamMask = saturate(foamMask + shoreMask + waterFX.r);
+	half3 foamBlend = _FoamBlend.Sample(sampler_FoamBlend, half2(foamMask, 0.5));
 
-	half foamA = lerp(0, foamMap.b, saturate(foamMask * 4 - 1));
-	half foamB = lerp(foamMap.g, foamMap.r, saturate(foamMask * 4 - 3));
-	half foam = lerp(foamA, foamB, saturate(foamMask * 4 - 2)) * (shadow + 0.5);
+	half foam = length(foamMap * foamBlend);
 #else
 	half foam = 0;
 #endif
@@ -204,7 +202,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 #if defined (_PERF_COL) // PERF
 	color *= Absorption(depth.x);// TODO - absoption
 	color += Scattering(depth.x);// TODO - scattering
-	color *=  saturate(min(shadow + 0.1, 1-fresnelTerm));
+	color *= saturate(min(shadow + 0.2, 1-fresnelTerm));
 #else
 	color = 0.5;
 #endif
@@ -246,7 +244,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	}
 	else if(_DebugPass == 8) // Temp debug
 	{
-		return half4(frac(IN.additionalData.y), 0, 0, 1);
+		return half4(frac(IN.clipPos.xy), 0, 1);
 	}
 	else // fallback to output
 	{

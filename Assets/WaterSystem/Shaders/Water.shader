@@ -33,8 +33,6 @@
 		_Perf_Gerstner ("Perf Gerstner Waves", float) = 0
 		[Toggle(_PERF_FOAM)]
 		_Perf_Foam ("Perf Foam", float) = 0
-		//[NoScaleOffset]
-		//_PeakMap("Peakmap", 2D) = "white" {}
 	}
 	SubShader
 	{

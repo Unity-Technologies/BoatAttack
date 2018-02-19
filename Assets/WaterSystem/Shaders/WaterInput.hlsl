@@ -26,14 +26,12 @@ TEXTURE2D(_WaterFXMap); SAMPLER(sampler_WaterFXMap);
 TEXTURE2D(_CameraDepthTexture); SAMPLER(sampler_CameraDepthTexture);
 TEXTURE2D(_WaterDepthMap); SAMPLER(sampler_WaterDepthMap);
 //TEXTURE2D(_CameraColorTexture); SAMPLER(sampler_CameraColorTexture); // TODO - Grabpass temp replacement 
-TEXTURE2D(_PeakMap); SAMPLER(sampler_PeakMap);
-
-
 
 // Surface textures
 TEXTURE2D(_AbsorptionScatteringRamp); SAMPLER(sampler_AbsorptionScatteringRamp);
 TEXTURE2D(_BumpMap); SAMPLER(sampler_BumpMap);
 TEXTURE2D(_FoamMap); SAMPLER(sampler_FoamMap);
+TEXTURE2D(_FoamBlend); SAMPLER(sampler_FoamBlend);
 
 // Must match Lightweigth ShaderGraph master node
 struct SurfaceData
