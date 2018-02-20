@@ -1,0 +1,128 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Sea
+  m_Shader: {fileID: 4800000, guid: a94edd303261140cf9e6ce8c90d7a99a, type: 3}
+  m_ShaderKeywords: GERSTNER_WAVES _DEBUGPASS_NORMALS _NORMALMAP _PERF_COL _PERF_DEPTH
+    _PERF_FOAM _PERF_FRESNEL _PERF_GERSTNER _PERF_GESTNER _PERF_LIGHTING _PERF_REF
+    _PERF_VERT _REFLECTION_PLANARREFLECTION
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 1
+  m_CustomRenderQueue: 3000
+  stringTagMap: {}
+  disabledShaderPasses:
+  - PASS 0
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: 6ef621565277fc147b3e6eecb98a325e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ColorRamp:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DispMap:
+        m_Texture: {fileID: 8400000, guid: 5510640d0517f4e78b407529b5d05e1e, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FoamBlend:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FoamMap:
+        m_Texture: {fileID: 2800000, guid: ca439406e806ecf44a9586510be9477d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _PeakMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _BumpScale: 0.5
+    - _BumpValue: 0.5
+    - _Cutoff: 0.5
+    - _Debug: 0
+    - _DebugPass: 5
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _FragWaves: 0
+    - _GlossMapScale: 1
+    - _Glossiness: 0
+    - _GlossyReflections: 1
+    - _Metallic: 0
+    - _Mode: 0
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _Perf: 1
+    - _Perf_Col: 1
+    - _Perf_Depth: 1
+    - _Perf_Foam: 1
+    - _Perf_Fres: 1
+    - _Perf_Gerstner: 1
+    - _Perf_Light: 1
+    - _Perf_Ref: 1
+    - _Perf_Vert: 1
+    - _Reflection: 2
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _Tess: 4
+    - _TessEdge: 14.4
+    - _Tessellation: 0
+    - _TessellationEdgeLength: 11.9
+    - _UVSec: 0
+    - _WorkflowMode: 1
+    - _ZWrite: 1
+    - _dispDist: 5
+    m_Colors:
+    - _Color: {r: 0.051486313, g: 0.6744443, b: 0.8396226, a: 1}
+    - _Color2: {r: 0, g: 0.19346876, b: 0.4056604, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
+    - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _wave01info: {r: 0.44, g: 2.3, b: 0, a: 12.3}
+    - _wave02info: {r: 0.3, g: 1.14, b: 1.25, a: 6.2}
+    - _wave03info: {r: 0.3, g: -1.13, b: 0.2, a: 9}
