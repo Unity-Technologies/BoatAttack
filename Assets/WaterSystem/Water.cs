@@ -75,7 +75,7 @@ namespace WaterSystem
         public void Init()
         {
             SetWaves();
-            GenerateVertexColors();
+            //GenerateVertexColors();
             GenerateColorRamp();
             GeneratePeakRamp();
             CaptureDepthMap();
@@ -159,7 +159,7 @@ namespace WaterSystem
             GerstnerWaves.GerstnerWaves._WaveData = waveData;
             GerstnerWaves.GerstnerWaves._WaveData2 = waveData2;
             CaptureDepthMap();
-            GenerateVertexColors();
+            //GenerateVertexColors();
         }
 
         public void ToggleBasicWaves(bool custom)
