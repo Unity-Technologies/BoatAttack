@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using UnityEngine.Experimental.Rendering.LightweightPipeline;
 
 // This is in fact just the Water script from Pro Standard Assets,
 // just with refraction stuff removed.
@@ -85,6 +87,11 @@ public class PlanarReflection : MonoBehaviour
 
         s_InsideRendering = false;
     }
+
+    // void OnEnable()
+    // {
+    //     LightweightPipeline.beginFrameRendering += UpdateReflectionCam();
+    // }
 
 
     // Cleanup all the objects we possibly have created
