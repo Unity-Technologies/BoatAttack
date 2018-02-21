@@ -48,15 +48,6 @@ namespace BoatTutorial
 
         void FixedUpdate()
         {
-            Profiler.BeginSample("GenerateUnderwaterMesh");
-			//Generate the under water mesh
-            modifyBoatMesh.GenerateUnderwaterMesh();
-            Profiler.EndSample();
-
-            //Display the under water mesh
-			if(debugMesh)
-            	modifyBoatMesh.DisplayMesh(underWaterMesh, "UnderWater Mesh", modifyBoatMesh.underWaterTriangleData);
-
             Profiler.BeginSample("AddUnderwaterForces");
             //boatRB.drag = 0.25f;
             //Add forces to the part of the boat that's below the water
@@ -65,6 +56,18 @@ namespace BoatTutorial
                 AddUnderWaterForces();
             }
             Profiler.EndSample();
+        }
+
+        void Update()
+        {
+            Profiler.BeginSample("GenerateUnderwaterMesh");
+			//Generate the under water mesh
+            modifyBoatMesh.GenerateUnderwaterMesh();
+            Profiler.EndSample();
+
+            //Display the under water mesh
+			if(debugMesh)
+            	modifyBoatMesh.DisplayMesh(underWaterMesh, "UnderWater Mesh", modifyBoatMesh.underWaterTriangleData);
         }
 
         //Add all forces that act on the squares below the water

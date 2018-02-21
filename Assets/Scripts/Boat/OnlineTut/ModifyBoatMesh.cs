@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using WaterSystem;
@@ -25,7 +26,7 @@ namespace BoatTutorial
         public List<TriangleData> underWaterTriangleData = new List<TriangleData>();
 
         //List that will store the data we need to sort the vertices based on distance to water
-        List<VertexData> vertexData = new List<VertexData>(3);
+        VertexData[] vertexData = new VertexData[3];
 
         public ModifyBoatMesh(GameObject boatObj, Mesh mesh)
         {
@@ -41,9 +42,9 @@ namespace BoatTutorial
             //Find all the distances to water once because some triangles share vertices, so reuse
             allDistancesToWater = new float[boatVertices.Length];
 
-            vertexData.Add(new VertexData());
-            vertexData.Add(new VertexData());
-            vertexData.Add(new VertexData());
+            vertexData[0] = new VertexData();
+            vertexData[1] = new VertexData();
+            vertexData[2] = new VertexData();
         }
 
         //Generate the underwater mesh
@@ -63,15 +64,13 @@ namespace BoatTutorial
                 boatVerticesGlobal[j] = globalPos;
                 if(j%2==0)
                 {
-                Profiler.BeginSample("GetWaterHeight");
-                allDistancesToWater[j] = -Water.Instance.GetWaterHeight(globalPos);
-                Profiler.EndSample();
+                    allDistancesToWater[j] = -Water.Instance.GetWaterHeight(globalPos);
                 }
                 else
                 {
                     allDistancesToWater[j] = allDistancesToWater[j-1];
                 }
-            }
+            }//Water.Instance.GetWaterHeights(new Vector3[]{Vector3.zero, Vector3.zero});
 
             //Add the triangles that are below the water
             Profiler.BeginSample("AddTriangles");
@@ -84,63 +83,67 @@ namespace BoatTutorial
         {
             //Loop through all the triangles (3 vertices at a time = 1 triangle)
             int i = 0;
-            while (i < boatTriangles.Length)
+            while(i < boatTriangles.Length)
             {
+                int countAboveWater = 3;
                 //Loop through the 3 vertices
                 for (int x = 0; x < 3; x++)
                 {
                     //Save the data we need
                     vertexData[x].distance = allDistancesToWater[boatTriangles[i]];
 
+                    if(vertexData[x].distance < 0f)
+                        countAboveWater--;
+
                     vertexData[x].index = x;
 
                     vertexData[x].globalVertexPos = boatVerticesGlobal[boatTriangles[i]];
-
                     i++;
                 }
 
-
-                //All vertices are above the water
-                if (vertexData[0].distance > 0f && vertexData[1].distance > 0f && vertexData[2].distance > 0f)
+                // if(countAboveWater < 2)
+                // {
+                //     Vector3 p1 = vertexData[0].globalVertexPos;
+                //     Vector3 p2 = vertexData[1].globalVertexPos;
+                //     Vector3 p3 = vertexData[2].globalVertexPos;
+                //     //Save the triangle
+                //     underWaterTriangleData.Add(new TriangleData(p1, p2, p3));
+                // }
+                // else
+                // {
+                //     break;
+                // }
+                //Debug.Log(countAboveWater);
+                switch(countAboveWater)
                 {
-                    continue;
-                }
-
-
-                //Create the triangles that are below the waterline
-
-                //All vertices are underwater
-                if (vertexData[0].distance < 0f && vertexData[1].distance < 0f && vertexData[2].distance < 0f)
-                {
-                    Vector3 p1 = vertexData[0].globalVertexPos;
-                    Vector3 p2 = vertexData[1].globalVertexPos;
-                    Vector3 p3 = vertexData[2].globalVertexPos;
-
-                    //Save the triangle
-                    underWaterTriangleData.Add(new TriangleData(p1, p2, p3));
-                }
-                //1 or 2 vertices are below the water
-                else
-                {
-                    //Sort the vertices
-                    vertexData.Sort((x, y) => x.distance.CompareTo(y.distance));
-
-                    vertexData.Reverse();
-
-                    //One vertice is above the water, the rest is below
-                    if (vertexData[0].distance > 0f && vertexData[1].distance < 0f && vertexData[2].distance < 0f)
+                    case 3:
+                    break;
+                    case 0:
                     {
+                        Vector3 p1 = vertexData[0].globalVertexPos;
+                        Vector3 p2 = vertexData[1].globalVertexPos;
+                        Vector3 p3 = vertexData[2].globalVertexPos;
+                        Vector3 d = new Vector3(vertexData[0].distance, vertexData[1].distance, vertexData[2].distance);
+                        //Save the triangle
+                        underWaterTriangleData.Add(new TriangleData(p1, p2, p3, d, true));
+                    }
+                    break;
+                    case 1:
+                    {
+                        Array.Sort(vertexData, delegate(VertexData v1, VertexData v2){return v2.distance.CompareTo(v1.distance);});
                         Profiler.BeginSample("AddTrianglesOneAboveWater");
                         AddTrianglesOneAboveWater();
                         Profiler.EndSample();
                     }
-                    //Two vertices are above the water, the other is below
-                    else if (vertexData[0].distance > 0f && vertexData[1].distance > 0f && vertexData[2].distance < 0f)
+                    break;
+                    case 2:
                     {
+                        Array.Sort(vertexData, delegate(VertexData v1, VertexData v2){return v2.distance.CompareTo(v1.distance);});
                         Profiler.BeginSample("AddTrianglesTwoAboveWater");
                         AddTrianglesTwoAboveWater();
                         Profiler.EndSample();
                     }
+                    break;
                 }
             }
         }
@@ -210,11 +213,10 @@ namespace BoatTutorial
 
             Vector3 I_L = LI_L + L;
 
-
             //Save the data, such as normal, area, etc      
             //2 triangles below the water  
-            underWaterTriangleData.Add(new TriangleData(M, I_M, I_L));
-            underWaterTriangleData.Add(new TriangleData(M, I_L, L));
+            underWaterTriangleData.Add(new TriangleData(M, I_M, I_L, Vector3.zero, false));
+            underWaterTriangleData.Add(new TriangleData(M, I_L, L, Vector3.zero, false));
         }
 
         //Build the new triangles where two of the old vertices are above the water
@@ -284,7 +286,7 @@ namespace BoatTutorial
 
             //Save the data, such as normal, area, etc
             //1 triangle below the water
-            underWaterTriangleData.Add(new TriangleData(L, J_H, J_M));
+            underWaterTriangleData.Add(new TriangleData(L, J_H, J_M, Vector3.zero, false));
         }
 
         //Help class to store triangle data so we can sort the distances
@@ -357,7 +359,7 @@ namespace BoatTutorial
         //The area of the triangle
         public float area;
 
-        public TriangleData(Vector3 p1, Vector3 p2, Vector3 p3)
+        public TriangleData(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 distances, bool full)
         {
             this.p1 = p1;
             this.p2 = p2;
@@ -366,8 +368,11 @@ namespace BoatTutorial
             //Center of the triangle
             this.center = (p1 + p2 + p3) / 3f;
 
-            //Distance to the surface from the center of the triangle
-            this.distanceToSurface = Mathf.Abs(Water.Instance.GetWaterHeight(this.center));
+            //Distance to the surface from the center of the triangle, we average it if triangle uncut
+            if(full)
+                this.distanceToSurface = Mathf.Abs((distances.x + distances.y + distances.z) / 3f);
+            else
+                this.distanceToSurface = Mathf.Abs(Water.Instance.GetWaterHeight(this.center));
 
             //Normal to the triangle
             this.normal = Vector3.Cross(p2 - p1, p3 - p1).normalized;

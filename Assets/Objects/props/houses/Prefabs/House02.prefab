@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4933349709312262}
   - component: {fileID: 33147715262670324}
   - component: {fileID: 23702019685331466}
+  - component: {fileID: 65956331300609782}
   m_Layer: 0
   m_Name: House02
   m_TagString: Untagged
@@ -83,3 +84,15 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1429428162184290}
   m_Mesh: {fileID: 4300008, guid: 7c7696c943ff57c4aac0e0bb9f82b3c2, type: 3}
+--- !u!65 &65956331300609782
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1429428162184290}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 8.438929, y: 2.5816169, z: 7.649478}
+  m_Center: {x: -0.6386714, y: 0.24104118, z: 6.3877883}

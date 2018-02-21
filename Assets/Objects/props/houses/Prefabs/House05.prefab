@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4517467000177320}
   - component: {fileID: 33169186937131558}
   - component: {fileID: 23503597795257916}
+  - component: {fileID: 65081846905683348}
   m_Layer: 0
   m_Name: House05
   m_TagString: Untagged
@@ -34,8 +35,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1229474891580490}
-  m_LocalRotation: {x: -0, y: 0.52748936, z: -0, w: 0.8495617}
-  m_LocalPosition: {x: -2, y: 5.2, z: -38.4}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -9.95, y: 0.92, z: -9.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -83,3 +84,15 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1229474891580490}
   m_Mesh: {fileID: 4300002, guid: 7c7696c943ff57c4aac0e0bb9f82b3c2, type: 3}
+--- !u!65 &65081846905683348
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1229474891580490}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 8.865782, y: 3.0447254, z: 3.6899261}
+  m_Center: {x: -1.23983, y: 0.4771173, z: 24.939562}
