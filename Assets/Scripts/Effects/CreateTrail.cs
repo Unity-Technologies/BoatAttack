@@ -34,14 +34,6 @@ public class CreateTrail : MonoBehaviour
 		}
 	}
 
-
-	IEnumerator Timer ()
-	{
-		Debug.Log("did it");
-		bool addSeg = true;
-		yield return new WaitForSeconds(2f);
-	}
-
 	//move class
 	/*
 	IEnumerator Move ()
@@ -75,7 +67,6 @@ public class CreateTrail : MonoBehaviour
 		if(curCount < 2)
 		{
 			curCount += 2;
-			Timer();
 		}if (addSeg == true)
 		{
 			curCount++;
@@ -119,7 +110,7 @@ public class CreateTrail : MonoBehaviour
 			if(init == false){
 				iiPos = transform.position;
 			}
-			verts[f*2+1] = transform.InverseTransformPoint(iPos.x+startWidth/2f, Height+f, -f*Time.time);
+			verts[f*2+1] = transform.InverseTransformPoint(iiPos.x+startWidth/2f, Height+f, -f*Time.time);
 			//yield return;
 		}init = true;
 

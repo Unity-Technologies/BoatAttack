@@ -7,7 +7,6 @@ namespace BoatTutorial
 {
     public class BoatPhysics : MonoBehaviour
     {
-
 		public Mesh boatHull;
 
         //Script that's doing everything needed with the boat mesh, such as finding out which part is above the water

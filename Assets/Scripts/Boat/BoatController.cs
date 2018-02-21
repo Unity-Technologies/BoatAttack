@@ -12,18 +12,18 @@ public class BoatController : MonoBehaviour {
 	public float wakeWidth;
 
 	//cache the engine connected to the boat
-	private Engine boatEngine;
+	//private Engine boatEngine;
 
 	//local cache
-	private Rigidbody RB;
-	private AudioSource AS;
+	//private Rigidbody RB;
+	//private AudioSource AS;
 
 	// Use this for initialization
 	void Start () 
 	{
-		RB = gameObject.GetComponent<Rigidbody>();
-		AS = gameObject.GetComponent<AudioSource>();
-		boatEngine = gameObject.GetComponent<Engine>();
+		//RB = gameObject.GetComponent<Rigidbody>();
+		//AS = gameObject.GetComponent<AudioSource>();
+		//boatEngine = gameObject.GetComponent<Engine>();
 
 		if (Human == true) 
 		{

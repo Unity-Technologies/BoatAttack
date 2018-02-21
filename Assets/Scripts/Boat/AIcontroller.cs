@@ -64,7 +64,7 @@ public class AIcontroller : MonoBehaviour {
 		Vector3 normDir = curDest - T.position;
 		normDir = normDir.normalized;
 		float dot = Vector3.Dot (normDir, T.forward);
-		float angle = Mathf.Acos (dot) * Mathf.Rad2Deg;
+		//float angle = Mathf.Acos (dot) * Mathf.Rad2Deg;
 		targetSide = Vector3.Cross (T.forward, normDir).y;//positive on right side, negative on left side
 
 		float steering = 0;
@@ -109,10 +109,10 @@ public class AIcontroller : MonoBehaviour {
 	void OnDrawGizmos()
 	{
 		Gizmos.color = Color.green;
-		if(curWPPos != null || curWPPos == Vector3.zero)
+		if(curWPPos == Vector3.zero)
 			Gizmos.DrawLine(transform.position + (Vector3.up*0.1f), curWPPos);
 		Gizmos.color = Color.red;
-		if(curDest != null || curDest == Vector3.zero)
+		if(curDest == Vector3.zero)
 			Gizmos.DrawLine(transform.position + (Vector3.up*0.1f), curDest);	
 		Gizmos.color = Color.yellow;
 

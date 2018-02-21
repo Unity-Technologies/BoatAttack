@@ -28,6 +28,8 @@ namespace BoatTutorial
         //List that will store the data we need to sort the vertices based on distance to water
         VertexData[] vertexData = new VertexData[3];
 
+        int GestnerIndex = -1;
+
         public ModifyBoatMesh(GameObject boatObj, Mesh mesh)
         {
             //Get the transform
@@ -52,7 +54,6 @@ namespace BoatTutorial
         {
             //Reset
             underWaterTriangleData.Clear();
-
             //Find all the distances to water once because some triangles share vertices, so reuse
             for (int j = 0; j < boatVertices.Length; j++)
             {
@@ -65,12 +66,18 @@ namespace BoatTutorial
                 if(j%2==0)
                 {
                     allDistancesToWater[j] = -Water.Instance.GetWaterHeight(globalPos);
+                    
                 }
                 else
                 {
                     allDistancesToWater[j] = allDistancesToWater[j-1];
                 }
-            }//Water.Instance.GetWaterHeights(new Vector3[]{Vector3.zero, Vector3.zero});
+            }
+            if(GestnerIndex == -1)
+                GestnerIndex = GerstnerWavesJobs.Instance.AddSamplePositions(boatVerticesGlobal);
+            else
+                GerstnerWavesJobs.Instance.UpdateSamplePositions(GestnerIndex, boatVerticesGlobal);
+            //Water.Instance.GetWaterHeights(new Vector3[]{Vector3.zero, Vector3.zero});
 
             //Add the triangles that are below the water
             Profiler.BeginSample("AddTriangles");

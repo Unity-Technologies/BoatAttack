@@ -24,8 +24,7 @@ public class HumanController : MonoBehaviour
 		{
 			engine.TurnLeft(-tilt*2f);
 		}
-		
-		int fingerCount = 0;
+
 		foreach (Touch touch in Input.touches) 
 		{
 			if (touch.position.x >= Screen.width * 0.8f && touch.position.y <= Screen.height * 0.3f)

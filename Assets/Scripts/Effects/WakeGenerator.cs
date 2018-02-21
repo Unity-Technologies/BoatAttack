@@ -105,12 +105,12 @@ public class WakeGenerator : MonoBehaviour {
 
         foreach(Wake w in _wakes)
 		{
-            Vector3 o = w.origin;
+            //Vector3 o = w.origin;
             
             foreach(WakeLine wl in w.lines)
 			{
 				int side = 0;
-                Vector3 oPoint = OffsetGenPoint(o, side);
+                //Vector3 oPoint = OffsetGenPoint(o, side);
 				foreach(WakePoint wp in wl.points)
 				{
                     Gizmos.DrawSphere(wp.pos, (_maxAge - wp.age) * 0.2f);

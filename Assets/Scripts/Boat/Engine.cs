@@ -6,7 +6,7 @@ public class Engine : MonoBehaviour
 {
 	//cache vars
 	private Rigidbody RB;
-	private Vector3 vel;
+	public Vector3 vel;
 
 	//engine stats
 	public float torque = 35f;
@@ -15,7 +15,7 @@ public class Engine : MonoBehaviour
 
 	//cache for the boatcontroller
 	private BuoyantObject buoyantObject;
-	private BoatController boatController;
+	//private BoatController boatController;
 	//cache for the wake generator
 	//private CreateWake wakeGen;
 
@@ -28,7 +28,7 @@ public class Engine : MonoBehaviour
 		RB = gameObject.GetComponent<Rigidbody>();
 
 		//cache boat and boat controller
-		boatController = gameObject.GetComponent<BoatController>();
+		//boatController = gameObject.GetComponent<BoatController>();
 		//buoyantObject = gameObject.GetComponent<BuoyantObject>();
 		//cache wakeGenerator
 		//wakeGen = GameObject.Find ("WakeGenerator").GetComponent<CreateWake> ();
