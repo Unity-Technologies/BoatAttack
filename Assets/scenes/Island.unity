@@ -2154,7 +2154,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 153441711}
-  m_LocalRotation: {x: 0.061738648, y: -0.8044848, z: 0.08495669, w: 0.58461523}
+  m_LocalRotation: {x: 0.043005105, y: -0.8062579, z: 0.09874177, w: 0.5816777}
   m_LocalPosition: {x: -64.48244, y: 7.422699, z: -114.538864}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2895,6 +2895,43 @@ Transform:
   m_Father: {fileID: 1242123165}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!28 &219870874
+Texture2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  serializedVersion: 2
+  m_Width: 128
+  m_Height: 2
+  m_CompleteImageSize: 1024
+  m_TextureFormat: 5
+  m_MipCount: 1
+  m_IsReadable: 1
+  m_AlphaIsTransparency: 0
+  m_ImageCount: 1
+  m_TextureDimension: 2
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_LightmapFormat: 0
+  m_ColorSpace: 1
+  image data: 1024
+  _typelessdata: ffbcb696ffa3b08eff8aa987ff7ea685ff7aa587ff75a488ff70a48aff6ca38bff67a38dff62a28eff5ea18fff59a191ff55a092ff50a094ff4b9f95ff479f97ff429e98ff3d9d99ff399d9bff359c9cff349b9bff339b9aff329a9aff319999ff2f9898ff2e9898ff2d9797ff2c9697ff2b9596ff2a9495ff289495ff279394ff269294ff259193ff249192ff229092ff218f91ff208e91ff1f8e90ff1e8d8fff1c8c8fff1b8b8eff1a8b8dff198a8dff18898cff17888cff15888bff14878aff13868aff128589ff118489ff0f8488ff0e8387ff0d8287ff0c8186ff0b8186ff098085ff087f84ff077e84ff067e83ff057d82ff047c82ff027b81ff017b81ff007a80ff007980ff00787fff00777fff00767eff00757eff00747eff00747dff00737dff00727dff00717cff00707cff006f7bff006e7bff006d7bff006c7aff006b7aff006b79ff006a79ff006979ff006878ff006778ff006678ff006577ff006477ff006376ff006376ff006276ff006175ff006075ff005f74ff005e74ff005d74ff005c73ff005b73ff005a73ff005a72ff005972ff005871ff005771ff005671ff005570ff005470ff005370ff00526fff00526fff00516eff00506eff004f6eff004e6dff004d6dff004c6cff004b6cff004a6cff00496bff00496bff00486bff00476aff00466aff004569ff004469ff004369ff004268ff004168ff000000ff010201ff030302ff040503ff060604ff070805ff090906ff0a0b07ff0c0c08ff0d0e09ff0f0f0aff10110bff12130cff13140dff15160eff16170fff181910ff191a10ff1b1c11ff1c1d12ff1e1f13ff1f2014ff212215ff222416ff232517ff252718ff262819ff282a1aff292b1bff2b2d1cff2c2e1dff2e301eff2e311fff2e3220ff2e3221ff2e3322ff2e3423ff2e3424ff2e3525ff2e3626ff2e3727ff2e3728ff2e3829ff2e392aff2e3a2bff2e3a2cff2e3b2eff2e3c2fff2e3d30ff2e3d31ff2e3e32ff2e3f33ff2e4034ff2e4035ff2e4136ff2e4237ff2e4338ff2e4339ff2e443aff2e453bff2e453cff2e463dff2e473eff2e483fff2e4840ff2e4941ff2e4a42ff2e4b43ff2e4b44ff2d4c45ff2d4d46ff2d4e47ff2d4e48ff2d4f49ff2d504aff2d514bff2d514cff2d524dff2d534eff2d544fff2d5451ff2d5552ff2d5653ff2d5654ff2d5755ff2d5856ff2d5957ff2d5958ff2d5a59ff2d5b5aff2d5c5bff2d5c5cff2d5d5dff2d5e5eff2d5f5fff2d5f60ff2d6061ff2d6162ff2d6263ff2d6264ff2d6365ff2d6466ff2d6567ff2d6568ff2d6669ff2d676aff2d676bff2d686cff2d696dff2d6a6eff2d6a6fff2d6b70ff2d6c71ff2d6d72ff2d6d73ff2d6e75ff2d6f76ff2d7077ff2d7078ff2d7179ff2d727aff2d737bff2d737cff2d747dff2d757eff2d767fff2d7680ff2d7781
+  m_StreamData:
+    offset: 0
+    size: 0
+    path: 
 --- !u!1001 &220011957
 Prefab:
   m_ObjectHideFlags: 0
@@ -3772,43 +3809,6 @@ Transform:
   m_PrefabParentObject: {fileID: 4440258580505926, guid: 3c0601ff3e2e64f35983e9dc28fa9aef,
     type: 2}
   m_PrefabInternal: {fileID: 238397706}
---- !u!28 &243231727
-Texture2D:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  serializedVersion: 2
-  m_Width: 128
-  m_Height: 1
-  m_CompleteImageSize: 512
-  m_TextureFormat: 5
-  m_MipCount: 1
-  m_IsReadable: 1
-  m_AlphaIsTransparency: 0
-  m_ImageCount: 1
-  m_TextureDimension: 2
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_LightmapFormat: 0
-  m_ColorSpace: 1
-  image data: 512
-  _typelessdata: ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000018ff000031ff00004bff000064ff00007dff000096ff0000b0ff0000c9ff0000e2ff0000fbff0005fbff000cf7ff0012f3ff0019eeff001feaff0025e5ff002ce1ff0032ddff0038d8ff003fd4ff0045d0ff004ccbff0052c7ff0058c3ff005fbeff0065baff006bb5ff0072b1ff0078adff007ea8ff0085a4ff008ba0ff00929bff009897ff009e93ff00a58eff00ab8aff00b185ff00b881ff00be7dff00c578ff00cb74ff00d170ff00d86bff00de67ff00e463ff00eb5eff00f15aff00f855ff00fe51ff07fc4eff10f84bff19f448ff22f046ff2bec43ff33e840ff3ce43dff45e03bff4edc38ff57d835ff60d432ff68d02fff71cc2dff7ac82aff83c327ff8cbf24ff94bb22ff9db71fffa6b31cffafaf19ffb8ab16ffc1a714ffc9a311ffd29f0effdb9b0bffe49709ffed9306fff58f03fffe8b00ffff8b00ffff8b00ffff8b00ffff8b00ffff8b00ffff8b00ffff8b00ffff8b00ffff8b00ffff8b00
-  m_StreamData:
-    offset: 0
-    size: 0
-    path: 
 --- !u!1001 &247863978
 Prefab:
   m_ObjectHideFlags: 0
@@ -5691,43 +5691,6 @@ Transform:
   m_Father: {fileID: 1242123165}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!28 &362815053
-Texture2D:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  serializedVersion: 2
-  m_Width: 128
-  m_Height: 2
-  m_CompleteImageSize: 1024
-  m_TextureFormat: 5
-  m_MipCount: 1
-  m_IsReadable: 1
-  m_AlphaIsTransparency: 0
-  m_ImageCount: 1
-  m_TextureDimension: 2
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_LightmapFormat: 0
-  m_ColorSpace: 1
-  image data: 1024
-  _typelessdata: ffbcb696ffa3b08eff8aa987ff7ea685ff7aa587ff75a488ff70a48aff6ca38bff67a38dff62a28eff5ea18fff59a191ff55a092ff50a094ff4b9f95ff479f97ff429e98ff3d9d99ff399d9bff359c9cff349b9bff339b9aff329a9aff319999ff2f9898ff2e9898ff2d9797ff2c9697ff2b9596ff2a9495ff289495ff279394ff269294ff259193ff249192ff229092ff218f91ff208e91ff1f8e90ff1e8d8fff1c8c8fff1b8b8eff1a8b8dff198a8dff18898cff17888cff15888bff14878aff13868aff128589ff118489ff0f8488ff0e8387ff0d8287ff0c8186ff0b8186ff098085ff087f84ff077e84ff067e83ff057d82ff047c82ff027b81ff017b81ff007a80ff007980ff00787fff00777fff00767eff00757eff00747eff00747dff00737dff00727dff00717cff00707cff006f7bff006e7bff006d7bff006c7aff006b7aff006b79ff006a79ff006979ff006878ff006778ff006678ff006577ff006477ff006376ff006376ff006276ff006175ff006075ff005f74ff005e74ff005d74ff005c73ff005b73ff005a73ff005a72ff005972ff005871ff005771ff005671ff005570ff005470ff005370ff00526fff00526fff00516eff00506eff004f6eff004e6dff004d6dff004c6cff004b6cff004a6cff00496bff00496bff00486bff00476aff00466aff004569ff004469ff004369ff004268ff004168ff000000ff010201ff030302ff040503ff060604ff070805ff090906ff0a0b07ff0c0c08ff0d0e09ff0f0f0aff10110bff12130cff13140dff15160eff16170fff181910ff191a10ff1b1c11ff1c1d12ff1e1f13ff1f2014ff212215ff222416ff232517ff252718ff262819ff282a1aff292b1bff2b2d1cff2c2e1dff2e301eff2e311fff2e3220ff2e3221ff2e3322ff2e3423ff2e3424ff2e3525ff2e3626ff2e3727ff2e3728ff2e3829ff2e392aff2e3a2bff2e3a2cff2e3b2eff2e3c2fff2e3d30ff2e3d31ff2e3e32ff2e3f33ff2e4034ff2e4035ff2e4136ff2e4237ff2e4338ff2e4339ff2e443aff2e453bff2e453cff2e463dff2e473eff2e483fff2e4840ff2e4941ff2e4a42ff2e4b43ff2e4b44ff2d4c45ff2d4d46ff2d4e47ff2d4e48ff2d4f49ff2d504aff2d514bff2d514cff2d524dff2d534eff2d544fff2d5451ff2d5552ff2d5653ff2d5654ff2d5755ff2d5856ff2d5957ff2d5958ff2d5a59ff2d5b5aff2d5c5bff2d5c5cff2d5d5dff2d5e5eff2d5f5fff2d5f60ff2d6061ff2d6162ff2d6263ff2d6264ff2d6365ff2d6466ff2d6567ff2d6568ff2d6669ff2d676aff2d676bff2d686cff2d696dff2d6a6eff2d6a6fff2d6b70ff2d6c71ff2d6d72ff2d6d73ff2d6e75ff2d6f76ff2d7077ff2d7078ff2d7179ff2d727aff2d737bff2d737cff2d747dff2d757eff2d767fff2d7680ff2d7781
-  m_StreamData:
-    offset: 0
-    size: 0
-    path: 
 --- !u!1 &365165639
 GameObject:
   m_ObjectHideFlags: 0
@@ -9602,7 +9565,7 @@ MonoBehaviour:
   m_XDamping: 2
   m_YDamping: 2
   m_ZDamping: 2
-  m_CameraUp: 0
+  m_CameraUp: 1
   m_PitchDamping: 0
   m_YawDamping: 0
   m_RollDamping: 0
@@ -14872,7 +14835,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1017609894}
-  m_LocalRotation: {x: 0.061738648, y: -0.8044848, z: 0.08495669, w: 0.58461523}
+  m_LocalRotation: {x: 0.043005105, y: -0.8062579, z: 0.09874177, w: 0.5816777}
   m_LocalPosition: {x: -64.48244, y: 7.422699, z: -114.538864}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -17016,23 +16979,6 @@ Transform:
   m_PrefabParentObject: {fileID: 4036952117179152, guid: b92151ed482ed45ef84412410142f938,
     type: 2}
   m_PrefabInternal: {fileID: 220011957}
---- !u!1 &1199339052 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1015499191777110, guid: 2cac2e60f3f6f2447ad9b550450f60ed,
-    type: 2}
-  m_PrefabInternal: {fileID: 1856532579}
---- !u!114 &1199339053
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1199339052}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e09f45dd7e088412e85c5924433ad4ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  heights: []
 --- !u!1001 &1202075916
 Prefab:
   m_ObjectHideFlags: 0
@@ -25650,6 +25596,43 @@ Transform:
   m_PrefabParentObject: {fileID: 4759700577955508, guid: 851454441f29b4ab9a78308458eafccb,
     type: 2}
   m_PrefabInternal: {fileID: 1769716854}
+--- !u!28 &1775026121
+Texture2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  serializedVersion: 2
+  m_Width: 128
+  m_Height: 1
+  m_CompleteImageSize: 512
+  m_TextureFormat: 5
+  m_MipCount: 1
+  m_IsReadable: 1
+  m_AlphaIsTransparency: 0
+  m_ImageCount: 1
+  m_TextureDimension: 2
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_LightmapFormat: 0
+  m_ColorSpace: 1
+  image data: 512
+  _typelessdata: ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000018ff000031ff00004bff000064ff00007dff000096ff0000b0ff0000c9ff0000e2ff0000fbff0005fbff000cf7ff0012f3ff0019eeff001feaff0025e5ff002ce1ff0032ddff0038d8ff003fd4ff0045d0ff004ccbff0052c7ff0058c3ff005fbeff0065baff006bb5ff0072b1ff0078adff007ea8ff0085a4ff008ba0ff00929bff009897ff009e93ff00a58eff00ab8aff00b185ff00b881ff00be7dff00c578ff00cb74ff00d170ff00d86bff00de67ff00e463ff00eb5eff00f15aff00f855ff00fe51ff07fc4eff10f84bff19f448ff22f046ff2bec43ff33e840ff3ce43dff45e03bff4edc38ff57d835ff60d432ff68d02fff71cc2dff7ac82aff83c327ff8cbf24ff94bb22ff9db71fffa6b31cffafaf19ffb8ab16ffc1a714ffc9a311ffd29f0effdb9b0bffe49709ffed9306fff58f03fffe8b00ffff8b00ffff8b00ffff8b00ffff8b00ffff8b00ffff8b00ffff8b00ffff8b00ffff8b00ffff8b00
+  m_StreamData:
+    offset: 0
+    size: 0
+    path: 
 --- !u!1001 &1778880044
 Prefab:
   m_ObjectHideFlags: 0
@@ -26871,6 +26854,11 @@ Prefab:
       propertyPath: sampleHeightCompute
       value: 
       objectReference: {fileID: 7200000, guid: efe1c759474a54492b19020f76d49041, type: 3}
+    - target: {fileID: 114084614423911968, guid: 2cac2e60f3f6f2447ad9b550450f60ed,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 23417954490615130, guid: 2cac2e60f3f6f2447ad9b550450f60ed, type: 2}
     - {fileID: 33110715006230082, guid: 2cac2e60f3f6f2447ad9b550450f60ed, type: 2}

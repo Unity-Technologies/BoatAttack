@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using WaterSystem;
 using UnityEngine.Profiling;
+using Unity.Jobs;
+using Unity.Collections;
 
 namespace BoatTutorial
 {
@@ -28,8 +30,6 @@ namespace BoatTutorial
         //List that will store the data we need to sort the vertices based on distance to water
         VertexData[] vertexData = new VertexData[3];
 
-        int GestnerIndex = -1;
-
         public ModifyBoatMesh(GameObject boatObj, Mesh mesh)
         {
             //Get the transform
@@ -47,6 +47,120 @@ namespace BoatTutorial
             vertexData[0] = new VertexData();
             vertexData[1] = new VertexData();
             vertexData[2] = new VertexData();
+
+            ///New stuff
+            _waveCount = Water.Instance._waves.Count;
+            _waveData = Water.Instance.GetWaveData();
+
+            //This specific
+            boatVerts = new NativeArray<Vector3>(mesh.vertices.Length, Allocator.Persistent);
+            for(var i = 0; i < boatVerts.Length; i++)
+                boatVerts[i] = mesh.vertices[i];
+
+            boatTris = new NativeArray<int>(mesh.triangles.Length, Allocator.Persistent);
+            for(var i = 0; i < boatTris.Length; i++)
+                boatTris[i] = mesh.triangles[i];
+
+            boatTransformMatrix = boatObj.transform.localToWorldMatrix;
+        }
+
+        void OnDisable()
+        {
+            boatVerts.Dispose();
+            boatTris.Dispose();
+        }
+        
+        //GerstnerWave specifics
+        Vector4[] _waveData;
+        int _waveCount;
+        //ModifyBoatMesh specifics
+        NativeArray<Vector3> boatVerts; // vert positions original mesh
+        NativeArray<int> boatTris;
+        Matrix4x4 boatTransformMatrix;
+
+        IEnumerator ModifyBoatData()
+        {
+            ///setup jobs
+            ///Waves specfic
+            NativeArray<Vector4> waveData = new NativeArray<Vector4>(_waveData.Length, Allocator.Temp);
+            for(var i = 0; i < _waveData.Length; i++)
+            {
+                waveData[i] = _waveData[i];
+            }
+
+            NativeArray<Vector3> wavePos = new NativeArray<Vector3>(128, Allocator.Temp); // To store the waves between calcs
+
+            ///ModifyBoatMesh specific
+            //Triangledata array
+            NativeArray<TriangleData> triData = new NativeArray<TriangleData>(128, Allocator.Temp);
+
+            NativeArray<Vector3> globalVertChecklist = new NativeArray<Vector3>(boatVerts.Length, Allocator.Temp);
+
+            ///JOB01
+            //globalPos of verts
+            var localToWorld = new GlobalVertConversion()
+            {
+                inPos = boatVerts,
+                outPos = globalVertChecklist
+            };
+            //>>pass data to job2
+
+            // ///JOB02 - dependant on job1
+            // //Height of all global verts
+            // //>>pass data to job3
+            var heightPass1 = new GerstnerWavesJobs.HeightJob()
+            {
+                waveData = waveData,
+                waveCount = _waveCount,
+                position = globalVertChecklist,
+                time = Time.time,
+                outPosition = wavePos
+            };
+
+            ///JOB03 - dependant on job2
+            //Add triangles
+            //>>pass data to job4/minijob1/minijob2
+
+            ///Mini job - add triagles 1 above
+
+            ///Mini job - add triangles 2 above
+
+            ///JOB04 - dependant on job3/minijob1/minijob2
+            //Height of all add tirangles
+            // var heightPass2 = new GerstnerWavesJobs.HeightJob()
+            // {
+            //     waveData = waveData,
+            //     waveCount = _waveCount,
+            //     position = inPos,
+            //     time = Time.time,
+            //     outPosition = outPos
+            // };
+
+            //Schedule all jobs
+
+            ///Wait for job 03
+            //Grab job 03's data
+
+            ///Wait for job 04
+            //Assign data to job 03's data
+
+            //Do it again
+            return null;
+        }
+
+        //Job Get global positions to check
+        struct GlobalVertConversion : IJobParallelFor
+        {
+            [ReadOnly]
+            public NativeArray<Vector3> inPos;
+            public NativeArray<Vector3> outPos;
+            [ReadOnly]
+            public Matrix4x4 matrix;
+
+            public void Execute(int i)
+            {
+                outPos[i] = matrix.MultiplyPoint(inPos[i]);
+            }
         }
 
         //Generate the underwater mesh
@@ -73,17 +187,82 @@ namespace BoatTutorial
                     allDistancesToWater[j] = allDistancesToWater[j-1];
                 }
             }
-            if(GestnerIndex == -1)
-                GestnerIndex = GerstnerWavesJobs.Instance.AddSamplePositions(boatVerticesGlobal);
-            else
-                GerstnerWavesJobs.Instance.UpdateSamplePositions(GestnerIndex, boatVerticesGlobal);
-            //Water.Instance.GetWaterHeights(new Vector3[]{Vector3.zero, Vector3.zero});
 
             //Add the triangles that are below the water
             Profiler.BeginSample("AddTriangles");
             AddTriangles();
             Profiler.EndSample();
         }
+/*
+        struct AddTriangles : IJobParallelFor
+        {
+            [ReadOnly]
+            public NativeArray<Vector3> wavePositions;
+            [ReadOnly]
+            public NativeArray<Vector3> globalVertexPos;
+            [ReadOnly]
+            public NativeArray<int> boatTris;
+            public NativeArray<TriangleData> triData;
+            public int index;
+
+            public void Execute(int i) // this has to process 3 verts at a time to make a tri calculation
+            {
+                VertexData[] vertData = new VertexData[3];
+                TriangleData triangle = new TriangleData();
+                int countAboveWater = 3;
+                int id = i;
+
+                for (int x = 0; x < 3; x++)
+                {
+                    //Save the data we need
+                    vertData[x].distance = globalVertexPos[id].y - wavePositions[id].y;
+
+                    if(vertData[x].distance < 0f)
+                        countAboveWater--;
+
+                    vertData[x].index = x;
+
+                    vertData[x].globalVertexPos = globalVertexPos[boatTris[id]];
+                    id++;
+                }
+
+                switch(countAboveWater)
+                {
+                case 3:
+                    break;
+                case 0:
+                    {
+                        Vector3 p1 = vertData[0].globalVertexPos;
+                        Vector3 p2 = vertData[1].globalVertexPos;
+                        Vector3 p3 = vertData[2].globalVertexPos;
+                        Vector3 d = new Vector3(vertData[0].distance, vertData[1].distance, vertData[2].distance);
+                        //Save the triangle
+                        triangle.p1 = p1;
+                        triangle.p2 = p2;
+                        triangle.p3 = p3;
+                        triData[index].Add(new TriangleData(p1, p2, p3, d, true));
+                        index++;
+                    }
+                    break;
+                case 1:
+                    {
+                        Array.Sort(vertData, delegate(VertexData v1, VertexData v2){return v2.distance.CompareTo(v1.distance);});
+                        Profiler.BeginSample("AddTrianglesOneAboveWater");
+                        AddTrianglesOneAboveWater();
+                        Profiler.EndSample();
+                    }
+                    break;
+                case 2:
+                    {
+                        Array.Sort(vertexData, delegate(VertexData v1, VertexData v2){return v2.distance.CompareTo(v1.distance);});
+                        Profiler.BeginSample("AddTrianglesTwoAboveWater");
+                        AddTrianglesTwoAboveWater();
+                        Profiler.EndSample();
+                    }
+                    break;
+                }
+            }
+        }*/
 
         //Add all the triangles that's part of the underwater mesh
         private void AddTriangles()
@@ -297,7 +476,7 @@ namespace BoatTutorial
         }
 
         //Help class to store triangle data so we can sort the distances
-        private class VertexData
+        private struct VertexData
         {
             //The distance to water from this vertex
             public float distance;
@@ -366,6 +545,8 @@ namespace BoatTutorial
         //The area of the triangle
         public float area;
 
+        public bool underWater;
+
         public TriangleData(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 distances, bool full)
         {
             this.p1 = p1;
@@ -390,6 +571,7 @@ namespace BoatTutorial
             float c = Vector3.Distance(p3, p1);
 
             this.area = (a * c * Mathf.Sin(Vector3.Angle(p2 - p1, p3 - p1) * Mathf.Deg2Rad)) / 2f;
+            this.underWater = true;
         }
     }
 }
