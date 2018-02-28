@@ -12,6 +12,8 @@ namespace BoatTutorial
         //Script that's doing everything needed with the boat mesh, such as finding out which part is above the water
         private ModifyBoatMesh modifyBoatMesh;
 
+        public ModifyBoatMesh.TriangleData[] triangleData;
+
         //Mesh for debugging
         private Mesh underWaterMesh;
 
@@ -59,26 +61,23 @@ namespace BoatTutorial
 
         void Update()
         {
-            Profiler.BeginSample("GenerateUnderwaterMesh");
-			//Generate the under water mesh
-            modifyBoatMesh.GenerateUnderwaterMesh();
-            Profiler.EndSample();
-
+            StartCoroutine(modifyBoatMesh.ModifyBoatData());
+            triangleData = modifyBoatMesh.underWaterTriangleData.ToArray();
             //Display the under water mesh
-			if(debugMesh)
-            	modifyBoatMesh.DisplayMesh(underWaterMesh, "UnderWater Mesh", modifyBoatMesh.underWaterTriangleData);
+			//if(debugMesh)
+            	//modifyBoatMesh.DisplayMesh(underWaterMesh, "UnderWater Mesh", modifyBoatMesh.underWaterTriangleData);
         }
 
         //Add all forces that act on the squares below the water
         void AddUnderWaterForces()
         {
             //Get all triangles
-            List<TriangleData> underWaterTriangleData = modifyBoatMesh.underWaterTriangleData;
+            List<ModifyBoatMesh.TriangleData> underWaterTriangleData = modifyBoatMesh.underWaterTriangleData;
 
             for (int i = 0; i < underWaterTriangleData.Count; i++)
             {
                 //This triangle
-                TriangleData triangleData = underWaterTriangleData[i];
+                ModifyBoatMesh.TriangleData triangleData = underWaterTriangleData[i];
 
                 //Calculate the buoyancy force
                 Vector3 buoyancyForce = BuoyancyForce(rhoWater, triangleData);
@@ -99,7 +98,7 @@ namespace BoatTutorial
         }
 
         //The buoyancy force so the boat can float
-        private Vector3 BuoyancyForce(float rho, TriangleData triangleData)
+        private Vector3 BuoyancyForce(float rho, ModifyBoatMesh.TriangleData triangleData)
         {
             //Buoyancy is a hydrostatic force - it's there even if the water isn't flowing or if the boat stays still
 
