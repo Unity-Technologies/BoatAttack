@@ -81,7 +81,7 @@ public class Engine : MonoBehaviour
 	public void TurnLeft(float modifier)
 	{
 		//if(buoyantObject.percentSubmerged > 0.05f)
-		RB.AddRelativeTorque (new Vector3 (-torque * 0.25f, -torque, torque * 0.5f) * modifier * 500f, ForceMode.Acceleration);
+		RB.AddRelativeTorque (new Vector3 (0f, -torque, torque * 0.5f) * modifier * 500f, ForceMode.Acceleration);
 
 		// if(engineDir.x < 1f)
 		// 	engineDir.x += modifier;
@@ -92,7 +92,7 @@ public class Engine : MonoBehaviour
 	public void TurnRight(float modifier)
 	{
 		//if(buoyantObject.percentSubmerged > 0.05f)
-		RB.AddRelativeTorque (new Vector3 (-torque * 0.25f, torque, -torque * 0.5f) * modifier * 500f, ForceMode.Acceleration);
+		RB.AddRelativeTorque (new Vector3 (0f, torque, -torque * 0.5f) * modifier * 500f, ForceMode.Acceleration);
 
 		// if(engineDir.x > -1f)
 		// 	engineDir.x -= modifier;

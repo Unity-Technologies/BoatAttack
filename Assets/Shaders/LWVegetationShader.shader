@@ -380,5 +380,4 @@ Pass
 
     }
     FallBack "Hidden/InternalErrorShader"
-    CustomEditor "LightweightStandardGUI"
 }

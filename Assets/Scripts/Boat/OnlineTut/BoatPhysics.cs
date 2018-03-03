@@ -12,7 +12,7 @@ namespace BoatTutorial
         //Script that's doing everything needed with the boat mesh, such as finding out which part is above the water
         private ModifyBoatMesh modifyBoatMesh;
 
-        public ModifyBoatMesh.TriangleData[] triangleData;
+        //public ModifyBoatMesh.TriangleData[] triangleData;
 
         //Mesh for debugging
         private Mesh underWaterMesh;
@@ -52,7 +52,7 @@ namespace BoatTutorial
             Profiler.BeginSample("AddUnderwaterForces");
             //boatRB.drag = 0.25f;
             //Add forces to the part of the boat that's below the water
-            if (modifyBoatMesh.underWaterTriangleData.Count > 0)
+            if (modifyBoatMesh.underWaterTriangleData?.Length > 0)
             {
                 AddUnderWaterForces();
             }
@@ -62,7 +62,7 @@ namespace BoatTutorial
         void Update()
         {
             StartCoroutine(modifyBoatMesh.ModifyBoatData());
-            triangleData = modifyBoatMesh.underWaterTriangleData.ToArray();
+            //triangleData = modifyBoatMesh.underWaterTriangleData.ToArray();
             //Display the under water mesh
 			//if(debugMesh)
             	//modifyBoatMesh.DisplayMesh(underWaterMesh, "UnderWater Mesh", modifyBoatMesh.underWaterTriangleData);
@@ -72,9 +72,9 @@ namespace BoatTutorial
         void AddUnderWaterForces()
         {
             //Get all triangles
-            List<ModifyBoatMesh.TriangleData> underWaterTriangleData = modifyBoatMesh.underWaterTriangleData;
+            ModifyBoatMesh.TriangleData[] underWaterTriangleData = modifyBoatMesh.underWaterTriangleData;
 
-            for (int i = 0; i < underWaterTriangleData.Count; i++)
+            for (int i = 0; i < underWaterTriangleData.Length; i++)
             {
                 //This triangle
                 ModifyBoatMesh.TriangleData triangleData = underWaterTriangleData[i];
@@ -91,8 +91,9 @@ namespace BoatTutorial
 				{
 					//Normal
 					Debug.DrawRay(triangleData.center, triangleData.normal, Color.white);
-					//Buoyancy
-					Debug.DrawRay(triangleData.center, buoyancyForce.normalized, Color.blue);
+                    //Buoyancy
+                    //Debug.DrawRay(triangleData.center, buoyancyForce.normalized, Color.blue);
+                    Debug.DrawRay(triangleData.center, Vector3.up * triangleData.distanceToSurface, Color.blue);
 				}
             }
         }
@@ -120,13 +121,18 @@ namespace BoatTutorial
             return buoyancyForce;
         }
 
+        void OnDisable()
+        {
+            modifyBoatMesh.BufferCleanup();
+        }
+
 		void OnDrawGizmos()
 		{
-			if(underWaterMesh && debugMesh)
-			{
-				Gizmos.color = Color.red;
-				Gizmos.DrawMesh(underWaterMesh, transform.position, transform.rotation);
-			}
+			// if(underWaterMesh && debugMesh)
+			// {
+			// 	Gizmos.color = Color.red;
+			// 	Gizmos.DrawMesh(underWaterMesh, transform.position, transform.rotation);
+			// }
 			Gizmos.color = Color.green;
 			Gizmos.DrawSphere(transform.TransformPoint(centerOfMass), 0.5f);
 		}
