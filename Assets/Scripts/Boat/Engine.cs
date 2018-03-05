@@ -39,6 +39,8 @@ public class Engine : MonoBehaviour
 	{
 		vel = RB.velocity;
 
+		RB.AddForce(Vector3.up * (Mathf.Abs(Vector3.Dot(vel, transform.forward)) * vel.sqrMagnitude), ForceMode.Force);
+
 		// if(throttle > 0f)
 		// {
 		// 	if(transform.TransformPoint(enginePosition).y < 0.5f)

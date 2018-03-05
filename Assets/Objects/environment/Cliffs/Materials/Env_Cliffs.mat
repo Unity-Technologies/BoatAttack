@@ -7,11 +7,11 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Env_Cliffs
-  m_Shader: {fileID: 4800000, guid: 7cd247c7cbda54323b0e395ea419af3d, type: 3}
+  m_Shader: {fileID: 4800000, guid: cb7f609cd69cf4f3ebf931295d1c1a10, type: 3}
   m_ShaderKeywords: _METALLICGLOSSMAP _METALLICSPECGLOSSMAP _NORMALMAP _OCCLUSIONMAP
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
-  m_DoubleSidedGI: 0
+  m_DoubleSidedGI: 1
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
@@ -55,7 +55,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 4985d1d6655474b058f6c4e862201430, type: 3}
+        m_Texture: {fileID: 2800000, guid: 73448ca97ea5f4b4f88686c2976cd24b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
