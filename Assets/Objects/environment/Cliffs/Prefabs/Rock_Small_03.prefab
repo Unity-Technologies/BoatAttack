@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4922975954009704}
   - component: {fileID: 205528723960064512}
   - component: {fileID: 64847769207814634}
+  - component: {fileID: 114278179531802014}
   m_Layer: 0
   m_Name: Rock_Small_03
   m_TagString: Untagged
@@ -274,6 +275,17 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300096, guid: d26d9decbd70a483885e93c275492b2e, type: 3}
+--- !u!114 &114278179531802014
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1152812708892862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5d715ee083c2438f89aa044883b30d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!205 &205528723960064512
 LODGroup:
   m_ObjectHideFlags: 1

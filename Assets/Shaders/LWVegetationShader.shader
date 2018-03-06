@@ -71,7 +71,7 @@
             #pragma shader_feature _EMISSION
             #pragma shader_feature _METALLICSPECGLOSSMAP
             #pragma shader_feature _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
-            #pragma shader_feature _OCCLUSIONMAP
+            #define _OCCLUSIONMAP
 
             #pragma shader_feature _SPECULARHIGHLIGHTS_OFF
             #pragma shader_feature _GLOSSYREFLECTIONS_OFF
@@ -149,6 +149,7 @@
 				half4 fogFactorAndVertexLight   : TEXCOORD7; // x: fogFactor, yzw: vertex light
 
 				float4 clipPos                  : SV_POSITION;
+                half occlusion                  : TEXCOORD8;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -242,6 +243,8 @@
 				half fogFactor = ComputeFogFactor(o.clipPos.z);
 				o.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
 
+                o.occlusion = v.color.a;
+
 				return o;
 			}
 
@@ -260,6 +263,7 @@
 
                 half3 bakedGI = SampleSH(normalWS);
 
+                surfaceData.albedo *= IN.occlusion;
 
                 BRDFData brdfData;
                 InitializeBRDFData(surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, surfaceData.alpha, brdfData);

@@ -22,6 +22,7 @@ namespace BoatTutorial
 
         //The density of the water the boat is traveling in
         private float rhoWater = 1000f;
+        private float rhoAir = 1.225f;
 
 		public Vector3 centerOfMass;
 
@@ -112,7 +113,7 @@ namespace BoatTutorial
             // z - distance to surface
             // S - surface area
             // n - normal to the surface
-            Vector3 buoyancyForce = rho * Physics.gravity.y * triangleData.distanceToSurface * triangleData.area * triangleData.normal;
+            Vector3 buoyancyForce = rho * Physics.gravity.y * (triangleData.distanceToSurface * triangleData.area * triangleData.normal);
 
             //The vertical component of the hydrostatic forces don't cancel out but the horizontal do
             buoyancyForce.x = 0f;

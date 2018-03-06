@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4114248574837390}
   - component: {fileID: 205242239281445118}
   - component: {fileID: 64128024958027376}
+  - component: {fileID: 114710068806123992}
   m_Layer: 0
   m_Name: Cliff_Wall_03
   m_TagString: Untagged
@@ -274,6 +275,17 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300052, guid: d26d9decbd70a483885e93c275492b2e, type: 3}
+--- !u!114 &114710068806123992
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1047755901713936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5d715ee083c2438f89aa044883b30d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!205 &205242239281445118
 LODGroup:
   m_ObjectHideFlags: 1
