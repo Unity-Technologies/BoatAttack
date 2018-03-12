@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Profiling;
 
 namespace BoatTutorial
 {
@@ -50,14 +49,14 @@ namespace BoatTutorial
 
         void FixedUpdate()
         {
-            Profiler.BeginSample("AddUnderwaterForces");
+            //Profiler.BeginSample("AddUnderwaterForces");
             //boatRB.drag = 0.25f;
             //Add forces to the part of the boat that's below the water
             if (modifyBoatMesh.underWaterTriangleData?.Length > 0)
             {
                 AddUnderWaterForces();
             }
-            Profiler.EndSample();
+            //Profiler.EndSample();
         }
 
         void Update()
