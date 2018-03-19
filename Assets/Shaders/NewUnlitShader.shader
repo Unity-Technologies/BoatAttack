@@ -290,7 +290,7 @@
 		    #pragma multi_compile_instancing
 		
 		    #pragma vertex ShadowPassVertex
-		    #pragma fragment LitPassFragmentNull
+		    #pragma fragment ShadowPassFragment
 		
 		    #include "LWRP/ShaderLibrary/LightweightPassShadow.hlsl"
 		    ENDHLSL
@@ -312,10 +312,10 @@
 		    // GPU Instancing
 		    #pragma multi_compile_instancing
 		
-		    #pragma vertex LitPassVertex
-		    #pragma fragment LitPassFragmentNull
+		    #pragma vertex DepthOnlyVertex
+		    #pragma fragment DepthOnlyFragment
 		
-		    #include "LWRP/ShaderLibrary/LightweightPassLit.hlsl"
+		    #include "LWRP/ShaderLibrary/LightweightPassDepthOnly.hlsl"
 		    ENDHLSL
 		}
 		
