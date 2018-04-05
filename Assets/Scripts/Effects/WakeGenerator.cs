@@ -41,6 +41,9 @@ public class WakeGenerator : MonoBehaviour {
 
 	void Update () 
 	{
+        List<WakePoint> wps = new List<WakePoint>();
+        List<Vector3> points = new List<Vector3>();
+        Vector3 origin;
         //For each wake pair
         for (int w = 0; w < _wakes.Count; w++)
         {
@@ -48,12 +51,13 @@ public class WakeGenerator : MonoBehaviour {
             int s = 0;
             for (int x = -1; x <= 1; x+=2)
 			{
-                Vector3 origin = _wake.origin;
+                origin = _wake.origin;
                 origin.x *= x;
                 origin = transform.TransformPoint(origin);
                 origin.y = 0;//flatten origin in world
-                List<WakePoint> wps = _wake.lines[s].points;
-                List<Vector3> points = new List<Vector3>();
+                wps.Clear();
+                wps.AddRange(_wake.lines[s].points);
+                points.Clear();
                 points.Add(origin);
                 //create points, if needed
                 if (wps.Count == 0)

@@ -364,7 +364,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1553288845585282}
   m_LocalRotation: {x: -0, y: -0.56714237, z: -0, w: 0.8236198}
-  m_LocalPosition: {x: -48.4, y: 1.64, z: -56.7}
+  m_LocalPosition: {x: -41.2, y: 1.64, z: -59.54}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4566539937980892}
@@ -484,7 +484,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 543c9392b5fc8488aadc861320357e4a, type: 2}
+  - {fileID: 2100000, guid: 99e41bed0266b42c2be534cc7d27de5a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -510,7 +510,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1964021460287884}
-  m_Mesh: {fileID: 4300000, guid: fac3099931c4a4347a8392bf5b805918, type: 3}
+  m_Mesh: {fileID: 4300000, guid: a362db008c5274e03bf6f3d2387cf617, type: 3}
 --- !u!54 &54710712322113256
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -518,8 +518,8 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1553288845585282}
   serializedVersion: 2
-  m_Mass: 500
-  m_Drag: 1.5
+  m_Mass: 1800
+  m_Drag: 2
   m_AngularDrag: 2.5
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -539,7 +539,7 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300000, guid: fac3099931c4a4347a8392bf5b805918, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 2df96455c7a214a93aef825dcf7042d5, type: 3}
 --- !u!82 &82633756123786494
 AudioSource:
   m_ObjectHideFlags: 1
@@ -975,9 +975,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad25c0660b199484a806598b69f0f280, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boatHull: {fileID: 4300000, guid: e67155c36d10c114aae34b4c92cbe92a, type: 3}
+  boatHull: {fileID: 4300000, guid: 2df96455c7a214a93aef825dcf7042d5, type: 3}
   centerOfMass: {x: 0, y: -0.3, z: -1.4}
-  multiplier: 0.2
+  multiplier: 0.75
   debugMesh: 0
 --- !u!198 &198104015329072190
 ParticleSystem:
