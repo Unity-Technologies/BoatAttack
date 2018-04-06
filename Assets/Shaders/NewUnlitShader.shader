@@ -1,11 +1,10 @@
-﻿Shader "BoatAttack/PackedPBR"
+﻿Shader "PBR Master"
 {
 	Properties
 	{
-				[NoScaleOffset] _MainTex("Albedo_Roughness", 2D) = "white" {}
+				[NoScaleOffset] Texture_AE91C5C2("Albedo_Roughness", 2D) = "white" {}
 				[NoScaleOffset] Texture_DE8BF47E("Normal_AO", 2D) = "white" {}
-		_Color("Color", Color) = (1, 1, 1, 1)
-
+		
 	}
 	SubShader
 	{
@@ -32,7 +31,7 @@
 			HLSLPROGRAM
 		    // Required to compile gles 2.0 with standard srp library
 		    #pragma prefer_hlslcc gles
-			#pragma target 3.0
+			#pragma target 2.0
 		
 			// -------------------------------------
 			// Lightweight Pipeline keywords
@@ -62,7 +61,7 @@
 			#include "CoreRP/ShaderLibrary/UnityInstancing.hlsl"
 			#include "ShaderGraphLibrary/Functions.hlsl"
 		
-								TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
+								TEXTURE2D(Texture_AE91C5C2); SAMPLER(samplerTexture_AE91C5C2);
 							TEXTURE2D(Texture_DE8BF47E); SAMPLER(samplerTexture_DE8BF47E);
 					
 							struct SurfaceInputs{
@@ -107,7 +106,7 @@
 					
 							SurfaceDescription PopulateSurfaceData(SurfaceInputs IN) {
 								SurfaceDescription surface = (SurfaceDescription)0;
-								float4 _SampleTexture2D_903562CE_RGBA = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, IN.uv0.xy);
+								float4 _SampleTexture2D_903562CE_RGBA = SAMPLE_TEXTURE2D(Texture_AE91C5C2, samplerTexture_AE91C5C2, IN.uv0.xy);
 								float _SampleTexture2D_903562CE_R = _SampleTexture2D_903562CE_RGBA.r;
 								float _SampleTexture2D_903562CE_G = _SampleTexture2D_903562CE_RGBA.g;
 								float _SampleTexture2D_903562CE_B = _SampleTexture2D_903562CE_RGBA.b;
@@ -138,7 +137,7 @@
 			struct GraphVertexOutput
 		    {
 		        float4 clipPos                : SV_POSITION;
-		        float4 lightmapUVOrVertexSH   : TEXCOORD0;
+		        DECLARE_LIGHTMAP_OR_SH(lightmapUV, vertexSH, 0);
 				half4 fogFactorAndVertexLight : TEXCOORD1; // x: fogFactor, yzw: vertex light
 		    	float4 shadowCoord            : TEXCOORD2;
 		        			float3 WorldSpaceNormal : TEXCOORD3;
@@ -174,11 +173,12 @@
 				float3 lwWorldPos = TransformObjectToWorld(v.vertex.xyz);
 				float4 clipPos = TransformWorldToHClip(lwWorldPos);
 		
-		 		// We either sample GI from lightmap or SH. lightmap UV and vertex SH coefficients
-			    // are packed in lightmapUVOrVertexSH to save interpolator.
-			    // The following funcions initialize
-			    OUTPUT_LIGHTMAP_UV(v.texcoord1, unity_LightmapST, o.lightmapUVOrVertexSH);
-			    OUTPUT_SH(lwWNormal, o.lightmapUVOrVertexSH);
+		 		// We either sample GI from lightmap or SH.
+			    // Lightmap UV and vertex SH coefficients use the same interpolator ("float2 lightmapUV" for lightmap or "half3 vertexSH" for SH)
+		        // see DECLARE_LIGHTMAP_OR_SH macro.
+			    // The following funcions initialize the correct variable with correct data
+			    OUTPUT_LIGHTMAP_UV(v.texcoord1, unity_LightmapST, o.lightmapUV);
+			    OUTPUT_SH(lwWNormal, o.vertexSH);
 		
 			    half3 vertexLight = VertexLighting(lwWorldPos, lwWNormal);
 			    half fogFactor = ComputeFogFactor(clipPos.z);
@@ -234,10 +234,14 @@
 		#ifdef _NORMALMAP
 			    inputData.normalWS = TangentToWorldNormal(Normal, WorldSpaceTangent, WorldSpaceBiTangent, WorldSpaceNormal);
 		#else
+		    #if !SHADER_HINT_NICE_QUALITY
+		        inputData.normalWS = WorldSpaceNormal;
+		    #else
 			    inputData.normalWS = normalize(WorldSpaceNormal);
+		    #endif
 		#endif
 		
-		#ifdef SHADER_API_MOBILE
+		#if !SHADER_HINT_NICE_QUALITY
 			    // viewDirection should be normalized here, but we avoid doing it as it's close enough and we save some ALU.
 			    inputData.viewDirectionWS = WorldSpaceViewDirection;
 		#else
@@ -248,7 +252,7 @@
 		
 			    inputData.fogCoord = IN.fogFactorAndVertexLight.x;
 			    inputData.vertexLighting = IN.fogFactorAndVertexLight.yzw;
-			    inputData.bakedGI = SampleGI(IN.lightmapUVOrVertexSH, inputData.normalWS);
+			    inputData.bakedGI = SAMPLE_GI(IN.lightmapUV, IN.vertexSH, inputData.normalWS);
 		
 				half4 color = LightweightFragmentPBR(
 					inputData, 
@@ -274,76 +278,81 @@
 		
 		Pass
 		{
-		    Tags{"LightMode" = "ShadowCaster"}
+			Tags{"LightMode" = "ShadowCaster"}
 		
-		    ZWrite On
-		    ZTest LEqual
-		    Cull Back
+			ZWrite On
+			ZTest LEqual
+			Cull Back
 		
-		    HLSLPROGRAM
-		    // Required to compile gles 2.0 with standard srp library
-		    #pragma prefer_hlslcc gles
-		    #pragma target 2.0
-		    
-		    //--------------------------------------
-		    // GPU Instancing
-		    #pragma multi_compile_instancing
+			HLSLPROGRAM
+			// Required to compile gles 2.0 with standard srp library
+			#pragma prefer_hlslcc gles
+			#pragma target 2.0
 		
-		    #pragma vertex ShadowPassVertex
-		    #pragma fragment ShadowPassFragment
+			//--------------------------------------
+			// GPU Instancing
+			#pragma multi_compile_instancing
 		
-		    #include "LWRP/ShaderLibrary/LightweightPassShadow.hlsl"
-		    ENDHLSL
+			#pragma vertex ShadowPassVertex
+			#pragma fragment ShadowPassFragment
+		
+			#include "LWRP/ShaderLibrary/InputSurfacePBR.hlsl"
+			#include "LWRP/ShaderLibrary/LightweightPassShadow.hlsl"
+		
+			ENDHLSL
 		}
 		
 		Pass
 		{
-		    Tags{"LightMode" = "DepthOnly"}
+			Tags{"LightMode" = "DepthOnly"}
 		
-		    ZWrite On
-		    ColorMask 0
+			ZWrite On
+			ColorMask 0
 		
-		    HLSLPROGRAM
-		    // Required to compile gles 2.0 with standard srp library
-		    #pragma prefer_hlslcc gles
-		    #pragma target 2.0
-		    
-		    //--------------------------------------
-		    // GPU Instancing
-		    #pragma multi_compile_instancing
+			HLSLPROGRAM
+			// Required to compile gles 2.0 with standard srp library
+			#pragma prefer_hlslcc gles
+			#pragma target 2.0
 		
-		    #pragma vertex DepthOnlyVertex
-		    #pragma fragment DepthOnlyFragment
+			#pragma vertex DepthOnlyVertex
+			#pragma fragment DepthOnlyFragment
 		
-		    #include "LWRP/ShaderLibrary/LightweightPassDepthOnly.hlsl"
-		    ENDHLSL
+			//--------------------------------------
+			// GPU Instancing
+			#pragma multi_compile_instancing
+		
+			#include "LWRP/ShaderLibrary/InputSurfacePBR.hlsl"
+			#include "LWRP/ShaderLibrary/LightweightPassDepthOnly.hlsl"
+			ENDHLSL
 		}
 		
 		// This pass it not used during regular rendering, only for lightmap baking.
 		Pass
 		{
-		    Tags{"LightMode" = "Meta"}
+			Tags{"LightMode" = "Meta"}
 		
-		    Cull Off
+			Cull Off
 		
-		    HLSLPROGRAM
-		    // Required to compile gles 2.0 with standard srp library
-		    #pragma prefer_hlslcc gles
+			HLSLPROGRAM
+			// Required to compile gles 2.0 with standard srp library
+			#pragma prefer_hlslcc gles
 		
-		    #pragma vertex LightweightVertexMeta
-		    #pragma fragment LightweightFragmentMetaSimple
+			#pragma vertex LightweightVertexMeta
+			#pragma fragment LightweightFragmentMeta
 		
-		    #pragma shader_feature _SPECULAR_SETUP
-		    #pragma shader_feature _EMISSION
-		    #pragma shader_feature _METALLICSPECGLOSSMAP
-		    #pragma shader_feature _ _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
-		    #pragma shader_feature EDITOR_VISUALIZATION
+			#pragma shader_feature _SPECULAR_SETUP
+			#pragma shader_feature _EMISSION
+			#pragma shader_feature _METALLICSPECGLOSSMAP
+			#pragma shader_feature _ _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+			#pragma shader_feature EDITOR_VISUALIZATION
 		
-		    #pragma shader_feature _SPECGLOSSMAP
+			#pragma shader_feature _SPECGLOSSMAP
 		
-		    #include "LWRP/ShaderLibrary/LightweightPassMeta.hlsl"
-		    ENDHLSL
+			#include "LWRP/ShaderLibrary/InputSurfacePBR.hlsl"
+			#include "LWRP/ShaderLibrary/LightweightPassMetaPBR.hlsl"
+			ENDHLSL
 		}
+		
 	}
 	
 	FallBack "Hidden/InternalErrorShader"

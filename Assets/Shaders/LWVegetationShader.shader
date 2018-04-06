@@ -2,7 +2,7 @@
 {
     Properties
     {
-        // Specular vs Metallic workflow
+                // Specular vs Metallic workflow
         [HideInInspector] _WorkflowMode("WorkflowMode", Float) = 1.0
 
         _Color("Color", Color) = (1,1,1,1)
@@ -22,6 +22,7 @@
 
         [ToggleOff] _SpecularHighlights("Specular Highlights", Float) = 1.0
         [ToggleOff] _GlossyReflections("Glossy Reflections", Float) = 1.0
+        [ToggleOff] _CorrectNormals("Correct Normals", Float) = 1.0
 
         _BumpScale("Scale", Float) = 1.0
         _BumpMap("Normal Map", 2D) = "bump" {}
@@ -33,10 +34,13 @@
         _EmissionMap("Emission", 2D) = "white" {}
 
         // Blending state
-        [HideInInspector] _Mode("__mode", Float) = 0.0
+        [HideInInspector] _Surface("__surface", Float) = 0.0
+        [HideInInspector] _Blend("__blend", Float) = 0.0
+        [HideInInspector] _AlphaClip("__clip", Float) = 0.0
         [HideInInspector] _SrcBlend("__src", Float) = 1.0
         [HideInInspector] _DstBlend("__dst", Float) = 0.0
         [HideInInspector] _ZWrite("__zw", Float) = 1.0
+        [HideInInspector] _Cull("__cull", Float) = 2.0
     }
 
     SubShader
@@ -44,7 +48,7 @@
         // Lightweight Pipeline tag is required. If Lightweight pipeline is not set in the graphics settings
         // this Subshader will fail. One can add a subshader below or fallback to Standard built-in to make this
         // material work with both Lightweight Pipeline and Builtin Unity Pipeline
-        Tags{"RenderType" = "Opaque" "RenderPipeline" = "LightweightPipeline"}
+        Tags{"RenderType" = "Opaque" "RenderPipeline" = "LightweightPipeline" "IgnoreProjector" = "True"}
 
         // ------------------------------------------------------------------
         //  Base forward pass (directional light, emission, lightmaps, ...)
@@ -62,19 +66,22 @@
             // Required to compile gles 2.0 with standard SRP library
             // All shaders must be compiled with HLSLcc and currently only gles is not using HLSLcc by default
             #pragma prefer_hlslcc gles
-            #pragma target 3.0
+            #pragma exclude_renderers d3d11_9x
+            #pragma target 2.0
 
             // -------------------------------------
             // Material Keywords
             #pragma shader_feature _NORMALMAP
-            #pragma shader_feature _ _ALPHATEST_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON
+            #pragma shader_feature _ALPHATEST_ON
+            #pragma shader_feature _ALPHAPREMULTIPLY_ON
             #pragma shader_feature _EMISSION
             #pragma shader_feature _METALLICSPECGLOSSMAP
             #pragma shader_feature _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
-            #define _OCCLUSIONMAP
+            #pragma shader_feature _OCCLUSIONMAP
 
             #pragma shader_feature _SPECULARHIGHLIGHTS_OFF
             #pragma shader_feature _GLOSSYREFLECTIONS_OFF
+            #pragma shader_feature _CORRECTNORMALS_OFF
             #pragma shader_feature _SPECULAR_SETUP
 
             // -------------------------------------
@@ -82,166 +89,146 @@
             #pragma multi_compile _ _ADDITIONAL_LIGHTS
             #pragma multi_compile _ _VERTEX_LIGHTS
             #pragma multi_compile _ _MIXED_LIGHTING_SUBTRACTIVE
-            #pragma multi_compile _ FOG_LINEAR FOG_EXP2
+            #pragma multi_compile _ _SHADOWS_ENABLED
 
             // -------------------------------------
             // Unity defined keywords
             #pragma multi_compile _ DIRLIGHTMAP_COMBINED
             #pragma multi_compile _ LIGHTMAP_ON
+            #pragma multi_compile_fog
 
             //--------------------------------------
             // GPU Instancing
             #pragma multi_compile_instancing
-
-            // LW doesn't support dynamic GI. So we save 30% shader variants if we assume
-            // LIGHTMAP_ON when DIRLIGHTMAP_COMBINED is set
-            #ifdef DIRLIGHTMAP_COMBINED
-            #define LIGHTMAP_ON
-            #endif
 
             // Including the following two function is enought for shading with Lightweight Pipeline. Everything is included in them.
             // Core.hlsl will include SRP shader library, all constant buffers not related to materials (perobject, percamera, perframe).
             // It also includes matrix/space conversion functions and fog.
             // Lighting.hlsl will include the light functions/data to abstract light constants. You should use GetMainLight and GetLight functions
             // that initialize Light struct. Lighting.hlsl also include GI, Light BDRF functions. It also includes Shadows.
-            #include "LWRP/ShaderLibrary/Core.hlsl"
-            #include "LWRP/ShaderLibrary/Lighting.hlsl"
+            //#include "LWRP/ShaderLibrary/Core.hlsl"
+                        // Not required but included here for simplicity. This defines all material related constants for the Standard surface shader like _Color, _MainTex, and so on.
+            // These are specific to this shader. You should define your own constants.
+            #include "LWRP/ShaderLibrary/InputSurfacePBR.hlsl"
+            #include "Vegetation.hlsl"
 
 			#pragma vertex VegetationVertex
 			#pragma fragment LitPassFragment
-        
-			float4 SmoothCurve( float4 x ) {
-				return x * x *( 3.0 - 2.0 * x );
-			}
 
-			float4 TriangleWave( float4 x ) {
-				return abs( frac( x + 0.5 ) * 2.0 - 1.0 );
-			}
+			// struct VegetationVertexInput
+			// {
+			// 	float4 vertex : POSITION;
+			// 	float3 normal : NORMAL;
+			// 	float4 tangent : TANGENT;
+			// 	float2 texcoord : TEXCOORD0;
+			// 	float2 lightmapUV : TEXCOORD1;
+			// 	float4 color : COLOR;
+            //     UNITY_VERTEX_INPUT_INSTANCE_ID
+			// };
 
-			float4 SmoothTriangleWave( float4 x ) {
-				return SmoothCurve( TriangleWave( x ) );
-			}
+			// struct VegetationVertexOutput
+			// {
+			// 	float3 uv                       : TEXCOORD0;//z holds vert AO
+			// 	float4 lightmapUVOrVertexSH     : TEXCOORD1; // holds either lightmapUV or vertex SH. depending on LIGHTMAP_ON
+			// 	float3 positionWS               : TEXCOORD2;
+			// 	half3  normal                   : TEXCOORD3;
 
-			struct LightweightVertexInput
-			{
-				float4 vertex : POSITION;
-				float3 normal : NORMAL;
-				float4 tangent : TANGENT;
-				float2 texcoord : TEXCOORD0;
-				float2 lightmapUV : TEXCOORD1;
-				float4 color : COLOR;
-                UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
+			// #if _NORMALMAP
+			// 	half3 tangent                   : TEXCOORD4;
+			// 	half3 binormal                  : TEXCOORD5;
+			// #endif
 
-			struct VegetationVertexOutput
-			{
-				float3 uv                       : TEXCOORD0;//z holds vert AO
-				float4 lightmapUVOrVertexSH     : TEXCOORD1; // holds either lightmapUV or vertex SH. depending on LIGHTMAP_ON
-				float3 positionWS               : TEXCOORD2;
-				half3  normal                   : TEXCOORD3;
+			// 	half3 viewDir                   : TEXCOORD6;
+			// 	half4 fogFactorAndVertexLight   : TEXCOORD7; // x: fogFactor, yzw: vertex light
 
-			#if _NORMALMAP
-				half3 tangent                   : TEXCOORD4;
-				half3 binormal                  : TEXCOORD5;
-			#endif
+			// 	float4 clipPos                  : SV_POSITION;
+            //     half occlusion                  : TEXCOORD8;
+            //     UNITY_VERTEX_INPUT_INSTANCE_ID
+			// };
 
-				half3 viewDir                   : TEXCOORD6;
-				half4 fogFactorAndVertexLight   : TEXCOORD7; // x: fogFactor, yzw: vertex light
+            // UNITY_INSTANCING_BUFFER_START(Props)
+            //     UNITY_DEFINE_INSTANCED_PROP(half4, _Position)
+            // UNITY_INSTANCING_BUFFER_END(Props)
 
-				float4 clipPos                  : SV_POSITION;
-                half occlusion                  : TEXCOORD8;
-                UNITY_VERTEX_INPUT_INSTANCE_ID
-			};
+            void InitializeInputData(VegetationVertexOutput IN, half3 normalTS, out InputData inputData)
+            {
+                inputData = (InputData)0;
 
-            // Not required but included here for simplicity. This defines all material related constants for the Standard surface shader like _Color, _MainTex, and so on.
-            // These are specific to this shader. You should define your own constants.
-            #include "LWRP/ShaderLibrary/InputSurface.hlsl"
+                inputData.positionWS = IN.posWS;
 
-            UNITY_INSTANCING_BUFFER_START(Props)
-                UNITY_DEFINE_INSTANCED_PROP(half4, _Position)
-            UNITY_INSTANCING_BUFFER_END(Props)
+            #ifdef _NORMALMAP
+                half3 viewDir = half3(IN.normal.w, IN.tangent.w, IN.binormal.w);
+                inputData.normalWS = TangentToWorldNormal(normalTS, IN.tangent.xyz, IN.binormal.xyz, IN.normal.xyz);
+            #else
+                half3 viewDir = IN.viewDir;
+                inputData.normalWS = FragmentNormalWS(IN.normal);
+            #endif
+
+                inputData.viewDirectionWS = FragmentViewDirWS(viewDir);
+            #ifdef _SHADOWS_ENABLED
+                inputData.shadowCoord = IN.shadowCoord;
+            #else
+                inputData.shadowCoord = float4(0, 0, 0, 0);
+            #endif
+                inputData.fogCoord = IN.fogFactorAndVertexLight.x;
+                inputData.vertexLighting = IN.fogFactorAndVertexLight.yzw;
+                inputData.bakedGI = SAMPLE_GI(IN.lightmapUV, IN.vertexSH, inputData.normalWS);
+            }
 
 			//vert
-			VegetationVertexOutput VegetationVertex(LightweightVertexInput v)
+			VegetationVertexOutput VegetationVertex(VegetationVertexInput v)
 			{
 				VegetationVertexOutput o = (VegetationVertexOutput)0;
 
                 UNITY_SETUP_INSTANCE_ID(v);
-    	        UNITY_TRANSFER_INSTANCE_ID(v, o);
-                // Pretty much same as builtin Unity shader library.
-				o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
+                UNITY_TRANSFER_INSTANCE_ID(v, o);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-                // SRP shader library adds some functions to convert between spaces.
-                // TransformObjectToHClip and some other functions are defined.
-                o.positionWS = TransformObjectToWorld(v.vertex.xyz);
-                o.clipPos = TransformWorldToHClip(o.positionWS);
+                o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
+
+                float3 posWS = TransformObjectToWorld(v.position.xyz);
+                o.clipPos = TransformWorldToHClip(posWS);
 
 				/////////////////////////////////////vegetation stuff//////////////////////////////////////////////////
                 //half phaseOffset = UNITY_ACCESS_INSTANCED_PROP(Props, _PhaseOffset);
-                float4 objectOrigin = UNITY_ACCESS_INSTANCED_PROP(Props, _Position);
+                float3 objectOrigin = UNITY_ACCESS_INSTANCED_PROP(Props, _Position).xyz;
 
-				///////Main Bending
-				float fBendScale = 0.05;//main bend opacity
-				float fLength = length(v.vertex.xyz);//distance to origin
-				float2 vWind = float2(sin(_Time.y + objectOrigin.x) * 0.1, sin(_Time.y + objectOrigin.z) * 0.1);//wind direction
-
-				// Bend factor - Wind variation is done on the CPU.
-				float fBF = v.vertex.y * fBendScale;
-				// Smooth bending factor and increase its nearby height limit.
-				fBF += 1.0;
-				fBF *= fBF;
-				fBF = fBF * fBF - fBF;
-				// Displace position
-				float3 vNewPos = v.vertex.xyz;
-				vNewPos.xz += vWind.xy * fBF;
-				// Rescale
-				v.vertex.xyz = normalize(vNewPos.xyz) * fLength;
-
-				////////Detail blending
-				float fSpeed = 0.25;//leaf occil
-				float fDetailFreq = 0.3;//detail leaf occil
-				float fEdgeAtten = v.color.x;//leaf stiffness(red)
-				float fDetailAmp = 0.1;//leaf edge amplitude of movement
-				float fBranchAtten = 1 - v.color.z;//branch stiffness(blue)
-				float fBranchAmp = 1.5;//branch amplitude of movement
-				float fBranchPhase = v.color.y * 3.3;//leaf phase(green)
-
-				// Phases (object, vertex, branch)
-				float fObjPhase = dot(objectOrigin.xyz, 1);
-				fBranchPhase += fObjPhase;
-				float fVtxPhase = dot(v.vertex.xyz, v.color.y + fBranchPhase);
-				// x is used for edges; y is used for branches
-				float2 vWavesIn = _Time.y + float2(fVtxPhase, fBranchPhase );
-				// 1.975, 0.793, 0.375, 0.193 are good frequencies
-				float4 vWaves = (frac( vWavesIn.xxyy * float4(1.975, 0.793, 0.375, 0.193) ) * 2.0 - 1.0 ) * fSpeed * fDetailFreq;
-				vWaves = SmoothTriangleWave( vWaves );
-				float2 vWavesSum = vWaves.xz + vWaves.yw;
-				// Edge (xy) and branch bending (z)
-				v.vertex.xyz += vWavesSum.xyx * float3(fEdgeAtten * fDetailAmp * v.normal.x, fBranchAtten * fBranchAmp, fEdgeAtten * fDetailAmp * v.normal.z);
-
+                v.position.xyz = VegetationDeformation(v.position.xyz, objectOrigin, v.normal, v.color.x, v.color.z, v.color.y);
 
 				//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-				o.positionWS = TransformObjectToWorld(v.vertex.xyz);
-				o.clipPos = TransformWorldToHClip(o.positionWS);
-				o.viewDir = SafeNormalize(_WorldSpaceCameraPos - o.positionWS);
+				posWS = TransformObjectToWorld(v.position.xyz);
+                o.clipPos = TransformWorldToHClip(posWS);
+                half3 viewDir = VertexViewDirWS(GetCameraPositionWS() - posWS);
 
-				// initializes o.normal and if _NORMALMAP also o.tangent and o.binormal
                 #ifdef _NORMALMAP
-                                OutputTangentToWorld(v.tangent, v.normal, o.tangent, o.binormal, o.normal);
+                    o.normal.w = viewDir.x;
+                    o.tangent.w = viewDir.y;
+                    o.binormal.w = viewDir.z;
                 #else
-                                o.normal = TransformObjectToWorldNormal(v.normal);
+                    o.viewDir = viewDir;
                 #endif
+
+                // initializes o.normal and if _NORMALMAP also o.tangent and o.binormal
+                OUTPUT_NORMAL(v, o);
 
 				// We either sample GI from lightmap or SH. lightmap UV and vertex SH coefficients
 				// are packed in lightmapUVOrVertexSH to save interpolator.
 				// The following funcions initialize
-				OUTPUT_LIGHTMAP_UV(v.lightmapUV, unity_LightmapST, o.lightmapUVOrVertexSH);
-				OUTPUT_SH(o.normal, o.lightmapUVOrVertexSH);
+                OUTPUT_LIGHTMAP_UV(v.lightmapUV, unity_LightmapST, o.lightmapUV);
+                OUTPUT_SH(o.normal.xyz, o.vertexSH);
 
-				half3 vertexLight = VertexLighting(o.positionWS, o.normal);
-				half fogFactor = ComputeFogFactor(o.clipPos.z);
-				o.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
+				half3 vertexLight = VertexLighting(o.posWS, o.normal.xyz);
+                    half fogFactor = ComputeFogFactor(o.clipPos.z);
+                    o.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
+
+                #ifdef _SHADOWS_ENABLED
+                #if SHADOWS_SCREEN
+                    o.shadowCoord = ComputeShadowCoord(o.clipPos);
+                #else
+                    o.shadowCoord = TransformWorldToShadowCoord(posWS);
+                #endif
+                #endif
 
                 o.occlusion = v.color.a;
 
@@ -252,33 +239,21 @@
             half4 LitPassFragment(VegetationVertexOutput IN, half facing : VFACE) : SV_Target
 			{
                 UNITY_SETUP_INSTANCE_ID(IN);
-				SurfaceData surfaceData;
-				InitializeStandardLitSurfaceData(IN.uv.xy, surfaceData);
 
-			#if _NORMALMAP
-				half3 normalWS = TangentToWorldNormal(surfaceData.normalTS, IN.tangent, IN.binormal, IN.normal);
-			#else
-				half3 normalWS = normalize(IN.normal);
-			#endif
+                SurfaceData surfaceData;
+                InitializeStandardLitSurfaceData(IN.uv, surfaceData);
 
-                half3 bakedGI = SampleSH(normalWS);
+                InputData inputData;
+                InitializeInputData(IN, surfaceData.normalTS, inputData);
 
-                surfaceData.albedo *= IN.occlusion;
+                #if !defined(_CORRECTNORMALS_OFF)
+                inputData.normalWS *= facing;
+                #endif
 
-                BRDFData brdfData;
-                InitializeBRDFData(surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, surfaceData.alpha, brdfData);
+                half4 color = LightweightFragmentPBR(inputData, surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, min(surfaceData.occlusion, IN.occlusion), surfaceData.emission, surfaceData.alpha);
 
-                Light mainLight = GetMainLight(IN.positionWS);
-
-				half3 color = GlobalIllumination(brdfData, bakedGI, surfaceData.occlusion, normalWS * facing, IN.viewDir);
-
-				float fogFactor = IN.fogFactorAndVertexLight.x;
-
-                color += LightingPhysicallyBased(brdfData, mainLight, normalWS * facing, IN.viewDir);
-				
-                // Computes fog factor per-vertex
-				ApplyFog(color.rgb, fogFactor);
-				return half4(color, surfaceData.alpha);
+                ApplyFog(color.rgb, inputData.fogCoord);
+                return color;
 			}
 
             ENDHLSL
@@ -290,24 +265,18 @@ Pass
 
             ZWrite On
             ZTest LEqual
+            Cull[_Cull]
 
             HLSLPROGRAM
             // Required to compile gles 2.0 with standard srp library
             #pragma prefer_hlslcc gles
+            #pragma exclude_renderers d3d11_9x
             #pragma target 2.0
-            
+
             // -------------------------------------
             // Material Keywords
-            #pragma shader_feature _NORMALMAP
-            #pragma shader_feature _ _ALPHATEST_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON
-            #pragma shader_feature _EMISSION
-            #pragma shader_feature _METALLICSPECGLOSSMAP
+            #pragma shader_feature _ALPHATEST_ON
             #pragma shader_feature _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
-            #pragma shader_feature _OCCLUSIONMAP
-
-            #pragma shader_feature _SPECULARHIGHLIGHTS_OFF
-            #pragma shader_feature _GLOSSYREFLECTIONS_OFF
-            #pragma shader_feature _SPECULAR_SETUP
 
             //--------------------------------------
             // GPU Instancing
@@ -316,6 +285,7 @@ Pass
             #pragma vertex ShadowPassVertex
             #pragma fragment ShadowPassFragment
 
+            #include "LWRP/ShaderLibrary/InputSurfacePBR.hlsl"
             #include "LWRP/ShaderLibrary/LightweightPassShadow.hlsl"
             ENDHLSL
         }
@@ -326,33 +296,53 @@ Pass
 
             ZWrite On
             ColorMask 0
+            Cull[_Cull]
 
             HLSLPROGRAM
             // Required to compile gles 2.0 with standard srp library
             #pragma prefer_hlslcc gles
+            #pragma exclude_renderers d3d11_9x
             #pragma target 2.0
-            
+
+            #pragma vertex DepthOnlyVertex
+            #pragma fragment DepthOnlyFragment
+
             // -------------------------------------
             // Material Keywords
-            #pragma shader_feature _NORMALMAP
-            #pragma shader_feature _ _ALPHATEST_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON
-            #pragma shader_feature _EMISSION
-            #pragma shader_feature _METALLICSPECGLOSSMAP
+            #pragma shader_feature _ALPHATEST_ON
             #pragma shader_feature _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
-            #pragma shader_feature _OCCLUSIONMAP
-
-            #pragma shader_feature _SPECULARHIGHLIGHTS_OFF
-            #pragma shader_feature _GLOSSYREFLECTIONS_OFF
-            #pragma shader_feature _SPECULAR_SETUP
 
             //--------------------------------------
             // GPU Instancing
             #pragma multi_compile_instancing
 
-            #pragma vertex DepthOnlyVertex
-            #pragma fragment DepthOnlyFragment
+            #include "LWRP/ShaderLibrary/InputSurfacePBR.hlsl"
 
-            #include "LWRP/ShaderLibrary/LightweightPassDepthOnly.hlsl"
+            #include "LWRP/ShaderLibrary/Core.hlsl"
+            #include "Vegetation.hlsl"
+
+            VegetationVertexOutput DepthOnlyVertex(VegetationVertexInput v)
+            {
+                VegetationVertexOutput o = (VegetationVertexOutput)0;
+                UNITY_SETUP_INSTANCE_ID(v);
+
+                /////////////////////////////////////vegetation stuff//////////////////////////////////////////////////
+                //half phaseOffset = UNITY_ACCESS_INSTANCED_PROP(Props, _PhaseOffset);
+                float3 objectOrigin = UNITY_ACCESS_INSTANCED_PROP(Props, _Position).xyz;
+
+                v.position.xyz = VegetationDeformation(v.position.xyz, objectOrigin, v.normal, v.color.x, v.color.z, v.color.y);
+
+                o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
+                o.clipPos = TransformObjectToHClip(v.position.xyz);
+                return o;
+            }
+
+            half4 DepthOnlyFragment(VegetationVertexOutput IN) : SV_TARGET
+            {
+                Alpha(SampleAlbedoAlpha(IN.uv.xy, TEXTURE2D_PARAM(_MainTex, sampler_MainTex)).a, _Color, _Cutoff);
+                return 0;
+            }
+
             ENDHLSL
         }
 
@@ -378,10 +368,12 @@ Pass
 
             #pragma shader_feature _SPECGLOSSMAP
 
-            #include "LWRP/ShaderLibrary/LightweightPassMeta.hlsl"
+            #include "LWRP/ShaderLibrary/InputSurfacePBR.hlsl"
+            #include "LWRP/ShaderLibrary/LightweightPassMetaPBR.hlsl"
+
             ENDHLSL
         }
-
     }
     FallBack "Hidden/InternalErrorShader"
+    //CustomEditor "LightweightStandardGUI"
 }
