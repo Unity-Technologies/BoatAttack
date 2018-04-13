@@ -60,6 +60,7 @@
 
             Blend[_SrcBlend][_DstBlend]
             ZWrite[_ZWrite]
+            AlphaToMask On
             Cull Off
 
             HLSLPROGRAM
@@ -72,17 +73,9 @@
             // -------------------------------------
             // Material Keywords
             #pragma shader_feature _NORMALMAP
-            #pragma shader_feature _ALPHATEST_ON
-            #pragma shader_feature _ALPHAPREMULTIPLY_ON
-            #pragma shader_feature _EMISSION
-            #pragma shader_feature _METALLICSPECGLOSSMAP
-            #pragma shader_feature _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
-            #pragma shader_feature _OCCLUSIONMAP
-
-            #pragma shader_feature _SPECULARHIGHLIGHTS_OFF
-            #pragma shader_feature _GLOSSYREFLECTIONS_OFF
+            #define _ALPHATEST_ON 1
+            #define _METALLICSPECGLOSSMAP 1
             #pragma shader_feature _CORRECTNORMALS_OFF
-            #pragma shader_feature _SPECULAR_SETUP
 
             // -------------------------------------
             // Lightweight Pipeline keywords
@@ -94,7 +87,7 @@
             // -------------------------------------
             // Unity defined keywords
             #pragma multi_compile _ DIRLIGHTMAP_COMBINED
-            #pragma multi_compile _ LIGHTMAP_ON
+            //#pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
 
             //--------------------------------------
@@ -114,41 +107,6 @@
 
 			#pragma vertex VegetationVertex
 			#pragma fragment LitPassFragment
-
-			// struct VegetationVertexInput
-			// {
-			// 	float4 vertex : POSITION;
-			// 	float3 normal : NORMAL;
-			// 	float4 tangent : TANGENT;
-			// 	float2 texcoord : TEXCOORD0;
-			// 	float2 lightmapUV : TEXCOORD1;
-			// 	float4 color : COLOR;
-            //     UNITY_VERTEX_INPUT_INSTANCE_ID
-			// };
-
-			// struct VegetationVertexOutput
-			// {
-			// 	float3 uv                       : TEXCOORD0;//z holds vert AO
-			// 	float4 lightmapUVOrVertexSH     : TEXCOORD1; // holds either lightmapUV or vertex SH. depending on LIGHTMAP_ON
-			// 	float3 positionWS               : TEXCOORD2;
-			// 	half3  normal                   : TEXCOORD3;
-
-			// #if _NORMALMAP
-			// 	half3 tangent                   : TEXCOORD4;
-			// 	half3 binormal                  : TEXCOORD5;
-			// #endif
-
-			// 	half3 viewDir                   : TEXCOORD6;
-			// 	half4 fogFactorAndVertexLight   : TEXCOORD7; // x: fogFactor, yzw: vertex light
-
-			// 	float4 clipPos                  : SV_POSITION;
-            //     half occlusion                  : TEXCOORD8;
-            //     UNITY_VERTEX_INPUT_INSTANCE_ID
-			// };
-
-            // UNITY_INSTANCING_BUFFER_START(Props)
-            //     UNITY_DEFINE_INSTANCED_PROP(half4, _Position)
-            // UNITY_INSTANCING_BUFFER_END(Props)
 
             void InitializeInputData(VegetationVertexOutput IN, half3 normalTS, out InputData inputData)
             {
@@ -265,6 +223,7 @@ Pass
 
             ZWrite On
             ZTest LEqual
+            AlphaToMask On
             Cull[_Cull]
 
             HLSLPROGRAM
@@ -275,8 +234,7 @@ Pass
 
             // -------------------------------------
             // Material Keywords
-            #pragma shader_feature _ALPHATEST_ON
-            #pragma shader_feature _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+            #define _ALPHATEST_ON 1
 
             //--------------------------------------
             // GPU Instancing
@@ -296,6 +254,7 @@ Pass
 
             ZWrite On
             ColorMask 0
+            AlphaToMask On
             Cull[_Cull]
 
             HLSLPROGRAM
@@ -309,8 +268,7 @@ Pass
 
             // -------------------------------------
             // Material Keywords
-            #pragma shader_feature _ALPHATEST_ON
-            #pragma shader_feature _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+            #define _ALPHATEST_ON 1
 
             //--------------------------------------
             // GPU Instancing
@@ -360,10 +318,7 @@ Pass
             #pragma vertex LightweightVertexMeta
             #pragma fragment LightweightFragmentMeta
 
-            #pragma shader_feature _SPECULAR_SETUP
-            #pragma shader_feature _EMISSION
-            #pragma shader_feature _METALLICSPECGLOSSMAP
-            #pragma shader_feature _ _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
+            #define _METALLICSPECGLOSSMAP 1
             #pragma shader_feature EDITOR_VISUALIZATION
 
             #pragma shader_feature _SPECGLOSSMAP

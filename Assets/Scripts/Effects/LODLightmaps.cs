@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(LODGroup))]
+[RequireComponent(typeof(LODGroup))][ExecuteInEditMode]
 public class LODLightmaps : MonoBehaviour {
 
     LODGroup _lodGrp;
