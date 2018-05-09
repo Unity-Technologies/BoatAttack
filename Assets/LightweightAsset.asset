@@ -3,7 +3,7 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -11,19 +11,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf2edee5c58d82540a51f03df9d42094, type: 3}
   m_Name: LightweightAsset
   m_EditorClassIdentifier: 
-  kAssetVersion: 2
+  kAssetVersion: 3
   m_MaxPixelLights: 1
   m_SupportsVertexLight: 0
   m_RequireDepthTexture: 0
   m_RequireSoftParticles: 0
   m_RequireOpaqueTexture: 1
-  m_OpaqueTextureScale: 1
+  m_OpaqueDownsampling: 1
   m_SupportsHDR: 0
   m_MSAA: 4
   m_RenderScale: 1
   m_ShadowType: 2
   m_ShadowAtlasResolution: 2048
-  m_ShadowNearPlaneOffset: 2
   m_ShadowDistance: 250
   m_ShadowCascades: 0
   m_Cascade2Split: 0.25

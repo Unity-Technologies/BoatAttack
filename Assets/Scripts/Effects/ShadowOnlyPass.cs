@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.LightweightPipeline;
 
+[ExecuteInEditMode]
 public class ShadowOnlyPass : MonoBehaviour {
 
 	private Light _light;
