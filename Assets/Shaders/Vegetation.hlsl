@@ -1,4 +1,5 @@
 #include "LWRP/ShaderLibrary/Lighting.hlsl"
+#define UNITY_USE_SHCOEFFS_ARRAYS 1
 
 struct VegetationVertexInput
 {
@@ -43,15 +44,15 @@ UNITY_INSTANCING_BUFFER_START(Props)
 UNITY_INSTANCING_BUFFER_END(Props)
 
 /////////////////////////////////////vegetation stuff//////////////////////////////////////////////////
-float4 SmoothCurve( float4 x ) {
+half4 SmoothCurve( half4 x ) {
     return x * x *( 3.0 - 2.0 * x );
 }
 
-float4 TriangleWave( float4 x ) {
+half4 TriangleWave( half4 x ) {
     return abs( frac( x + 0.5 ) * 2.0 - 1.0 );
 }
 
-float4 SmoothTriangleWave( float4 x ) {
+half4 SmoothTriangleWave( half4 x ) {
     return SmoothCurve( TriangleWave( x ) );
 }
 
@@ -80,13 +81,13 @@ float3 VegetationDeformation(float3 position, float3 origin, float3 normal, half
     float fEdgeAtten = leafStiffness;//leaf stiffness(red)
     float fDetailAmp = 0.1;//leaf edge amplitude of movement
     float fBranchAtten = 1 - branchStiffness;//branch stiffness(blue)
-    float fBranchAmp = 1.5;//branch amplitude of movement
+    float fBranchAmp = 5.5;//branch amplitude of movement
     float fBranchPhase = phaseOffset * 3.3;//leaf phase(green)
 
     // Phases (object, vertex, branch)
     float fObjPhase = dot(origin, 1);
     fBranchPhase += fObjPhase;
-    float fVtxPhase = dot(position, phaseOffset + fBranchPhase);
+    float fVtxPhase = dot(position, fBranchPhase + fBranchPhase);
     // x is used for edges; y is used for branches
     float2 vWavesIn = _Time.y + float2(fVtxPhase, fBranchPhase );
     // 1.975, 0.793, 0.375, 0.193 are good frequencies

@@ -8,8 +8,11 @@ public class Engine : MonoBehaviour
 	private Rigidbody RB;
 	public Vector3 vel;
 
-	//engine stats
-	public float torque = 35f;
+    public AudioSource engineSound;
+    public AudioSource waterSound;
+
+    //engine stats
+    public float torque = 35f;
 	public float horsePower = 100f;
 	public float throttle = 0f; 
 
@@ -26,20 +29,27 @@ public class Engine : MonoBehaviour
 	{
 		//cache rigidbody
 		RB = gameObject.GetComponent<Rigidbody>();
+        engineSound.time = Random.Range(0f, engineSound.clip.length);
+        waterSound.time = Random.Range(0f, waterSound.clip.length);
 
-		//cache boat and boat controller
-		//boatController = gameObject.GetComponent<BoatController>();
-		//buoyantObject = gameObject.GetComponent<BuoyantObject>();
-		//cache wakeGenerator
-		//wakeGen = GameObject.Find ("WakeGenerator").GetComponent<CreateWake> ();
+        //cache boat and boat controller
+        //boatController = gameObject.GetComponent<BoatController>();
+        //buoyantObject = gameObject.GetComponent<BuoyantObject>();
+        //cache wakeGenerator
+        //wakeGen = GameObject.Find ("WakeGenerator").GetComponent<CreateWake> ();
 
-	}	
+    }	
 
 	void FixedUpdate()
 	{
 		vel = RB.velocity;
 
-		RB.AddForce(Vector3.up * (Mathf.Abs(Vector3.Dot(vel, transform.forward)) * vel.sqrMagnitude), ForceMode.Force);
+        float velMag = vel.sqrMagnitude;
+
+
+        engineSound.pitch = Mathf.Max(velMag * 0.015f, 0.3f);
+
+        RB.AddForce(Vector3.up * (Mathf.Abs(Vector3.Dot(vel, transform.forward)) * velMag), ForceMode.Force);
 
 		// if(throttle > 0f)
 		// {

@@ -3,7 +3,7 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -21,7 +21,7 @@ MonoBehaviour:
 --- !u!114 &114088165168550336
 MonoBehaviour:
   m_ObjectHideFlags: 3
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -48,7 +48,7 @@ MonoBehaviour:
 --- !u!114 &114213298802087806
 MonoBehaviour:
   m_ObjectHideFlags: 3
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -71,26 +71,27 @@ MonoBehaviour:
     value: 0
   diffusion:
     overrideState: 1
-    value: 6
+    value: 5
   anamorphicRatio:
     overrideState: 1
     value: 0
   color:
     overrideState: 1
-    value: {r: 0.48406905, g: 0.83208627, b: 0.9245283, a: 1}
+    value: {r: 0.5421413, g: 0.8061619, b: 0.8773585, a: 1}
   fastMode:
     overrideState: 1
     value: 1
   dirtTexture:
     overrideState: 1
     value: {fileID: 2800000, guid: 0a0984ce0012b4fc8a3d20e3225bf2a7, type: 3}
+    defaultState: 1
   dirtIntensity:
     overrideState: 1
     value: 1
 --- !u!114 &114275378640873818
 MonoBehaviour:
   m_ObjectHideFlags: 3
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -117,7 +118,7 @@ MonoBehaviour:
 --- !u!114 &114726729492399870
 MonoBehaviour:
   m_ObjectHideFlags: 3
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -132,6 +133,7 @@ MonoBehaviour:
   spectralLut:
     overrideState: 1
     value: {fileID: 0}
+    defaultState: 1
   intensity:
     overrideState: 1
     value: 0.1
@@ -141,7 +143,7 @@ MonoBehaviour:
 --- !u!114 &114812438466178442
 MonoBehaviour:
   m_ObjectHideFlags: 3
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -177,13 +179,14 @@ MonoBehaviour:
   mask:
     overrideState: 1
     value: {fileID: 0}
+    defaultState: 1
   opacity:
     overrideState: 1
     value: 1
 --- !u!114 &114842788608805528
 MonoBehaviour:
   m_ObjectHideFlags: 3
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -201,6 +204,7 @@ MonoBehaviour:
   externalLut:
     overrideState: 0
     value: {fileID: 0}
+    defaultState: 1
   tonemapper:
     overrideState: 1
     value: 2
@@ -222,12 +226,13 @@ MonoBehaviour:
   toneCurveGamma:
     overrideState: 0
     value: 1
-  logLut:
-    overrideState: 0
-    value: {fileID: 0}
   ldrLut:
     overrideState: 0
     value: {fileID: 2800000, guid: f12f2e0de490d4034af2577f58cf0e99, type: 3}
+    defaultState: 4
+  ldrLutContribution:
+    overrideState: 0
+    value: 1
   temperature:
     overrideState: 1
     value: 20
@@ -245,7 +250,7 @@ MonoBehaviour:
     value: 0
   brightness:
     overrideState: 1
-    value: -21.2
+    value: -22
   postExposure:
     overrideState: 0
     value: 1.56
@@ -281,13 +286,13 @@ MonoBehaviour:
     value: 100
   lift:
     overrideState: 1
-    value: {x: 0.9609579, y: 0.9909525, z: 1, w: -0.026431717}
+    value: {x: 0.9609579, y: 0.9909525, z: 1, w: 0.040346242}
   gamma:
     overrideState: 1
-    value: {x: 1, y: 0.91323954, z: 0.8510033, w: 0.14977974}
+    value: {x: 1, y: 0.9324456, z: 0.79953825, w: -0.11686144}
   gain:
     overrideState: 1
-    value: {x: 0.92347467, y: 0.93918395, z: 1, w: 0.09691631}
+    value: {x: 0.973715, y: 0.9852356, z: 1, w: 0.19708326}
   masterCurve:
     overrideState: 0
     value:
