@@ -45,11 +45,11 @@ UNITY_INSTANCING_BUFFER_END(Props)
 
 /////////////////////////////////////vegetation stuff//////////////////////////////////////////////////
 half4 SmoothCurve( half4 x ) {
-    return x * x *( 3.0 - 2.0 * x );
+    return x * x * ( 3.0 - 2.0 * x );
 }
 
 half4 TriangleWave( half4 x ) {
-    return abs( frac( x + 0.5 ) * 2.0 - 1.0 );
+    return abs( frac( x + 0.5) * 2.0 - 1.0 );
 }
 
 half4 SmoothTriangleWave( half4 x ) {
@@ -76,25 +76,26 @@ float3 VegetationDeformation(float3 position, float3 origin, float3 normal, half
     position = normalize(vNewPos.xyz) * fLength;
 
     ////////Detail blending
-    float fSpeed = 0.25;//leaf occil
-    float fDetailFreq = 0.3;//detail leaf occil
+    float fSpeed = 0.5;//leaf occil
+    float fDetailFreq = 0.5;//detail leaf occil
     float fEdgeAtten = leafStiffness;//leaf stiffness(red)
-    float fDetailAmp = 0.1;//leaf edge amplitude of movement
+    float fDetailAmp = 0.05;//leaf edge amplitude of movement
+    float fDetailPhase = phaseOffset * 1.2;// detail phase(red)
     float fBranchAtten = 1 - branchStiffness;//branch stiffness(blue)
-    float fBranchAmp = 5.5;//branch amplitude of movement
-    float fBranchPhase = phaseOffset * 3.3;//leaf phase(green)
+    float fBranchAmp = 0.25;//branch amplitude of movement
+    float fBranchPhase = phaseOffset * 3.3;// leaf phase(green)
 
     // Phases (object, vertex, branch)
     float fObjPhase = dot(origin, 1);
     fBranchPhase += fObjPhase;
-    float fVtxPhase = dot(position, fBranchPhase + fBranchPhase);
+    float fVtxPhase = dot(position, fDetailPhase + fBranchPhase);
     // x is used for edges; y is used for branches
     float2 vWavesIn = _Time.y + float2(fVtxPhase, fBranchPhase );
     // 1.975, 0.793, 0.375, 0.193 are good frequencies
-    float4 vWaves = (frac( vWavesIn.xxyy * float4(1.975, 0.793, 0.375, 0.193) ) * 2.0 - 1.0 ) * fSpeed * fDetailFreq;
+    float4 vWaves = (( vWavesIn.xxyy * float4(1.975, 0.793, 0.375, 0.193) ) * 2.0 - 1.0 ) * fSpeed * fDetailFreq;
     vWaves = SmoothTriangleWave( vWaves );
     float2 vWavesSum = vWaves.xz + vWaves.yw;
-    // Edge (xy) and branch bending (z)
+    // Edge (xz) and branch bending (y)
     return position + vWavesSum.xyx * float3(fEdgeAtten * fDetailAmp * normal.x, fBranchAtten * fBranchAmp, fEdgeAtten * fDetailAmp * normal.z);
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////

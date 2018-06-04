@@ -58,6 +58,29 @@ namespace Cinemachine.PostFX.Editor
         {
             serializedObject.Update();
 
+            if (m_FocusTracksTarget.boolValue)
+            {
+                bool valid = false;
+                DepthOfField dof;
+                if (Target.m_Profile != null && Target.m_Profile.TryGetSettings(out dof))
+                    valid = dof.enabled && dof.active && dof.focusDistance.overrideState;
+                if (!valid)
+                    EditorGUILayout.HelpBox(
+                        "Focus Tracking requires an active DepthOfField/FocusDistance effect in the profile", 
+                        MessageType.Warning);
+                else
+                {
+                    if (!Target.VirtualCamera.State.HasLookAt)
+                        EditorGUILayout.HelpBox(
+                            "Focus Offset is relative to the Camera position", 
+                            MessageType.Info);
+                     else
+                        EditorGUILayout.HelpBox(
+                            "Focus Offset is relative to the Target position", 
+                            MessageType.Info);
+                }
+            }
+
             var rect = GUILayoutUtility.GetRect(1, EditorGUIUtility.singleLineHeight); rect.y += 2;
             float checkboxWidth = rect.height + 5;
             rect = EditorGUI.PrefixLabel(rect, new GUIContent(m_FocusTracksTarget.displayName));
@@ -71,16 +94,6 @@ namespace Cinemachine.PostFX.Editor
                 EditorGUIUtility.labelWidth = textDimensions.x;
                 EditorGUI.PropertyField(rect, m_FocusOffset, offsetText);
                 EditorGUIUtility.labelWidth = oldWidth;
-
-                bool valid = false;
-                DepthOfField dof;
-                if (Target.m_Profile != null && Target.m_Profile.TryGetSettings<DepthOfField>(out dof))
-                    valid = dof.enabled && dof.active && dof.focusDistance.overrideState 
-                        && Target.VirtualCamera.LookAt != null;
-                if (!valid)
-                    EditorGUILayout.HelpBox(
-                        "Focus Tracking requires a LookAt target on the Virtual Camera, and an active DepthOfField/FocusDistance effect in the profile", 
-                        MessageType.Warning);
             }
 
             DrawProfileInspectorGUI();

@@ -177,7 +177,11 @@
                 OUTPUT_SH(o.normal.xyz, o.vertexSH);
 
 				half3 vertexLight = VertexLighting(o.posWS, o.normal.xyz);
-                    half fogFactor = ComputeFogFactor(o.clipPos.z);
+            #if defined(FOG_EXP)
+                half fogFactor = ComputeGlobalFogFactor(posWS);
+            #else
+                half fogFactor = ComputeFogFactor(o.clipPos.z);
+            #endif
                     o.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
 
                 #ifdef _SHADOWS_ENABLED

@@ -93,7 +93,7 @@ namespace Cinemachine.PostFX
                 else
                 {
                     // Handle Follow Focus
-                    if (!m_FocusTracksTarget || !state.HasLookAt)
+                    if (!m_FocusTracksTarget)
                         DestroyProfileCopy();
                     else
                     {
@@ -101,8 +101,12 @@ namespace Cinemachine.PostFX
                             CreateProfileCopy();
                         DepthOfField dof;
                         if (mProfileCopy.TryGetSettings(out dof))
-                            dof.focusDistance.value 
-                                = (state.FinalPosition - state.ReferenceLookAt).magnitude + m_FocusOffset;
+                        {
+                            float focusDistance = m_FocusOffset;
+                            if (state.HasLookAt)
+                                focusDistance += (state.FinalPosition - state.ReferenceLookAt).magnitude;
+                            dof.focusDistance.value = Mathf.Max(0, focusDistance);
+                        }
                     }
 
                     // Apply the post-processing
@@ -115,17 +119,15 @@ namespace Cinemachine.PostFX
         static void OnCameraCut(CinemachineBrain brain)
         {
             // Debug.Log("Camera cut event");
-            PostProcessLayer postFX = brain.PostProcessingComponent as PostProcessLayer;
-            if (postFX == null)
-                brain.PostProcessingComponent = null;   // object deleted
-            else
+            PostProcessLayer postFX = GetPPLayer(brain);
+            if (postFX != null)
                 postFX.ResetHistory();
         }
 
         static void ApplyPostFX(CinemachineBrain brain)
         {
             //UnityEngine.Profiling.Profiler.BeginSample("CinemachinePostProcessing.ApplyPostFX");
-            PostProcessLayer ppLayer = brain.PostProcessingComponent as PostProcessLayer;
+            PostProcessLayer ppLayer = GetPPLayer(brain);
             if (ppLayer == null || !ppLayer.enabled  || ppLayer.volumeLayer == 0)
                 return;
 
@@ -212,18 +214,27 @@ namespace Cinemachine.PostFX
             return sVolumes;
         }
 
-        static void StaticPostFXHandler(CinemachineBrain brain)
+        static Dictionary<CinemachineBrain, PostProcessLayer> mBrainToLayer 
+            = new Dictionary<CinemachineBrain, PostProcessLayer>();
+
+        static PostProcessLayer GetPPLayer(CinemachineBrain brain)
         {
-            PostProcessLayer postFX = brain.PostProcessingComponent as PostProcessLayer;
-            if (postFX == null)
+            PostProcessLayer layer = null;
+            if (mBrainToLayer.TryGetValue(brain, out layer))
             {
-                brain.PostProcessingComponent = brain.GetComponent<PostProcessLayer>();
-                postFX = brain.PostProcessingComponent as PostProcessLayer;
-                if (postFX != null)
-                        brain.m_CameraCutEvent.AddListener(CinemachinePostProcessing.OnCameraCut);
+#if UNITY_EDITOR
+                // Maybe they added it since we last checked
+                if (layer != null || Application.isPlaying)
+#endif
+                return layer;
             }
-            if (postFX != null)
-                CinemachinePostProcessing.ApplyPostFX(brain);
+            layer = brain.GetComponent<PostProcessLayer>();
+            mBrainToLayer[brain] = layer;
+            if (layer != null)
+                brain.m_CameraCutEvent.AddListener(OnCameraCut);
+            else
+                brain.m_CameraCutEvent.RemoveListener(OnCameraCut);
+            return layer;
         }
 
 #if UNITY_EDITOR
@@ -234,8 +245,8 @@ namespace Cinemachine.PostFX
         static void InitializeModule()
         {
             // Afetr the brain pushes the state to the camera, hook in to the PostFX
-            CinemachineCore.CameraUpdatedEvent.RemoveListener(StaticPostFXHandler);
-            CinemachineCore.CameraUpdatedEvent.AddListener(StaticPostFXHandler);
+            CinemachineCore.CameraUpdatedEvent.RemoveListener(ApplyPostFX);
+            CinemachineCore.CameraUpdatedEvent.AddListener(ApplyPostFX);
         }
     }
 }
