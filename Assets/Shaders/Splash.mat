@@ -4,7 +4,7 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Splash
   m_Shader: {fileID: 200, guid: 0000000000000000f000000000000000, type: 0}
@@ -67,7 +67,7 @@ Material:
     - _CameraNearFadeDistance: 1
     - _ColorMode: 1
     - _Cull: 0
-    - _Cutoff: 0.215
+    - _Cutoff: 0.062
     - _DetailNormalMapScale: 1
     - _DistortionBlend: 0.5
     - _DistortionEnabled: 0
@@ -78,6 +78,7 @@ Material:
     - _FlipbookMode: 0
     - _GlossMapScale: 1
     - _Glossiness: 1
+    - _GlossinessSource: 0
     - _GlossyReflections: 1
     - _InvFade: 3
     - _LightingEnabled: 1
@@ -85,10 +86,12 @@ Material:
     - _Mode: 2
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _Shininess: 1
     - _SmoothnessTextureChannel: 0
     - _SoftParticlesEnabled: 0
     - _SoftParticlesFarFadeDistance: 0.1
     - _SoftParticlesNearFadeDistance: 0
+    - _SpecSource: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 5
     - _UVSec: 0
@@ -96,7 +99,7 @@ Material:
     - _ZWrite: 0
     m_Colors:
     - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
-    - _Color: {r: 2.7240984, g: 2.7240984, b: 2.7240984, a: 1}
+    - _Color: {r: 3.6368854, g: 3.6368854, b: 3.6368854, a: 1}
     - _ColorAddSubDiff: {r: 1, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
