@@ -168,7 +168,6 @@ GameObject:
   - component: {fileID: 4534809148113994}
   - component: {fileID: 54710712322113256}
   - component: {fileID: 64258884862185400}
-  - component: {fileID: 114651856573695240}
   - component: {fileID: 114559526544640098}
   - component: {fileID: 114129291822198474}
   - component: {fileID: 114571606569623246}
@@ -378,7 +377,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1553288845585282}
   m_LocalRotation: {x: -0, y: -0.56714237, z: -0, w: 0.8236198}
-  m_LocalPosition: {x: -35.022, y: 1.64, z: -61.719}
+  m_LocalPosition: {x: -36.08, y: 1.64, z: -63.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4566539937980892}
@@ -928,10 +927,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Human: 0
   AIdifficulty: 0
-  speed: 0
-  weight: 0
-  strength: 0
-  wakeWidth: 0
+  PrimaryColor: {r: 0.8396226, g: 0.8396226, b: 0.8396226, a: 0}
+  TrimColor: {r: 0.8490566, g: 0.13216448, b: 0.13216448, a: 0}
+  boatRenderer: {fileID: 23139903168929634}
 --- !u!114 &114135153223430406
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1197,21 +1195,6 @@ MonoBehaviour:
   colliders:
   - {fileID: 64258884862185400}
   percentSubmerged: 0
---- !u!114 &114651856573695240
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1553288845585282}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad25c0660b199484a806598b69f0f280, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boatHull: {fileID: 4300000, guid: 2df96455c7a214a93aef825dcf7042d5, type: 3}
-  centerOfMass: {x: 0, y: -0.3, z: -1.8}
-  multiplier: 1
-  debugMesh: 0
 --- !u!198 &198104015329072190
 ParticleSystem:
   m_ObjectHideFlags: 1

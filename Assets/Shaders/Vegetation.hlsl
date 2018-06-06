@@ -1,5 +1,5 @@
 #include "LWRP/ShaderLibrary/Lighting.hlsl"
-#define UNITY_USE_SHCOEFFS_ARRAYS 1
+//#define UNITY_USE_SHCOEFFS_ARRAYS 1
 
 struct VegetationVertexInput
 {

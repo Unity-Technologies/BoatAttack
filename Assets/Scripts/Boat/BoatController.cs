@@ -6,26 +6,26 @@ public class BoatController : MonoBehaviour {
 	//Boat stats
 	public bool Human;
 	public int AIdifficulty;
-	public float speed;
-	public float weight;
-	public float strength;
-	public float wakeWidth;
 
-	//cache the engine connected to the boat
-	//private Engine boatEngine;
+    public Color PrimaryColor;
+    public Color TrimColor;
+    public Renderer boatRenderer;
 
-	//local cache
-	//private Rigidbody RB;
-	//private AudioSource AS;
-
-	// Use this for initialization
-	void Start () 
+	void OnValidate()
 	{
-		//RB = gameObject.GetComponent<Rigidbody>();
-		//AS = gameObject.GetComponent<AudioSource>();
-		//boatEngine = gameObject.GetComponent<Engine>();
+        if (boatRenderer)
+        {
+            MaterialPropertyBlock mpb = new MaterialPropertyBlock();
+            mpb.SetColor("_Color1", PrimaryColor);
+            mpb.SetColor("_Color2", TrimColor);
+            boatRenderer.SetPropertyBlock(mpb);
+        }
+    }
 
-		if (Human == true) 
+    // Use this for initialization
+    void Start ()
+	{
+        if (Human == true) 
 		{
 			gameObject.AddComponent<HumanController>();
 		} 
