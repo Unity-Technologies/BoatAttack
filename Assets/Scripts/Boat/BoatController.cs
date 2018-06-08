@@ -13,18 +13,13 @@ public class BoatController : MonoBehaviour {
 
 	void OnValidate()
 	{
-        if (boatRenderer)
-        {
-            MaterialPropertyBlock mpb = new MaterialPropertyBlock();
-            mpb.SetColor("_Color1", PrimaryColor);
-            mpb.SetColor("_Color2", TrimColor);
-            boatRenderer.SetPropertyBlock(mpb);
-        }
+        Colourize();
     }
 
     // Use this for initialization
     void Start ()
 	{
+        Colourize();
         if (Human == true) 
 		{
 			gameObject.AddComponent<HumanController>();
@@ -34,4 +29,15 @@ public class BoatController : MonoBehaviour {
 			gameObject.AddComponent<AIcontroller>();
 		}
 	}
+
+    void Colourize()
+    {
+        if (boatRenderer)
+        {
+            MaterialPropertyBlock mpb = new MaterialPropertyBlock();
+            mpb.SetColor("_Color1", PrimaryColor);
+            mpb.SetColor("_Color2", TrimColor);
+            boatRenderer.SetPropertyBlock(mpb);
+        }
+    }
 }
