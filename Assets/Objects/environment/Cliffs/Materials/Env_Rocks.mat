@@ -8,7 +8,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: Env_Rocks
   m_Shader: {fileID: 4800000, guid: 7cd247c7cbda54323b0e395ea419af3d, type: 3}
-  m_ShaderKeywords: _GLOSSINESS_FROM_BASE_ALPHA _NORMALMAP _SPECULAR_COLOR
+  m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 1
@@ -18,12 +18,49 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_2D2A40E:
+        m_Texture: {fileID: 2800000, guid: d32e7607f71a3e6449c16ae86a4f459a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_4CCF661D:
+        m_Texture: {fileID: 28079174106953648, guid: f46269ea1099c4fb4bc7191f76fcfab3,
+          type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_5F5D1FE1:
+        m_Texture: {fileID: 2800000, guid: 58c621426b0004e43b875f1bfbbbf2d9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_8EA5BCC6:
+        m_Texture: {fileID: 2800000, guid: 9b83018dda05e4cffb3ca62e0d54d252, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - Texture2D_AE91C5C2:
         m_Texture: {fileID: 2800000, guid: de66a605dcddb493bac5bf7d4c20f431, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - Texture2D_BC9E4820:
+        m_Texture: {fileID: 2800000, guid: b793a644029c648a286a2ebd00e9e848, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_CE9C74A7:
+        m_Texture: {fileID: 2800000, guid: 36283a22a982c44448b4a62732a0866f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_D3E53D6C:
+        m_Texture: {fileID: 2800000, guid: 9b6c255f1b0f84e4caab0ca53ff3d44a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - Texture2D_DE8BF47E:
         m_Texture: {fileID: 2800000, guid: 9dcfebd3827a5451894d55ba9c19dab2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_E3D097C6:
+        m_Texture: {fileID: 2800000, guid: d389fa646f8a74bae9368b04367ad643, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_FC50AADC:
+        m_Texture: {fileID: 2800000, guid: b3c2ab157efdd44c79666fe44e45e75e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture_7F042A:
@@ -83,15 +120,18 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - _AlphaClip: 0
+    - _Blend: 0
     - _BumpScale: 1
+    - _Cull: 2
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0
+    - _Glossiness: 0.767
     - _GlossinessSource: 0
     - _GlossyReflections: 1
-    - _Metallic: 0
+    - _Metallic: 1
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
@@ -100,6 +140,7 @@ Material:
     - _SpecSource: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _Surface: 0
     - _UVSec: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
