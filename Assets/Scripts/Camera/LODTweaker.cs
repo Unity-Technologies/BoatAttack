@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.LightweightPipeline;
 
+[ExecuteInEditMode]
 public class LODTweaker : MonoBehaviour {
 
 	void SetMaxLOD(Camera cam)

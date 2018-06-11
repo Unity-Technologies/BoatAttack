@@ -9,7 +9,7 @@ public class MaxLodOption : MonoBehaviour {
     public Text displayText;
 
     private void Start() {
-        curlevel = QualitySettings.maximumLODLevel;
+        curlevel = (int)QualitySettings.lodBias;
         displayText.text = curlevel.ToString();
     }
 
@@ -17,7 +17,7 @@ public class MaxLodOption : MonoBehaviour {
 	{
 		if(curlevel < 7)
             curlevel++;
-        QualitySettings.maximumLODLevel = curlevel;
+        QualitySettings.lodBias = curlevel;
         displayText.text = curlevel.ToString();
     }
 
@@ -25,7 +25,7 @@ public class MaxLodOption : MonoBehaviour {
     {
         if (curlevel > 0)
             curlevel--;
-        QualitySettings.maximumLODLevel = curlevel;
+        QualitySettings.lodBias = curlevel;
         displayText.text = curlevel.ToString();
     }
 }
