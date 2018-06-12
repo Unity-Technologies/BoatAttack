@@ -10,7 +10,7 @@ public class LODTweaker : MonoBehaviour {
 	{
         if (cam == Camera.main)
         {
-            QualitySettings.lodBias = 2;
+            QualitySettings.lodBias = 3;
         }
         else
         {
