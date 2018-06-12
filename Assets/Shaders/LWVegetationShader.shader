@@ -2,45 +2,12 @@
 {
     Properties
     {
-                // Specular vs Metallic workflow
-        [HideInInspector] _WorkflowMode("WorkflowMode", Float) = 1.0
-
-        _Color("Color", Color) = (1,1,1,1)
         _MainTex("Albedo", 2D) = "white" {}
-
         _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
-
-        _Glossiness("Smoothness", Range(0.0, 1.0)) = 0.5
-        _GlossMapScale("Smoothness Scale", Range(0.0, 1.0)) = 1.0
-        _SmoothnessTextureChannel("Smoothness texture channel", Float) = 0
-
-        [Gamma] _Metallic("Metallic", Range(0.0, 1.0)) = 0.0
-        _MetallicGlossMap("Metallic", 2D) = "white" {}
-
-        _SpecColor("Specular", Color) = (0.2, 0.2, 0.2)
-        _SpecGlossMap("Specular", 2D) = "white" {}
-
-        [ToggleOff] _SpecularHighlights("Specular Highlights", Float) = 1.0
-        [ToggleOff] _GlossyReflections("Glossy Reflections", Float) = 1.0
-        [ToggleOff] _CorrectNormals("Correct Normals", Float) = 1.0
-
-        _BumpScale("Scale", Float) = 1.0
+        _Gloss("Gloss", Range(0.0, 1.0)) = 0.5
+        [Toggle(_CORRECTNORMALS)] _CorrectNormals("Correct Normals", Float) = 1.0
+        [Toggle(_VERTEXANIMATION)] _VertexAnimation("Vertex Animation", Float) = 1.0
         _BumpMap("Normal Map", 2D) = "bump" {}
-
-        _OcclusionStrength("Strength", Range(0.0, 1.0)) = 1.0
-        _OcclusionMap("Occlusion", 2D) = "white" {}
-
-        _EmissionColor("Color", Color) = (0,0,0)
-        _EmissionMap("Emission", 2D) = "white" {}
-
-        // Blending state
-        [HideInInspector] _Surface("__surface", Float) = 0.0
-        [HideInInspector] _Blend("__blend", Float) = 0.0
-        [HideInInspector] _AlphaClip("__clip", Float) = 0.0
-        [HideInInspector] _SrcBlend("__src", Float) = 1.0
-        [HideInInspector] _DstBlend("__dst", Float) = 0.0
-        [HideInInspector] _ZWrite("__zw", Float) = 1.0
-        [HideInInspector] _Cull("__cull", Float) = 2.0
     }
 
     SubShader
@@ -58,8 +25,7 @@
             // no LightMode tag are also rendered by Lightweight Pipeline
             Tags{"LightMode" = "LightweightForward"}
 
-            Blend[_SrcBlend][_DstBlend]
-            ZWrite[_ZWrite]
+            ZWrite On
             AlphaToMask On
             Cull Off
 
@@ -72,10 +38,10 @@
 
             // -------------------------------------
             // Material Keywords
-            #pragma shader_feature _NORMALMAP
             #define _ALPHATEST_ON 1
-            #define _METALLICSPECGLOSSMAP 1
-            #pragma shader_feature _CORRECTNORMALS_OFF
+            #pragma shader_feature _NORMALMAP
+            #pragma shader_feature _CORRECTNORMALS
+            #pragma shader_feature _VERTEXANIMATION
 
             // -------------------------------------
             // Lightweight Pipeline keywords
@@ -87,8 +53,8 @@
             // -------------------------------------
             // Unity defined keywords
             #pragma multi_compile _ DIRLIGHTMAP_COMBINED
-            //#pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
+            #pragma multi_compile _ LOD_FADE_CROSSFADE
 
             //--------------------------------------
             // GPU Instancing
@@ -102,7 +68,7 @@
             //#include "LWRP/ShaderLibrary/Core.hlsl"
                         // Not required but included here for simplicity. This defines all material related constants for the Standard surface shader like _Color, _MainTex, and so on.
             // These are specific to this shader. You should define your own constants.
-            #include "LWRP/ShaderLibrary/InputSurfacePBR.hlsl"
+            #include "InputSurfaceVegetation.hlsl"
             #include "Vegetation.hlsl"
 
 			#pragma vertex VegetationVertex
@@ -147,16 +113,14 @@
                 float3 posWS = TransformObjectToWorld(v.position.xyz);
                 o.clipPos = TransformWorldToHClip(posWS);
 
+                #if _VERTEXANIMATION
 				/////////////////////////////////////vegetation stuff//////////////////////////////////////////////////
-                //half phaseOffset = UNITY_ACCESS_INSTANCED_PROP(Props, _PhaseOffset);
                 float3 objectOrigin = UNITY_ACCESS_INSTANCED_PROP(Props, _Position).xyz;
-
                 v.position.xyz = VegetationDeformation(v.position.xyz, objectOrigin, v.normal, v.color.x, v.color.z, v.color.y);
-
 				//////////////////////////////////////////////////////////////////////////////////////////////////////
-
 				posWS = TransformObjectToWorld(v.position.xyz);
                 o.clipPos = TransformWorldToHClip(posWS);
+                #endif
                 half3 viewDir = VertexViewDirWS(GetCameraPositionWS() - posWS);
 
                 #ifdef _NORMALMAP
@@ -205,16 +169,21 @@
                 SurfaceData surfaceData;
                 InitializeStandardLitSurfaceData(IN.uv, surfaceData);
 
+                surfaceData.occlusion = IN.occlusion;
+
                 InputData inputData;
                 InitializeInputData(IN, surfaceData.normalTS, inputData);
 
-                #if !defined(_CORRECTNORMALS_OFF)
+                #if _CORRECTNORMALS
                 inputData.normalWS *= facing;
                 #endif
 
-                half4 color = LightweightFragmentPBR(inputData, surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, min(surfaceData.occlusion, IN.occlusion), surfaceData.emission, surfaceData.alpha);
+                half4 color = LightweightFragmentPBR(inputData, surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, surfaceData.occlusion, surfaceData.emission, surfaceData.alpha);
 
                 ApplyFog(color.rgb, inputData.fogCoord);
+                #ifdef LOD_FADE_CROSSFADE // enable dithering LOD transition if user select CrossFade transition in LOD group
+            	    LODDitheringTransition(IN.clipPos, unity_LODFade.x);
+            	#endif
                 return color;
 			}
 
@@ -228,7 +197,7 @@ Pass
             ZWrite On
             ZTest LEqual
             AlphaToMask On
-            Cull[_Cull]
+            Cull Off
 
             HLSLPROGRAM
             // Required to compile gles 2.0 with standard srp library
@@ -244,11 +213,12 @@ Pass
             // GPU Instancing
             #pragma multi_compile_instancing
 
-            #pragma vertex ShadowPassVertex
-            #pragma fragment ShadowPassFragment
+            #pragma vertex ShadowPassVegetationVertex
+            #pragma fragment ShadowPassVegetationFragment
 
-            #include "LWRP/ShaderLibrary/InputSurfacePBR.hlsl"
-            #include "LWRP/ShaderLibrary/LightweightPassShadow.hlsl"
+            #include "InputSurfaceVegetation.hlsl"
+            #include "ShadowPassVegetation.hlsl"
+
             ENDHLSL
         }
 
@@ -259,7 +229,7 @@ Pass
             ZWrite On
             ColorMask 0
             AlphaToMask On
-            Cull[_Cull]
+            Cull Off
 
             HLSLPROGRAM
             // Required to compile gles 2.0 with standard srp library
@@ -273,13 +243,14 @@ Pass
             // -------------------------------------
             // Material Keywords
             #define _ALPHATEST_ON 1
+            #pragma shader_feature _VERTEXANIMATION
 
             //--------------------------------------
             // GPU Instancing
             #pragma multi_compile_instancing
+            #pragma multi_compile _ LOD_FADE_CROSSFADE
 
-            #include "LWRP/ShaderLibrary/InputSurfacePBR.hlsl"
-
+            #include "InputSurfaceVegetation.hlsl"
             #include "LWRP/ShaderLibrary/Core.hlsl"
             #include "Vegetation.hlsl"
 
@@ -288,11 +259,13 @@ Pass
                 VegetationVertexOutput o = (VegetationVertexOutput)0;
                 UNITY_SETUP_INSTANCE_ID(v);
 
+                #if _VERTEXANIMATION
                 /////////////////////////////////////vegetation stuff//////////////////////////////////////////////////
                 //half phaseOffset = UNITY_ACCESS_INSTANCED_PROP(Props, _PhaseOffset);
                 float3 objectOrigin = UNITY_ACCESS_INSTANCED_PROP(Props, _Position).xyz;
 
                 v.position.xyz = VegetationDeformation(v.position.xyz, objectOrigin, v.normal, v.color.x, v.color.z, v.color.y);
+                #endif
 
                 o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
                 o.clipPos = TransformObjectToHClip(v.position.xyz);
@@ -301,7 +274,11 @@ Pass
 
             half4 DepthOnlyFragment(VegetationVertexOutput IN) : SV_TARGET
             {
-                Alpha(SampleAlbedoAlpha(IN.uv.xy, TEXTURE2D_PARAM(_MainTex, sampler_MainTex)).a, _Color, _Cutoff);
+                half alpha = SampleAlbedoAlpha(IN.uv.xy, TEXTURE2D_PARAM(_MainTex, sampler_MainTex)).a;
+                clip(alpha - _Cutoff);
+                #ifdef LOD_FADE_CROSSFADE // enable dithering LOD transition if user select CrossFade transition in LOD group
+            	    LODDitheringTransition(IN.clipPos, unity_LODFade.x);
+            	#endif
                 return 0;
             }
 
@@ -327,12 +304,11 @@ Pass
 
             #pragma shader_feature _SPECGLOSSMAP
 
-            #include "LWRP/ShaderLibrary/InputSurfacePBR.hlsl"
+            #include "InputSurfaceVegetation.hlsl"
             #include "LWRP/ShaderLibrary/LightweightPassMetaPBR.hlsl"
 
             ENDHLSL
         }
     }
     FallBack "Hidden/InternalErrorShader"
-    //CustomEditor "LightweightStandardGUI"
 }

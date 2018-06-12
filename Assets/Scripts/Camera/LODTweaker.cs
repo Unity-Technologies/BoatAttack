@@ -10,11 +10,11 @@ public class LODTweaker : MonoBehaviour {
 	{
         if (cam == Camera.main)
         {
-            QualitySettings.maximumLODLevel = 0;
+            QualitySettings.lodBias = 2;
         }
         else
         {
-            QualitySettings.maximumLODLevel = 2;
+            QualitySettings.lodBias = 0.5f;
         }
     }
 

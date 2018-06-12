@@ -1,28 +1,23 @@
 fileFormatVersion: 2
-guid: 4b4ce6ec92223bd41a846a43ef6489ce
+guid: cf7e1f705443e4d5fab1a3bc22b86fce
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
-    100002: Palm_03_billboard
+    100002: PalmB_01_billboard
     400000: //RootNode
-    400002: Palm_03_billboard
+    400002: PalmB_01_billboard
     2100000: Default
     2100002: Trees_Billboard
     2300000: //RootNode
-    2300002: Palm_03_billboard
+    2300002: PalmB_01_billboard
     3300000: //RootNode
-    3300002: Palm_03_billboard
-    4300000: Palm_03
-    4300002: Palm_03_billboard
+    3300002: PalmB_01_billboard
+    4300000: PalmB_01
+    4300002: PalmB_01_billboard
     7400000: Take 001
     9500000: //RootNode
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Default
-    second: {fileID: 2100000, guid: 65362f8b29e996742896ce4dd8a6d723, type: 2}
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
@@ -73,14 +68,14 @@ ModelImporter:
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
+    previousCalculatedGlobalScale: 0.01
+    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
-  importAnimation: 0
+  importAnimation: 1
   copyAvatar: 0
   humanDescription:
     serializedVersion: 2
@@ -99,7 +94,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

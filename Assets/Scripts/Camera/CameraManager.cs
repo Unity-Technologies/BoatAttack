@@ -17,6 +17,10 @@ public class CameraManager : MonoBehaviour {
 	public Text _staticCamText;
 	private int _curStaticCam = 0;
 
+	private void Start() {
+		Application.targetFrameRate = 60;
+	}
+
 	public void PlayCutscene()
 	{
 		// Lower other camera priorities
