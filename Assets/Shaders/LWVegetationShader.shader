@@ -80,7 +80,6 @@
                 inputData = (InputData)0;
 
                 inputData.positionWS = IN.posWS;
-
             #ifdef _NORMALMAP
                 half3 viewDir = half3(IN.normal.w, IN.tangent.w, IN.binormal.w);
                 inputData.normalWS = TangentToWorldNormal(normalTS, IN.tangent.xyz, IN.binormal.xyz, IN.normal.xyz);
@@ -109,7 +108,7 @@
                 UNITY_TRANSFER_INSTANCE_ID(v, o);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-                o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
+                o.uv.xy = v.texcoord;
 
                 float3 posWS = TransformObjectToWorld(v.position.xyz);
                 o.clipPos = TransformWorldToHClip(posWS);
@@ -177,6 +176,7 @@
 
                 #if _CORRECTNORMALS
                 inputData.normalWS *= facing;
+                surfaceData.albedo *= lerp(half3(0.4, 1.6, 0.4), 1, (facing * 0.5 + 0.5));
                 #endif
 
                 half4 color = LightweightFragmentPBR(inputData, surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, surfaceData.occlusion, surfaceData.emission, surfaceData.alpha);
@@ -268,7 +268,7 @@ Pass
                 v.position.xyz = VegetationDeformation(v.position.xyz, objectOrigin, v.normal, v.color.x, v.color.z, v.color.y);
                 #endif
 
-                o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
+                o.uv.xy = v.texcoord;
                 o.clipPos = TransformObjectToHClip(v.position.xyz);
                 return o;
             }

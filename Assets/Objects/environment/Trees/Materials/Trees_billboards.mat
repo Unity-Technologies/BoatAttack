@@ -8,7 +8,7 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: Trees_billboards
   m_Shader: {fileID: 4800000, guid: 1adca499d9899854aa1b4011854d49fb, type: 3}
-  m_ShaderKeywords: _ALPHATEST_ON _CORRECTNORMALS _NORMALMAP _OCCLUSIONMAP
+  m_ShaderKeywords: _ALPHATEST_ON _NORMALMAP _OCCLUSIONMAP
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -62,7 +62,7 @@ Material:
     - _AlphaClip: 1
     - _Blend: 0
     - _BumpScale: 1
-    - _CorrectNormals: 1
+    - _CorrectNormals: 0
     - _Cull: 0
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1

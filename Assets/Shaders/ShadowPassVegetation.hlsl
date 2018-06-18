@@ -50,7 +50,7 @@ VertexOutput ShadowPassVegetationVertex(VertexInput v)
     VertexOutput o;
     UNITY_SETUP_INSTANCE_ID(v);
 
-    o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
+    o.uv = v.texcoord;
     o.clipPos = GetShadowPositionHClip(v);
     return o;
 }

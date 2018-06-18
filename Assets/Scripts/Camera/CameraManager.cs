@@ -5,10 +5,10 @@ using UnityEngine.Playables;
 using Cinemachine;
 using UnityEngine.UI;
 
-public class CameraManager : MonoBehaviour {
-
-	public CameraModes _camModes;
-
+public class CameraManager : MonoBehaviour 
+{
+    public GameObject UI;
+    public CameraModes _camModes;
 	public PlayableDirector _cutsceneDirector;
 	public List<CinemachineVirtualCamera> _cutsceneCameras = new List<CinemachineVirtualCamera>();
 	public CinemachineVirtualCamera _droneCamera;
@@ -21,8 +21,27 @@ public class CameraManager : MonoBehaviour {
 		Application.targetFrameRate = 60;
 	}
 
+	private void Update() {
+		if(Input.GetKeyDown(KeyCode.Space))
+		{
+			if(_camModes == CameraModes.Cutscene)
+            	StaticCams();
+			else
+                PlayCutscene();
+        }
+
+		if(Input.GetKeyDown(KeyCode.LeftArrow))
+            NextStaticCam();
+
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+            PrevStaticCam();
+
+		if(Input.GetKeyDown(KeyCode.H) || (Input.touchCount > 0 && Input.touches[0].tapCount == 2))
+            UI.SetActive(!UI.activeSelf);
+    }
 	public void PlayCutscene()
 	{
+        _camModes = CameraModes.Cutscene;
 		// Lower other camera priorities
 		_droneCamera.Priority = 5;
 		_raceCamera.Priority = 5;
@@ -41,6 +60,7 @@ public class CameraManager : MonoBehaviour {
 
 	public void DroneCam()
 	{
+        _camModes = CameraModes.Drone;
 		// Lower other camera priorities
 		DisableCutscene();
 		_raceCamera.Priority = 5;
@@ -51,8 +71,9 @@ public class CameraManager : MonoBehaviour {
 
 	public void RaceCam()
 	{
-		// Lower other camera priorities
-		DisableCutscene();
+        _camModes = CameraModes.Race;
+        // Lower other camera priorities
+        DisableCutscene();
 		_droneCamera.Priority = 5;		
 		_replayShots.Priority = 5;
 		// activate drone
@@ -61,6 +82,7 @@ public class CameraManager : MonoBehaviour {
 
 	public void ReplayCam()
 	{
+        _camModes = CameraModes.Replay;
 		// Lower other camera priorities
 		DisableCutscene();
 		_droneCamera.Priority = 5;		
@@ -71,6 +93,7 @@ public class CameraManager : MonoBehaviour {
 
 	public void StaticCams()
 	{
+        _camModes = CameraModes.Static;
 		// Lower other camera priorities
 		DisableCutscene();
 		_droneCamera.Priority = 5;		

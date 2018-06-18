@@ -6,7 +6,6 @@ public class AIcontroller : MonoBehaviour {
 
 	public NavMeshPath navPath;//navigation path;
 	private Vector3[] pathPoint = null;
-	public float distToNext;//distance to the next path point
 	public Vector3 curDest;
 	public Vector3 curWPPos;
 	public float curWPsize;
@@ -14,9 +13,6 @@ public class AIcontroller : MonoBehaviour {
 	public int curWP = 0;
 	public bool foundPath;
 	private int pathPointNum;
-
-	private Transform T;//cache for the AI transform
-
 	public Engine engine;//cache for AIs engine
 
 	private Vector3 tempFrom;//nav from position
@@ -32,40 +28,37 @@ public class AIcontroller : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
-		//WPs = GameObject.Find("WPgroup").GetComponent<WaypointGroup>().Waypoints;//temp. find the target
-
-		T = gameObject.transform;//cache the transform
-
 		engine = GetComponent<Engine> ();// find the engine for the boat
 
 		//CalculatePath (targetPos);//calculate path to target
 		GetNextWP();
-		InvokeRepeating("CalculatePath", 0.5f, 0.5f);
+		InvokeRepeating("CalculatePath", 0f, 0.5f);
+	}
+
+	private void Update() {
+        if (Vector3.Distance(transform.position, curWPPos) < curWPsize * 2f)
+        {
+            GetNextWP();
+        }
+        else if ((Vector3.Distance(transform.position, curDest)) < curWPsize)
+        {
+            curPoint++;
+            if (curPoint < pathPoint.Length)
+            {
+                curDest = pathPoint[curPoint];
+            }
+        }
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
-		if (Vector3.Distance(transform.position, curWPPos) < curWPsize * 2f) 
-		{
-			GetNextWP();
-		}
-		else if((Vector3.Distance(transform.position, curDest)) < curWPsize)
-		{
-			curPoint++;
-			if(curPoint < pathPoint.Length)
-			{
-				curDest = pathPoint[curPoint];
-			}
-		}
-
-		
 		//\\\\\\\\Get angle to the destination and the side
-		Vector3 normDir = curDest - T.position;
+		Vector3 normDir = curDest - transform.position;
 		normDir = normDir.normalized;
-		float dot = Vector3.Dot (normDir, T.forward);
+		float dot = Vector3.Dot (normDir, transform.forward);
 		//float angle = Mathf.Acos (dot) * Mathf.Rad2Deg;
-		targetSide = Vector3.Cross (T.forward, normDir).y;//positive on right side, negative on left side
+		targetSide = Vector3.Cross (transform.forward, normDir).y;//positive on right side, negative on left side
 
 		float steering = 0;
 
@@ -79,7 +72,7 @@ public class AIcontroller : MonoBehaviour {
 		else 
 				engine.TurnLeft(Mathf.Clamp01(Mathf.Abs(steering)));
 
-		engine.Accel (dot > 0 ? 1f : 0.25f);//Mathf.Clamp(1, 0.1f, 0.9f));
+		engine.Accel (dot > 0 ? 1f : 0.25f);
 	}
 
 	void GetNextWP()

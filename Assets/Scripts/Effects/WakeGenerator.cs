@@ -8,7 +8,6 @@ public class WakeGenerator : MonoBehaviour {
     public List<Wake> _wakes = new List<Wake>();
     private List<GameObject> _lrs = new List<GameObject>();
     public GameObject _wakePrefab;
-    public Transform _wakeContainer;
     public float _genDistance = 0.5f;
     public float _maxAge = 5f;
 
@@ -25,7 +24,7 @@ public class WakeGenerator : MonoBehaviour {
                 wl.points = new List<WakePoint>();
                 wl._lineRenderer = LR;
                 w.lines.Add(wl);
-                go.hideFlags = HideFlags.HideAndDontSave;
+                //go.hideFlags = HideFlags.HideAndDontSave;
             }
         }
     }
@@ -41,8 +40,6 @@ public class WakeGenerator : MonoBehaviour {
 
 	void Update () 
 	{
-        List<WakePoint> wps = new List<WakePoint>();
-        List<Vector3> points = new List<Vector3>();
         Vector3 origin;
         //For each wake pair
         for (int w = 0; w < _wakes.Count; w++)
@@ -55,47 +52,46 @@ public class WakeGenerator : MonoBehaviour {
                 origin.x *= x;
                 origin = transform.TransformPoint(origin);
                 origin.y = 0;//flatten origin in world
-                wps.Clear();
-                wps.AddRange(_wake.lines[s].points);
-                points.Clear();
-                points.Add(origin);
                 //create points, if needed
-                if (wps.Count == 0)
+                if (_wake.lines[s].points.Count == 0)
                 {
-                    wps.Insert(0, CreateWakePoint(origin));
+                    _wake.lines[s].points.Insert(0, CreateWakePoint(origin, x));
                 }
-                else if (Vector3.Distance(wps[0].pos, origin) > _genDistance)
+                else if (Vector3.Distance(_wake.lines[s].points[0].pos, origin) > _genDistance)
                 {
-                    wps.Insert(0, CreateWakePoint(origin));
+                    _wake.lines[s].points.Insert(0, CreateWakePoint(origin, x));
                 }
                 //kill points, if needed
-
-                for (int i = wps.Count - 1; i >= 0; i--)
+                for (int i = _wake.lines[s].points.Count - 1; i >= 0; i--)
 				{
-					if(wps[i].age > _maxAge)
+					if(_wake.lines[s].points[i].age > _maxAge)
 					{
-                        wps.RemoveAt(i);
+                        _wake.lines[s].points.RemoveAt(i);
                     }
 					else
 					{
-						
-						wps[i].age += Time.deltaTime;
-                        wps[i].pos += (wps[i].dir * (2f * x)) * Time.deltaTime;
-                        points.Insert(1, wps[i].pos);
+                        _wake.lines[s].points[i].age += Time.deltaTime;
+                        _wake.lines[s].points[i].pos += _wake.lines[s].points[i].dir * 3 * Time.deltaTime;
                     }
                 }
-                _wake.lines[s]._lineRenderer.positionCount = points.Count;
-                _wake.lines[s]._lineRenderer.SetPositions(points.ToArray());
+                Vector3[] points = new Vector3[_wake.lines[s].points.Count + 1];
+                points[0] = origin;
+                for (var p = 1; p < points.Length - 1; p++)
+                    points[p] = _wake.lines[s].points[p - 1].pos;
+
+                _wake.lines[s]._lineRenderer.positionCount = _wake.lines[s].points.Count;
+                _wake.lines[s]._lineRenderer.SetPositions(points);
                 s++;
             }
         }
     }
 
-	WakePoint CreateWakePoint(Vector3 pos)
+	WakePoint CreateWakePoint(Vector3 pos, float sign)
 	{
         WakePoint wp = new WakePoint(pos);
-        wp.dir = transform.right;
-		return wp;
+        wp.dir = transform.right * sign;
+        wp.dir.y = 0;
+        return wp;
 	}
 
 	void OnDrawGizmos()
@@ -117,7 +113,7 @@ public class WakeGenerator : MonoBehaviour {
                 //Vector3 oPoint = OffsetGenPoint(o, side);
 				foreach(WakePoint wp in wl.points)
 				{
-                    Gizmos.DrawSphere(wp.pos, (_maxAge - wp.age) * 0.2f);
+                    Gizmos.DrawSphere(wp.pos, (_maxAge - wp.age) * 0.05f);
                 }
                 side++;
             }
@@ -139,12 +135,14 @@ public class WakeGenerator : MonoBehaviour {
         public List<WakeLine> lines = new List<WakeLine>();
     }
 
+    [System.Serializable]
 	public class WakeLine
 	{
         public LineRenderer _lineRenderer;
         public List<WakePoint> points = new List<WakePoint>();
     }
 
+    [System.Serializable]
 	public class WakePoint
 	{
     	public Vector3 pos;

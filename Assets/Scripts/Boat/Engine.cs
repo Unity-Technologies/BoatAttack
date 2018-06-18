@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using WaterSystem;
+using Unity.Mathematics;
 
 public class Engine : MonoBehaviour 
 {
@@ -18,11 +19,12 @@ public class Engine : MonoBehaviour
 
 	//cache for the boatcontroller
 	private BuoyantObject buoyantObject;
-	//private BoatController boatController;
-	//cache for the wake generator
-	//private CreateWake wakeGen;
+    private float3[] point = new float3[1]; // engine submerged check
+    private float3[] heights = new float3[1]; // engine submerged check
+    private int _guid;
+    private float yHeight;
 
-	public Vector3 enginePosition;
+    public Vector3 enginePosition;
 	private Vector3 engineDir;
 
 	void Awake () 
@@ -32,49 +34,25 @@ public class Engine : MonoBehaviour
         engineSound.time = Random.Range(0f, engineSound.clip.length);
         waterSound.time = Random.Range(0f, waterSound.clip.length);
 
-        //cache boat and boat controller
-        //boatController = gameObject.GetComponent<BoatController>();
+        _guid = this.GetInstanceID();
         buoyantObject = gameObject.GetComponent<BuoyantObject>();
-        //cache wakeGenerator
-        //wakeGen = GameObject.Find ("WakeGenerator").GetComponent<CreateWake> ();
-
     }	
 
 	void FixedUpdate()
 	{
         vel = RB.velocity;
         float velMag = vel.sqrMagnitude;
-        engineSound.pitch = Mathf.Max(velMag * 0.015f, 0.3f);
-        // if (buoyantObject.percentSubmerged > 0.1f)
-        // {
-        //     RB.AddForce(Vector3.up * (Mathf.Abs(Vector3.Dot(vel, transform.forward)) * velMag), ForceMode.Force);
-        // }
-        // if(throttle > 0f)
-        // {
-        // 	if(transform.TransformPoint(enginePosition).y < 0.5f)
-        // 	{
-        // 		Vector3 forward = transform.forward + transform.TransformDirection(engineDir * 0.15f);
-        // 		forward.Normalize();
-        // 		RB.AddForceAtPosition(((forward * horsePower) * throttle), transform.TransformPoint(enginePosition), ForceMode.Acceleration);
-        // 	}
-        // 	throttle -= Time.fixedDeltaTime;
-        // }
-        // else
-        // {
-        // 	throttle = 0f;
-        // }
+        engineSound.pitch = Mathf.Max(velMag * 0.01f, 0.3f);
 
-        // if(engineDir.x > 0.1f)
-        // 		engineDir.x -= Time.fixedDeltaTime;
-        // else if(engineDir.x < -0.1f)
-        // 		engineDir.x += Time.fixedDeltaTime;
-        // else
-        // 	engineDir.x = 0f;
+        point[0] = transform.TransformPoint(enginePosition);
+        GerstnerWavesJobs.UpdateSamplePoints(point, _guid, false);
+        GerstnerWavesJobs.GetData(_guid, ref heights);
+        yHeight = heights[0].y - point[0].y;
     }
 
 	public void Accel(float modifier)
 	{
-        if (buoyantObject.percentSubmerged > 0.1f)
+        if (yHeight > -0.1f)
         {
             Vector3 forward = transform.forward;
             forward.y = 0f;
@@ -93,27 +71,19 @@ public class Engine : MonoBehaviour
 	public void TurnLeft(float modifier)
 	{
         //if(buoyantObject.percentSubmerged > 0.05f)
-        if (buoyantObject.percentSubmerged > 0.1f)
+        if (yHeight > -0.1f)
         {
             RB.AddRelativeTorque(new Vector3(0f, -torque, torque * 0.5f) * modifier * 500f, ForceMode.Acceleration);
         }
-        // if(engineDir.x < 1f)
-        // 	engineDir.x += modifier;
-        // if(engineDir.x > 1f)
-        // 	engineDir.x = 1f;
     }
 
 	public void TurnRight(float modifier)
 	{
         //if(buoyantObject.percentSubmerged > 0.05f)
-        if (buoyantObject.percentSubmerged > 0.1f)
+        if (yHeight > -0.1f)
         {
             RB.AddRelativeTorque(new Vector3(0f, torque, -torque * 0.5f) * modifier * 500f, ForceMode.Acceleration);
         }
-        // if(engineDir.x > -1f)
-        // 	engineDir.x -= modifier;
-        // if(engineDir.x < -1f)
-        // 	engineDir.x = -1f;
     }
 
 	void OnDrawGizmosSelected ()
