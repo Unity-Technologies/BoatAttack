@@ -28,13 +28,13 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
 #endif
         private WaterFXPass m_WaterFXPass;
 
-        public RenderTargetHandle Color;
-        public RenderTargetHandle DepthAttachment;
-        public RenderTargetHandle DepthTexture;
-        public RenderTargetHandle OpaqueColor;
-        public RenderTargetHandle DirectionalShadowmap;
-        public RenderTargetHandle LocalShadowmap;
-        public RenderTargetHandle ScreenSpaceShadowmap;
+        private RenderTargetHandle Color;
+        private RenderTargetHandle DepthAttachment;
+        private RenderTargetHandle DepthTexture;
+        private RenderTargetHandle OpaqueColor;
+        private RenderTargetHandle DirectionalShadowmap;
+        private RenderTargetHandle LocalShadowmap;
+        private RenderTargetHandle ScreenSpaceShadowmap;
 
         [NonSerialized]
         private bool m_Initialized = false;
@@ -69,14 +69,14 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
 
             // RenderTexture format depends on camera and pipeline (HDR, non HDR, etc)
             // Samples (MSAA) depend on camera and pipeline
-            renderer.RegisterSurface("_CameraColorTexture", out Color);
-            renderer.RegisterSurface("_CameraDepthAttachment", out DepthAttachment);
-            renderer.RegisterSurface("_CameraDepthTexture", out DepthTexture);
-            renderer.RegisterSurface("_CameraOpaqueTexture", out OpaqueColor);
-            renderer.RegisterSurface("_DirectionalShadowmapTexture", out DirectionalShadowmap);
-            renderer.RegisterSurface("_LocalShadowmapTexture", out LocalShadowmap);
-            renderer.RegisterSurface("_ScreenSpaceShadowMapTexture", out ScreenSpaceShadowmap);
-
+            Color.Init("_CameraColorTexture");
+            DepthAttachment.Init("_CameraDepthAttachment");
+            DepthTexture.Init("_CameraDepthTexture");
+            OpaqueColor.Init("_CameraOpaqueTexture");
+            DirectionalShadowmap.Init("_DirectionalShadowmapTexture");
+            LocalShadowmap.Init("_LocalShadowmapTexture");
+            ScreenSpaceShadowmap.Init("_ScreenSpaceShadowMapTexture");
+            
             m_Initialized = true;
         }
 
@@ -135,8 +135,8 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
                     ref renderingData.cameraData,
                     baseDescriptor,
                     requiresDepthAttachment);
-            RenderTargetHandle colorHandle = (requiresColorAttachment) ? Color : RenderTargetHandle.BackBuffer;
-            RenderTargetHandle depthHandle = (requiresDepthAttachment) ? DepthAttachment : RenderTargetHandle.BackBuffer;
+            RenderTargetHandle colorHandle = (requiresColorAttachment) ? Color : RenderTargetHandle.CameraTarget;
+            RenderTargetHandle depthHandle = (requiresDepthAttachment) ? DepthAttachment : RenderTargetHandle.CameraTarget;
 
             var sampleCount = (SampleCount)renderingData.cameraData.msaaSamples;
             m_CreateLightweightRenderTexturesPass.Setup(baseDescriptor, colorHandle, depthHandle, sampleCount);
@@ -151,7 +151,7 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
 
             renderer.EnqueuePass(m_SetupLightweightConstants);
 
-            //renderer.EnqueuePass(m_WaterFXPass);
+            renderer.EnqueuePass(m_WaterFXPass);
 
             m_RenderOpaqueForwardPass.Setup(baseDescriptor, colorHandle, depthHandle, LightweightForwardRenderer.GetCameraClearFlag(camera), camera.backgroundColor, rendererConfiguration, dynamicBatching);
             renderer.EnqueuePass(m_RenderOpaqueForwardPass);
@@ -166,7 +166,7 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
             if (camera.clearFlags == CameraClearFlags.Skybox)
                 renderer.EnqueuePass(m_DrawSkyboxPass);
 
-            if (depthHandle != RenderTargetHandle.BackBuffer)
+            if (depthHandle != RenderTargetHandle.CameraTarget)
             {
                 m_CopyDepthPass.Setup(depthHandle, DepthTexture);
                 renderer.EnqueuePass(m_CopyDepthPass);
@@ -186,7 +186,7 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
                 m_TransparentPostProcessPass.Setup(baseDescriptor, colorHandle);
                 renderer.EnqueuePass(m_TransparentPostProcessPass);
             }
-            else if (!renderingData.cameraData.isOffscreenRender && colorHandle != RenderTargetHandle.BackBuffer)
+            else if (!renderingData.cameraData.isOffscreenRender && colorHandle != RenderTargetHandle.CameraTarget)
             {
                 m_FinalBlitPass.Setup(baseDescriptor, colorHandle);
                 renderer.EnqueuePass(m_FinalBlitPass);

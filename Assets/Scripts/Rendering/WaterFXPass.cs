@@ -6,11 +6,12 @@ using UnityEngine.Experimental.Rendering.LightweightPipeline;
 public class WaterFXPass : ScriptableRenderPass
 {
     const string k_RenderWaterFXTag = "Render Water FX";
-	RenderTexture m_WaterFXTexture;
+    private RenderTargetHandle m_WaterFX = RenderTargetHandle.CameraTarget;
 
     public WaterFXPass(LightweightForwardRenderer renderer) : base(renderer)
     {
         RegisterShaderPassName("WaterFX");
+        m_WaterFX.Init("_WaterFXMap");
 	}
 
     public override void Execute(ref ScriptableRenderContext context, ref CullResults cullResults, ref RenderingData renderingData)
@@ -18,18 +19,18 @@ public class WaterFXPass : ScriptableRenderPass
         CommandBuffer cmd = CommandBufferPool.Get(k_RenderWaterFXTag);
 
         RenderTextureDescriptor descriptor = renderer.CreateRTDesc(ref renderingData.cameraData);
-        //descriptor.width = (int)(descriptor.width * 0.5f);
-        //descriptor.height = (int)(descriptor.height * 0.5f);
+        descriptor.width = (int)(descriptor.width * 0.5f);
+        descriptor.height = (int)(descriptor.height * 0.5f);
 
         using (new ProfilingSample(cmd, k_RenderWaterFXTag))
         {
-            m_WaterFXTexture = RenderTexture.GetTemporary(descriptor);
-            m_WaterFXTexture.filterMode = FilterMode.Bilinear;
-            m_WaterFXTexture.wrapMode = TextureWrapMode.Clamp;
+            cmd.GetTemporaryRT(m_WaterFX.id, descriptor, FilterMode.Bilinear);
+            
+            //m_WaterFXTexture.wrapMode = TextureWrapMode.Clamp;
 
             SetRenderTarget(
                 cmd,
-                m_WaterFXTexture,
+                m_WaterFX.Identifier(),
                 RenderBufferLoadAction.DontCare,
                 RenderBufferStoreAction.Store,
                 ClearFlag.Color,
@@ -50,7 +51,6 @@ public class WaterFXPass : ScriptableRenderPass
             else
                 context.DrawRenderers(cullResults.visibleRenderers, ref drawSettings, renderer.transparentFilterSettings);
 
-            cmd.SetGlobalTexture("_WaterFXMap", m_WaterFXTexture);
         }
         context.ExecuteCommandBuffer(cmd);
         CommandBufferPool.Release(cmd);
@@ -58,10 +58,9 @@ public class WaterFXPass : ScriptableRenderPass
 
     public override void Dispose(CommandBuffer cmd)
     {
-        if (m_WaterFXTexture)
+        if (m_WaterFX != RenderTargetHandle.CameraTarget)
         {
-            RenderTexture.ReleaseTemporary(m_WaterFXTexture);
-            m_WaterFXTexture = null;
+            cmd.ReleaseTemporaryRT(m_WaterFX.id);
         }
     }
 }
