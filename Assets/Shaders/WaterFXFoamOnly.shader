@@ -13,11 +13,12 @@
 
 		Pass
 		{
+			Name "WaterFX"
+			Tags{"LightMode" = "WaterFX"}
+
 			HLSLPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			// make fog work
-			#pragma multi_compile_fog
 
 			#define _NORMALMAP 1
 			
