@@ -18,8 +18,8 @@ public class WaterFXPass : ScriptableRenderPass
         CommandBuffer cmd = CommandBufferPool.Get(k_RenderWaterFXTag);
 
         RenderTextureDescriptor descriptor = renderer.CreateRTDesc(ref renderingData.cameraData);
-        descriptor.width = (int)(descriptor.width * 0.5f);
-        descriptor.height = (int)(descriptor.height * 0.5f);
+        //descriptor.width = (int)(descriptor.width * 0.5f);
+        //descriptor.height = (int)(descriptor.height * 0.5f);
 
         using (new ProfilingSample(cmd, k_RenderWaterFXTag))
         {
