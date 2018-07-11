@@ -86,6 +86,15 @@ public class Engine : MonoBehaviour
         }
     }
 
+    public void Turn(float modifier)
+    {
+        //if(buoyantObject.percentSubmerged > 0.05f)
+        if (yHeight > -0.1f)
+        {
+            RB.AddRelativeTorque(new Vector3(0f, torque, -torque * 0.5f) * modifier * 500f, ForceMode.Acceleration);
+        }
+    }
+
 	void OnDrawGizmosSelected ()
 	{
 		Gizmos.color = Color.green;

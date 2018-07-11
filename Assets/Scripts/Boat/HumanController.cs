@@ -20,7 +20,7 @@ public class HumanController : MonoBehaviour
 		{
 			engine.TurnRight(tilt*2f);
 		}
-		if(tilt <  -0.0f || Input.GetKey(KeyCode.LeftArrow))
+		if(tilt <  -0.0f)
 		{
 			engine.TurnLeft(-tilt*2f);
 		}
@@ -32,20 +32,27 @@ public class HumanController : MonoBehaviour
 			
 		}
 
-		if(Input.GetKey(KeyCode.RightArrow))
-		{
-			engine.TurnRight(1f);
-		}
+		// if(Input.GetKey(KeyCode.RightArrow))
+		// {
+		// 	engine.TurnRight(1f);
+		// }
 
-		if(Input.GetKey(KeyCode.LeftArrow))
-		{
-			engine.TurnLeft(1f);
-		}
+		// if(Input.GetKey(KeyCode.LeftArrow))
+		// {
+		// 	engine.TurnLeft(1f);
+		// }
 
-		if(Input.GetKey(KeyCode.UpArrow))
+		if(Input.GetAxis("Accellerate") > 0.1f)
 		{
 			engine.Accel(1.0f);
 		}
+
+        float h = Input.GetAxis("Horizontal");
+
+        if(Mathf.Abs(h) > 0.05f)
+		{
+            engine.Turn(h);
+        }
 		
 	}
 
