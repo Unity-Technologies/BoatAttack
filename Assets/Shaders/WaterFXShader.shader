@@ -19,11 +19,11 @@
 
 		Pass
 		{
+			Name "WaterFX"
+			Tags{"LightMode" = "WaterFX"}
 			HLSLPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			// make fog work
-			#pragma multi_compile_fog
 			#pragma shader_feature _INVERT_ON
 
 			#define _NORMALMAP 1

@@ -16,13 +16,13 @@ PlayerSettings:
   productName: BoatAttack
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
-  m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
+  m_SplashScreenBackgroundColor: {r: 1, g: 1, b: 1, a: 1}
   m_ShowUnitySplashScreen: 1
   m_ShowUnitySplashLogo: 1
   m_SplashScreenOverlayOpacity: 1
   m_SplashScreenAnimation: 1
-  m_SplashScreenLogoStyle: 1
-  m_SplashScreenDrawMode: 0
+  m_SplashScreenLogoStyle: 0
+  m_SplashScreenDrawMode: 1
   m_SplashScreenBackgroundAnimationZoom: 1
   m_SplashScreenLogoAnimationZoom: 1
   m_SplashScreenBackgroundLandscapeAspect: 1
@@ -39,13 +39,15 @@ PlayerSettings:
     y: 0
     width: 1
     height: 1
-  m_SplashScreenLogos: []
+  m_SplashScreenLogos:
+  - logo: {fileID: 10404, guid: 0000000000000000e000000000000000, type: 0}
+    duration: 2
   m_VirtualRealitySplashScreen: {fileID: 0}
   m_HolographicTrackingLossScreen: {fileID: 0}
   defaultScreenWidth: 1024
   defaultScreenHeight: 768
-  defaultScreenWidthWeb: 960
-  defaultScreenHeightWeb: 600
+  defaultScreenWidthWeb: 980
+  defaultScreenHeightWeb: 550
   m_StereoRenderingPath: 0
   m_ActiveColorSpace: 1
   m_MTRendering: 1
@@ -63,6 +65,7 @@ PlayerSettings:
   use32BitDisplayBuffer: 1
   preserveFramebufferAlpha: 0
   disableDepthAndStencilBuffers: 1
+  androidStartInFullscreen: 1
   androidBlitType: 0
   defaultIsNativeResolution: 1
   macRetinaSupport: 1
@@ -107,11 +110,7 @@ PlayerSettings:
   xboxOneDisableEsram: 0
   xboxOnePresentImmediateThreshold: 0
   switchQueueCommandMemory: 0
-  videoMemoryForVertexBuffers: 0
-  psp2PowerMode: 0
-  psp2AcquireBGM: 1
   vulkanEnableSetSRGBWrite: 0
-  vulkanUseSWCommandBuffers: 1
   m_SupportedAspectRatios:
     4:3: 1
     5:4: 1
@@ -144,6 +143,7 @@ PlayerSettings:
       dashSupport: 0
     enable360StereoCapture: 0
   protectGraphicsMemory: 0
+  enableFrameTimingStats: 0
   useHDRDisplay: 0
   m_ColorGamuts: 00000000
   targetPixelDensity: 150
@@ -225,7 +225,7 @@ PlayerSettings:
   iOSURLSchemes: []
   iOSBackgroundModes: 0
   iOSMetalForceHardShadows: 0
-  metalEditorSupport: 1
+  metalEditorSupport: 0
   metalAPIValidation: 1
   iOSRenderExtraFrameOnPause: 0
   appleDeveloperTeamID: BVPN9UFA9B
@@ -236,7 +236,6 @@ PlayerSettings:
   appleEnableAutomaticSigning: 1
   iOSRequireARKit: 0
   appleEnableProMotion: 0
-  vulkanEditorSupport: 0
   clonedFromGUID: 00000000000000000000000000000000
   templatePackageId: 
   templateDefaultScene: 
@@ -418,11 +417,44 @@ PlayerSettings:
       m_Height: 36
       m_Kind: 1
       m_SubKind: 
+    - m_Textures: []
+      m_Width: 192
+      m_Height: 192
+      m_Kind: 0
+      m_SubKind: 
+    - m_Textures: []
+      m_Width: 144
+      m_Height: 144
+      m_Kind: 0
+      m_SubKind: 
+    - m_Textures: []
+      m_Width: 96
+      m_Height: 96
+      m_Kind: 0
+      m_SubKind: 
+    - m_Textures: []
+      m_Width: 72
+      m_Height: 72
+      m_Kind: 0
+      m_SubKind: 
+    - m_Textures: []
+      m_Width: 48
+      m_Height: 48
+      m_Kind: 0
+      m_SubKind: 
+    - m_Textures: []
+      m_Width: 36
+      m_Height: 36
+      m_Kind: 0
+      m_SubKind: 
   m_BuildTargetBatching:
   - m_BuildTarget: iPhone
     m_StaticBatching: 1
     m_DynamicBatching: 1
   - m_BuildTarget: Standalone
+    m_StaticBatching: 1
+    m_DynamicBatching: 0
+  - m_BuildTarget: Android
     m_StaticBatching: 1
     m_DynamicBatching: 0
   m_BuildTargetGraphicsAPIs:
@@ -437,6 +469,9 @@ PlayerSettings:
     m_Automatic: 0
   - m_BuildTarget: MacStandaloneSupport
     m_APIs: 10000000
+    m_Automatic: 0
+  - m_BuildTarget: WebGLSupport
+    m_APIs: 0b000000
     m_Automatic: 0
   m_BuildTargetVRSettings: []
   m_BuildTargetEnableVuforiaSettings: []
@@ -630,6 +665,7 @@ PlayerSettings:
   ps4pnGameCustomData: 1
   playerPrefsSupport: 0
   enableApplicationExit: 0
+  resetTempFolder: 1
   restrictedAudioUsageRights: 0
   ps4UseResolutionFallback: 0
   ps4ReprojectionSupport: 0
@@ -653,53 +689,6 @@ PlayerSettings:
   ps4attribEyeToEyeDistanceSettingVR: 0
   ps4IncludedModules: []
   monoEnv: 
-  psp2Splashimage: {fileID: 0}
-  psp2NPTrophyPackPath: 
-  psp2NPSupportGBMorGJP: 0
-  psp2NPAgeRating: 12
-  psp2NPTitleDatPath: 
-  psp2NPCommsID: 
-  psp2NPCommunicationsID: 
-  psp2NPCommsPassphrase: 
-  psp2NPCommsSig: 
-  psp2ParamSfxPath: 
-  psp2ManualPath: 
-  psp2LiveAreaGatePath: 
-  psp2LiveAreaBackroundPath: 
-  psp2LiveAreaPath: 
-  psp2LiveAreaTrialPath: 
-  psp2PatchChangeInfoPath: 
-  psp2PatchOriginalPackage: 
-  psp2PackagePassword: 66MuCV6GXi5xr84P2R391UXaLHbavJvF
-  psp2KeystoneFile: 
-  psp2MemoryExpansionMode: 0
-  psp2DRMType: 0
-  psp2StorageType: 0
-  psp2MediaCapacity: 0
-  psp2DLCConfigPath: 
-  psp2ThumbnailPath: 
-  psp2BackgroundPath: 
-  psp2SoundPath: 
-  psp2TrophyCommId: 
-  psp2TrophyPackagePath: 
-  psp2PackagedResourcesPath: 
-  psp2SaveDataQuota: 10240
-  psp2ParentalLevel: 1
-  psp2ShortTitle: Not Set
-  psp2ContentID: IV0000-ABCD12345_00-0123456789ABCDEF
-  psp2Category: 0
-  psp2MasterVersion: 01.00
-  psp2AppVersion: 01.00
-  psp2TVBootMode: 0
-  psp2EnterButtonAssignment: 2
-  psp2TVDisableEmu: 0
-  psp2AllowTwitterDialog: 1
-  psp2Upgradable: 0
-  psp2HealthWarning: 0
-  psp2UseLibLocation: 0
-  psp2InfoBarOnStartup: 0
-  psp2InfoBarColor: 0
-  psp2ScriptOptimizationLevel: 0
   splashScreenBackgroundSourceLandscape: {fileID: 0}
   splashScreenBackgroundSourcePortrait: {fileID: 0}
   spritePackerPolicy: 
@@ -714,7 +703,8 @@ PlayerSettings:
   webGLAnalyzeBuildSize: 0
   webGLUseEmbeddedResources: 0
   webGLCompressionFormat: 1
-  webGLLinkerTarget: 0
+  webGLLinkerTarget: 1
+  webGLThreadsSupport: 0
   scriptingDefineSymbols:
     1: UNITY_POST_PROCESSING_STACK_V2
     4: UNITY_POST_PROCESSING_STACK_V2
@@ -730,9 +720,11 @@ PlayerSettings:
     25: UNITY_POST_PROCESSING_STACK_V2
     26: UNITY_POST_PROCESSING_STACK_V2
     27: UNITY_POST_PROCESSING_STACK_V2
+    28: UNITY_POST_PROCESSING_STACK_V2
   platformArchitecture: {}
   scriptingBackend: {}
   il2cppCompilerConfiguration: {}
+  managedStrippingLevel: {}
   incrementalIl2cppBuild: {}
   allowUnsafeCode: 0
   additionalIl2CppArgs: 
@@ -754,11 +746,12 @@ PlayerSettings:
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
   metroWideTileShowName: 0
+  metroSupportStreamingInstall: 0
+  metroLastRequiredScene: 0
   metroDefaultTileSize: 1
   metroTileForegroundText: 2
   metroTileBackgroundColor: {r: 0.13333334, g: 0.17254902, b: 0.21568628, a: 0}
-  metroSplashScreenBackgroundColor: {r: 0.12941177, g: 0.17254902, b: 0.21568628,
-    a: 1}
+  metroSplashScreenBackgroundColor: {r: 0.12941177, g: 0.17254902, b: 0.21568628, a: 1}
   metroSplashScreenUseBackgroundColor: 0
   platformCapabilities: {}
   metroFTAName: 
@@ -806,11 +799,30 @@ PlayerSettings:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
   cloudServicesEnabled: {}
+  luminIcon:
+    m_Name: 
+    m_ModelFolderPath: 
+    m_PortalFolderPath: 
+  luminCert:
+    m_CertPath: 
+    m_PrivateKeyPath: 
+  luminIsChannelApp: 0
+  luminVersion:
+    m_VersionCode: 1
+    m_VersionName: 
   facebookSdkVersion: 7.9.4
-  apiCompatibilityLevel: 3
+  facebookAppId: 
+  facebookCookies: 1
+  facebookLogging: 1
+  facebookStatus: 1
+  facebookXfbml: 0
+  facebookFrictionlessRequests: 1
+  apiCompatibilityLevel: 6
   cloudProjectId: 
+  framebufferDepthMemorylessMode: 0
   projectName: 
   organizationId: 
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
+  legacyClampBlendShapeWeights: 1
