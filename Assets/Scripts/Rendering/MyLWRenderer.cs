@@ -3,6 +3,9 @@ using UnityEngine.Rendering;
 
 namespace UnityEngine.Experimental.Rendering.LightweightPipeline
 {
+    /// <summary>
+    /// A Custom tweaking of the LWRP using the passes system, in this example a 'WaterFXPass' is added
+    /// </summary>
     public class MyLWRenderer : MonoBehaviour, IRendererSetup
     {
         private DepthOnlyPass m_DepthOnlyPass;
@@ -38,11 +41,29 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
 
         [NonSerialized]
         private bool m_Initialized = false;
+        public bool m_addToSceneCamera = true;
 
         private void Init(LightweightForwardRenderer renderer)
         {
             if (m_Initialized)
                 return;
+
+            // Add this custom renderer component to the scene camera(I'm not looking at removing so could cause issues)
+            if(m_addToSceneCamera)
+            {
+                Object[] cameras = Resources.FindObjectsOfTypeAll(typeof(Camera));
+                for (var i = 0; i < cameras.Length; i++)
+                {
+                    Camera cam = cameras[i] as Camera;
+                    if(cam.cameraType == CameraType.SceneView)
+                    {
+                        if(cam.gameObject.GetComponent(this.GetType()) == null)
+                        {
+                            cam.gameObject.AddComponent(this.GetType());
+                        }
+                    }
+                }
+            }
 
             m_DepthOnlyPass = new DepthOnlyPass(renderer);
             m_DirectionalShadowPass = new DirectionalShadowsPass(renderer);
@@ -197,13 +218,13 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
                 renderer.EnqueuePass(m_EndXrRenderingPass);
             }
 
-#if UNITY_EDITOR
-            if (renderingData.cameraData.isSceneViewCamera)
-            {
-                m_SceneViewDepthCopyPass.Setup(DepthTexture);
-                renderer.EnqueuePass(m_SceneViewDepthCopyPass);
-            }
-#endif
+// #if UNITY_EDITOR
+//             if (renderingData.cameraData.isSceneViewCamera)
+//             {
+//                 m_SceneViewDepthCopyPass.Setup(DepthTexture);
+//                 renderer.EnqueuePass(m_SceneViewDepthCopyPass);
+//             }
+// #endif
         }
     }
 }

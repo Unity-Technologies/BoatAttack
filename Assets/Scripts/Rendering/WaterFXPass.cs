@@ -25,8 +25,6 @@ public class WaterFXPass : ScriptableRenderPass
         using (new ProfilingSample(cmd, k_RenderWaterFXTag))
         {
             cmd.GetTemporaryRT(m_WaterFX.id, descriptor, FilterMode.Bilinear);
-            
-            //m_WaterFXTexture.wrapMode = TextureWrapMode.Clamp;
 
             SetRenderTarget(
                 cmd,

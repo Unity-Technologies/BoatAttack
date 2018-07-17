@@ -2,119 +2,124 @@
 using System.Collections;
 using UnityEngine.AI;
 
-public class AIcontroller : MonoBehaviour {
 
-	public NavMeshPath navPath;//navigation path;
-	private Vector3[] pathPoint = null;
-	public Vector3 curDest;
-	public Vector3 curWPPos;
-	public float curWPsize;
-	public int curPoint = 0;
-	public int curWP = 0;
-	public bool foundPath;
-	private int pathPointNum;
-	public Engine engine;//cache for AIs engine
+namespace BoatAttack.Boat
+{
+    /// <summary>
+    /// AIController is for non-human boats to control the engine of the boat
+    /// </summary>
+    public class AIcontroller : MonoBehaviour
+    {
 
-	private Vector3 tempFrom;//nav from position
-	private Vector3 tempTo;//nav to position
-	private float targetSide;//side of destination, positive on right side, negative on left side
-	//testing vars
-	private Transform targ;
-	public Vector3 targetPos;
+        public NavMeshPath navPath; // navigation path
+        public Vector3[] pathPoint = null; // list of points along the path
+        //private Vector3 curDest; // the current destination point
+        private int curWPindex = 0; // the current waypoint index;
+        private WaypointGroup.Waypoint curWP;
+        public Vector3 curWPPos; // the current WayPoint point
+        //public float curWPsize; // the current waypoints size
+        public int curPoint = 0;
+        public bool foundPath = false;
+        private int pathPointNum;
+        private Engine engine; // cache the boats engine
 
-	private WaypointGroup.Waypoint[] WPs;
-
-
-	// Use this for initialization
-	void Start ()
-	{
-		engine = GetComponent<Engine> ();// find the engine for the boat
-
-		//CalculatePath (targetPos);//calculate path to target
-		GetNextWP();
-		InvokeRepeating("CalculatePath", 0f, 0.5f);
-	}
-
-	private void Update() {
-        if (Vector3.Distance(transform.position, curWPPos) < curWPsize * 2f)
+        // Use this for initialization
+        void Start()
         {
-            GetNextWP();
+            engine = GetComponent<Engine>(); // find the engine for the boat
+            GetNextWP(); // Get the starting waypoint
+            InvokeRepeating("CalculatePath", Random.Range(0f, 0.2f), 0.25f);
         }
-        else if ((Vector3.Distance(transform.position, curDest)) < curWPsize)
+
+        // Update is called once per frame
+        private void Update()
         {
-            curPoint++;
-            if (curPoint < pathPoint.Length)
+            if (pathPoint.Length > curPoint && foundPath)
             {
-                curDest = pathPoint[curPoint];
+                if (Vector3.Distance(transform.position, pathPoint[pathPoint.Length - 1]) < curWP.WPradius) // If we are close to the waypoint get the next one
+                {
+                    GetNextWP(); // Get next waypoint
+                }
+                if ((Vector3.Distance(transform.position, pathPoint[curPoint])) < 2f) // If we are cloase to the current point on the path get the next
+                {
+                    curPoint++; // Move on to next point
+                    if(curPoint >= pathPoint.Length)
+                        curPoint = 0;
+                }
             }
         }
-	}
-	
-	// Update is called once per frame
-	void FixedUpdate () 
-	{
-		//\\\\\\\\Get angle to the destination and the side
-		Vector3 normDir = curDest - transform.position;
-		normDir = normDir.normalized;
-		float dot = Vector3.Dot (normDir, transform.forward);
-		//float angle = Mathf.Acos (dot) * Mathf.Rad2Deg;
-		targetSide = Vector3.Cross (transform.forward, normDir).y;//positive on right side, negative on left side
 
-		float steering = 0;
+        // FixedUpdate is called once per physics update
+        void FixedUpdate()
+        {
+            if (foundPath) // Do we have a path to race?
+            {
+                // Steering
+                Vector3 normDir = Vector3.Normalize(pathPoint[curPoint] - transform.position); // get the direction to the cur dest
+                float steering = Vector3.Cross(transform.forward, normDir).y;//positive on right side, negative on left side
+                engine.Turn(steering); // Set the engines turning
+                // Acceleration
+                float dot = Vector3.Dot(normDir, transform.forward); // how lined up is the boat to the cur dest
+                engine.Accel(dot > 0 ? 1f : 0.25f); // Set the engines accel
+            }
+        }
 
-		if(targetSide > 0f)
-				steering = targetSide;
-		else 
-				steering = targetSide;
+        /// <summary>
+        /// Gets the next waypoint from the current waypoint group
+        /// </summary>
+        void GetNextWP()
+        {
+            curWP = WaypointGroup.Instance.GetWaypoint(curWPindex); // Gets the waypoint
+            Vector3 offset = Random.insideUnitSphere * curWP.WPradius * 0.5f; // creates the random offset form the waypoint
+            offset.y = 0f; // Zeroes out the offsets 'Y' to be flat
+            curWPPos = curWP.point + offset; // Add the offset to the waypoint center
+            CalculatePath(); // Update the path with new waypoint
+            curWPindex++; // Increments the waypoint
+            if (curWPindex >= WaypointGroup.Instance.WPs.Count) // Keeps WPindex looping
+                curWPindex = 0;
+        }
 
-		if(steering > 0f)
-				engine.TurnRight(Mathf.Clamp01(steering));
-		else 
-				engine.TurnLeft(Mathf.Clamp01(Mathf.Abs(steering)));
+        /// <summary>
+        /// Calculates a new path to the next waypoint
+        /// </summary>
+        void CalculatePath()
+        {
+            navPath = new NavMeshPath(); // New nav path
+            NavMesh.CalculatePath(transform.position, curWPPos, 255, navPath);
+            if (navPath.status == NavMeshPathStatus.PathComplete) // if the path is good(complete) use it
+            {
+                pathPoint = navPath.corners;
+                curPoint = 1;
+                foundPath = true;
+            }
+            else if(navPath == null || navPath.status == NavMeshPathStatus.PathInvalid) // if the path is bad, we havent found a path
+            {
+                foundPath = false;
+            }
+        }
 
-		engine.Accel (dot > 0 ? 1f : 0.25f);
-	}
+        // Draw some helper gizmos
+        void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.green;
 
-	void GetNextWP()
-	{
-		WaypointGroup.Waypoint wp = WaypointGroup.Instance.GetWaypoint(curWP);
-		curWPsize = wp.WPradius;
-		Vector3 offset = Random.insideUnitSphere * curWPsize;
-		offset.y = 0f;
-		curWPPos = wp.point + offset;
-		curWP++;
-		if(curWP >= WaypointGroup.Instance.WPs.Count)
-			curWP = 0;
-	}
+            if (foundPath)
+            {
+                if (curWP != null)
+                    Gizmos.DrawLine(transform.position + (Vector3.up * 0.1f), curWP.point);
+                Gizmos.color = Color.red;
+                if (pathPoint[curPoint] != Vector3.zero)
+                    Gizmos.DrawLine(transform.position + (Vector3.up * 0.1f), pathPoint[curPoint]);
+                Gizmos.color = Color.yellow;
 
-	void CalculatePath()
-	{
-		navPath = new NavMeshPath ();
-		NavMesh.CalculatePath (transform.position, curWPPos, 255, navPath);
-		if(navPath.status == NavMeshPathStatus.PathComplete)
-		{
-			pathPoint = navPath.corners;
-			curPoint = 0;
-			curDest = pathPoint[0];
-		}
-	}
-
-	void OnDrawGizmos()
-	{
-		Gizmos.color = Color.green;
-		if(curWPPos == Vector3.zero)
-			Gizmos.DrawLine(transform.position + (Vector3.up*0.1f), curWPPos);
-		Gizmos.color = Color.red;
-		if(curDest == Vector3.zero)
-			Gizmos.DrawLine(transform.position + (Vector3.up*0.1f), curDest);	
-		Gizmos.color = Color.yellow;
-
-		for(int i = 0; i < pathPoint.Length - 1; i++)
-		{
-			if(i == pathPoint.Length - 1)
-				Gizmos.DrawLine(pathPoint[pathPoint.Length - 1], pathPoint[i]);
-			else
-				Gizmos.DrawLine(pathPoint[i], pathPoint[i+1]);
-		}
-	}
+                for (int i = 0; i < pathPoint.Length - 1; i++)
+                {
+                    if (i == pathPoint.Length - 1)
+                        Gizmos.DrawLine(pathPoint[pathPoint.Length - 1], pathPoint[i]);
+                    else
+                        Gizmos.DrawLine(pathPoint[i], pathPoint[i + 1]);
+                }
+            }
+        }
+    }
 }

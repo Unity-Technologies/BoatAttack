@@ -2,13 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RandomHue : MonoBehaviour {
-
-    void OnValidate()
+namespace BoatAttack
+{
+    /// <summary>
+    /// Simple scripts sets a random HUE on a shader with the property '_Hue'
+    /// </summary>
+    public class RandomHue : MonoBehaviour
     {
-        float hue = Random.Range(0f, 1f);
-        MaterialPropertyBlock mtb = new MaterialPropertyBlock();
-        mtb.SetFloat("_Hue", hue);
-        GetComponent<MeshRenderer>().SetPropertyBlock(mtb);
+        void OnValidate()
+        {
+            float hue = Random.Range(0f, 1f);
+            MaterialPropertyBlock mtb = new MaterialPropertyBlock();
+            mtb.SetFloat("_Hue", hue);
+            GetComponent<MeshRenderer>().SetPropertyBlock(mtb);
+        }
     }
 }

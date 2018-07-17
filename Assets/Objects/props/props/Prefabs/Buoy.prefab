@@ -37,6 +37,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4124875948106566}
   - component: {fileID: 114692567228333054}
+  - component: {fileID: 205052103221047872}
   m_Layer: 0
   m_Name: Buoy
   m_TagString: Untagged
@@ -85,6 +86,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 3
   m_RenderingLayerMask: 4294967295
+  m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: b1aaf92c06be94931a4e515a4812f42e, type: 2}
   m_StaticBatchInfo:
@@ -134,3 +136,21 @@ MonoBehaviour:
   colliders:
   - {fileID: 0}
   percentSubmerged: 0
+--- !u!205 &205052103221047872
+LODGroup:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1619300153551722}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: -0.525918, z: 0.030020773}
+  m_Size: 1.7400162
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.04204334
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 23673582507941226}
+  m_Enabled: 1

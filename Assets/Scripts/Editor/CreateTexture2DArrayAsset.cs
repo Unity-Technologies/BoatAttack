@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.Experimental.Rendering;
 
+/// <summary>
+/// Not ideal code, use at own peril...
+/// </summary>
 [ExecuteInEditMode]
 public class CreateTexture2DArrayAsset : MonoBehaviour {
 
