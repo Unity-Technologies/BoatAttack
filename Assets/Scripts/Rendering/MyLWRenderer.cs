@@ -3,6 +3,36 @@ using UnityEngine.Rendering;
 
 namespace UnityEngine.Experimental.Rendering.LightweightPipeline
 {
+    public class SceneViewDepthCopyPassCustom : ScriptableRenderPass
+    {
+        private RenderTargetHandle source { get; set; }
+
+
+        public SceneViewDepthCopyPassCustom(LightweightForwardRenderer renderer) : base(renderer)
+        {}
+
+        public void Setup(RenderTargetHandle source)
+        {
+            this.source = source;
+        }
+
+        public override void Execute(ref ScriptableRenderContext context, ref CullResults cullResults, ref RenderingData renderingData)
+        {
+            // Restore Render target for additional editor rendering.
+            // Note: Scene view camera always perform depth prepass
+            CommandBuffer cmd = CommandBufferPool.Get("Copy Depth to Camera");
+            CoreUtils.SetRenderTarget(cmd, BuiltinRenderTextureType.CameraTarget);
+            cmd.SetGlobalTexture("_CameraDepthAttachment", source.Identifier());
+            cmd.EnableShaderKeyword(LightweightKeywordStrings.DepthNoMsaa);
+            cmd.DisableShaderKeyword(LightweightKeywordStrings.DepthMsaa2);
+            cmd.DisableShaderKeyword(LightweightKeywordStrings.DepthMsaa4);
+            cmd.Blit(source.Identifier(), BuiltinRenderTextureType.CameraTarget, renderer.GetMaterial(MaterialHandles.DepthCopy));
+            context.ExecuteCommandBuffer(cmd);
+            CommandBufferPool.Release(cmd);
+        }
+    }
+    
+    
     /// <summary>
     /// A Custom tweaking of the LWRP using the passes system, in this example a 'WaterFXPass' is added
     /// </summary>
@@ -27,7 +57,7 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
         private EndXRRenderingPass m_EndXrRenderingPass;
 
 #if UNITY_EDITOR
-        private SceneViewDepthCopyPass m_SceneViewDepthCopyPass;
+        private SceneViewDepthCopyPassCustom m_SceneViewDepthCopyPass;
 #endif
         private WaterFXPass m_WaterFXPass;
 
@@ -85,7 +115,7 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
             m_WaterFXPass = new WaterFXPass(renderer);
 
 #if UNITY_EDITOR
-            m_SceneViewDepthCopyPass = new SceneViewDepthCopyPass(renderer);
+            m_SceneViewDepthCopyPass = new SceneViewDepthCopyPassCustom(renderer);
 #endif
 
             // RenderTexture format depends on camera and pipeline (HDR, non HDR, etc)
@@ -218,13 +248,13 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
                 renderer.EnqueuePass(m_EndXrRenderingPass);
             }
 
-// #if UNITY_EDITOR
-//             if (renderingData.cameraData.isSceneViewCamera)
-//             {
-//                 m_SceneViewDepthCopyPass.Setup(DepthTexture);
-//                 renderer.EnqueuePass(m_SceneViewDepthCopyPass);
-//             }
-// #endif
+ #if UNITY_EDITOR
+             if (renderingData.cameraData.isSceneViewCamera)
+             {
+                 m_SceneViewDepthCopyPass.Setup(DepthTexture);
+                 renderer.EnqueuePass(m_SceneViewDepthCopyPass);
+             }
+ #endif
         }
     }
 }
