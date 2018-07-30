@@ -48,7 +48,7 @@ PlayerSettings:
   defaultScreenHeight: 768
   defaultScreenWidthWeb: 980
   defaultScreenHeightWeb: 550
-  m_StereoRenderingPath: 0
+  m_StereoRenderingPath: 1
   m_ActiveColorSpace: 1
   m_MTRendering: 1
   m_StackTraceTypes: 010000000100000001000000010000000100000001000000
@@ -99,9 +99,6 @@ PlayerSettings:
   xboxEnableGuest: 0
   xboxEnablePIXSampling: 0
   metalFramebufferOnly: 1
-  n3dsDisableStereoscopicView: 0
-  n3dsEnableSharedListOpt: 1
-  n3dsEnableVSync: 0
   xboxOneResolution: 0
   xboxOneSResolution: 0
   xboxOneXResolution: 3
@@ -225,7 +222,7 @@ PlayerSettings:
   iOSURLSchemes: []
   iOSBackgroundModes: 0
   iOSMetalForceHardShadows: 0
-  metalEditorSupport: 0
+  metalEditorSupport: 1
   metalAPIValidation: 1
   iOSRenderExtraFrameOnPause: 0
   appleDeveloperTeamID: BVPN9UFA9B
@@ -473,7 +470,11 @@ PlayerSettings:
   - m_BuildTarget: WebGLSupport
     m_APIs: 0b000000
     m_Automatic: 0
-  m_BuildTargetVRSettings: []
+  m_BuildTargetVRSettings:
+  - m_BuildTarget: Android
+    m_Enabled: 1
+    m_Devices:
+    - Oculus
   m_BuildTargetEnableVuforiaSettings: []
   openGLRequireES31: 1
   openGLRequireES31AEP: 0
@@ -758,17 +759,6 @@ PlayerSettings:
   metroFTAFileTypes: []
   metroProtocolName: 
   metroCompilationOverrides: 1
-  n3dsUseExtSaveData: 0
-  n3dsCompressStaticMem: 1
-  n3dsExtSaveDataNumber: 0x12345
-  n3dsStackSize: 131072
-  n3dsTargetPlatform: 2
-  n3dsRegion: 7
-  n3dsMediaSize: 0
-  n3dsLogoStyle: 3
-  n3dsTitle: GameName
-  n3dsProductCode: 
-  n3dsApplicationId: 0xFF3FF
   XboxOneProductId: 
   XboxOneUpdateKey: 
   XboxOneSandboxId: 
