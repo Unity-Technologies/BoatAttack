@@ -8,17 +8,25 @@ public class WaterFXPass : ScriptableRenderPass
     const string k_RenderWaterFXTag = "Render Water FX";
     private RenderTargetHandle m_WaterFX = RenderTargetHandle.CameraTarget;
 
-    public WaterFXPass(LightweightForwardRenderer renderer) : base(renderer)
+    private FilterRenderersSettings transparentFilterSettings { get; set; }
+    
+    public WaterFXPass()
     {
         RegisterShaderPassName("WaterFX");
         m_WaterFX.Init("_WaterFXMap");
+        
+        
+        transparentFilterSettings = new FilterRenderersSettings(true)
+        {
+            renderQueueRange = RenderQueueRange.transparent,
+        };
 	}
 
     public override void Execute(ref ScriptableRenderContext context, ref CullResults cullResults, ref RenderingData renderingData)
     {
         CommandBuffer cmd = CommandBufferPool.Get(k_RenderWaterFXTag);
 
-        RenderTextureDescriptor descriptor = renderer.CreateRTDesc(ref renderingData.cameraData);
+        RenderTextureDescriptor descriptor = LightweightForwardRenderer.CreateRTDesc(ref renderingData.cameraData);
         descriptor.width = (int)(descriptor.width * 0.5f);
         descriptor.height = (int)(descriptor.height * 0.5f);
 
@@ -43,19 +51,20 @@ public class WaterFXPass : ScriptableRenderPass
             {
                 Camera camera = renderingData.cameraData.camera;
                 context.StartMultiEye(camera);
-                context.DrawRenderers(cullResults.visibleRenderers, ref drawSettings, renderer.transparentFilterSettings);
+                context.DrawRenderers(cullResults.visibleRenderers, ref drawSettings, transparentFilterSettings);
                 context.StopMultiEye(camera);
             }
             else
-                context.DrawRenderers(cullResults.visibleRenderers, ref drawSettings, renderer.transparentFilterSettings);
+                context.DrawRenderers(cullResults.visibleRenderers, ref drawSettings, transparentFilterSettings);
 
         }
         context.ExecuteCommandBuffer(cmd);
         CommandBufferPool.Release(cmd);
     }
 
-    public override void Dispose(CommandBuffer cmd)
+    public override void FrameCleanup(CommandBuffer cmd)
     {
+        base.FrameCleanup(cmd);
         if (m_WaterFX != RenderTargetHandle.CameraTarget)
         {
             cmd.ReleaseTemporaryRT(m_WaterFX.id);

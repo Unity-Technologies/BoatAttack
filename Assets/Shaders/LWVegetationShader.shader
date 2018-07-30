@@ -49,6 +49,8 @@
             #pragma multi_compile _ _VERTEX_LIGHTS
             #pragma multi_compile _ _MIXED_LIGHTING_SUBTRACTIVE
             #pragma multi_compile _ _SHADOWS_ENABLED
+            #pragma multi_compile _ _LOCAL_SHADOWS_ENABLED
+            #pragma multi_compile _ _SHADOWS_SOFT
             #pragma multi_compile _ _SHADOWS_CASCADE
 
             // -------------------------------------
@@ -148,13 +150,13 @@
             #endif
                     o.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
 
-                #ifdef _SHADOWS_ENABLED
-                #if SHADOWS_SCREEN
-                    o.shadowCoord = ComputeShadowCoord(o.clipPos);
-                #else
-                    o.shadowCoord = TransformWorldToShadowCoord(posWS);
-                #endif
-                #endif
+            #ifdef _SHADOWS_ENABLED
+            #if SHADOWS_SCREEN
+                o.shadowCoord = ComputeShadowCoord(o.clipPos);
+            #else
+                o.shadowCoord = TransformWorldToShadowCoord(posWS);
+            #endif
+            #endif
 
                 o.occlusion = v.color.a;
 
