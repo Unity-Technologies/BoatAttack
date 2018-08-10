@@ -218,7 +218,7 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
             ScriptableRenderContext context,
             Camera camera, 
             LightweightPipeline.PipelineSettings pipelineSettings,
-            LightweightRenderer renderer)
+            ScriptableRenderer renderer)
         {
 
             if (!enabled)
