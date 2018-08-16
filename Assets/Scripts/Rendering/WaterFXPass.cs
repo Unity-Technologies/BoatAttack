@@ -3,14 +3,36 @@ using UnityEngine.Rendering;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Experimental.Rendering.LightweightPipeline;
 
-public class WaterFXPass : ScriptableRenderPass
+[ImageEffectAllowedInSceneView]
+public class WaterFXPass : MonoBehaviour, IAfterSkyboxPass
+{
+    private WaterFXPassImpl m_WaterFXPass;
+
+    WaterFXPassImpl waterFxPass
+    {
+        get
+        {
+            if (m_WaterFXPass == null)
+                m_WaterFXPass = new WaterFXPassImpl();
+
+            return m_WaterFXPass;
+        }
+    }
+
+    public ScriptableRenderPass GetPassToEnqueue(RenderTextureDescriptor baseDescriptor, RenderTargetHandle colorHandle, RenderTargetHandle depthHandle)
+    {
+        return waterFxPass;
+    }
+}
+
+public class WaterFXPassImpl : ScriptableRenderPass
 {
     const string k_RenderWaterFXTag = "Render Water FX";
     private RenderTargetHandle m_WaterFX = RenderTargetHandle.CameraTarget;
 
     private FilterRenderersSettings transparentFilterSettings { get; set; }
     
-    public WaterFXPass()
+    public WaterFXPassImpl()
     {
         RegisterShaderPassName("WaterFX");
         m_WaterFX.Init("_WaterFXMap");
@@ -22,11 +44,11 @@ public class WaterFXPass : ScriptableRenderPass
         };
 	}
 
-    public override void Execute(ref ScriptableRenderContext context, ref CullResults cullResults, ref RenderingData renderingData)
+    public override void Execute(ScriptableRenderer renderer, ref ScriptableRenderContext context, ref CullResults cullResults, ref RenderingData renderingData)
     {
         CommandBuffer cmd = CommandBufferPool.Get(k_RenderWaterFXTag);
 
-        RenderTextureDescriptor descriptor = LightweightForwardRenderer.CreateRTDesc(ref renderingData.cameraData);
+        RenderTextureDescriptor descriptor = ScriptableRenderer.CreateRTDesc(ref renderingData.cameraData);
         descriptor.width = (int)(descriptor.width * 0.5f);
         descriptor.height = (int)(descriptor.height * 0.5f);
 
