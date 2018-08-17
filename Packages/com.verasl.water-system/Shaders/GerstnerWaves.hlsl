@@ -13,10 +13,10 @@ struct Wave
 	half omni;
 };
 
-#if SHADER_TARGET < 30
-half4 waveData[20]; // 0-9 amplitude, direction, wavelength, omni, 10-19 origin.xy
-#else
+#if defined(USE_STRUCTURED_BUFFER)
 StructuredBuffer<Wave> _WaveDataBuffer;
+#else
+half4 waveData[20]; // 0-9 amplitude, direction, wavelength, omni, 10-19 origin.xy
 #endif
 
 struct WaveStruct
@@ -76,22 +76,23 @@ inline void SampleWaves(float3 position, half opacity, out WaveStruct waveOut)
 	UNITY_LOOP
 	for(uint i = 0; i < _WaveCount; i++)
 	{
-		#if SHADER_TARGET < 30
-		waves[i] = GerstnerWave(pos,
-								waveCountMulti, 
-								waveData[i].x, 
-								waveData[i].y, 
-								waveData[i].z, 
-								waveData[i].w, 
-								waveData[i + 10].xy); // calculate the wave
-		#else
+		#if defined(USE_STRUCTURED_BUFFER)
 		waves[i] = GerstnerWave(pos,
 								waveCountMulti, 
 								_WaveDataBuffer[i].amplitude, 
 								_WaveDataBuffer[i].direction, 
 								_WaveDataBuffer[i].wavelength, 
 								_WaveDataBuffer[i].omni, 
-								_WaveDataBuffer[i].origin); // calculate the wave
+								_WaveDataBuffer[i].origin); // calculate the wave		
+		#else
+		waves[i] = GerstnerWave(pos,
+        								waveCountMulti, 
+        								waveData[i].x, 
+        								waveData[i].y, 
+        								waveData[i].z, 
+        								waveData[i].w, 
+        								waveData[i + 10].xy); // calculate the wave
+
 		#endif
 		waveOut.position += waves[i].position; // add the position
 		waveOut.normal += waves[i].normal; // add the normal

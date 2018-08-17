@@ -24,6 +24,7 @@ namespace WaterSystem
         }
 
         private bool useComputeBuffer;
+        public bool computeOverride;
 
         private RenderTexture _depthTex;
         private Camera _depthCam;
@@ -34,8 +35,6 @@ namespace WaterSystem
         [SerializeField]
         private ComputeBuffer _waveBuffer;
         private float _maxWaveHeight;
-        [SerializeField]
-        DebugMode _debugMode;
 
         [SerializeField]
         public WaterSettingsData settingsData;
@@ -47,8 +46,11 @@ namespace WaterSystem
 
         void OnEnable()
         {
-            useComputeBuffer = SystemInfo.supportsComputeShaders &&
-                                Application.platform != RuntimePlatform.WebGLPlayer;
+            if (!computeOverride)
+                useComputeBuffer = SystemInfo.supportsComputeShaders &&
+                                   Application.platform != RuntimePlatform.WebGLPlayer;
+            else
+                useComputeBuffer = false;
             Init();
             LightweightPipeline.beginCameraRendering += BeginCameraRendering;
 
@@ -106,6 +108,10 @@ namespace WaterSystem
 
         void Update()
         {
+            if (_waveBuffer == null)
+            {
+                Init();
+            }
             if(Application.isPlaying)
             {
                 waterTime = Time.time;
@@ -170,6 +176,7 @@ namespace WaterSystem
             //GPU side
             if (useComputeBuffer)
             {
+                Shader.EnableKeyword("USE_STRUCTURED_BUFFER");
                 if (_waveBuffer == null)
                     _waveBuffer = new ComputeBuffer(10, (sizeof(float) * 6));
                 _waveBuffer.SetData(_waves);
@@ -177,6 +184,7 @@ namespace WaterSystem
             }
             else
             {
+                Shader.DisableKeyword("USE_STRUCTURED_BUFFER");
                 Shader.SetGlobalVectorArray("waveData", GetWaveData());
             }
             //CPU side
@@ -189,7 +197,7 @@ namespace WaterSystem
             Vector4[] waveData = new Vector4[20];
             for (int i = 0; i < _waves.Length; i++)
             {
-                waveData[i] = new Vector4(_waves[i].amplitude, _waves[i].direction, _waves[i].wavelength, _waves[i].onmiDir);//1 is for omni testing only TODO
+                waveData[i] = new Vector4(_waves[i].amplitude, _waves[i].direction, _waves[i].wavelength, _waves[i].onmiDir);
                 waveData[i+10] = new Vector4(_waves[i].origin.x, _waves[i].origin.y, 0, 0);
             }
             return waveData;
