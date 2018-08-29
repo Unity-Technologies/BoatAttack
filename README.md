@@ -25,7 +25,7 @@ Feel free to post any issues, but know this is a 'as is' repo, it's meant more f
 
 [Alex Best](https://big_ally.artstation.com) - Modeling, Texturing
 
-[Stinta](https://soundcloud.com/stintah) - Soundtrack
+[Stintah](https://soundcloud.com/stintah) - Soundtrack
 
 Special thanks to:
 
