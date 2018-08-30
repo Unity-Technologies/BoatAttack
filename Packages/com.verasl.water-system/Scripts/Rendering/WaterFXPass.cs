@@ -47,12 +47,11 @@ namespace WaterSystem
             };
         }
 
-        public override void Execute(ScriptableRenderer renderer, ref ScriptableRenderContext context,
-            ref CullResults cullResults, ref RenderingData renderingData)
+        public override void Execute(ScriptableRenderer renderer, ScriptableRenderContext context, ref RenderingData renderingData)
         {
             CommandBuffer cmd = CommandBufferPool.Get(k_RenderWaterFXTag);
 
-            RenderTextureDescriptor descriptor = ScriptableRenderer.CreateRTDesc(ref renderingData.cameraData);
+            RenderTextureDescriptor descriptor = ScriptableRenderer.CreateRenderTextureDescriptor(ref renderingData.cameraData);
             descriptor.width = (int) (descriptor.width * 0.5f);
             descriptor.height = (int) (descriptor.height * 0.5f);
 
@@ -78,11 +77,11 @@ namespace WaterSystem
                 {
                     Camera camera = renderingData.cameraData.camera;
                     context.StartMultiEye(camera);
-                    context.DrawRenderers(cullResults.visibleRenderers, ref drawSettings, transparentFilterSettings);
+                    context.DrawRenderers(renderingData.cullResults.visibleRenderers, ref drawSettings, transparentFilterSettings);
                     context.StopMultiEye(camera);
                 }
                 else
-                    context.DrawRenderers(cullResults.visibleRenderers, ref drawSettings, transparentFilterSettings);
+                    context.DrawRenderers(renderingData.cullResults.visibleRenderers, ref drawSettings, transparentFilterSettings);
 
             }
 
