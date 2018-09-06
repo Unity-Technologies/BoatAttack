@@ -215,10 +215,9 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
         }
 
         public void ExecuteBeforeCameraRender(
+            LightweightPipeline pipelineInstance,
             ScriptableRenderContext context,
-            Camera camera, 
-            LightweightPipeline.PipelineSettings pipelineSettings,
-            ScriptableRenderer renderer)
+            Camera camera)
         {
 
             if (!enabled)
@@ -228,9 +227,9 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
             RenderSettings.fog = false;
             
             UpdateReflectionCamera(camera);
-            
+
             CullResults cullResults = new CullResults();
-            LightweightPipeline.RenderSingleCamera(context, pipelineSettings, m_ReflectionCamera, ref cullResults, new DefaultRendererSetup(), renderer);
+            LightweightPipeline.RenderSingleCamera(pipelineInstance, context, m_ReflectionCamera, ref cullResults);
             
             GL.invertCulling = false;
             RenderSettings.fog = true;
