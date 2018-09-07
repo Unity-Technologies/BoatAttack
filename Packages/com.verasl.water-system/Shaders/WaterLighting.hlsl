@@ -61,7 +61,7 @@ half3 SampleReflections(half3 normalWS, half3 viewDirectionWS, half2 screenUV, h
     half3 reflectVector = reflect(-viewDirectionWS, normalWS);
     reflection = GlossyEnvironmentReflection(reflectVector, 0, 1);
 #elif _REFLECTION_PLANARREFLECTION
-    refOffset += (normalWS.xx * normalWS.zz) * half2(0.5, 2);
+    refOffset += (normalWS.xx * normalWS.zz) * half2(0.2, 4);
     half rimFade = (1-fresnelTerm);//value to smooth out reflection distortion on glancing/distant angles
     half2 reflectionUV = screenUV + refOffset * rimFade;
     reflection += SAMPLE_TEXTURE2D_LOD(_PlanarReflectionTexture, sampler_ScreenTextures_linear_clamp, reflectionUV, 6 * roughness).rgb;//planar reflection

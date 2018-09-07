@@ -39,7 +39,7 @@ namespace WaterSystem
 
         void OnSceneGUI()
         {
-            Water w = target as Water;
+/*            Water w = target as Water;
             Camera cam = SceneView.currentDrawingSceneView.camera;
             var waveDebug = serializedObject.FindProperty("_debugMode");
             if (cam && waveDebug.intValue != 0)
@@ -67,7 +67,7 @@ namespace WaterSystem
                     pos.y = wave.amplitude;
                     DrawWaveGizmo(pos, wave.direction, wave.amplitude, wave.wavelength);
                 }
-            }
+            }*/
         }
         
         void DrawWaveGizmo(Vector3 pos, float angle, float size, float length)

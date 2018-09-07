@@ -33,7 +33,7 @@ WaveStruct GerstnerWave(half2 pos, float waveCountMulti, half amplitude, half di
 	half3 wave = 0; // wave vector
 	half w = 6.28318 / wavelength; // 2pi over wavelength(hardcoded)
 	half wSpeed = sqrt(9.8 * w); // frequency of the wave based off wavelength
-	half peak = 0.95; // peak value, 1 is the sharpest peaks
+	half peak = 1; // peak value, 1 is the sharpest peaks
 	half qi = peak / (amplitude * w * _WaveCount);
 
 	direction = radians(direction); // convert the incoming degrees to radians, for directional waves
@@ -79,7 +79,7 @@ inline void SampleWaves(float3 position, half opacity, out WaveStruct waveOut)
 		#if defined(USE_STRUCTURED_BUFFER)
 		waves[i] = GerstnerWave(pos,
 								waveCountMulti, 
-								_WaveDataBuffer[i].amplitude, 
+								_WaveDataBuffer[i].amplitude * opacity, 
 								_WaveDataBuffer[i].direction, 
 								_WaveDataBuffer[i].wavelength, 
 								_WaveDataBuffer[i].omni, 
@@ -87,7 +87,7 @@ inline void SampleWaves(float3 position, half opacity, out WaveStruct waveOut)
 		#else
 		waves[i] = GerstnerWave(pos,
         								waveCountMulti, 
-        								waveData[i].x, 
+        								waveData[i].x * opacity, 
         								waveData[i].y, 
         								waveData[i].z, 
         								waveData[i].w, 

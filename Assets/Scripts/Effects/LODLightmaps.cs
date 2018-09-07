@@ -16,7 +16,7 @@ namespace BoatAttack
         Renderer[] _LOD1; // LOD2 Meshes
         Renderer[] _LOD2; // LOD3 Meshes
 
-        void Awake()
+        void OnEnable()
         {
             CopyLightmapSettings();
         }

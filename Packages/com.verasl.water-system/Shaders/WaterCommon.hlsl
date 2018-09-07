@@ -69,7 +69,7 @@ float3 WaterDepth(float3 posWS, half2 texcoords, half4 additionalData, half2 scr
 {
 	float3 outDepth = 0;
 	outDepth.xz = AdjustedDepth(screenUVs, additionalData);
-	float wd = UNITY_REVERSED_Z + (SAMPLE_TEXTURE2D(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, texcoords).r * _ProjectionParams.x);
+	float wd = UNITY_REVERSED_Z + (SAMPLE_DEPTH_TEXTURE(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, texcoords).r * _ProjectionParams.x);
 	outDepth.y = ((wd * _depthCamZParams.y) - 4 - _depthCamZParams.x) + posWS.y;
 	return outDepth;
 }
@@ -112,9 +112,12 @@ WaterVertexOutput WaterVertex(WaterVertexInput v)
 	half4 screenUV = ComputeScreenPos(TransformWorldToHClip(o.posWS));
 	screenUV.xyz /= screenUV.w;
 
+    // shallows mask
+    half waterDepth = UNITY_REVERSED_Z + SAMPLE_DEPTH_TEXTURE_LOD(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, (o.posWS.xz * 0.002) + 0.5, 0).r;
+
 	//Gerstner here
 	WaveStruct wave;
-	SampleWaves(o.posWS, 1, wave);
+	SampleWaves(o.posWS, saturate((waterDepth - 3)) + 0.01, wave);
 	o.normal = normalize(wave.normal.xzy);
 	o.posWS += wave.position;
 
