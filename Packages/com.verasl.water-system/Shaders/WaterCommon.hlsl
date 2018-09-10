@@ -113,11 +113,13 @@ WaterVertexOutput WaterVertex(WaterVertexInput v)
 	screenUV.xyz /= screenUV.w;
 
     // shallows mask
-    half waterDepth = UNITY_REVERSED_Z + SAMPLE_DEPTH_TEXTURE_LOD(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, (o.posWS.xz * 0.002) + 0.5, 0).r;
+    half waterDepth = UNITY_REVERSED_Z + SAMPLE_DEPTH_TEXTURE_LOD(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, (o.posWS.xz * 0.002) + 0.5, 1).r * _ProjectionParams.x;
+    waterDepth = ((waterDepth * _depthCamZParams.y) - 4 - _depthCamZParams.x);
+    o.posWS.y += saturate((1 - waterDepth) * 0.6 - 0.5);
 
 	//Gerstner here
 	WaveStruct wave;
-	SampleWaves(o.posWS, saturate((waterDepth - 3)) + 0.01, wave);
+	SampleWaves(o.posWS, saturate((waterDepth * 0.25)) + 0.1, wave);
 	o.normal = normalize(wave.normal.xzy);
 	o.posWS += wave.position;
 
@@ -208,7 +210,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 
 	// Foam
 	half3 foamMap = SAMPLE_TEXTURE2D(_FoamMap, sampler_FoamMap, (IN.uv.zw * 0.1) + (detailBump.xy * 0.0025)).rgb; //r=thick, g=medium, b=light
-	float shoreMask = 1-depth.y;//shore foam
+	float shoreMask = 1-depth.y - 0.15;//shore foam
 	half foamMask = (IN.additionalData.z) * 0.5;
 	foamMask = saturate(max(max(foamMask, shoreMask), waterFX.r * 2));
 	half3 foamBlend = SAMPLE_TEXTURE2D(_AbsorptionScatteringRamp, sampler_AbsorptionScatteringRamp, half2(foamMask, 0.66)).rgb;
@@ -237,7 +239,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
     float fogFactor = IN.fogFactorAndVertexLight.x;
     ApplyFog(comp, fogFactor);
 	return half4(comp, 1);
-	//return half4(caustics, 0, 0, 1); // debug line
+	//return half4(IN.vertColor.a, 0, 0, 1); // debug line
 }
 
 #endif // WATER_COMMON_INCLUDED
