@@ -35,7 +35,7 @@ struct WaterVertexOutput // fragment struct
 	float2	preWaveSP 				: TEXCOORD4;	// screen position of the verticies before wave distortion
 	half4 	fogFactorAndVertexLight : TEXCOORD5;	// x: fogFactor, yzw: vertex light
 
-	half4	additionalData			: TEXCOORD6;	// x = distance to surface, y = distance to surface??
+	half4	additionalData			: TEXCOORD6;	// x = distance to surface, y = distance to surface, z = normalized wave height
 	half4	vertColor				: TEXCOORD7;
 	half4	shadowCoord				: TEXCOORD8;	// for ssshadows
 
@@ -108,6 +108,7 @@ WaterVertexOutput WaterVertex(WaterVertexInput v)
     o.posWS = TransformObjectToWorld(v.vertex.xyz);
 	o.uv.zw = o.posWS.xz;
 	o.vertColor = v.color;
+	o.vertColor.a = (noise((o.posWS.xz * 0.5) + _GlobalTime * 0.25) - 0.5) + 1;
 
 	half4 screenUV = ComputeScreenPos(TransformWorldToHClip(o.posWS));
 	screenUV.xyz /= screenUV.w;
@@ -170,7 +171,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	
 	// Detail waves
 	half t = _Time.x;
-	half2 detailBump = SAMPLE_TEXTURE2D_ARRAY(_SurfaceMap, sampler_SurfaceMap, IN.uv.zw * 0.25h, animT).xy;
+	half2 detailBump = SAMPLE_TEXTURE2D_ARRAY(_SurfaceMap, sampler_SurfaceMap, IN.uv.zw * 0.25h + t + (IN.vertColor.a * 0.1), animT).xy;
 	IN.normal += (half3(detailBump.x, 0.5h, detailBump.y) * 2 - 1) * _BumpScale;
 	IN.normal += half3(waterFX.y, 0.5h, waterFX.z) * 2 - 1;
 
@@ -191,7 +192,8 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	float2 seabedWS = D.xz/D.w;
 
 	// Caustics
-	half caustics = SAMPLE_TEXTURE2D_ARRAY(_SurfaceMap, sampler_SurfaceMap, (seabedWS * 0.3h + t) + IN.additionalData.w * 0.1h, animT).z * 0.25h; // caustics for sea floor, darkened to 25%
+	half2 causticUV = (seabedWS * 0.3h + t + (IN.vertColor.a * 0.1)) + IN.additionalData.w * 0.1h;
+	half caustics = SAMPLE_TEXTURE2D_ARRAY(_SurfaceMap, sampler_SurfaceMap, causticUV, animT).z * 0.25h; // caustics for sea floor, darkened to 25%
 
 	// Fresnel
 	half fresnelTerm = CalculateFresnelTerm(lerp(IN.normal, half3(0, 1, 0), 0.5), IN.viewDir.xyz);
@@ -209,10 +211,10 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	reflection = max(reflection, spec);
 
 	// Foam
-	half3 foamMap = SAMPLE_TEXTURE2D(_FoamMap, sampler_FoamMap, (IN.uv.zw * 0.1) + (detailBump.xy * 0.0025)).rgb; //r=thick, g=medium, b=light
-	float shoreMask = 1-depth.y - 0.15;//shore foam
-	half foamMask = (IN.additionalData.z) * 0.5;
-	foamMask = saturate(max(max(foamMask, shoreMask), waterFX.r * 2));
+	half3 foamMap = SAMPLE_TEXTURE2D(_FoamMap, sampler_FoamMap, (IN.uv.zw * 0.1) + (detailBump.xy * 0.0025) + (IN.vertColor.a * 0.05) + _GlobalTime * 0.05).rgb; //r=thick, g=medium, b=light
+	half shoreMask = pow(saturate((1-depth.y + 2.8) * 0.25), 6);
+	half foamMask = (IN.additionalData.z);
+	foamMask = saturate(max(max(foamMask, shoreMask) - IN.vertColor.a * 0.25, waterFX.r * 2));
 	half3 foamBlend = SAMPLE_TEXTURE2D(_AbsorptionScatteringRamp, sampler_AbsorptionScatteringRamp, half2(foamMask, 0.66)).rgb;
 
 	half foam = length(foamMap * foamBlend);
@@ -220,11 +222,11 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	reflection *= 1 - foam;
 
 	// Refraction
-	half3 refraction = (Refraction(distortion) + caustics) * (1 - foam);
+	half3 refraction = Refraction(distortion);
 
 	// Final Colouring
 	half depthMulti = 1 / _MaxDepth;
-    half3 color = refraction;
+    half3 color = (refraction + caustics) * (1 - foam);
 	color *= Absorption((depth.x - 0.5) * depthMulti);
 	color += Scattering(depth.x * depthMulti) * ambient * saturate(1-length(reflection));// TODO - scattering from main light(maybe additional lights too depending on cost)
 	color *= 1 - foam;
@@ -233,13 +235,13 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	foam *= shadow + 0.5;
 
 	// Do compositing
-	half3 comp = color + reflection + foam;
+	half3 comp = lerp(refraction, color + reflection + foam, 1-saturate(1-depth.x * 50));
 	
 	// Fog
     float fogFactor = IN.fogFactorAndVertexLight.x;
     ApplyFog(comp, fogFactor);
 	return half4(comp, 1);
-	//return half4(IN.vertColor.a, 0, 0, 1); // debug line
+	//return half4(waterFX.r, 0, 0, 1); // debug line
 }
 
 #endif // WATER_COMMON_INCLUDED

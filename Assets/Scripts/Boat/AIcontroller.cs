@@ -2,7 +2,6 @@
 using System.Collections;
 using UnityEngine.AI;
 
-
 namespace BoatAttack.Boat
 {
     /// <summary>
@@ -10,73 +9,100 @@ namespace BoatAttack.Boat
     /// </summary>
     public class AIcontroller : MonoBehaviour
     {
-
-        public NavMeshPath navPath; // navigation path
-        public Vector3[] pathPoint = null; // list of points along the path
-        //private Vector3 curDest; // the current destination point
-        private int curWPindex = 0; // the current waypoint index;
-        private WaypointGroup.Waypoint curWP;
-        public Vector3 curWPPos; // the current WayPoint point
-        //public float curWPsize; // the current waypoints size
+        public NavMeshPath navPath;//navigation path;
+        private Vector3[] pathPoint = null;
+        public Vector3 curWPPos;
+        public float curWPsize;
         public int curPoint = 0;
-        public bool foundPath = false;
+        public int curWP = 0;
+        public bool foundPath;
         private int pathPointNum;
-        private Engine engine; // cache the boats engine
-
+        public Engine engine;//cache for AIs engine
+    
+        private Vector3 tempFrom;//nav from position
+        private Vector3 tempTo;//nav to position
+        private float targetSide;//side of destination, positive on right side, negative on left side
+    
+        private WaypointGroup.Waypoint[] WPs;
+    
+    
         // Use this for initialization
-        void Start()
+        void Start ()
         {
-            engine = GetComponent<Engine>(); // find the engine for the boat
-            GetNextWP(); // Get the starting waypoint
-            InvokeRepeating("CalculatePath", Random.Range(0f, 0.2f), 0.25f);
+            engine = GetComponent<Engine> ();// find the engine for the boat
+    
+            //CalculatePath (targetPos);//calculate path to target
+            float delay = WaypointGroup.Instance.raceDelay;
+    
+            Invoke("GetNearestWP", delay);
+            
         }
 
         // Update is called once per frame
-        private void Update()
+        private void LateUpdate()
         {
-            if (pathPoint.Length > curPoint && foundPath)
+            if (pathPoint != null)
             {
-                if (Vector3.Distance(transform.position, pathPoint[pathPoint.Length - 1]) < curWP.WPradius) // If we are close to the waypoint get the next one
+                if (pathPoint.Length > curPoint && foundPath)
                 {
-                    GetNextWP(); // Get next waypoint
-                }
-                if ((Vector3.Distance(transform.position, pathPoint[curPoint])) < 2f) // If we are cloase to the current point on the path get the next
-                {
-                    curPoint++; // Move on to next point
-                    if(curPoint >= pathPoint.Length)
-                        curPoint = 0;
+/*                    if (Vector3.Distance(transform.position, pathPoint[pathPoint.Length - 1]) <
+                        WaypointGroup.Instance.GetWaypoint(curWP).WPradius * 2) // If we are close to the waypoint get the next one
+                    {
+                        GetNextWP(); // Get next waypoint
+                    }*/
+
+                    if ((Vector3.Distance(transform.position, pathPoint[curPoint])) < 8) // If we are close to the current point on the path get the next
+                    {
+                        curPoint++; // Move on to next point
+                        if (curPoint >= pathPoint.Length)
+                            GetNextWP();
+                    }
+                    
                 }
             }
         }
-
-        // FixedUpdate is called once per physics update
-        void FixedUpdate()
+        
+        // Update is called once per frame
+        void FixedUpdate () 
         {
-            if (foundPath) // Do we have a path to race?
+            if (pathPoint != null && pathPoint.Length > curPoint)
             {
-                // Steering
-                Vector3 normDir = Vector3.Normalize(pathPoint[curPoint] - transform.position); // get the direction to the cur dest
-                float steering = Vector3.Cross(transform.forward, normDir).y;//positive on right side, negative on left side
-                engine.Turn(steering); // Set the engines turning
-                // Acceleration
-                float dot = Vector3.Dot(normDir, transform.forward); // how lined up is the boat to the cur dest
-                engine.Accel(dot > 0 ? 1f : 0.25f); // Set the engines accel
+                //\\\\\\\\Get angle to the destination and the side
+                Vector3 normDir = pathPoint[curPoint] - transform.position;
+                normDir = normDir.normalized;
+                float dot = Vector3.Dot(normDir, transform.forward);
+                //float angle = Mathf.Acos (dot) * Mathf.Rad2Deg;
+                targetSide = Vector3.Cross(transform.forward, normDir).y;//positive on right side, negative on left side
+
+                engine.Turn(Mathf.Clamp(targetSide, -1.0f, 1.0f));
+                engine.Accel(dot > 0 ? 1f : 0.25f);
             }
         }
-
-        /// <summary>
-        /// Gets the next waypoint from the current waypoint group
-        /// </summary>
+    
+        void GetNearestWP()
+        {
+            WaypointGroup.Waypoint wp = WaypointGroup.Instance.GetClosestWaypoint(transform.position);
+            if (Vector3.Dot(wp.point - transform.position, transform.forward) < 0)
+                AssignWP(WaypointGroup.Instance.GetNextWaypoint(wp));
+            else
+                AssignWP(WaypointGroup.Instance.GetClosestWaypoint(transform.position));
+        }
+    
         void GetNextWP()
         {
-            curWP = WaypointGroup.Instance.GetWaypoint(curWPindex); // Gets the waypoint
-            Vector3 offset = Random.insideUnitSphere * curWP.WPradius * 0.5f; // creates the random offset form the waypoint
-            offset.y = 0f; // Zeroes out the offsets 'Y' to be flat
-            curWPPos = curWP.point + offset; // Add the offset to the waypoint center
-            CalculatePath(); // Update the path with new waypoint
-            curWPindex++; // Increments the waypoint
-            if (curWPindex >= WaypointGroup.Instance.WPs.Count) // Keeps WPindex looping
-                curWPindex = 0;
+            AssignWP(WaypointGroup.Instance.GetWaypoint(curWP));
+        }
+    
+        void AssignWP(WaypointGroup.Waypoint wp)
+        {
+            curWPsize = wp.WPradius;
+            Vector3 offset = Random.insideUnitSphere * curWPsize;
+            offset.y = 0f;
+            curWPPos = wp.point + offset;
+            curWP++;
+            if (curWP >= WaypointGroup.Instance.WPs.Count)
+                curWP = 0;
+            CalculatePath();
         }
 
         /// <summary>
@@ -101,16 +127,22 @@ namespace BoatAttack.Boat
         // Draw some helper gizmos
         void OnDrawGizmosSelected()
         {
-            Gizmos.color = Color.green;
-
+            var c = Color.green;
+            c.a = 0.5f;
+            Gizmos.color = c;
+            
             if (foundPath)
             {
-                if (curWP != null)
-                    Gizmos.DrawLine(transform.position + (Vector3.up * 0.1f), curWP.point);
-                Gizmos.color = Color.red;
+                Gizmos.DrawLine(transform.position + (Vector3.up * 0.1f),
+                    WaypointGroup.Instance.GetWaypoint(curWP).point);
+                Gizmos.DrawSphere(curWPPos, 1);
+
+                c = Color.red;
+                Gizmos.color = c;
                 if (pathPoint[curPoint] != Vector3.zero)
                     Gizmos.DrawLine(transform.position + (Vector3.up * 0.1f), pathPoint[curPoint]);
-                Gizmos.color = Color.yellow;
+                c = Color.yellow;
+                Gizmos.color = c;
 
                 for (int i = 0; i < pathPoint.Length - 1; i++)
                 {

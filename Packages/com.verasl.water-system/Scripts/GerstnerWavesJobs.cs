@@ -247,7 +247,7 @@ namespace WaterSystem
                         // calculate the offsets for the current point
                         wavePos.x += qi * amplitude * windDir.x * cosCalc;
                         wavePos.z += qi * amplitude * windDir.y * cosCalc;
-                        wavePos.y += (((sinCalc * 0.5f + 0.5f) * amplitude)) * waveCountMulti; // the height is divided by the number of waves 
+                        wavePos.y += ((sinCalc * amplitude)) * waveCountMulti; // the height is divided by the number of waves 
 
                         if (normal == 1)
                         {

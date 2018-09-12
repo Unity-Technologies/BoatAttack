@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
 namespace BoatAttack.Boat
 {
@@ -114,7 +117,9 @@ namespace BoatAttack.Boat
         // Draw helper Gizmos
         void OnDrawGizmosSelected()
         {
-            Gizmos.color = Color.green;
+            var c = Color.blue;
+            c.a = 0.5f;
+            Gizmos.color = c;
             foreach (Wake w in _wakes)
             {
                 Gizmos.DrawSphere(transform.TransformPoint(w.origin.x, w.origin.y, w.origin.z), 0.1f);
@@ -122,12 +127,17 @@ namespace BoatAttack.Boat
             }
             foreach (Wake w in _wakes)
             {
+                
                 foreach (WakeLine wl in w.lines)
                 {
                     int side = 0;
+                    var pre = Vector3.zero;
                     foreach (WakePoint wp in wl.points)
                     {
-                        Gizmos.DrawSphere(wp.pos, (_maxAge - wp.age) * 0.05f);
+                        Gizmos.DrawSphere(wp.pos, (_maxAge - wp.age) * 0.01f);
+                        if(pre != Vector3.zero)
+                            Gizmos.DrawLine(wp.pos, pre);
+                        pre = wp.pos;
                     }
                     side++;
                 }

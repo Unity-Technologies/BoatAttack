@@ -50,7 +50,7 @@ WaveStruct GerstnerWave(half2 pos, float waveCountMulti, half amplitude, half di
 
 	// calculate the offsets for the current point
 	wave.xz = qi * amplitude * windDir.xy * cosCalc;
-	wave.y = (((sinCalc * 0.5 + 0.5) * amplitude)) * waveCountMulti;// the height is divided by the number of waves
+	wave.y = ((sinCalc * amplitude)) * waveCountMulti;// the height is divided by the number of waves
 	
 	////////////////////////////normal output calculations/////////////////////////
 	half wa = w * amplitude;
