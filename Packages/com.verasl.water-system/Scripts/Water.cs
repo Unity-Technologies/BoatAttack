@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
@@ -108,10 +109,6 @@ namespace WaterSystem
 
         void Update()
         {
-            if (_waveBuffer == null)
-            {
-                Init();
-            }
             if(Application.isPlaying)
             {
                 waterTime = Time.time;
@@ -327,7 +324,8 @@ namespace WaterSystem
             _depthCam.cullingMask = (1 << 10);
             //Generate RT
             if (!_depthTex)
-                _depthTex = new RenderTexture(1024, 1024, 24, RenderTextureFormat.Depth);
+                _depthTex = new RenderTexture(1024, 1024, 24, RenderTextureFormat.Depth, RenderTextureReadWrite.Linear);
+            _depthTex.name = "WaterDepthMap";
             //do depth capture
             _depthCam.targetTexture = _depthTex;
             _depthCam.Render();
@@ -338,6 +336,14 @@ namespace WaterSystem
             Vector4 zParams = new Vector4(n, f, f / (f-n), f * n / (n-f));
             //Vector4 zParams = new Vector4(1-f/n, f/n, (1-f/n)/f, (f/n)/f);//2015
             Shader.SetGlobalVector("_depthCamZParams", zParams);
+            
+            #if UNITY_EDITOR
+/*            Texture2D tex2D = new Texture2D(1024, 1024, TextureFormat.Alpha8, false);
+            Graphics.CopyTexture(_depthTex, tex2D);
+            byte[] image = tex2D.EncodeToPNG();
+            System.IO.File.WriteAllBytes(Application.dataPath + "/WaterDepth.png", image);*/
+            #endif
+            
             _depthCam.enabled = false;
             _depthCam.targetTexture = null;
         }

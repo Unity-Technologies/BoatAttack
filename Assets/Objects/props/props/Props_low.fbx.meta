@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 92a669df93f0d4f99bd8fa27767e8c9e
 ModelImporter:
-  serializedVersion: 22
+  serializedVersion: 23
   fileIDToRecycleName:
     100000: Geo_Props_ArrowSign
     100002: Geo_Props_Blimp
@@ -12,6 +12,18 @@ ModelImporter:
     100012: Geo_Props_Umbrella
     100014: Geo_Props_WindSurfer
     100016: //RootNode
+    100018: Geo_Props_ArrowSign_LOD_0
+    100020: Geo_Props_ArrowSign_LOD_1
+    100022: Geo_Props_Bouy_LOD_0
+    100024: Geo_Props_Bouy_LOD_1
+    100026: Geo_Props_Chair_LOD_0
+    100028: Geo_Props_Chair_LOD_1
+    100030: Geo_Props_Paraglider_LOD_0
+    100032: Geo_Props_Paraglider_LOD_1
+    100034: Geo_Props_Umbrella_LOD_0
+    100036: Geo_Props_Umbrella_LOD_1
+    100038: Geo_Props_WindSurfer_LOD_0
+    100040: Geo_Props_WindSurfer_LOD_1
     400000: Geo_Props_ArrowSign
     400002: Geo_Props_Blimp
     400004: Geo_Props_Bouy
@@ -21,6 +33,18 @@ ModelImporter:
     400012: Geo_Props_Umbrella
     400014: Geo_Props_WindSurfer
     400016: //RootNode
+    400018: Geo_Props_ArrowSign_LOD_0
+    400020: Geo_Props_ArrowSign_LOD_1
+    400022: Geo_Props_Bouy_LOD_0
+    400024: Geo_Props_Bouy_LOD_1
+    400026: Geo_Props_Chair_LOD_0
+    400028: Geo_Props_Chair_LOD_1
+    400030: Geo_Props_Paraglider_LOD_0
+    400032: Geo_Props_Paraglider_LOD_1
+    400034: Geo_Props_Umbrella_LOD_0
+    400036: Geo_Props_Umbrella_LOD_1
+    400038: Geo_Props_WindSurfer_LOD_0
+    400040: Geo_Props_WindSurfer_LOD_1
     2100000: Matr_Props
     2300000: Geo_Props_ArrowSign
     2300002: Geo_Props_Blimp
@@ -30,6 +54,18 @@ ModelImporter:
     2300010: Geo_Props_Paraglider
     2300012: Geo_Props_Umbrella
     2300014: Geo_Props_WindSurfer
+    2300016: Geo_Props_ArrowSign_LOD_0
+    2300018: Geo_Props_ArrowSign_LOD_1
+    2300020: Geo_Props_Bouy_LOD_0
+    2300022: Geo_Props_Bouy_LOD_1
+    2300024: Geo_Props_Chair_LOD_0
+    2300026: Geo_Props_Chair_LOD_1
+    2300028: Geo_Props_Paraglider_LOD_0
+    2300030: Geo_Props_Paraglider_LOD_1
+    2300032: Geo_Props_Umbrella_LOD_0
+    2300034: Geo_Props_Umbrella_LOD_1
+    2300036: Geo_Props_WindSurfer_LOD_0
+    2300038: Geo_Props_WindSurfer_LOD_1
     3300000: Geo_Props_ArrowSign
     3300002: Geo_Props_Blimp
     3300004: Geo_Props_Bouy
@@ -38,6 +74,18 @@ ModelImporter:
     3300010: Geo_Props_Paraglider
     3300012: Geo_Props_Umbrella
     3300014: Geo_Props_WindSurfer
+    3300016: Geo_Props_ArrowSign_LOD_0
+    3300018: Geo_Props_ArrowSign_LOD_1
+    3300020: Geo_Props_Bouy_LOD_0
+    3300022: Geo_Props_Bouy_LOD_1
+    3300024: Geo_Props_Chair_LOD_0
+    3300026: Geo_Props_Chair_LOD_1
+    3300028: Geo_Props_Paraglider_LOD_0
+    3300030: Geo_Props_Paraglider_LOD_1
+    3300032: Geo_Props_Umbrella_LOD_0
+    3300034: Geo_Props_Umbrella_LOD_1
+    3300036: Geo_Props_WindSurfer_LOD_0
+    3300038: Geo_Props_WindSurfer_LOD_1
     4300000: Geo_Props_Blimp
     4300002: Geo_Props_Bouy
     4300004: Geo_Props_Umbrella
@@ -46,6 +94,19 @@ ModelImporter:
     4300010: Geo_Props_Chair
     4300012: Geo_Props_Paraglider
     4300014: Geo_Props_ArrowSign
+    4300016: Geo_Props_Bouy_LOD_0
+    4300018: Geo_Props_Umbrella_LOD_0
+    4300020: Geo_Props_WindSurfer_LOD_0
+    4300022: Geo_Props_Chair_LOD_0
+    4300024: Geo_Props_Paraglider_LOD_0
+    4300026: Geo_Props_ArrowSign_LOD_0
+    4300028: Geo_Props_Bouy_LOD_1
+    4300030: Geo_Props_Umbrella_LOD_1
+    4300032: Geo_Props_Chair_LOD_1
+    4300034: Geo_Props_WindSurfer_LOD_1
+    4300036: Geo_Props_Paraglider_LOD_1
+    4300038: Geo_Props_ArrowSign_LOD_1
+    2186277476908879412: ImportLogs
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -85,6 +146,7 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -102,11 +164,16 @@ ModelImporter:
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
+    previousCalculatedGlobalScale: 1
+    hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
@@ -121,7 +188,6 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1

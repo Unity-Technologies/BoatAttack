@@ -9,12 +9,21 @@ namespace BoatAttack
     /// </summary>
     public class RandomHue : MonoBehaviour
     {
+        public MeshRenderer[] renderers;
         void OnValidate()
         {
             float hue = Random.Range(0f, 1f);
             MaterialPropertyBlock mtb = new MaterialPropertyBlock();
             mtb.SetFloat("_Hue", hue);
-            GetComponent<MeshRenderer>().SetPropertyBlock(mtb);
+
+            if (renderers.Length > 0)
+            {
+                for (int i = 0; i < renderers.Length; i++)
+                {
+                    renderers[i].SetPropertyBlock(mtb);
+                }
+                
+            }
         }
     }
 }

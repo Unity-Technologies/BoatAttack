@@ -7,7 +7,7 @@
 	SubShader
 	{
 		Tags { "RenderType"="Transparent" "Queue"="Transparent-100" "RenderPipeline" = "LightweightPipeline" }
-		ZWrite Off
+		ZWrite On
 
 		Pass
 		{

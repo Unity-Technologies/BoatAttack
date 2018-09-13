@@ -115,11 +115,11 @@ namespace WaterSystem
 
         public static void GetSimpleData(int guid, ref float3[] outPos, ref float3[] outNorm)
         {
-            var offsets = new int2(0, 0); ;
+            var offsets = new int2(0, 0);
             if (simpleRegistry.TryGetValue(guid, out offsets))
             {
-                outPos = waveSimplePos.Slice(offsets.x, offsets.y).ToArray();
-                outNorm = waveSimpleNormal.Slice(offsets.x, offsets.y).ToArray();
+                waveSimplePos.Slice(offsets.x, offsets.y - offsets.x).CopyTo(outPos);
+                waveSimpleNormal.Slice(offsets.x, offsets.y - offsets.x).CopyTo(outNorm);
             }
         }
 
@@ -128,7 +128,7 @@ namespace WaterSystem
             var offsets = new int2(0, 0);
             if (registry.TryGetValue(guid, out offsets))
             {
-                outPos = wavePos.Slice(offsets.x, offsets.y).ToArray();
+                wavePos.Slice(offsets.x, offsets.y - offsets.x).CopyTo(outPos);
             }
         }
 
@@ -247,7 +247,7 @@ namespace WaterSystem
                         // calculate the offsets for the current point
                         wavePos.x += qi * amplitude * windDir.x * cosCalc;
                         wavePos.z += qi * amplitude * windDir.y * cosCalc;
-                        wavePos.y += (((sinCalc * 0.5f + 0.5f) * amplitude)) * waveCountMulti; // the height is divided by the number of waves 
+                        wavePos.y += ((sinCalc * amplitude)) * waveCountMulti; // the height is divided by the number of waves 
 
                         if (normal == 1)
                         {

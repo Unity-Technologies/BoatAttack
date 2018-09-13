@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
 namespace BoatAttack.Boat
 {
@@ -47,7 +50,8 @@ namespace BoatAttack.Boat
         {
             Vector3 origin;
             //For each wake pair
-            for (int w = 0; w < _wakes.Count; w++)
+            var wCount = _wakes.Count;
+            for (int w = 0; w < wCount; w++)
             {
                 Wake _wake = _wakes[w];
                 int s = 0;
@@ -57,14 +61,17 @@ namespace BoatAttack.Boat
                     origin.x *= x;
                     origin = transform.TransformPoint(origin);
                     origin.y = 0;//flatten origin in world
+                    var pointCount = _wake.lines[s].points.Count;
                     //////////////////////////// create points, if needed ///////////////////////////////
-                    if (_wake.lines[s].points.Count == 0)
+                    if (pointCount == 0)
                     {
                         _wake.lines[s].points.Insert(0, CreateWakePoint(origin, x));
+                        pointCount++;
                     }
                     else if (Vector3.Distance(_wake.lines[s].points[0].pos, origin) > _genDistance)
                     {
                         _wake.lines[s].points.Insert(0, CreateWakePoint(origin, x));
+                        pointCount++;
                     }
                     ///////////////////////////// kill points, if needed ////////////////////////////////
                     for (int i = _wake.lines[s].points.Count - 1; i >= 0; i--)
@@ -72,6 +79,7 @@ namespace BoatAttack.Boat
                         if (_wake.lines[s].points[i].age > _maxAge)
                         {
                             _wake.lines[s].points.RemoveAt(i);
+                            pointCount--;
                         }
                         else
                         {
@@ -80,13 +88,13 @@ namespace BoatAttack.Boat
                         }
                     }
                     ///////////////////// Create the line renderer points ///////////////////////////////
-                    Vector3[] points = new Vector3[_wake.lines[s].points.Count + 1];
-                    points[0] = origin;
-                    for (var p = 1; p < points.Length - 1; p++)
-                        points[p] = _wake.lines[s].points[p - 1].pos;
-
-                    _wake.lines[s]._lineRenderer.positionCount = _wake.lines[s].points.Count;
-                    _wake.lines[s]._lineRenderer.SetPositions(points);
+                    
+                    _wake.lines[s]._lineRenderer.positionCount = pointCount + 1;
+                    _wake.lines[s]._lineRenderer.SetPosition(0, origin);
+                    for (var i = 0; i < pointCount; i++)
+                    {
+                        _wake.lines[s]._lineRenderer.SetPosition(i + 1, _wake.lines[s].points[i].pos);
+                    }
                     s++;
                 }
             }
@@ -109,7 +117,9 @@ namespace BoatAttack.Boat
         // Draw helper Gizmos
         void OnDrawGizmosSelected()
         {
-            Gizmos.color = Color.green;
+            var c = Color.blue;
+            c.a = 0.5f;
+            Gizmos.color = c;
             foreach (Wake w in _wakes)
             {
                 Gizmos.DrawSphere(transform.TransformPoint(w.origin.x, w.origin.y, w.origin.z), 0.1f);
@@ -117,12 +127,17 @@ namespace BoatAttack.Boat
             }
             foreach (Wake w in _wakes)
             {
+                
                 foreach (WakeLine wl in w.lines)
                 {
                     int side = 0;
+                    var pre = Vector3.zero;
                     foreach (WakePoint wp in wl.points)
                     {
-                        Gizmos.DrawSphere(wp.pos, (_maxAge - wp.age) * 0.05f);
+                        Gizmos.DrawSphere(wp.pos, (_maxAge - wp.age) * 0.01f);
+                        if(pre != Vector3.zero)
+                            Gizmos.DrawLine(wp.pos, pre);
+                        pre = wp.pos;
                     }
                     side++;
                 }

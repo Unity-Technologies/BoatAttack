@@ -45,11 +45,14 @@ namespace WaterSystem
 
         [ContextMenu("Initialize")]
 		void Init()
-		{
+        {
+            voxels = null;
+		    
             if(_buoyancyType == BuoyancyType.NonPhysicalVoxel || _buoyancyType == BuoyancyType.PhysicalVoxel) // If voxel based we need colliders and voxels
             {
                 SetupColliders();
                 SliceIntoVoxels();
+                samplePoints = new float3[voxels.Length];
             }
 
             if (_buoyancyType == BuoyancyType.Physical || _buoyancyType == BuoyancyType.PhysicalVoxel) // If physical, then we need a rigidbody
@@ -64,12 +67,18 @@ namespace WaterSystem
                 RB.centerOfMass = centerOfMass + voxelBounds.center;
                 baseDrag = RB.drag;
                 baseAngularDrag = RB.angularDrag;
+                samplePoints = new float3[voxels.Length];
+            }
+
+            if (_buoyancyType == BuoyancyType.NonPhysical || _buoyancyType == BuoyancyType.Physical)
+            {
+                voxels = new Vector3[1];
+                voxels[0] = centerOfMass;
+                samplePoints = new float3[1];
             }
 
             float archimedesForceMagnitude = WATER_DENSITY * Mathf.Abs(Physics.gravity.y) * volume;
-            localArchimedesForce = new Vector3(0, archimedesForceMagnitude, 0) / voxels.Length;
-
-            samplePoints = new float3[voxels.Length];
+            localArchimedesForce = new Vector3(0, archimedesForceMagnitude, 0) / samplePoints.Length;
         }
 
         private void Start()

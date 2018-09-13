@@ -72,42 +72,42 @@ MonoBehaviour:
     m_NumColorKeys: 4
     m_NumAlphaKeys: 2
   _waves:
-  - amplitude: 4.9
+  - amplitude: 1
     direction: -6.03
-    wavelength: 5.09
-    origin: {x: -53.403767, y: 105.14393}
+    wavelength: 10
+    origin: {x: -146.4, y: 326.2}
     onmiDir: 1
-  - amplitude: 1.82
-    direction: 178
-    wavelength: 3.3500388
+  - amplitude: 0.9
+    direction: 166
+    wavelength: 8
     origin: {x: 0, y: 0}
     onmiDir: 0
   - amplitude: 0.5
     direction: 6.532788
     wavelength: 7.455916
-    origin: {x: 0, y: 0}
+    origin: {x: -63.14, y: 931.6}
     onmiDir: 1
   - amplitude: 0.7
     direction: 4.051435
     wavelength: 4.6626315
-    origin: {x: 0, y: 0}
+    origin: {x: -72.74, y: -16.01}
     onmiDir: 1
   - amplitude: 0.5
-    direction: 2.0216856
+    direction: 180
     wavelength: 2.6733496
-    origin: {x: 0, y: 0}
-    onmiDir: 1
+    origin: {x: -50.43, y: 0}
+    onmiDir: 0
   - amplitude: 0.5
-    direction: -39
+    direction: -151
     wavelength: 2.9848163
     origin: {x: 0, y: 0}
-    onmiDir: 1
+    onmiDir: 0
   _customWaves: 0
   randomSeed: 891
   _basicWaveSettings:
     numWaves: 6
-    amplitude: 0.8
-    direction: -177
+    amplitude: 0.6
+    direction: -176
     wavelength: 8
   _foamSettings:
     foamType: 1
@@ -115,22 +115,40 @@ MonoBehaviour:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0.25280517
+        time: 0
         value: 0
-        inSlope: 3.040578
-        outSlope: 3.040578
+        inSlope: 0.16228558
+        outSlope: 0.16228558
         tangentMode: 0
         weightedMode: 0
         inWeight: 0
-        outWeight: 0.07297084
+        outWeight: 0.15316528
       - serializedVersion: 3
-        time: 1
-        value: 0.925
-        inSlope: 2.2884614
-        outSlope: 2.2884614
+        time: 0.6247411
+        value: 0.39698213
+        inSlope: 1.2551872
+        outSlope: 1.2551872
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.06255044
+        inWeight: 0.33333334
+        outWeight: 0.28785437
+      - serializedVersion: 3
+        time: 0.8523668
+        value: 0.81129223
+        inSlope: 1.9929253
+        outSlope: 1.9929253
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.27977753
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0.6611113
+        outSlope: 0.6611113
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.55429333
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2

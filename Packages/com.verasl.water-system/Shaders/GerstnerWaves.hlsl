@@ -33,7 +33,7 @@ WaveStruct GerstnerWave(half2 pos, float waveCountMulti, half amplitude, half di
 	half3 wave = 0; // wave vector
 	half w = 6.28318 / wavelength; // 2pi over wavelength(hardcoded)
 	half wSpeed = sqrt(9.8 * w); // frequency of the wave based off wavelength
-	half peak = 0.95; // peak value, 1 is the sharpest peaks
+	half peak = 1; // peak value, 1 is the sharpest peaks
 	half qi = peak / (amplitude * w * _WaveCount);
 
 	direction = radians(direction); // convert the incoming degrees to radians, for directional waves
@@ -50,7 +50,7 @@ WaveStruct GerstnerWave(half2 pos, float waveCountMulti, half amplitude, half di
 
 	// calculate the offsets for the current point
 	wave.xz = qi * amplitude * windDir.xy * cosCalc;
-	wave.y = (((sinCalc * 0.5 + 0.5) * amplitude)) * waveCountMulti;// the height is divided by the number of waves
+	wave.y = ((sinCalc * amplitude)) * waveCountMulti;// the height is divided by the number of waves
 	
 	////////////////////////////normal output calculations/////////////////////////
 	half wa = w * amplitude;
@@ -72,6 +72,7 @@ inline void SampleWaves(float3 position, half opacity, out WaveStruct waveOut)
 	waveOut.position = 0;
 	waveOut.normal = 0;
 	half waveCountMulti = 1.0 / _WaveCount;
+	half3 opacityMask = saturate(half3(3, 1, 3) * opacity);
 	
 	UNITY_LOOP
 	for(uint i = 0; i < _WaveCount; i++)
@@ -94,8 +95,8 @@ inline void SampleWaves(float3 position, half opacity, out WaveStruct waveOut)
         								waveData[i + 10].xy); // calculate the wave
 
 		#endif
-		waveOut.position += waves[i].position; // add the position
-		waveOut.normal += waves[i].normal; // add the normal
+		waveOut.position += waves[i].position * opacityMask; // add the position
+		waveOut.normal += waves[i].normal * opacityMask; // add the normal
 	}
 }
 
