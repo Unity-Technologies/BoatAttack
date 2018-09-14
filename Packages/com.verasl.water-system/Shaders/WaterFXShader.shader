@@ -22,24 +22,22 @@
 			Name "WaterFX"
 			Tags{"LightMode" = "WaterFX"}
 			HLSLPROGRAM
-			#pragma vertex vert
-			#pragma fragment frag
+			#pragma vertex WaterFXVertex
+			#pragma fragment WaterFXFragment
 			#pragma shader_feature _INVERT_ON
-
-			#define _NORMALMAP 1
 			
 			#include "LWRP/ShaderLibrary/Core.hlsl"
 
-			struct appdata
+			struct Attributes
 			{
-				float4 vertex : POSITION;
-				float3 normal : NORMAL;
-    			float4 tangent : TANGENT;
+				float3 positionOS : POSITION;
+				float3 normalOS : NORMAL;
+    			float4 tangentOS : TANGENT;
 				half4 color : COLOR;
 				float2 uv : TEXCOORD0;
 			};
 
-			struct v2f
+			struct Varyings
 			{
 				float2 uv : TEXCOORD0;
 				half4 normal : TEXCOORD1;    // xyz: normal, w: viewDir.x
@@ -51,40 +49,43 @@
 
 			sampler2D _MainTex;
 			
-			v2f vert (appdata v)
+			Varyings WaterFXVertex (Attributes input)
 			{
-				v2f o;
-				half3 posWS = TransformObjectToWorld(v.vertex.xyz);
-				o.vertex = TransformWorldToHClip(posWS);
-				o.uv = v.uv;
+				Varyings output = (Varyings)0;
+				
+				VertexPosition vertexPosition = GetVertexPosition(input.positionOS.xyz);
+                VertexTBN vertexTBN = GetVertexTBN(input.normalOS, input.tangentOS);
+				
+				output.vertex = vertexPosition.hclipSpace;
+				
+				output.uv = input.uv;
 
-				o.color = v.color;
+				output.color = input.color;
 
-				half3 viewDir = VertexViewDirWS(GetCameraPositionWS() - posWS);
-				o.normal.w = viewDir.x;
-    			o.tangent.w = viewDir.y;
-    			o.binormal.w = viewDir.z;
+				half3 viewDir = VertexViewDirWS(GetCameraPositionWS() - vertexPosition.worldSpace);
 
-				OUTPUT_NORMAL(v, o);
+                output.normal = half4(vertexTBN.normalWS, viewDir.x);
+                output.tangent = half4(vertexTBN.tangentWS, viewDir.y);
+                output.binormal = half4(vertexTBN.binormalWS, viewDir.z);
 
-				return o;
+				return output;
 			}
 			
-			half4 frag (v2f i) : SV_Target
+			half4 WaterFXFragment (Varyings input) : SV_Target
 			{
-				half4 col = tex2D(_MainTex, i.uv);
+				half4 col = tex2D(_MainTex, input.uv);
 
-				half foamMask = col.r * i.color.r;
+				half foamMask = col.r * input.color.r;
 				half disp = col.a * 2 - 1;
 
-				disp *= i.color.a;
+				disp *= input.color.a;
 
 				half3 tNorm = half3(col.b, col.g, 1) * 2 - 1;
 
-				half3 viewDir = half3(i.normal.w, i.tangent.w, i.binormal.w);
-    			half3 normalWS = TangentToWorldNormal(tNorm, i.tangent.xyz, i.binormal.xyz, i.normal.xyz);
+				half3 viewDir = half3(input.normal.w, input.tangent.w, input.binormal.w);
+    			half3 normalWS = TangentToWorldNormal(tNorm, input.tangent.xyz, input.binormal.xyz, input.normal.xyz);
 
-				normalWS = lerp(half3(0, 1, 0), normalWS, i.color.g);
+				normalWS = lerp(half3(0, 1, 0), normalWS, input.color.g);
 				half4 comp = half4(foamMask, normalWS.xz, disp);
 
 				#ifdef _INVERT_ON

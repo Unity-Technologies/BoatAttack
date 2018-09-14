@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf2edee5c58d82540a51f03df9d42094, type: 3}
   m_Name: LightweightAsset
   m_EditorClassIdentifier: 
+  m_DirectionalShadowsSupported: 1
+  m_PunctualLightsSupport: 2
+  m_LocalShadowsSupported: 0
+  m_SoftShadowsSupported: 1
+  m_MixedLightingSupported: 1
   k_AssetVersion: 3
   m_MaxPixelLights: 1
-  m_SupportsVertexLight: 0
   m_RequireDepthTexture: 1
   m_RequireSoftParticles: 0
   m_RequireOpaqueTexture: 1
@@ -23,19 +27,18 @@ MonoBehaviour:
   m_MSAA: 4
   m_RenderScale: 1.15
   m_SupportsDynamicBatching: 1
-  m_DirectionalShadowsSupported: 1
   m_ShadowAtlasResolution: 2048
   m_ShadowDistance: 250
   m_ShadowCascades: 0
   m_Cascade2Split: 0.25
   m_Cascade4Split: {x: 0.067, y: 0.2, z: 0.467}
-  m_LocalShadowsSupported: 0
   m_LocalShadowsAtlasResolution: 512
-  m_SoftShadowsSupported: 1
   m_ResourcesAsset: {fileID: 11400000, guid: aac5a08c32552a14c89394b703f1978a, type: 2}
   m_SavedXRConfig:
     renderScale: 1.15
     viewportScale: 1
     useOcclusionMesh: 1
     occlusionMaskScale: 1
+    showDeviceView: 1
+    gameViewRenderMode: 3
   m_ShadowType: 2
