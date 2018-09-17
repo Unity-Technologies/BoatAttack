@@ -6,11 +6,11 @@ Shader "hidden/preview"
     }
     HLSLINCLUDE
     #define USE_LEGACY_UNITY_MATRIX_VARIABLES
-    #include "CoreRP/ShaderLibrary/Common.hlsl"
-    #include "CoreRP/ShaderLibrary/Packing.hlsl"
-    #include "CoreRP/ShaderLibrary/Color.hlsl"
-    #include "CoreRP/ShaderLibrary/UnityInstancing.hlsl"
-    #include "CoreRP/ShaderLibrary/EntityLighting.hlsl"
+    #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
+    #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Packing.hlsl"
+    #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
+    #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/UnityInstancing.hlsl"
+    #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/EntityLighting.hlsl"
     #include "ShaderGraphLibrary/ShaderVariables.hlsl"
     #include "ShaderGraphLibrary/ShaderVariablesFunctions.hlsl"
     #include "ShaderGraphLibrary/Functions.hlsl"

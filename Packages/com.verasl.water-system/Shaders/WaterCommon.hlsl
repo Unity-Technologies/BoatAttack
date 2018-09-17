@@ -5,7 +5,7 @@
 #define _SHADOWS_ENABLED
 #define SHADOWS_SCREEN 0
 
-#include "LWRP/ShaderLibrary/Core.hlsl"
+#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
 #include "WaterInput.hlsl"
 #include "CommonUtilities.hlsl"
 #include "GerstnerWaves.hlsl"
