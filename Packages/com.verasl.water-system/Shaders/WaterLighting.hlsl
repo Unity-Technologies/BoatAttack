@@ -23,7 +23,7 @@ half4 VertexLightingAndFog(half3 normalWS, half3 posWS, half3 clipPos)
 //specular
 half3 Highlights(half3 positionWS, half roughness, half3 normalWS, half3 viewDirectionWS)
 {
-    Light mainLight = GetMainLight();
+    Light mainLight = GetDirectionalLight();
 
     half roughness2 = roughness * roughness;
     half3 halfDir = SafeNormalize(mainLight.direction + viewDirectionWS);
@@ -42,7 +42,7 @@ half3 Highlights(half3 positionWS, half roughness, half3 normalWS, half3 viewDir
     specularTerm = specularTerm - HALF_MIN;
     specularTerm = clamp(specularTerm, 0.0, 5.0); // Prevent FP16 overflow on mobiles
 #endif
-    return specularTerm * mainLight.color * mainLight.attenuation;
+    return specularTerm * mainLight.color * mainLight.distanceAttenuation;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
