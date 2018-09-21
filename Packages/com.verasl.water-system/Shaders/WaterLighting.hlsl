@@ -1,7 +1,7 @@
 ﻿#ifndef WATER_LIGHTING_INCLUDED
 #define WATER_LIGHTING_INCLUDED
 
-#include "LWRP/ShaderLibrary/Lighting.hlsl"
+#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Lighting.hlsl"
 
 half CalculateFresnelTerm(half3 normalWS, half3 viewDirectionWS)
 {

@@ -1,4 +1,4 @@
-#include "LWRP/ShaderLibrary/Lighting.hlsl"
+#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Lighting.hlsl"
 //#define UNITY_USE_SHCOEFFS_ARRAYS 1
 
 struct VegetationVertexInput

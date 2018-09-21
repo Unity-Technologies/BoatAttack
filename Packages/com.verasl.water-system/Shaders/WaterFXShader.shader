@@ -26,7 +26,7 @@
 			#pragma fragment WaterFXFragment
 			#pragma shader_feature _INVERT_ON
 			
-			#include "LWRP/ShaderLibrary/Core.hlsl"
+			#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
 
 			struct Attributes
 			{

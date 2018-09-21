@@ -1,9 +1,9 @@
 #ifndef INPUT_SURFACE_VEGETATION_INCLUDED
 #define INPUT_SURFACE_VEGETATION_INCLUDED
 
-#include "LWRP/ShaderLibrary/Core.hlsl"
-#include "CoreRP/ShaderLibrary/CommonMaterial.hlsl"
-#include "LWRP/ShaderLibrary/InputSurfaceCommon.hlsl"
+#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
+#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/CommonMaterial.hlsl"
+#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/InputSurfaceCommon.hlsl"
 
 CBUFFER_START(UnityPerMaterial)
 float4 _MainTex_ST;

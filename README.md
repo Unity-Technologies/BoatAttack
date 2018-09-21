@@ -1,7 +1,7 @@
 # Boat Attack
 ###### Demo Project using the Lightweight Render Pipeline from Unity3D
 
-![Boat Attack!](http://gdurl.com/6ISqD)
+[![Click for Youtube Video](http://gdurl.com/6ISqD)](http://www.youtube.com/watch?v=8ancNOmt4pA)
 
 This Unity project has been created to aid the testing and development of LWRP. The project is a small vertical slice of a boat racing game, complete with raceable boats and island environment.
 
@@ -14,6 +14,8 @@ This Unity project has been created to aid the testing and development of LWRP. 
   * Custom LWRP pass injection for water and planar reflections
   * Gestner based water system
   * Much more..
+
+[Youtube Video](http://www.youtube.com/watch?v=8ancNOmt4pA)
 
 # Usage
 Currently this is a full project so you should jsut need to clone* down and open in Unity, if you stick to the master branch it should always work with the latest publicly available Unity and assorted packages.

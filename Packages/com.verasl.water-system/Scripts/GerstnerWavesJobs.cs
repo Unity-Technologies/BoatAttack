@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Jobs;
+using Unity.Burst;
 using Unity.Mathematics;
 using WaterSystem.Data;
 
@@ -184,6 +185,7 @@ namespace WaterSystem
         }
 
         // Gerstner Height C# Job
+        [BurstCompile]
         public struct HeightJob : IJobParallelFor
         {
             [ReadOnly]
@@ -222,17 +224,17 @@ namespace WaterSystem
                         var wavelength = waveData[wave].wavelength;
                         float2 omniPos = waveData[wave].origin;
                         ////////////////////////////////wave value calculations//////////////////////////
-                        half w = 6.28318f / wavelength; // 2pi over wavelength(hardcoded)
-                        half wSpeed = math.sqrt(9.8f * w); // frequency of the wave based off wavelength
-                        half peak = 0.8f; // peak value, 1 is the sharpest peaks
-                        half qi = peak / (amplitude * w * waveData.Length);
+                        float w = 6.28318f / wavelength; // 2pi over wavelength(hardcoded)
+                        float wSpeed = math.sqrt(9.8f * w); // frequency of the wave based off wavelength
+                        float peak = 0.8f; // peak value, 1 is the sharpest peaks
+                        float qi = peak / (amplitude * w * waveData.Length);
 
                         float2 windDir = new float2(0f, 0f);
                         float dir = 0;
 
                         direction = math.radians(direction); // convert the incoming degrees to radians
-                        half2 windDirInput = new float2(math.sin(direction), math.cos(direction)) * (1 - waveData[wave].onmiDir); // calculate wind direction - TODO - currently radians
-                        half2 windOmniInput = (pos - omniPos) * waveData[wave].onmiDir;
+                        float2 windDirInput = new float2(math.sin(direction), math.cos(direction)) * (1 - waveData[wave].onmiDir); // calculate wind direction - TODO - currently radians
+                        float2 windOmniInput = (pos - omniPos) * waveData[wave].onmiDir;
 
                         windDir += windDirInput;
                         windDir += windOmniInput;
@@ -252,7 +254,7 @@ namespace WaterSystem
                         if (normal == 1)
                         {
                             ////////////////////////////normal output calculations/////////////////////////
-                            half wa = w * amplitude;
+                            float wa = w * amplitude;
                             // normal vector
                             float3 norm = new float3(-(windDir.xy * wa * cosCalc),
                                             1 - (qi * wa * sinCalc));

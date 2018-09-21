@@ -64,7 +64,7 @@ Shader "LightweightPipeline/PBR/Packed Dialectric"
             #pragma fragment LitPassFragment
 
             #include "InputSurfacePackedDialectric.hlsl"
-            #include "LWRP/ShaderLibrary/LightweightPassLit.hlsl"
+            #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/LightweightPassLit.hlsl"
             ENDHLSL
         }
 
@@ -90,7 +90,7 @@ Shader "LightweightPipeline/PBR/Packed Dialectric"
             #pragma fragment ShadowPassFragment
 
             #include "InputSurfacePackedDialectric.hlsl"
-            #include "LWRP/ShaderLibrary/LightweightPassShadow.hlsl"
+            #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/LightweightPassShadow.hlsl"
             ENDHLSL
         }
 
@@ -117,7 +117,7 @@ Shader "LightweightPipeline/PBR/Packed Dialectric"
             #pragma multi_compile_instancing
 
             #include "InputSurfacePackedDialectric.hlsl"
-            #include "LWRP/ShaderLibrary/LightweightPassDepthOnly.hlsl"
+            #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/LightweightPassDepthOnly.hlsl"
             ENDHLSL
         }
 
@@ -141,7 +141,7 @@ Shader "LightweightPipeline/PBR/Packed Dialectric"
             #pragma shader_feature EDITOR_VISUALIZATION
 
             #include "InputSurfacePackedDialectric.hlsl"
-            #include "LWRP/ShaderLibrary/LightweightPassMetaPBR.hlsl"
+            #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/LightweightPassMetaPBR.hlsl"
 
             ENDHLSL
         }

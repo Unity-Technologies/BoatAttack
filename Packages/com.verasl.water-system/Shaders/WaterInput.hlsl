@@ -1,7 +1,7 @@
 ﻿#ifndef WATER_INPUT_INCLUDED
 #define WATER_INPUT_INCLUDED
 
-#include "LWRP/ShaderLibrary/Core.hlsl"
+#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
 
 CBUFFER_START(MaterialProperties)
 half _BumpScale;

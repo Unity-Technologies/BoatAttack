@@ -67,7 +67,7 @@
             // It also includes matrix/space conversion functions and fog.
             // Lighting.hlsl will include the light functions/data to abstract light constants. You should use GetMainLight and GetLight functions
             // that initialize Light struct. Lighting.hlsl also include GI, Light BDRF functions. It also includes Shadows.
-            //#include "LWRP/ShaderLibrary/Core.hlsl"
+            //#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
                         // Not required but included here for simplicity. This defines all material related constants for the Standard surface shader like _Color, _MainTex, and so on.
             // These are specific to this shader. You should define your own constants.
             #include "InputSurfaceVegetation.hlsl"
@@ -243,7 +243,7 @@ Pass
             #pragma multi_compile _ LOD_FADE_CROSSFADE
 
             #include "InputSurfaceVegetation.hlsl"
-            #include "LWRP/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
             #include "Vegetation.hlsl"
 
             VegetationVertexOutput DepthOnlyVertex(VegetationVertexInput input)
@@ -299,7 +299,7 @@ Pass
             #pragma shader_feature _SPECGLOSSMAP
 
             #include "InputSurfaceVegetation.hlsl"
-            #include "LWRP/ShaderLibrary/LightweightPassMetaPBR.hlsl"
+            #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/LightweightPassMetaPBR.hlsl"
 
             ENDHLSL
         }
