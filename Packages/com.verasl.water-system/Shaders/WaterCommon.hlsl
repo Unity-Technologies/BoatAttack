@@ -35,8 +35,8 @@ struct WaterVertexOutput // fragment struct
 	float2	preWaveSP 				: TEXCOORD4;	// screen position of the verticies before wave distortion
 	half4 	fogFactorAndVertexLight : TEXCOORD5;	// x: fogFactor, yzw: vertex light
 
-	half4	additionalData			: TEXCOORD6;	// x = distance to surface, y = distance to surface, z = normalized wave height
-	half4	vertColor				: TEXCOORD7;
+	float4	additionalData			: TEXCOORD6;	// x = distance to surface, y = distance to surface, z = normalized wave height
+	float4	vertColor				: TEXCOORD7;
 	half4	shadowCoord				: TEXCOORD8;	// for ssshadows
 
 	float4	clipPos					: SV_POSITION;
