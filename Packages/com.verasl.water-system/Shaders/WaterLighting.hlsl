@@ -23,7 +23,7 @@ half4 VertexLightingAndFog(half3 normalWS, half3 posWS, half3 clipPos)
 //specular
 half3 Highlights(half3 positionWS, half roughness, half3 normalWS, half3 viewDirectionWS)
 {
-    Light mainLight = GetDirectionalLight();
+    Light mainLight = GetMainLight();
 
     half roughness2 = roughness * roughness;
     half3 halfDir = SafeNormalize(mainLight.direction + viewDirectionWS);

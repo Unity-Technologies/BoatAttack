@@ -199,11 +199,11 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	half fresnelTerm = CalculateFresnelTerm(lerp(IN.normal, half3(0, 1, 0), 0.5), IN.viewDir.xyz);
 
 	// Shadows
-	half shadow = DirectionalLightRealtimeShadow(TransformWorldToShadowCoord(IN.posWS));
+	half shadow = MainLightRealtimeShadow(TransformWorldToShadowCoord(IN.posWS));
 	
 	// Specular
 	half3 spec = Highlights(IN.posWS, 0.005, IN.normal, IN.viewDir) * shadow;
-	Light mainLight = GetDirectionalLight();
+	Light mainLight = GetMainLight();
 	half3 ambient = SampleSHPixel(IN.lightmapUVOrVertexSH, IN.normal) * (mainLight.color * mainLight.distanceAttenuation) * 0.5;
 
 	// Reflections
