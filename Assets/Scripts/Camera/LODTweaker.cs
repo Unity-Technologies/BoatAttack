@@ -26,12 +26,12 @@ namespace BoatAttack
 
         void OnEnable()
         {
-            LightweightPipeline.beginCameraRendering += SetMaxLOD; // listen for LWRP camera callback
+            LightweightRenderPipeline.beginCameraRendering += SetMaxLOD; // listen for LWRP camera callback
         }
 
         void OnDisable()
         {
-            LightweightPipeline.beginCameraRendering -= SetMaxLOD; // stop listening for LWRP camera callback
+            LightweightRenderPipeline.beginCameraRendering -= SetMaxLOD; // stop listening for LWRP camera callback
         }
     }
 }

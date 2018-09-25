@@ -6,7 +6,7 @@ using WaterSystem;
 namespace UnityEngine.Experimental.Rendering.LightweightPipeline
 {
     [ImageEffectAllowedInSceneView]
-    public class PlanerReflections : MonoBehaviour, LightweightPipeline.IBeforeCameraRender
+    public class PlanerReflections : MonoBehaviour, IBeforeCameraRender
     {
         [System.Serializable]
         public enum ResolutionMulltiplier
@@ -220,7 +220,7 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
         }
 
         public void ExecuteBeforeCameraRender(
-            LightweightPipeline pipelineInstance,
+            LightweightRenderPipeline pipelineInstance,
             ScriptableRenderContext context,
             Camera camera)
         {
@@ -236,7 +236,7 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
             UpdateReflectionCamera(camera);
 
             CullResults cullResults = new CullResults();
-            LightweightPipeline.RenderSingleCamera(pipelineInstance, context, m_ReflectionCamera, ref cullResults);
+            LightweightRenderPipeline.RenderSingleCamera(pipelineInstance, context, m_ReflectionCamera, ref cullResults);
             
             GL.invertCulling = false;
             RenderSettings.fog = true;
