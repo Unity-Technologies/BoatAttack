@@ -1,14 +1,14 @@
-#include "LWRP/ShaderLibrary/Lighting.hlsl"
+#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Lighting.hlsl"
 //#define UNITY_USE_SHCOEFFS_ARRAYS 1
 
 struct VegetationVertexInput
 {
-    float4 position : POSITION;
-    float3 normal : NORMAL;
-    float4 tangent : TANGENT;
+    float3 positionOS : POSITION;
+    float3 normalOS : NORMAL;
+    float4 tangentOS : TANGENT;
     float2 texcoord : TEXCOORD0;
     float2 lightmapUV : TEXCOORD1;
-    float4 color : COLOR;
+    half4 color : COLOR;
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -29,7 +29,7 @@ struct VegetationVertexOutput
 
     half4 fogFactorAndVertexLight   : TEXCOORD6; // x: fogFactor, yzw: vertex light
 
-#ifdef _SHADOWS_ENABLED
+#ifdef _DIRECTIONAL_SHADOWS
     float4 shadowCoord              : TEXCOORD7;
 #endif
 

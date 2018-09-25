@@ -1,7 +1,7 @@
 #ifndef SHADOW_PASS_VEGETATION_INCLUDED
 #define SHADOW_PASS_VEGETATION_INCLUDED
 
-#include "LWRP/ShaderLibrary/Core.hlsl"
+#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
 
 // x: global clip space bias, y: normal world space bias
 float4 _ShadowBias;
@@ -9,9 +9,10 @@ float3 _LightDirection;
 
 struct VertexInput
 {
-    float4 position     : POSITION;
-    float3 normal       : NORMAL;
+    float4 positionOS   : POSITION;
+    float3 normalOS     : NORMAL;
     float2 texcoord     : TEXCOORD0;
+    half3 color         : COLOR;
     UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -21,16 +22,16 @@ struct VertexOutput
     float4 clipPos      : SV_POSITION;
 };
 
-float4 GetShadowPositionHClip(VertexInput v)
+float4 GetShadowPositionHClip(VertexInput input)
 {
-    float3 positionWS = TransformObjectToWorld(v.position.xyz);
-    float3 normalWS = TransformObjectToWorldDir(v.normal);
-
+    VertexPosition vertexPosition = GetVertexPosition(input.positionOS);
+    
+    float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
     float invNdotL = 1.0 - saturate(dot(_LightDirection, normalWS));
     float scale = invNdotL * _ShadowBias.y;
 
     // normal bias is negative since we want to apply an inset normal offset
-    positionWS = normalWS * scale.xxx + positionWS;
+    float3 positionWS = normalWS * scale.xxx + vertexPosition.worldSpace;
     float4 clipPos = TransformWorldToHClip(positionWS);
 
     // _ShadowBias.x sign depens on if platform has reversed z buffer
@@ -45,14 +46,21 @@ float4 GetShadowPositionHClip(VertexInput v)
     return clipPos;
 }
 
-VertexOutput ShadowPassVegetationVertex(VertexInput v)
+VertexOutput ShadowPassVegetationVertex(VertexInput input)
 {
-    VertexOutput o;
-    UNITY_SETUP_INSTANCE_ID(v);
-
-    o.uv = v.texcoord;
-    o.clipPos = GetShadowPositionHClip(v);
-    return o;
+    VertexOutput output;
+    UNITY_SETUP_INSTANCE_ID(input);
+    
+    #if _VERTEXANIMATION
+    /////////////////////////////////////vegetation stuff//////////////////////////////////////////////////
+    float3 objectOrigin = UNITY_ACCESS_INSTANCED_PROP(Props, _Position).xyz;
+    input.positionOS.xyz = VegetationDeformation(input.positionOS, objectOrigin, input.normalOS, input.color.x, input.color.z, input.color.y);
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+    #endif
+    
+    output.uv = input.texcoord;
+    output.clipPos = GetShadowPositionHClip(input);
+    return output;
 }
 
 half4 ShadowPassVegetationFragment(VertexOutput IN) : SV_TARGET

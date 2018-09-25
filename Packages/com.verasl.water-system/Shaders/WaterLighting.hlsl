@@ -1,7 +1,7 @@
 ﻿#ifndef WATER_LIGHTING_INCLUDED
 #define WATER_LIGHTING_INCLUDED
 
-#include "LWRP/ShaderLibrary/Lighting.hlsl"
+#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Lighting.hlsl"
 
 half CalculateFresnelTerm(half3 normalWS, half3 viewDirectionWS)
 {
@@ -42,7 +42,7 @@ half3 Highlights(half3 positionWS, half roughness, half3 normalWS, half3 viewDir
     specularTerm = specularTerm - HALF_MIN;
     specularTerm = clamp(specularTerm, 0.0, 5.0); // Prevent FP16 overflow on mobiles
 #endif
-    return specularTerm * mainLight.color * mainLight.attenuation;
+    return specularTerm * mainLight.color * mainLight.distanceAttenuation;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

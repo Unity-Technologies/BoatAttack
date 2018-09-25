@@ -2,10 +2,10 @@
 #define WATER_COMMON_INCLUDED
 
 #define _SHADOWS_SOFT
-#define _SHADOWS_ENABLED
+#define _DIRECTIONAL_SHADOWS
 #define SHADOWS_SCREEN 0
 
-#include "LWRP/ShaderLibrary/Core.hlsl"
+#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
 #include "WaterInput.hlsl"
 #include "CommonUtilities.hlsl"
 #include "GerstnerWaves.hlsl"
@@ -35,8 +35,8 @@ struct WaterVertexOutput // fragment struct
 	float2	preWaveSP 				: TEXCOORD4;	// screen position of the verticies before wave distortion
 	half4 	fogFactorAndVertexLight : TEXCOORD5;	// x: fogFactor, yzw: vertex light
 
-	half4	additionalData			: TEXCOORD6;	// x = distance to surface, y = distance to surface, z = normalized wave height
-	half4	vertColor				: TEXCOORD7;
+	float4	additionalData			: TEXCOORD6;	// x = distance to surface, y = distance to surface, z = normalized wave height
+	float4	vertColor				: TEXCOORD7;
 	half4	shadowCoord				: TEXCOORD8;	// for ssshadows
 
 	float4	clipPos					: SV_POSITION;
@@ -199,12 +199,12 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	half fresnelTerm = CalculateFresnelTerm(lerp(IN.normal, half3(0, 1, 0), 0.5), IN.viewDir.xyz);
 
 	// Shadows
-	half shadow = MainLightRealtimeShadowAttenuation(TransformWorldToShadowCoord(IN.posWS));
+	half shadow = MainLightRealtimeShadow(TransformWorldToShadowCoord(IN.posWS));
 	
 	// Specular
 	half3 spec = Highlights(IN.posWS, 0.005, IN.normal, IN.viewDir) * shadow;
 	Light mainLight = GetMainLight();
-	half3 ambient = SampleSHPixel(IN.lightmapUVOrVertexSH, IN.normal) * (mainLight.color * mainLight.attenuation) * 0.5;
+	half3 ambient = SampleSHPixel(IN.lightmapUVOrVertexSH, IN.normal) * (mainLight.color * mainLight.distanceAttenuation) * 0.5;
 
 	// Reflections
 	half3 reflection = SampleReflections(IN.normal, IN.viewDir.xyz, screenUV.xy, fresnelTerm, 0.0);
@@ -228,7 +228,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	half depthMulti = 1 / _MaxDepth;
     half3 color = (refraction + caustics) * (1 - foam);
 	color *= Absorption((depth.x - 0.5) * depthMulti);
-	color += Scattering(depth.x * depthMulti) * ambient * saturate(1-length(reflection));// TODO - scattering from main light(maybe additional lights too depending on cost)
+	color += Scattering(depth.x * depthMulti) * ambient * (shadow * 0.5 + 0.5) * saturate(1-length(reflection));// TODO - scattering from main light(maybe additional lights too depending on cost)
 	color *= 1 - foam;
 
 	// Foam lighting
@@ -241,7 +241,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
     float fogFactor = IN.fogFactorAndVertexLight.x;
     ApplyFog(comp, fogFactor);
 	return half4(comp, 1);
-	//return half4(waterFX.r, 0, 0, 1); // debug line
+	//return half4(shadow.r, 0, 0, 1); // debug line
 }
 
 #endif // WATER_COMMON_INCLUDED

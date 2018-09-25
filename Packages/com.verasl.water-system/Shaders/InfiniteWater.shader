@@ -22,7 +22,7 @@ Shader "Unlit/InfiniteWater"
 			// make fog work
 			#pragma multi_compile_fog
 
-			#include "LWRP/ShaderLibrary/Core.hlsl"
+			#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
 			#include "WaterInput.hlsl"
 			#include "CommonUtilities.hlsl"
 			#include "WaterLighting.hlsl"

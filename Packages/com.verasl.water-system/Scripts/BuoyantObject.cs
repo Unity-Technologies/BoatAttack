@@ -114,6 +114,13 @@ namespace WaterSystem
 
         void Update()
         {
+
+        }
+
+        private void FixedUpdate()
+        {
+            //// previously from update ////
+            
             for(var i = 0; i < samplePoints.Length; i++)
             {
                 samplePoints[i] = transform.TransformPoint(voxels[i]);
@@ -141,10 +148,10 @@ namespace WaterSystem
                     // do the voxel non-physical
                 }
             }
-        }
-
-        private void FixedUpdate()
-        {
+            
+            ///////////////////////////////
+            
+            
             float submergedAmount = 0f;
 
             if(_buoyancyType == BuoyancyType.PhysicalVoxel)

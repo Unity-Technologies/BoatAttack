@@ -67,10 +67,10 @@ Shader "PBR Master"
 						#define _NORMALMAP 1
 		
 		
-			#include "LWRP/ShaderLibrary/Core.hlsl"
-			#include "LWRP/ShaderLibrary/Lighting.hlsl"
-			#include "CoreRP/ShaderLibrary/Color.hlsl"
-			#include "CoreRP/ShaderLibrary/UnityInstancing.hlsl"
+			#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
+			#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Lighting.hlsl"
+			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
+			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/UnityInstancing.hlsl"
 			#include "ShaderGraphLibrary/Functions.hlsl"
 		
 								TEXTURE2D(Texture_CA4EFDF0); SAMPLER(samplerTexture_CA4EFDF0);
@@ -297,7 +297,7 @@ Shader "PBR Master"
 		    #pragma vertex ShadowPassVertex
 		    #pragma fragment ShadowPassFragment
 		
-		    #include "LWRP/ShaderLibrary/LightweightPassShadow.hlsl"
+		    #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/LightweightPassShadow.hlsl"
 		    ENDHLSL
 		}
 		
@@ -315,7 +315,7 @@ Shader "PBR Master"
 		    #pragma vertex vert
 		    #pragma fragment frag
 		
-		    #include "LWRP/ShaderLibrary/Core.hlsl"
+		    #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
 		
 		    float4 vert(float4 pos : POSITION) : SV_POSITION
 		    {
@@ -351,7 +351,7 @@ Shader "PBR Master"
 		
 		    #pragma shader_feature _SPECGLOSSMAP
 		
-		    #include "LWRP/ShaderLibrary/LightweightPassMeta.hlsl"
+		    #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/LightweightPassMeta.hlsl"
 		    ENDHLSL
 		}
 	}

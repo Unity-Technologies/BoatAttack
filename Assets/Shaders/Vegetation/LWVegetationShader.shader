@@ -45,13 +45,12 @@
 
             // -------------------------------------
             // Lightweight Pipeline keywords
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS
-            #pragma multi_compile _ _VERTEX_LIGHTS
-            #pragma multi_compile _ _MIXED_LIGHTING_SUBTRACTIVE
-            #pragma multi_compile _ _SHADOWS_ENABLED
-            #pragma multi_compile _ _LOCAL_SHADOWS_ENABLED
+            #pragma multi_compile _ _DIRECTIONAL_SHADOWS
+            #pragma multi_compile _ _DIRECTIONAL_SHADOWS_CASCADE
+            #pragma multi_compile _ _PUNCTUAL_LIGHTS_VERTEX _PUNCTUAL_LIGHTS
+            #pragma multi_compile _ _PUNCTUAL_LIGHT_SHADOWS
             #pragma multi_compile _ _SHADOWS_SOFT
-            #pragma multi_compile _ _SHADOWS_CASCADE
+            #pragma multi_compile _ _MIXED_LIGHTING_SUBTRACTIVE
 
             // -------------------------------------
             // Unity defined keywords
@@ -68,7 +67,7 @@
             // It also includes matrix/space conversion functions and fog.
             // Lighting.hlsl will include the light functions/data to abstract light constants. You should use GetMainLight and GetLight functions
             // that initialize Light struct. Lighting.hlsl also include GI, Light BDRF functions. It also includes Shadows.
-            //#include "LWRP/ShaderLibrary/Core.hlsl"
+            //#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
                         // Not required but included here for simplicity. This defines all material related constants for the Standard surface shader like _Color, _MainTex, and so on.
             // These are specific to this shader. You should define your own constants.
             #include "InputSurfaceVegetation.hlsl"
@@ -91,7 +90,7 @@
             #endif
 
                 inputData.viewDirectionWS = FragmentViewDirWS(viewDir);
-            #ifdef _SHADOWS_ENABLED
+            #if defined(_DIRECTIONAL_SHADOWS)
                 inputData.shadowCoord = IN.shadowCoord;
             #else
                 inputData.shadowCoord = float4(0, 0, 0, 0);
@@ -102,65 +101,53 @@
             }
 
 			//vert
-			VegetationVertexOutput VegetationVertex(VegetationVertexInput v)
+			VegetationVertexOutput VegetationVertex(VegetationVertexInput input)
 			{
-				VegetationVertexOutput o = (VegetationVertexOutput)0;
+				VegetationVertexOutput output = (VegetationVertexOutput)0;
 
-                UNITY_SETUP_INSTANCE_ID(v);
-                UNITY_TRANSFER_INSTANCE_ID(v, o);
-                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+                UNITY_SETUP_INSTANCE_ID(input);
+                UNITY_TRANSFER_INSTANCE_ID(input, output);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
-                o.uv.xy = v.texcoord;
-
-                float3 posWS = TransformObjectToWorld(v.position.xyz);
-                o.clipPos = TransformWorldToHClip(posWS);
+                output.uv.xy = input.texcoord;
 
                 #if _VERTEXANIMATION
 				/////////////////////////////////////vegetation stuff//////////////////////////////////////////////////
                 float3 objectOrigin = UNITY_ACCESS_INSTANCED_PROP(Props, _Position).xyz;
-                v.position.xyz = VegetationDeformation(v.position.xyz, objectOrigin, v.normal, v.color.x, v.color.z, v.color.y);
+                input.positionOS = VegetationDeformation(input.positionOS, objectOrigin, input.normalOS, input.color.x, input.color.z, input.color.y);
 				//////////////////////////////////////////////////////////////////////////////////////////////////////
-				posWS = TransformObjectToWorld(v.position.xyz);
-                o.clipPos = TransformWorldToHClip(posWS);
                 #endif
-                half3 viewDir = VertexViewDirWS(GetCameraPositionWS() - posWS);
+                VertexPosition vertexPosition = GetVertexPosition(input.positionOS);
+                VertexTBN vertexTBN = GetVertexTBN(input.normalOS, input.tangentOS);
+                half3 vertexLight = VertexLighting(vertexPosition.worldSpace, output.normal.xyz);
+                half fogFactor = ComputeFogFactor(vertexPosition.hclipSpace.z);
+                half3 viewDir = VertexViewDirWS(GetCameraPositionWS() - vertexPosition.worldSpace);
+                output.clipPos = vertexPosition.hclipSpace;
 
-                #ifdef _NORMALMAP
-                    o.normal.w = viewDir.x;
-                    o.tangent.w = viewDir.y;
-                    o.binormal.w = viewDir.z;
-                #else
-                    o.viewDir = viewDir;
-                #endif
-
-                // initializes o.normal and if _NORMALMAP also o.tangent and o.binormal
-                OUTPUT_NORMAL(v, o);
+            #ifdef _NORMALMAP
+                output.normal = half4(vertexTBN.normalWS, viewDir.x);
+                output.tangent = half4(vertexTBN.tangentWS, viewDir.y);
+                output.binormal = half4(vertexTBN.binormalWS, viewDir.z);
+            #else
+                output.normal = vertexTBN.normalWS;
+                output.viewDir = viewDir;
+            #endif
 
 				// We either sample GI from lightmap or SH. lightmap UV and vertex SH coefficients
 				// are packed in lightmapUVOrVertexSH to save interpolator.
 				// The following funcions initialize
-                OUTPUT_LIGHTMAP_UV(v.lightmapUV, unity_LightmapST, o.lightmapUV);
-                OUTPUT_SH(o.normal.xyz, o.vertexSH);
+                OUTPUT_LIGHTMAP_UV(input.lightmapUV, unity_LightmapST, output.lightmapUV);
+                OUTPUT_SH(output.normal.xyz, output.vertexSH);
+                
+                output.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
 
-				half3 vertexLight = VertexLighting(o.posWS, o.normal.xyz);
-            #if defined(FOG_EXP)
-                half fogFactor = ComputeGlobalFogFactor(posWS);
-            #else
-                half fogFactor = ComputeFogFactor(o.clipPos.z);
-            #endif
-                    o.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
-
-            #ifdef _SHADOWS_ENABLED
-            #if SHADOWS_SCREEN
-                o.shadowCoord = ComputeShadowCoord(o.clipPos);
-            #else
-                o.shadowCoord = TransformWorldToShadowCoord(posWS);
-            #endif
+            #if defined(_DIRECTIONAL_SHADOWS) && !defined(_RECEIVE_SHADOWS_OFF)
+                output.shadowCoord = GetShadowCoord(vertexPosition);
             #endif
 
-                o.occlusion = v.color.a;
+                output.occlusion = input.color.a;
 
-				return o;
+				return output;
 			}
 
 			//frag
@@ -211,6 +198,7 @@ Pass
             // -------------------------------------
             // Material Keywords
             #define _ALPHATEST_ON 1
+            #pragma shader_feature _VERTEXANIMATION
 
             //--------------------------------------
             // GPU Instancing
@@ -219,6 +207,7 @@ Pass
             #pragma vertex ShadowPassVegetationVertex
             #pragma fragment ShadowPassVegetationFragment
 
+            #include "Vegetation.hlsl"
             #include "InputSurfaceVegetation.hlsl"
             #include "ShadowPassVegetation.hlsl"
 
@@ -254,25 +243,27 @@ Pass
             #pragma multi_compile _ LOD_FADE_CROSSFADE
 
             #include "InputSurfaceVegetation.hlsl"
-            #include "LWRP/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
             #include "Vegetation.hlsl"
 
-            VegetationVertexOutput DepthOnlyVertex(VegetationVertexInput v)
+            VegetationVertexOutput DepthOnlyVertex(VegetationVertexInput input)
             {
-                VegetationVertexOutput o = (VegetationVertexOutput)0;
-                UNITY_SETUP_INSTANCE_ID(v);
+                VegetationVertexOutput output = (VegetationVertexOutput)0;
+                UNITY_SETUP_INSTANCE_ID(input);
 
                 #if _VERTEXANIMATION
                 /////////////////////////////////////vegetation stuff//////////////////////////////////////////////////
                 //half phaseOffset = UNITY_ACCESS_INSTANCED_PROP(Props, _PhaseOffset);
                 float3 objectOrigin = UNITY_ACCESS_INSTANCED_PROP(Props, _Position).xyz;
 
-                v.position.xyz = VegetationDeformation(v.position.xyz, objectOrigin, v.normal, v.color.x, v.color.z, v.color.y);
+                input.positionOS = VegetationDeformation(input.positionOS, objectOrigin, input.normalOS, input.color.x, input.color.z, input.color.y);
                 #endif
+                
+                VertexPosition vertexPosition = GetVertexPosition(input.positionOS);
 
-                o.uv.xy = v.texcoord;
-                o.clipPos = TransformObjectToHClip(v.position.xyz);
-                return o;
+                output.uv.xy = input.texcoord;
+                output.clipPos = vertexPosition.hclipSpace;
+                return output;
             }
 
             half4 DepthOnlyFragment(VegetationVertexOutput IN) : SV_TARGET
@@ -308,7 +299,7 @@ Pass
             #pragma shader_feature _SPECGLOSSMAP
 
             #include "InputSurfaceVegetation.hlsl"
-            #include "LWRP/ShaderLibrary/LightweightPassMetaPBR.hlsl"
+            #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/LightweightPassMetaPBR.hlsl"
 
             ENDHLSL
         }
