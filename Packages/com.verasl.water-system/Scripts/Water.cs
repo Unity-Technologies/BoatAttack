@@ -53,7 +53,7 @@ namespace WaterSystem
             else
                 useComputeBuffer = false;
             Init();
-            LightweightPipeline.beginCameraRendering += BeginCameraRendering;
+            LightweightRenderPipeline.beginCameraRendering += BeginCameraRendering;
 
             if(resources == null)
             {
@@ -69,7 +69,7 @@ namespace WaterSystem
         {
             if(Application.isPlaying)
                 GerstnerWavesJobs.Cleanup();
-            LightweightPipeline.beginCameraRendering -= BeginCameraRendering;
+            LightweightRenderPipeline.beginCameraRendering -= BeginCameraRendering;
             if (_depthCam)
             {
                 _depthCam.targetTexture = null;
@@ -116,7 +116,7 @@ namespace WaterSystem
             }
         }
 
-        private void FixedUpdate() {
+        private void LateUpdate() {
             if(Application.isPlaying)
                 GerstnerWavesJobs.UpdateHeights();
         }

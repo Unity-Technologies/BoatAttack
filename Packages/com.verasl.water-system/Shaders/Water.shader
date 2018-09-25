@@ -18,12 +18,17 @@
 			#pragma prefer_hlslcc gles
 			/////////////////SHADER FEATURES//////////////////
 			#pragma shader_feature _REFLECTION_CUBEMAP _REFLECTION_PROBES _REFLECTION_PLANARREFLECTION
-			#pragma multi_compile _ FOG_LINEAR FOG_EXP2
 			#pragma multi_compile _ USE_STRUCTURED_BUFFER
+			
+			// -------------------------------------
+            // Lightweight Pipeline keywords
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
+            #pragma multi_compile _ _SHADOWS_SOFT
 
 			//--------------------------------------
             // GPU Instancing
             #pragma multi_compile_instancing
+            #pragma multi_compile_fog
 
 			////////////////////INCLUDES//////////////////////
 			#include "WaterCommon.hlsl"

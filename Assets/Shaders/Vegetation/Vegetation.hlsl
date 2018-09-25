@@ -29,7 +29,7 @@ struct VegetationVertexOutput
 
     half4 fogFactorAndVertexLight   : TEXCOORD6; // x: fogFactor, yzw: vertex light
 
-#ifdef _DIRECTIONAL_SHADOWS
+#ifdef _MAIN_LIGHT_SHADOWS
     float4 shadowCoord              : TEXCOORD7;
 #endif
 

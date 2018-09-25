@@ -54,6 +54,7 @@ namespace WaterSystem
             RenderTextureDescriptor descriptor = ScriptableRenderer.CreateRenderTextureDescriptor(ref renderingData.cameraData);
             descriptor.width = (int) (descriptor.width * 0.5f);
             descriptor.height = (int) (descriptor.height * 0.5f);
+            descriptor.colorFormat = RenderTextureFormat.Default;
 
             using (new ProfilingSample(cmd, k_RenderWaterFXTag))
             {

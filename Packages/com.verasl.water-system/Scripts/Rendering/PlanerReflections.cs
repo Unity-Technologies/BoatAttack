@@ -6,7 +6,7 @@ using WaterSystem;
 namespace UnityEngine.Experimental.Rendering.LightweightPipeline
 {
     [ImageEffectAllowedInSceneView]
-    public class PlanerReflections : MonoBehaviour, LightweightPipeline.IBeforeCameraRender
+    public class PlanerReflections : MonoBehaviour, IBeforeCameraRender
     {
         [System.Serializable]
         public enum ResolutionMulltiplier
@@ -180,7 +180,7 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
 
         private Camera CreateMirrorObjects(Camera currentCamera)
         {
-            LightweightPipelineAsset lwAsset = (LightweightPipelineAsset) GraphicsSettings.renderPipelineAsset;
+            LightweightRenderPipelineAsset lwAsset = (LightweightRenderPipelineAsset) GraphicsSettings.renderPipelineAsset;
             var resMulti = lwAsset.renderScale * GetScaleValue();
             m_TextureSize.x = (int) Mathf.Pow(2, Mathf.RoundToInt(Mathf.Log(currentCamera.pixelWidth * resMulti, 2)));
             m_TextureSize.y = (int) Mathf.Pow(2, Mathf.RoundToInt(Mathf.Log(currentCamera.pixelHeight * resMulti, 2)));
@@ -204,8 +204,8 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
             GameObject go =
                 new GameObject("Planar Refl Camera id" + GetInstanceID() + " for " + currentCamera.GetInstanceID(),
                     typeof(Camera), typeof(Skybox));
-            LightweightAdditionalCameraData lwrpCamData =
-                go.AddComponent(typeof(LightweightAdditionalCameraData)) as LightweightAdditionalCameraData;
+            AdditionalCameraData lwrpCamData =
+                go.AddComponent(typeof(AdditionalCameraData)) as AdditionalCameraData;
             lwrpCamData.renderShadows = false; // turn off shadows for the reflection camera
             var reflectionCamera = go.GetComponent<Camera>();
             reflectionCamera.transform.SetPositionAndRotation(transform.position, transform.rotation);
@@ -220,7 +220,7 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
         }
 
         public void ExecuteBeforeCameraRender(
-            LightweightPipeline pipelineInstance,
+            LightweightRenderPipeline pipelineInstance,
             ScriptableRenderContext context,
             Camera camera)
         {
@@ -236,7 +236,7 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
             UpdateReflectionCamera(camera);
 
             CullResults cullResults = new CullResults();
-            LightweightPipeline.RenderSingleCamera(pipelineInstance, context, m_ReflectionCamera, ref cullResults);
+            LightweightRenderPipeline.RenderSingleCamera(pipelineInstance, context, m_ReflectionCamera, ref cullResults);
             
             GL.invertCulling = false;
             RenderSettings.fog = true;

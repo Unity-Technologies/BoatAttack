@@ -18,12 +18,12 @@ namespace WaterSystem
 
         private void OnEnable()
         {
-            LightweightPipeline.beginCameraRendering += UpdatePosition;
+            LightweightRenderPipeline.beginCameraRendering += UpdatePosition;
         }
 
         private void OnDisable()
         {
-            LightweightPipeline.beginCameraRendering -= UpdatePosition;
+            LightweightRenderPipeline.beginCameraRendering -= UpdatePosition;
         }
 
         void UpdatePosition(Camera cam)

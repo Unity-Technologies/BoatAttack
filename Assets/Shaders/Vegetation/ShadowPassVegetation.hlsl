@@ -24,14 +24,14 @@ struct VertexOutput
 
 float4 GetShadowPositionHClip(VertexInput input)
 {
-    VertexPosition vertexPosition = GetVertexPosition(input.positionOS);
+    VertexPositionInputs vertexPosition = GetVertexPositionInputs(input.positionOS);
     
     float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
     float invNdotL = 1.0 - saturate(dot(_LightDirection, normalWS));
     float scale = invNdotL * _ShadowBias.y;
 
     // normal bias is negative since we want to apply an inset normal offset
-    float3 positionWS = normalWS * scale.xxx + vertexPosition.worldSpace;
+    float3 positionWS = normalWS * scale.xxx + vertexPosition.positionWS;
     float4 clipPos = TransformWorldToHClip(positionWS);
 
     // _ShadowBias.x sign depens on if platform has reversed z buffer
