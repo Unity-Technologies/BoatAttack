@@ -1,8 +1,7 @@
 ﻿#ifndef WATER_COMMON_INCLUDED
 #define WATER_COMMON_INCLUDED
 
-#define _SHADOWS_SOFT
-#define _DIRECTIONAL_SHADOWS
+#define _MAIN_LIGHT_SHADOWS_CASCADE 1
 #define SHADOWS_SCREEN 0
 
 #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
@@ -140,9 +139,7 @@ WaterVertexOutput WaterVertex(WaterVertexInput v)
     OUTPUT_SH(o.normal, o.lightmapUVOrVertexSH);
 
     o.fogFactorAndVertexLight = VertexLightingAndFog(o.normal, o.posWS, o.clipPos.xyz);
-#if defined(FOG_EXP)
-	o.fogFactorAndVertexLight.x = ComputeGlobalFogFactor(lwWorldPos);
-#endif
+	o.fogFactorAndVertexLight.x = ComputeFogFactor(o.clipPos.z);
 	o.fogFactorAndVertexLight.yzw = screenUV.xyz; // pre-displaced screenUVs
 	// Additional data
     float3 viewPos = TransformWorldToView(o.posWS.xyz);
@@ -173,7 +170,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	half t = _Time.x;
 	half2 detailBump = SAMPLE_TEXTURE2D_ARRAY(_SurfaceMap, sampler_SurfaceMap, IN.uv.zw * 0.25h + t + (IN.vertColor.a * 0.1), animT).xy;
 	IN.normal += (half3(detailBump.x, 0.5h, detailBump.y) * 2 - 1) * _BumpScale;
-	IN.normal += half3(waterFX.y, 0.5h, waterFX.z) * 2 - 1;
+	IN.normal += half3(waterFX.y, 0.5h, waterFX.z) - 0.5;
 
 	// Depth
 	float3 depth = WaterDepth(IN.posWS, (IN.posWS.xz * 0.002) + 0.5, IN.additionalData, screenUV.xy);// TODO - hardcoded shore depth UVs
@@ -193,7 +190,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 
 	// Caustics
 	half2 causticUV = (seabedWS * 0.3h + t + (IN.vertColor.a * 0.1)) + IN.additionalData.w * 0.1h;
-	half caustics = SAMPLE_TEXTURE2D_ARRAY(_SurfaceMap, sampler_SurfaceMap, causticUV, animT).z * 0.25h; // caustics for sea floor, darkened to 25%
+	half caustics = SAMPLE_TEXTURE2D_ARRAY_LOD(_SurfaceMap, sampler_SurfaceMap, causticUV, animT, depth.x * 0.5).z * saturate(depth.x); // caustics for sea floor, darkened to 25%
 
 	// Fresnel
 	half fresnelTerm = CalculateFresnelTerm(lerp(IN.normal, half3(0, 1, 0), 0.5), IN.viewDir.xyz);
@@ -202,46 +199,48 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	half shadow = MainLightRealtimeShadow(TransformWorldToShadowCoord(IN.posWS));
 	
 	// Specular
-	half3 spec = Highlights(IN.posWS, 0.005, IN.normal, IN.viewDir) * shadow;
+	half3 spec = Highlights(IN.posWS, 0.001, IN.normal, IN.viewDir) * shadow;
 	Light mainLight = GetMainLight();
-	half3 ambient = SampleSHPixel(IN.lightmapUVOrVertexSH, IN.normal) * (mainLight.color * mainLight.distanceAttenuation) * 0.5;
+	half3 ambient = SampleSHPixel(IN.lightmapUVOrVertexSH, IN.normal) * (mainLight.color * mainLight.distanceAttenuation);
+
+	// Foam
+	float2 foamMapUV = (IN.uv.zw * 0.1) + (detailBump.xy * 0.0025) + (IN.vertColor.a * 0.05) + _GlobalTime * 0.05;
+	half3 foamMap = SAMPLE_TEXTURE2D(_FoamMap, sampler_FoamMap, foamMapUV).rgb; //r=thick, g=medium, b=light
+	half shoreMask = pow(((1-depth.y + 9) * 0.1), 6);
+	half foamMask = (IN.additionalData.z);
+	half shoreWave = (sin(_Time.z + (depth.y * 10) + IN.vertColor.a) * 0.5 + 0.5) * saturate((1-depth.x) + 1);
+	foamMask = max(max((foamMask + shoreMask) - IN.vertColor.a * 0.25, waterFX.r * 2), shoreWave);
+	half3 foamBlend = SAMPLE_TEXTURE2D(_AbsorptionScatteringRamp, sampler_AbsorptionScatteringRamp, half2(foamMask, 0.66)).rgb;
+
+	half3 foam = length(foamMap * foamBlend).rrr;
 
 	// Reflections
 	half3 reflection = SampleReflections(IN.normal, IN.viewDir.xyz, screenUV.xy, fresnelTerm, 0.0);
-	reflection = max(reflection, spec);
-
-	// Foam
-	half3 foamMap = SAMPLE_TEXTURE2D(_FoamMap, sampler_FoamMap, (IN.uv.zw * 0.1) + (detailBump.xy * 0.0025) + (IN.vertColor.a * 0.05) + _GlobalTime * 0.05).rgb; //r=thick, g=medium, b=light
-	half shoreMask = pow(saturate((1-depth.y + 2.8) * 0.25), 6);
-	half foamMask = (IN.additionalData.z);
-	foamMask = saturate(max(max(foamMask, shoreMask) - IN.vertColor.a * 0.25, waterFX.r * 2));
-	half3 foamBlend = SAMPLE_TEXTURE2D(_AbsorptionScatteringRamp, sampler_AbsorptionScatteringRamp, half2(foamMask, 0.66)).rgb;
-
-	half foam = length(foamMap * foamBlend);
-
-	reflection *= 1 - foam;
+	reflection = reflection + spec;
+	reflection *= 1 - saturate(foam);
 
 	// Refraction
 	half3 refraction = Refraction(distortion);
 
 	// Final Colouring
 	half depthMulti = 1 / _MaxDepth;
-    half3 color = (refraction + caustics) * (1 - foam);
-	color *= Absorption((depth.x - 0.5) * depthMulti);
-	color += Scattering(depth.x * depthMulti) * ambient * (shadow * 0.5 + 0.5) * saturate(1-length(reflection));// TODO - scattering from main light(maybe additional lights too depending on cost)
-	color *= 1 - foam;
+    half3 color = (refraction + ((caustics * refraction) * mainLight.color));
+	color *= Absorption((depth.x) * depthMulti);
+	color += Scattering(depth.x * depthMulti) * (shadow * 0.5 + 0.5);// * saturate(1-length(reflection));// TODO - scattering from main light(maybe additional lights too depending on cost)
+	color *= 1 - saturate(foam);
+	//color *= 1-saturate(length(reflection));
 
 	// Foam lighting
-	foam *= shadow + 0.5;
+	foam *= (shadow * 0.9 + 0.1) * mainLight.color;
 
 	// Do compositing
-	half3 comp = lerp(refraction, color + reflection + foam, 1-saturate(1-depth.x * 50));
+	half3 comp = lerp(refraction, color + reflection + foam, 1-saturate(1-depth.x * 25));
 	
 	// Fog
     float fogFactor = IN.fogFactorAndVertexLight.x;
     ApplyFog(comp, fogFactor);
 	return half4(comp, 1);
-	//return half4(shadow.r, 0, 0, 1); // debug line
+	//return half4(foam, 1); // debug line
 }
 
 #endif // WATER_COMMON_INCLUDED

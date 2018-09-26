@@ -53,16 +53,16 @@
 			{
 				Varyings output = (Varyings)0;
 				
-				VertexPosition vertexPosition = GetVertexPosition(input.positionOS.xyz);
+				VertexPositionInputs vertexPosition = GetVertexPositionInputs(input.positionOS.xyz);
                 VertexTBN vertexTBN = GetVertexTBN(input.normalOS, input.tangentOS);
 				
-				output.vertex = vertexPosition.hclipSpace;
+				output.vertex = vertexPosition.positionCS;
 				
 				output.uv = input.uv;
 
 				output.color = input.color;
 
-				half3 viewDir = VertexViewDirWS(GetCameraPositionWS() - vertexPosition.worldSpace);
+				half3 viewDir = VertexViewDirWS(GetCameraPositionWS() - vertexPosition.positionWS);
 
                 output.normal = half4(vertexTBN.normalWS, viewDir.x);
                 output.tangent = half4(vertexTBN.tangentWS, viewDir.y);

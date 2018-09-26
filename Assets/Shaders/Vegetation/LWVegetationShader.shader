@@ -45,16 +45,17 @@
 
             // -------------------------------------
             // Lightweight Pipeline keywords
-            #pragma multi_compile _ _DIRECTIONAL_SHADOWS
-            #pragma multi_compile _ _DIRECTIONAL_SHADOWS_CASCADE
-            #pragma multi_compile _ _PUNCTUAL_LIGHTS_VERTEX _PUNCTUAL_LIGHTS
-            #pragma multi_compile _ _PUNCTUAL_LIGHT_SHADOWS
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile _ _SHADOWS_SOFT
             #pragma multi_compile _ _MIXED_LIGHTING_SUBTRACTIVE
 
             // -------------------------------------
             // Unity defined keywords
             #pragma multi_compile _ DIRLIGHTMAP_COMBINED
+            #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
             #pragma multi_compile _ LOD_FADE_CROSSFADE
 
@@ -90,7 +91,7 @@
             #endif
 
                 inputData.viewDirectionWS = FragmentViewDirWS(viewDir);
-            #if defined(_DIRECTIONAL_SHADOWS)
+            #if defined(_MAIN_LIGHT_SHADOWS)
                 inputData.shadowCoord = IN.shadowCoord;
             #else
                 inputData.shadowCoord = float4(0, 0, 0, 0);
@@ -117,12 +118,12 @@
                 input.positionOS = VegetationDeformation(input.positionOS, objectOrigin, input.normalOS, input.color.x, input.color.z, input.color.y);
 				//////////////////////////////////////////////////////////////////////////////////////////////////////
                 #endif
-                VertexPosition vertexPosition = GetVertexPosition(input.positionOS);
+                VertexPositionInputs vertexPosition = GetVertexPositionInputs(input.positionOS);
                 VertexTBN vertexTBN = GetVertexTBN(input.normalOS, input.tangentOS);
-                half3 vertexLight = VertexLighting(vertexPosition.worldSpace, output.normal.xyz);
-                half fogFactor = ComputeFogFactor(vertexPosition.hclipSpace.z);
-                half3 viewDir = VertexViewDirWS(GetCameraPositionWS() - vertexPosition.worldSpace);
-                output.clipPos = vertexPosition.hclipSpace;
+                half3 vertexLight = VertexLighting(vertexPosition.positionWS, output.normal.xyz);
+                half fogFactor = ComputeFogFactor(vertexPosition.positionCS.z);
+                half3 viewDir = VertexViewDirWS(GetCameraPositionWS() - vertexPosition.positionWS);
+                output.clipPos = vertexPosition.positionCS;
 
             #ifdef _NORMALMAP
                 output.normal = half4(vertexTBN.normalWS, viewDir.x);
@@ -141,7 +142,7 @@
                 
                 output.fogFactorAndVertexLight = half4(fogFactor, vertexLight);
 
-            #if defined(_DIRECTIONAL_SHADOWS) && !defined(_RECEIVE_SHADOWS_OFF)
+            #if defined(_MAIN_LIGHT_SHADOWS)
                 output.shadowCoord = GetShadowCoord(vertexPosition);
             #endif
 
@@ -259,10 +260,10 @@ Pass
                 input.positionOS = VegetationDeformation(input.positionOS, objectOrigin, input.normalOS, input.color.x, input.color.z, input.color.y);
                 #endif
                 
-                VertexPosition vertexPosition = GetVertexPosition(input.positionOS);
+                VertexPositionInputs vertexPosition = GetVertexPositionInputs(input.positionOS);
 
                 output.uv.xy = input.texcoord;
-                output.clipPos = vertexPosition.hclipSpace;
+                output.clipPos = vertexPosition.positionCS;
                 return output;
             }
 
@@ -299,7 +300,7 @@ Pass
             #pragma shader_feature _SPECGLOSSMAP
 
             #include "InputSurfaceVegetation.hlsl"
-            #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/LightweightPassMetaPBR.hlsl"
+            #include "Packages/com.unity.render-pipelines.lightweight/Shaders/LitMetaPass.hlsl"
 
             ENDHLSL
         }

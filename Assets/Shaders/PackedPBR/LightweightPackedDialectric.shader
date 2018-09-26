@@ -42,13 +42,12 @@ Shader "LightweightPipeline/PBR/Packed Dialectric"
 
             // -------------------------------------
             // Lightweight Pipeline keywords
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS
-            #pragma multi_compile _ _VERTEX_LIGHTS
-            #pragma multi_compile _ _MIXED_LIGHTING_SUBTRACTIVE
-            #pragma multi_compile _ _SHADOWS_ENABLED
-            #pragma multi_compile _ _LOCAL_SHADOWS_ENABLED
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
             #pragma multi_compile _ _SHADOWS_SOFT
-            #pragma multi_compile _ _SHADOWS_CASCADE
+            #pragma multi_compile _ _MIXED_LIGHTING_SUBTRACTIVE
 
             // -------------------------------------
             // Unity defined keywords
@@ -64,7 +63,7 @@ Shader "LightweightPipeline/PBR/Packed Dialectric"
             #pragma fragment LitPassFragment
 
             #include "InputSurfacePackedDialectric.hlsl"
-            #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/LightweightPassLit.hlsl"
+            #include "Packages/com.unity.render-pipelines.lightweight/Shaders/LitForwardPass.hlsl"
             ENDHLSL
         }
 
@@ -90,7 +89,7 @@ Shader "LightweightPipeline/PBR/Packed Dialectric"
             #pragma fragment ShadowPassFragment
 
             #include "InputSurfacePackedDialectric.hlsl"
-            #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/LightweightPassShadow.hlsl"
+            #include "Packages/com.unity.render-pipelines.lightweight/Shaders/ShadowCasterPass.hlsl"
             ENDHLSL
         }
 
@@ -117,7 +116,7 @@ Shader "LightweightPipeline/PBR/Packed Dialectric"
             #pragma multi_compile_instancing
 
             #include "InputSurfacePackedDialectric.hlsl"
-            #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/LightweightPassDepthOnly.hlsl"
+            #include "Packages/com.unity.render-pipelines.lightweight/Shaders/DepthOnlyPass.hlsl"
             ENDHLSL
         }
 
@@ -141,7 +140,7 @@ Shader "LightweightPipeline/PBR/Packed Dialectric"
             #pragma shader_feature EDITOR_VISUALIZATION
 
             #include "InputSurfacePackedDialectric.hlsl"
-            #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/LightweightPassMetaPBR.hlsl"
+            #include "Packages/com.unity.render-pipelines.lightweight/Shaders/LitMetaPass.hlsl"
 
             ENDHLSL
         }

@@ -116,7 +116,7 @@ namespace WaterSystem
             }
         }
 
-        private void FixedUpdate() {
+        private void LateUpdate() {
             if(Application.isPlaying)
                 GerstnerWavesJobs.UpdateHeights();
         }
