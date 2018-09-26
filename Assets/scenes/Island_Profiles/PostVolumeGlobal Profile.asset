@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48a79b01ea5641d4aa6daa2e23605641, type: 3}
   m_Name: Bloom
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   enabled:
     overrideState: 1
     value: 1
@@ -155,11 +155,11 @@ MonoBehaviour:
     value: 1
   spectralLut:
     overrideState: 1
-    value: {fileID: 2800000, guid: 318cbcd94840f1d48aca4d86234dc2e7, type: 3}
+    value: {fileID: 0}
     defaultState: 1
   intensity:
     overrideState: 1
-    value: 0.095
+    value: 0.083
   fastMode:
     overrideState: 1
     value: 1
@@ -175,7 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40b924e2dad56384a8df2a1e111bb675, type: 3}
   m_Name: Vignette
   m_EditorClassIdentifier: 
-  active: 0
+  active: 1
   enabled:
     overrideState: 1
     value: 1
@@ -190,10 +190,10 @@ MonoBehaviour:
     value: {x: 0.5, y: 0.5}
   intensity:
     overrideState: 1
-    value: 0.27
+    value: 0.297
   smoothness:
     overrideState: 1
-    value: 0.35
+    value: 0.232
   roundness:
     overrideState: 1
     value: 1
@@ -293,25 +293,25 @@ MonoBehaviour:
     value: 0
   mixerGreenOutRedIn:
     overrideState: 1
-    value: 4
+    value: -3
   mixerGreenOutGreenIn:
     overrideState: 1
-    value: 102
+    value: 93
   mixerGreenOutBlueIn:
     overrideState: 1
-    value: -23
+    value: -4
   mixerBlueOutRedIn:
-    overrideState: 0
-    value: -27
+    overrideState: 1
+    value: -16
   mixerBlueOutGreenIn:
-    overrideState: 0
-    value: 0
+    overrideState: 1
+    value: 9
   mixerBlueOutBlueIn:
     overrideState: 1
     value: 115
   lift:
     overrideState: 1
-    value: {x: 0.87723887, y: 1, z: 0.9061638, w: -0.01436094}
+    value: {x: 1, y: 0.8049291, z: 0.7631181, w: -0.01436094}
   gamma:
     overrideState: 0
     value: {x: 0.9162389, y: 0.937634, z: 1, w: -0.07180469}
