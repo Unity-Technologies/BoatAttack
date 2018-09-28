@@ -61,9 +61,17 @@ half3 SampleReflections(half3 normalWS, half3 viewDirectionWS, half2 screenUV, h
     half3 reflectVector = reflect(-viewDirectionWS, normalWS);
     reflection = GlossyEnvironmentReflection(reflectVector, 0, 1);
 #elif _REFLECTION_PLANARREFLECTION
-    refOffset += (normalWS.xx * normalWS.zz) * half2(0.2, 4);
-    half rimFade = (1-fresnelTerm);//value to smooth out reflection distortion on glancing/distant angles
-    half2 reflectionUV = screenUV + refOffset * rimFade;
+
+    // get the perspective projection
+    float2 p11_22 = float2(unity_CameraInvProjection._11, unity_CameraInvProjection._22) * 10;
+    // conver the uvs into view space by "undoing" projection
+    float3 viewDir = -(float3((screenUV * 2 - 1) / p11_22, -1));
+
+    //half3 viewDir = (mul((real3x3)GetWorldToViewMatrix(), -viewDirectionWS));
+    half3 viewNormal = mul(-normalWS, GetWorldToViewMatrix()).xyz;
+    half3 reflectVector = reflect(-viewDir, viewNormal);
+    
+    half2 reflectionUV = screenUV + reflectVector * 0.05;
     reflection += SAMPLE_TEXTURE2D_LOD(_PlanarReflectionTexture, sampler_ScreenTextures_linear_clamp, reflectionUV, 6 * roughness).rgb;//planar reflection
 #endif
     //do backup

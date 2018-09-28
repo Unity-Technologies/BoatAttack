@@ -83,14 +83,14 @@
 
                 inputData.positionWS = IN.posWS;
             #ifdef _NORMALMAP
-                half3 viewDir = half3(IN.normal.w, IN.tangent.w, IN.binormal.w);
-                inputData.normalWS = TangentToWorldNormal(normalTS, IN.tangent.xyz, IN.binormal.xyz, IN.normal.xyz);
+                half3 viewDir = half3(IN.normal.w, IN.tangent.w, IN.bitangent.w);
+                inputData.normalWS = normalize(TransformTangentToWorld(normalTS, half3x3(IN.tangent.xyz, IN.bitangent.xyz, IN.normal.xyz)));
             #else
                 half3 viewDir = IN.viewDir;
-                inputData.normalWS = FragmentNormalWS(IN.normal);
+                inputData.normalWS = TransformObjectToWorldNormal(IN.normal);
             #endif
 
-                inputData.viewDirectionWS = FragmentViewDirWS(viewDir);
+                inputData.viewDirectionWS = viewDir;
             #if defined(_MAIN_LIGHT_SHADOWS)
                 inputData.shadowCoord = IN.shadowCoord;
             #else
@@ -119,16 +119,16 @@
 				//////////////////////////////////////////////////////////////////////////////////////////////////////
                 #endif
                 VertexPositionInputs vertexPosition = GetVertexPositionInputs(input.positionOS);
-                VertexTBN vertexTBN = GetVertexTBN(input.normalOS, input.tangentOS);
+                VertexNormalInputs vertexTBN = GetVertexNormalInputs(input.normalOS, input.tangentOS);
                 half3 vertexLight = VertexLighting(vertexPosition.positionWS, output.normal.xyz);
                 half fogFactor = ComputeFogFactor(vertexPosition.positionCS.z);
-                half3 viewDir = VertexViewDirWS(GetCameraPositionWS() - vertexPosition.positionWS);
+                half3 viewDir = GetCameraPositionWS() - vertexPosition.positionWS;
                 output.clipPos = vertexPosition.positionCS;
 
             #ifdef _NORMALMAP
                 output.normal = half4(vertexTBN.normalWS, viewDir.x);
                 output.tangent = half4(vertexTBN.tangentWS, viewDir.y);
-                output.binormal = half4(vertexTBN.binormalWS, viewDir.z);
+                output.bitangent = half4(vertexTBN.bitangentWS, viewDir.z);
             #else
                 output.normal = vertexTBN.normalWS;
                 output.viewDir = viewDir;
@@ -171,7 +171,7 @@
 
                 half4 color = LightweightFragmentPBR(inputData, surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, surfaceData.occlusion, surfaceData.emission, surfaceData.alpha);
 
-                ApplyFog(color.rgb, inputData.fogCoord);
+                color.rgb = MixFog(color.rgb, inputData.fogCoord);
                 #ifdef LOD_FADE_CROSSFADE // enable dithering LOD transition if user select CrossFade transition in LOD group
             	    LODDitheringTransition(IN.clipPos, unity_LODFade.x);
             	#endif

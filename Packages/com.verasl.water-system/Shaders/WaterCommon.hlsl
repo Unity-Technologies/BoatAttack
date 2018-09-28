@@ -73,18 +73,18 @@ float3 WaterDepth(float3 posWS, half2 texcoords, half4 additionalData, half2 scr
 	return outDepth;
 }
 
-half3 Refraction(half2 distortion)
+half3 Refraction(half2 distortion, half mip)
 {
-	half3 refrac = SAMPLE_TEXTURE2D(_CameraOpaqueTexture, sampler_ScreenTextures_linear_clamp, distortion);
+	half3 refrac = SAMPLE_TEXTURE2D_LOD(_CameraOpaqueTexture, sampler_CameraOpaqueTexture_linear, distortion, mip);
 	return refrac;
 }
 
-half2 DistortionUVs(float3 normalWS)
+half2 DistortionUVs(half depth, float3 normalWS)
 {
-	half2 distortion;
-	distortion.x = (normalWS.x + normalWS.z);
-	distortion.y = (normalWS.x + normalWS.z);
-    return distortion * 0.005;
+	//half2 distortion;
+    half3 viewNormal = mul(GetWorldToHClipMatrix(), -normalWS).xyz;
+    
+    return viewNormal.xz * saturate((depth) * 0.005);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -107,7 +107,7 @@ WaterVertexOutput WaterVertex(WaterVertexInput v)
     o.posWS = TransformObjectToWorld(v.vertex.xyz);
 	o.uv.zw = o.posWS.xz;
 	o.vertColor = v.color;
-	o.vertColor.a = (noise((o.posWS.xz * 0.5) + _GlobalTime * 0.25) - 0.5) + 1;
+	o.vertColor.a = ((noise((o.posWS.xz * 0.5) + _GlobalTime) + noise((o.posWS.xz * 1) + _GlobalTime)) * 0.25 - 0.5) + 1;
 
 	half4 screenUV = ComputeScreenPos(TransformWorldToHClip(o.posWS));
 	screenUV.xyz /= screenUV.w;
@@ -176,8 +176,8 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	float3 depth = WaterDepth(IN.posWS, (IN.posWS.xz * 0.002) + 0.5, IN.additionalData, screenUV.xy);// TODO - hardcoded shore depth UVs
 
 	// Distortion
-	half2 distortion = DistortionUVs(IN.normal);
-	distortion = screenUV.xy + distortion * clamp(depth.x, 0, 5);
+	half2 distortion = DistortionUVs(depth.x, IN.normal);
+	distortion = screenUV.xy + distortion;// * clamp(depth.x, 0, 5);
 	float d = depth.x;
 	depth.xz = AdjustedDepth(distortion, IN.additionalData);
 	distortion = depth.x < 0 ? screenUV.xy : distortion;
@@ -189,7 +189,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	float2 seabedWS = D.xz/D.w;
 
 	// Caustics
-	half2 causticUV = (seabedWS * 0.3h + t + (IN.vertColor.a * 0.1)) + IN.additionalData.w * 0.1h;
+	half2 causticUV = (seabedWS * 0.3h + t + half2((IN.vertColor.a * 0.25), (1-IN.vertColor.a) * 0.25)) + IN.additionalData.w * 0.1h;
 	half caustics = SAMPLE_TEXTURE2D_ARRAY_LOD(_SurfaceMap, sampler_SurfaceMap, causticUV, animT, depth.x * 0.5).z * saturate(depth.x); // caustics for sea floor, darkened to 25%
 
 	// Fresnel
@@ -204,7 +204,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	half3 ambient = SampleSHPixel(IN.lightmapUVOrVertexSH, IN.normal) * (mainLight.color * mainLight.distanceAttenuation);
 
 	// Foam
-	float2 foamMapUV = (IN.uv.zw * 0.1) + (detailBump.xy * 0.0025) + (IN.vertColor.a * 0.05) + _GlobalTime * 0.05;
+	float2 foamMapUV = (IN.uv.zw * 0.1) + (detailBump.xy * 0.0025) + half2(IN.vertColor.a * 0.1, (1-IN.vertColor.a) * 0.1) + _GlobalTime * 0.05;
 	half3 foamMap = SAMPLE_TEXTURE2D(_FoamMap, sampler_FoamMap, foamMapUV).rgb; //r=thick, g=medium, b=light
 	half shoreMask = pow(((1-depth.y + 9) * 0.1), 6);
 	half foamMask = (IN.additionalData.z);
@@ -220,7 +220,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	reflection *= 1 - saturate(foam);
 
 	// Refraction
-	half3 refraction = Refraction(distortion);
+	half3 refraction = Refraction(distortion, depth.x * 0.25);
 
 	// Final Colouring
 	half depthMulti = 1 / _MaxDepth;
@@ -238,9 +238,9 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	
 	// Fog
     float fogFactor = IN.fogFactorAndVertexLight.x;
-    ApplyFog(comp, fogFactor);
+    comp = MixFog(comp, fogFactor);
 	return half4(comp, 1);
-	//return half4(foam, 1); // debug line
+	//return half4(refraction, 1); // debug line
 }
 
 #endif // WATER_COMMON_INCLUDED
