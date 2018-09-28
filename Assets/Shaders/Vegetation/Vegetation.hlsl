@@ -21,7 +21,7 @@ struct VegetationVertexOutput
 #ifdef _NORMALMAP
     half4 normal                    : TEXCOORD3;    // xyz: normal, w: viewDir.x
     half4 tangent                   : TEXCOORD4;    // xyz: tangent, w: viewDir.y
-    half4 binormal                  : TEXCOORD5;    // xyz: binormal, w: viewDir.z
+    half4 bitangent                  : TEXCOORD5;    // xyz: binormal, w: viewDir.z
 #else
     half3  normal                   : TEXCOORD3;
     half3 viewDir                   : TEXCOORD4;

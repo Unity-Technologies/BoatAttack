@@ -42,7 +42,7 @@
 				float2 uv : TEXCOORD0;
 				half4 normal : TEXCOORD1;    // xyz: normal, w: viewDir.x
     			half4 tangent : TEXCOORD2;    // xyz: tangent, w: viewDir.y
-    			half4 binormal : TEXCOORD3;    // xyz: binormal, w: viewDir.z
+    			half4 bitangent : TEXCOORD3;    // xyz: binormal, w: viewDir.z
 				half4 color : TEXCOORD4;
 				float4 vertex : SV_POSITION;
 			};
@@ -54,7 +54,7 @@
 				Varyings output = (Varyings)0;
 				
 				VertexPositionInputs vertexPosition = GetVertexPositionInputs(input.positionOS.xyz);
-                VertexTBN vertexTBN = GetVertexTBN(input.normalOS, input.tangentOS);
+                VertexNormalInputs vertexTBN = GetVertexNormalInputs(input.normalOS, input.tangentOS);
 				
 				output.vertex = vertexPosition.positionCS;
 				
@@ -62,11 +62,11 @@
 
 				output.color = input.color;
 
-				half3 viewDir = VertexViewDirWS(GetCameraPositionWS() - vertexPosition.positionWS);
+				half3 viewDir = GetCameraPositionWS() - vertexPosition.positionWS;
 
                 output.normal = half4(vertexTBN.normalWS, viewDir.x);
                 output.tangent = half4(vertexTBN.tangentWS, viewDir.y);
-                output.binormal = half4(vertexTBN.binormalWS, viewDir.z);
+                output.bitangent = half4(vertexTBN.bitangentWS, viewDir.z);
 
 				return output;
 			}
@@ -82,8 +82,8 @@
 
 				half3 tNorm = half3(col.b, col.g, 1) * 2 - 1;
 
-				half3 viewDir = half3(input.normal.w, input.tangent.w, input.binormal.w);
-    			half3 normalWS = TangentToWorldNormal(tNorm, input.tangent.xyz, input.binormal.xyz, input.normal.xyz);
+				half3 viewDir = half3(input.normal.w, input.tangent.w, input.bitangent.w);
+    			half3 normalWS = TransformTangentToWorld(tNorm, half3x3(input.tangent.xyz, input.bitangent.xyz, input.normal.xyz));
 
 				normalWS = lerp(half3(0, 1, 0), normalWS, input.color.g);
 				half4 comp = half4(foamMask, normalWS.xz, disp);
