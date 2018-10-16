@@ -33,7 +33,7 @@ namespace WaterSystem
         const string k_RenderWaterFXTag = "Render Water FX";
         private RenderTargetHandle m_WaterFX = RenderTargetHandle.CameraTarget;
 
-        private FilterRenderersSettings transparentFilterSettings { get; set; }
+        private FilteringSettings transparentFilterSettings { get; set; }
 
         public WaterFXPassImpl()
         {
@@ -41,10 +41,7 @@ namespace WaterSystem
             m_WaterFX.Init("_WaterFXMap");
 
 
-            transparentFilterSettings = new FilterRenderersSettings(true)
-            {
-                renderQueueRange = RenderQueueRange.transparent,
-            };
+            transparentFilterSettings = new FilteringSettings(RenderQueueRange.transparent);
         }
 
         public override void Execute(ScriptableRenderer renderer, ScriptableRenderContext context, ref RenderingData renderingData)
@@ -72,17 +69,20 @@ namespace WaterSystem
                 context.ExecuteCommandBuffer(cmd);
                 cmd.Clear();
 
-                var drawSettings = CreateDrawRendererSettings(renderingData.cameraData.camera,
-                    SortFlags.CommonTransparent, RendererConfiguration.None, renderingData.supportsDynamicBatching);
+                var drawSettings = CreateDrawingSettings(renderingData.cameraData.camera,
+                    SortingCriteria.CommonTransparent, PerObjectData.None, renderingData.supportsDynamicBatching);
+                var filteringSettings = transparentFilterSettings;
                 if (renderingData.cameraData.isStereoEnabled)
                 {
                     Camera camera = renderingData.cameraData.camera;
                     context.StartMultiEye(camera);
-                    context.DrawRenderers(renderingData.cullResults.visibleRenderers, ref drawSettings, transparentFilterSettings);
+                    context.DrawRenderers(renderingData.cullResults, ref drawSettings, ref filteringSettings);
                     context.StopMultiEye(camera);
                 }
                 else
-                    context.DrawRenderers(renderingData.cullResults.visibleRenderers, ref drawSettings, transparentFilterSettings);
+                {
+                    context.DrawRenderers(renderingData.cullResults, ref drawSettings, ref filteringSettings);
+                }
 
             }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.LightweightPipeline;
+using UnityEngine.Rendering;
 
 namespace WaterSystem
 {
@@ -18,12 +19,12 @@ namespace WaterSystem
 
         private void OnEnable()
         {
-            LightweightRenderPipeline.beginCameraRendering += UpdatePosition;
+            RenderPipelineManager.beginCameraRendering += UpdatePosition;
         }
 
         private void OnDisable()
         {
-            LightweightRenderPipeline.beginCameraRendering -= UpdatePosition;
+            RenderPipelineManager.beginCameraRendering -= UpdatePosition;
         }
 
         void UpdatePosition(Camera cam)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.LightweightPipeline;
+using UnityEngine.Rendering;
 
 namespace BoatAttack
 {
@@ -26,12 +27,12 @@ namespace BoatAttack
 
         void OnEnable()
         {
-            LightweightRenderPipeline.beginCameraRendering += SetMaxLOD; // listen for LWRP camera callback
+            RenderPipelineManager.beginCameraRendering += SetMaxLOD; // listen for LWRP camera callback
         }
 
         void OnDisable()
         {
-            LightweightRenderPipeline.beginCameraRendering -= SetMaxLOD; // stop listening for LWRP camera callback
+            RenderPipelineManager.beginCameraRendering -= SetMaxLOD; // stop listening for LWRP camera callback
         }
     }
 }
