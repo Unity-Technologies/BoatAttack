@@ -205,8 +205,8 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
             GameObject go =
                 new GameObject("Planar Refl Camera id" + GetInstanceID() + " for " + currentCamera.GetInstanceID(),
                     typeof(Camera), typeof(Skybox));
-            AdditionalCameraData lwrpCamData =
-                go.AddComponent(typeof(AdditionalCameraData)) as AdditionalCameraData;
+            LWRPAdditionalCameraData lwrpCamData =
+                go.AddComponent(typeof(LWRPAdditionalCameraData)) as LWRPAdditionalCameraData;
             lwrpCamData.renderShadows = false; // turn off shadows for the reflection camera
             var reflectionCamera = go.GetComponent<Camera>();
             reflectionCamera.transform.SetPositionAndRotation(transform.position, transform.rotation);
