@@ -208,6 +208,8 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
             LWRPAdditionalCameraData lwrpCamData =
                 go.AddComponent(typeof(LWRPAdditionalCameraData)) as LWRPAdditionalCameraData;
             lwrpCamData.renderShadows = false; // turn off shadows for the reflection camera
+            lwrpCamData.requiresColorOption = CameraOverrideOption.Off;
+            lwrpCamData.requiresDepthOption = CameraOverrideOption.Off;
             var reflectionCamera = go.GetComponent<Camera>();
             reflectionCamera.transform.SetPositionAndRotation(transform.position, transform.rotation);
             reflectionCamera.targetTexture = m_ReflectionTexture;

@@ -2,9 +2,8 @@
 #define SHADOW_PASS_VEGETATION_INCLUDED
 
 #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
+#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Shadows.hlsl"
 
-// x: global clip space bias, y: normal world space bias
-float4 _ShadowBias;
 float3 _LightDirection;
 
 struct VertexInput
@@ -27,15 +26,8 @@ float4 GetShadowPositionHClip(VertexInput input)
     VertexPositionInputs vertexPosition = GetVertexPositionInputs(input.positionOS);
     
     float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
-    float invNdotL = 1.0 - saturate(dot(_LightDirection, normalWS));
-    float scale = invNdotL * _ShadowBias.y;
+    float4 clipPos = TransformWorldToHClip(ApplyShadowBias(vertexPosition.positionWS, normalWS, _LightDirection));
 
-    // normal bias is negative since we want to apply an inset normal offset
-    float3 positionWS = normalWS * scale.xxx + vertexPosition.positionWS;
-    float4 clipPos = TransformWorldToHClip(positionWS);
-
-    // _ShadowBias.x sign depens on if platform has reversed z buffer
-    clipPos.z += _ShadowBias.x;
 
 #if UNITY_REVERSED_Z
     clipPos.z = min(clipPos.z, clipPos.w * UNITY_NEAR_CLIP_VALUE);

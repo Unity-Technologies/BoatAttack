@@ -320,7 +320,7 @@ namespace WaterSystem
             _depthCam.nearClipPlane =0.1f;
             _depthCam.farClipPlane = surfaceData._waterMaxVisibility;
             _depthCam.allowHDR = false;
-            //_depthCam.allowMSAA = false;
+            _depthCam.allowMSAA = false;
             _depthCam.cullingMask = (1 << 10);
             //Generate RT
             if (!_depthTex)
@@ -337,12 +337,12 @@ namespace WaterSystem
             //Vector4 zParams = new Vector4(1-f/n, f/n, (1-f/n)/f, (f/n)/f);//2015
             Shader.SetGlobalVector("_depthCamZParams", zParams);
             
-            #if UNITY_EDITOR
-/*            Texture2D tex2D = new Texture2D(1024, 1024, TextureFormat.Alpha8, false);
+/*            #if UNITY_EDITOR
+            Texture2D tex2D = new Texture2D(1024, 1024, TextureFormat.Alpha8, false);
             Graphics.CopyTexture(_depthTex, tex2D);
             byte[] image = tex2D.EncodeToPNG();
-            System.IO.File.WriteAllBytes(Application.dataPath + "/WaterDepth.png", image);*/
-            #endif
+            System.IO.File.WriteAllBytes(Application.dataPath + "/WaterDepth.png", image);
+            #endif*/
             
             _depthCam.enabled = false;
             _depthCam.targetTexture = null;
