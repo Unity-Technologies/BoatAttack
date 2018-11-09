@@ -49,7 +49,8 @@ namespace WaterSystem
         {
             if (!computeOverride)
                 useComputeBuffer = SystemInfo.supportsComputeShaders &&
-                                   Application.platform != RuntimePlatform.WebGLPlayer;
+                                   Application.platform != RuntimePlatform.WebGLPlayer &&
+                                   Application.platform != RuntimePlatform.Android;
             else
                 useComputeBuffer = false;
             Init();
