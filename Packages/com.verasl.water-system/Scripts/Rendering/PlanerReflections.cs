@@ -216,6 +216,7 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
             reflectionCamera.allowMSAA = true;
             reflectionCamera.depth = -10;
             reflectionCamera.enabled = false;
+            reflectionCamera.allowHDR = false;
             go.hideFlags = HideFlags.HideAndDontSave;
 
             Shader.SetGlobalTexture("_PlanarReflectionTexture", m_ReflectionTexture);

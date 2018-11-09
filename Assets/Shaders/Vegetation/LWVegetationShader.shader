@@ -54,8 +54,8 @@
 
             // -------------------------------------
             // Unity defined keywords
-            #pragma multi_compile _ DIRLIGHTMAP_COMBINED
-            #pragma multi_compile _ LIGHTMAP_ON
+            //#pragma multi_compile _ DIRLIGHTMAP_COMBINED
+            //#pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
             #pragma multi_compile _ LOD_FADE_CROSSFADE
 
@@ -168,6 +168,8 @@
                 inputData.normalWS *= facing;
                 surfaceData.albedo *= lerp(half3(0.4, 1.6, 0.4), 1, (facing * 0.5 + 0.5));
                 #endif
+                
+                //return half4(surfaceData.albedo, 1);
 
                 half4 color = LightweightFragmentPBR(inputData, surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, surfaceData.occlusion, surfaceData.emission, surfaceData.alpha);
 
@@ -295,7 +297,6 @@ Pass
             #pragma fragment LightweightFragmentMeta
 
             #define _METALLICSPECGLOSSMAP 1
-            #pragma shader_feature EDITOR_VISUALIZATION
 
             #pragma shader_feature _SPECGLOSSMAP
 

@@ -9,6 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: 8e6292b2c06870d4495f009f912b9600, type: 3}
   m_Name: PostVolumeGlobal Profile
   m_EditorClassIdentifier: 
@@ -27,6 +28,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: 48a79b01ea5641d4aa6daa2e23605641, type: 3}
   m_Name: Bloom
   m_EditorClassIdentifier: 
@@ -74,6 +76,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: 9b77c5407dc277943b591ade9e6b18c5, type: 3}
   m_Name: LensDistortion
   m_EditorClassIdentifier: 
@@ -83,7 +86,7 @@ MonoBehaviour:
     value: 1
   intensity:
     overrideState: 1
-    value: 19.6
+    value: 10
   intensityX:
     overrideState: 0
     value: 1
@@ -98,7 +101,7 @@ MonoBehaviour:
     value: 0
   scale:
     overrideState: 1
-    value: 1.02
+    value: 1
 --- !u!114 &114726729492399870
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -108,6 +111,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: 6050e2d5de785ce4d931e4dbdbf2d755, type: 3}
   m_Name: ChromaticAberration
   m_EditorClassIdentifier: 
@@ -134,6 +138,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: 40b924e2dad56384a8df2a1e111bb675, type: 3}
   m_Name: Vignette
   m_EditorClassIdentifier: 
@@ -178,6 +183,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: adb84e30e02715445aeb9959894e3b4d, type: 3}
   m_Name: ColorGrading
   m_EditorClassIdentifier: 
@@ -222,7 +228,7 @@ MonoBehaviour:
     value: 1
   temperature:
     overrideState: 1
-    value: 23.2
+    value: 29.8
   tint:
     overrideState: 1
     value: -16.9
@@ -234,13 +240,13 @@ MonoBehaviour:
     value: 10
   saturation:
     overrideState: 1
-    value: 8.4
+    value: 1.2
   brightness:
     overrideState: 1
     value: -12
   postExposure:
-    overrideState: 0
-    value: 1.56
+    overrideState: 1
+    value: -0.63
   contrast:
     overrideState: 1
     value: 19.7
