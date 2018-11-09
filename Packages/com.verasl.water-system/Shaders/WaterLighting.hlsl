@@ -69,9 +69,9 @@ half3 SampleReflections(half3 normalWS, half3 viewDirectionWS, half2 screenUV, h
 
     //half3 viewDir = (mul((real3x3)GetWorldToViewMatrix(), -viewDirectionWS));
     half3 viewNormal = mul(-normalWS, GetWorldToViewMatrix()).xyz;
-    half3 reflectVector = reflect(-viewDir, viewNormal);
+    half3 reflectVector = reflect(-viewDir, viewNormal) - half3(0, 0.35, 0);
     
-    half2 reflectionUV = screenUV + reflectVector * 0.05;
+    half2 reflectionUV = screenUV + reflectVector.xy * 0.05;
     reflection += SAMPLE_TEXTURE2D_LOD(_PlanarReflectionTexture, sampler_ScreenTextures_linear_clamp, reflectionUV, 6 * roughness).rgb;//planar reflection
 #endif
     //do backup

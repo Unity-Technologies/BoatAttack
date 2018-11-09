@@ -240,7 +240,8 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
             GL.invertCulling = true;
             RenderSettings.fog = false;
             var bias = QualitySettings.lodBias;
-            QualitySettings.lodBias = bias * 0.25f;
+            QualitySettings.maximumLODLevel = 1;
+            QualitySettings.lodBias = bias * 0.5f;
             
             UpdateReflectionCamera(camera);
 
@@ -248,6 +249,7 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
             
             GL.invertCulling = false;
             RenderSettings.fog = true;
+            QualitySettings.maximumLODLevel = 0;
             QualitySettings.lodBias = bias;
         }
     }
