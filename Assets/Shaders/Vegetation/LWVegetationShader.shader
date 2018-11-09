@@ -69,7 +69,7 @@
             // Lighting.hlsl will include the light functions/data to abstract light constants. You should use GetMainLight and GetLight functions
             // that initialize Light struct. Lighting.hlsl also include GI, Light BDRF functions. It also includes Shadows.
             //#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
-                        // Not required but included here for simplicity. This defines all material related constants for the Standard surface shader like _Color, _MainTex, and so on.
+            // Not required but included here for simplicity. This defines all material related constants for the Standard surface shader like _Color, _MainTex, and so on.
             // These are specific to this shader. You should define your own constants.
             #include "InputSurfaceVegetation.hlsl"
             #include "Vegetation.hlsl"
