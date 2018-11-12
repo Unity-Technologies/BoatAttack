@@ -195,7 +195,7 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
                 SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.ARGB2101010);
                 RenderTextureFormat hdrFormat = (useHDR10) ? RenderTextureFormat.ARGB2101010 : RenderTextureFormat.DefaultHDR;
             
-                m_ReflectionTexture = new RenderTexture(m_TextureSize.x, m_TextureSize.y, 16,
+                m_ReflectionTexture = new RenderTexture(m_TextureSize.x, m_TextureSize.y, 0,
                     currentCamera.allowHDR ? hdrFormat : RenderTextureFormat.Default);
                 m_ReflectionTexture.useMipMap = m_ReflectionTexture.autoGenerateMips = false;
                 m_ReflectionTexture.autoGenerateMips = false; // no need for mips(unless wanting cheap roughness)
