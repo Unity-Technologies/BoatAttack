@@ -3,7 +3,7 @@ using Unity.Mathematics;
 using UnityEngine.Rendering;
 using WaterSystem;
 
-namespace UnityEngine.Experimental.Rendering.LightweightPipeline
+namespace UnityEngine.Rendering.LWRP
 {
     [ImageEffectAllowedInSceneView]
 

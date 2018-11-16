@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Experimental.Rendering;
-using UnityEngine.Experimental.Rendering.LightweightPipeline;
+using UnityEngine.Rendering.LWRP;
+using UnityEngine.Experimental.Rendering.LWRP;
 
 namespace WaterSystem
 {
