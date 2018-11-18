@@ -21,23 +21,6 @@ struct VertexOutput
     float4 clipPos      : SV_POSITION;
 };
 
-float4 GetShadowPositionHClip(VertexInput input)
-{
-    VertexPositionInputs vertexPosition = GetVertexPositionInputs(input.positionOS);
-    
-    float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
-    float4 clipPos = TransformWorldToHClip(ApplyShadowBias(vertexPosition.positionWS, normalWS, _LightDirection));
-
-
-#if UNITY_REVERSED_Z
-    clipPos.z = min(clipPos.z, clipPos.w * UNITY_NEAR_CLIP_VALUE);
-#else
-    clipPos.z = max(clipPos.z, clipPos.w * UNITY_NEAR_CLIP_VALUE);
-#endif
-
-    return clipPos;
-}
-
 VertexOutput ShadowPassVegetationVertex(VertexInput input)
 {
     VertexOutput output;
@@ -51,7 +34,17 @@ VertexOutput ShadowPassVegetationVertex(VertexInput input)
     #endif
     
     output.uv = input.texcoord;
-    output.clipPos = GetShadowPositionHClip(input);
+
+    float3 positionWS = TransformObjectToWorld(input.positionOS.xyz);
+    float3 normalWS = TransformObjectToWorldDir(input.normalOS);
+
+    output.clipPos = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, _LightDirection));
+
+#if UNITY_REVERSED_Z
+    output.clipPos.z = min(output.clipPos.z, output.clipPos.w * UNITY_NEAR_CLIP_VALUE);
+#else
+    output.clipPos.z = max(output.clipPos.z, output.clipPos.w * UNITY_NEAR_CLIP_VALUE);
+#endif
     return output;
 }
 
@@ -59,7 +52,7 @@ half4 ShadowPassVegetationFragment(VertexOutput IN) : SV_TARGET
 {
     half alpha = SampleAlbedoAlpha(IN.uv, TEXTURE2D_PARAM(_MainTex, sampler_MainTex)).a;
     clip(alpha - _Cutoff);
-    return 0;
+    return 1;
 }
 
 #endif // SHADOW_PASS_VEGETATION_INCLUDED
