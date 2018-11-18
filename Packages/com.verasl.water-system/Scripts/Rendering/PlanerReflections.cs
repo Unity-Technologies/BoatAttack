@@ -190,8 +190,13 @@ namespace UnityEngine.Rendering.LWRP
             {
                 if (m_ReflectionTexture)
                     DestroyImmediate(m_ReflectionTexture);
-                m_ReflectionTexture = new RenderTexture(m_TextureSize.x, m_TextureSize.y, 16,
-                    currentCamera.allowHDR ? RenderTextureFormat.DefaultHDR : RenderTextureFormat.Default);
+
+                bool useHDR10 = Application.isMobilePlatform &&
+                SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.ARGB2101010);
+                RenderTextureFormat hdrFormat = (useHDR10) ? RenderTextureFormat.ARGB2101010 : RenderTextureFormat.DefaultHDR;
+            
+                m_ReflectionTexture = new RenderTexture(m_TextureSize.x, m_TextureSize.y, 0,
+                    currentCamera.allowHDR ? hdrFormat : RenderTextureFormat.Default);
                 m_ReflectionTexture.useMipMap = m_ReflectionTexture.autoGenerateMips = false;
                 m_ReflectionTexture.autoGenerateMips = false; // no need for mips(unless wanting cheap roughness)
                 m_ReflectionTexture.name = "_PlanarReflection" + GetInstanceID();
@@ -235,7 +240,8 @@ namespace UnityEngine.Rendering.LWRP
             GL.invertCulling = true;
             RenderSettings.fog = false;
             var bias = QualitySettings.lodBias;
-            QualitySettings.lodBias = bias * 0.25f;
+            QualitySettings.maximumLODLevel = 1;
+            QualitySettings.lodBias = bias * 0.5f;
             
             UpdateReflectionCamera(camera);
 
@@ -243,6 +249,7 @@ namespace UnityEngine.Rendering.LWRP
             
             GL.invertCulling = false;
             RenderSettings.fog = true;
+            QualitySettings.maximumLODLevel = 0;
             QualitySettings.lodBias = bias;
         }
     }

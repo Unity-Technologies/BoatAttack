@@ -26,17 +26,15 @@ struct WaterVertexInput // vert struct
 struct WaterVertexOutput // fragment struct
 {
 	float4	uv 						: TEXCOORD0;	// Geometric UVs stored in xy, and world(pre-waves) in zw
-	float4	lightmapUVOrVertexSH	: TEXCOORD1;	// holds either lightmapUV or vertex SH. depending on LIGHTMAP_ON - TODO
-	float3	posWS					: TEXCOORD2;	// world position of the vertices
+	//float4	lightmapUVOrVertexSH	: TEXCOORD1;	// holds either lightmapUV or vertex SH. depending on LIGHTMAP_ON - TODO
+	float3	posWS					: TEXCOORD1;	// world position of the vertices
 	half3 	normal 					: NORMAL;		// vert normals
+	float3 	viewDir 				: TEXCOORD2;	// view direction
+	float3	preWaveSP 				: TEXCOORD3;	// screen position of the verticies before wave distortion
+	half2 	fogFactorNoise : TEXCOORD4;	// x: fogFactor, y: noise
 
-	float3 	viewDir 				: TEXCOORD3;	// view direction
-	float2	preWaveSP 				: TEXCOORD4;	// screen position of the verticies before wave distortion
-	half4 	fogFactorAndVertexLight : TEXCOORD5;	// x: fogFactor, yzw: vertex light
-
-	float4	additionalData			: TEXCOORD6;	// x = distance to surface, y = distance to surface, z = normalized wave height
-	float4	vertColor				: TEXCOORD7;
-	half4	shadowCoord				: TEXCOORD8;	// for ssshadows
+	float4	additionalData			: TEXCOORD5;	// x = distance to surface, y = distance to surface, z = normalized wave height
+	half4	shadowCoord				: TEXCOORD6;	// for ssshadows
 
 	float4	clipPos					: SV_POSITION;
 	UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -106,8 +104,7 @@ WaterVertexOutput WaterVertex(WaterVertexInput v)
 
     o.posWS = TransformObjectToWorld(v.vertex.xyz);
 	o.uv.zw = o.posWS.xz;
-	o.vertColor = v.color;
-	o.vertColor.a = ((noise((o.posWS.xz * 0.5) + _GlobalTime) + noise((o.posWS.xz * 1) + _GlobalTime)) * 0.25 - 0.5) + 1;
+	o.fogFactorNoise.y = ((noise((o.posWS.xz * 0.5) + _GlobalTime) + noise((o.posWS.xz * 1) + _GlobalTime)) * 0.25 - 0.5) + 1;
 
 	half4 screenUV = ComputeScreenPos(TransformWorldToHClip(o.posWS));
 	screenUV.xyz /= screenUV.w;
@@ -135,12 +132,12 @@ WaterVertexOutput WaterVertex(WaterVertexInput v)
     // We either sample GI from lightmap or SH. lightmap UV and vertex SH coefficients
     // are packed in lightmapUVOrVertexSH to save interpolator.
     // The following funcions initialize
-    OUTPUT_LIGHTMAP_UV(v.lightmapUV, unity_LightmapST, o.lightmapUVOrVertexSH);
-    OUTPUT_SH(o.normal, o.lightmapUVOrVertexSH);
+    //OUTPUT_LIGHTMAP_UV(v.lightmapUV, unity_LightmapST, o.lightmapUVOrVertexSH);
+    //OUTPUT_SH(o.normal, o.lightmapUVOrVertexSH);
 
-    o.fogFactorAndVertexLight = VertexLightingAndFog(o.normal, o.posWS, o.clipPos.xyz);
-	o.fogFactorAndVertexLight.x = ComputeFogFactor(o.clipPos.z);
-	o.fogFactorAndVertexLight.yzw = screenUV.xyz; // pre-displaced screenUVs
+    //o.fogFactorAndVertexLight = VertexLightingAndFog(o.normal, o.posWS, o.clipPos.xyz);
+	o.fogFactorNoise.x = ComputeFogFactor(o.clipPos.z);
+	o.preWaveSP = screenUV; // pre-displaced screenUVs
 	// Additional data
     float3 viewPos = TransformWorldToView(o.posWS.xyz);
 	o.additionalData.x = length(viewPos / viewPos.z);// distance to surface
@@ -162,13 +159,13 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	UNITY_SETUP_INSTANCE_ID(IN);
 	half3 screenUV = IN.shadowCoord.xyz / IN.shadowCoord.w;//screen UVs
 
-	half4 waterFX = SAMPLE_TEXTURE2D(_WaterFXMap, sampler_ScreenTextures_linear_clamp, IN.fogFactorAndVertexLight.yz);
+	half4 waterFX = SAMPLE_TEXTURE2D(_WaterFXMap, sampler_ScreenTextures_linear_clamp, IN.preWaveSP.xy);
 
 	half animT = frac(_GlobalTime) * 16; // amination value for caustics(16 frames)
 	
 	// Detail waves
 	half t = _Time.x;
-	half2 detailBump = SAMPLE_TEXTURE2D_ARRAY(_SurfaceMap, sampler_SurfaceMap, IN.uv.zw * 0.25h + t + (IN.vertColor.a * 0.1), animT).xy;
+	half2 detailBump = SAMPLE_TEXTURE2D_ARRAY(_SurfaceMap, sampler_SurfaceMap, IN.uv.zw * 0.25h + t + (IN.fogFactorNoise.y * 0.1), animT).xy; // TODO - check perf
 	IN.normal += (half3(detailBump.x, 0.5h, detailBump.y) * 2 - 1) * _BumpScale;
 	IN.normal += half3(waterFX.y, 0.5h, waterFX.z) - 0.5;
 
@@ -189,7 +186,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	float2 seabedWS = D.xz/D.w;
 
 	// Caustics
-	half2 causticUV = (seabedWS * 0.3h + t + half2((IN.vertColor.a * 0.25), (1-IN.vertColor.a) * 0.25)) + IN.additionalData.w * 0.1h;
+	half2 causticUV = (seabedWS * 0.3h + t + half2((IN.fogFactorNoise.y * 0.25), (1-IN.fogFactorNoise.y) * 0.25)) + IN.additionalData.w * 0.1h;
 	half caustics = SAMPLE_TEXTURE2D_ARRAY_LOD(_SurfaceMap, sampler_SurfaceMap, causticUV, animT, depth.x * 0.5).z * saturate(depth.x); // caustics for sea floor, darkened to 25%
 
 	// Fresnel
@@ -201,15 +198,15 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	// Specular
 	half3 spec = Highlights(IN.posWS, 0.001, IN.normal, IN.viewDir) * shadow;
 	Light mainLight = GetMainLight();
-	half3 ambient = SampleSHPixel(IN.lightmapUVOrVertexSH, IN.normal) * (mainLight.color * mainLight.distanceAttenuation);
+	//half3 ambient = SampleSHPixel(IN.lightmapUVOrVertexSH, IN.normal) * (mainLight.color * mainLight.distanceAttenuation);
 
 	// Foam
-	float2 foamMapUV = (IN.uv.zw * 0.1) + (detailBump.xy * 0.0025) + half2(IN.vertColor.a * 0.1, (1-IN.vertColor.a) * 0.1) + _GlobalTime * 0.05;
+	float2 foamMapUV = (IN.uv.zw * 0.1) + (detailBump.xy * 0.0025) + half2(IN.fogFactorNoise.y * 0.1, (1-IN.fogFactorNoise.y) * 0.1) + _GlobalTime * 0.05;
 	half3 foamMap = SAMPLE_TEXTURE2D(_FoamMap, sampler_FoamMap, foamMapUV).rgb; //r=thick, g=medium, b=light
 	half shoreMask = pow(((1-depth.y + 9) * 0.1), 6);
 	half foamMask = (IN.additionalData.z);
-	half shoreWave = (sin(_Time.z + (depth.y * 10) + IN.vertColor.a) * 0.5 + 0.5) * saturate((1-depth.x) + 1);
-	foamMask = max(max((foamMask + shoreMask) - IN.vertColor.a * 0.25, waterFX.r * 2), shoreWave);
+	half shoreWave = (sin(_Time.z + (depth.y * 10) + IN.fogFactorNoise.y) * 0.5 + 0.5) * saturate((1-depth.x) + 1);
+	foamMask = max(max((foamMask + shoreMask) - IN.fogFactorNoise.y * 0.25, waterFX.r * 2), shoreWave);
 	half3 foamBlend = SAMPLE_TEXTURE2D(_AbsorptionScatteringRamp, sampler_AbsorptionScatteringRamp, half2(foamMask, 0.66)).rgb;
 
 	half3 foam = length(foamMap * foamBlend).rrr;
@@ -237,7 +234,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	half3 comp = lerp(refraction, color + reflection + foam, 1-saturate(1-depth.x * 25));
 	
 	// Fog
-    float fogFactor = IN.fogFactorAndVertexLight.x;
+    float fogFactor = IN.fogFactorNoise.x;
     comp = MixFog(comp, fogFactor);
 	return half4(comp, 1);
 	//return half4(refraction, 1); // debug line

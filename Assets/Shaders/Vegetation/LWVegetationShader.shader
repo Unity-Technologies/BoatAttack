@@ -157,7 +157,7 @@
                 UNITY_SETUP_INSTANCE_ID(IN);
 
                 SurfaceData surfaceData;
-                InitializeStandardLitSurfaceData(IN.uv, surfaceData);
+                InitializeStandardLitSurfaceData(IN.uv.xy, surfaceData);
 
                 surfaceData.occlusion = IN.occlusion;
 
@@ -175,7 +175,7 @@
 
                 color.rgb = MixFog(color.rgb, inputData.fogCoord);
                 #ifdef LOD_FADE_CROSSFADE // enable dithering LOD transition if user select CrossFade transition in LOD group
-            	    LODDitheringTransition(IN.clipPos, unity_LODFade.x);
+            	    LODDitheringTransition(IN.clipPos.xyz, unity_LODFade.x);
             	#endif
                 return color;
 			}
@@ -185,6 +185,7 @@
 
 Pass
         {
+            Name "ShadowCaster"
             Tags{"LightMode" = "ShadowCaster"}
 
             ZWrite On
@@ -253,6 +254,7 @@ Pass
             {
                 VegetationVertexOutput output = (VegetationVertexOutput)0;
                 UNITY_SETUP_INSTANCE_ID(input);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
                 #if _VERTEXANIMATION
                 /////////////////////////////////////vegetation stuff//////////////////////////////////////////////////
@@ -276,7 +278,7 @@ Pass
                 #ifdef LOD_FADE_CROSSFADE // enable dithering LOD transition if user select CrossFade transition in LOD group
             	    LODDitheringTransition(IN.clipPos, unity_LODFade.x);
             	#endif
-                return 0;
+                return 1;
             }
 
             ENDHLSL

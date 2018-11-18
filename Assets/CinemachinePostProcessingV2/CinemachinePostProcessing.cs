@@ -26,7 +26,11 @@ namespace Cinemachine.PostFX
     /// DepthOfField effect that is enabled.
     /// </summary>
     [DocumentationSorting(DocumentationSortingAttribute.Level.UserRef)]
+#if UNITY_2018_3_OR_NEWER
+    [ExecuteAlways]
+#else
     [ExecuteInEditMode]
+#endif
     [AddComponentMenu("")] // Hide in menu
     [SaveDuringPlay]
     public class CinemachinePostProcessing : CinemachineExtension
@@ -83,7 +87,6 @@ namespace Cinemachine.PostFX
             CinemachineVirtualCameraBase vcam,
             CinemachineCore.Stage stage, ref CameraState state, float deltaTime)
         {
-            //UnityEngine.Profiling.Profiler.BeginSample("CinemachinePostProcessing.PostPipelineStageCallback");
             // Set the focus after the camera has been fully positioned.
             // GML todo: what about collider?
             if (stage == CinemachineCore.Stage.Aim)
@@ -113,7 +116,6 @@ namespace Cinemachine.PostFX
                     state.AddCustomBlendable(new CameraState.CustomBlendable(this, 1));
                 }
             }
-            //UnityEngine.Profiling.Profiler.EndSample();
         }
 
         static void OnCameraCut(CinemachineBrain brain)
@@ -126,7 +128,6 @@ namespace Cinemachine.PostFX
 
         static void ApplyPostFX(CinemachineBrain brain)
         {
-            //UnityEngine.Profiling.Profiler.BeginSample("CinemachinePostProcessing.ApplyPostFX");
             PostProcessLayer ppLayer = GetPPLayer(brain);
             if (ppLayer == null || !ppLayer.enabled  || ppLayer.volumeLayer == 0)
                 return;
@@ -163,7 +164,6 @@ namespace Cinemachine.PostFX
                     firstVolume.weight = 1;
 #endif
             }
-            //UnityEngine.Profiling.Profiler.EndSample();
         }
 
         static string sVolumeOwnerName = "__CMVolumes";
@@ -171,7 +171,6 @@ namespace Cinemachine.PostFX
         static List<PostProcessVolume> GetDynamicBrainVolumes(
             CinemachineBrain brain, PostProcessLayer ppLayer, int minVolumes)
         {
-            //UnityEngine.Profiling.Profiler.BeginSample("CinemachinePostProcessing.GetDynamicBrainVolumes");
             // Locate the camera's child object that holds our dynamic volumes
             GameObject volumeOwner = null;
             Transform t = brain.transform;
@@ -210,7 +209,6 @@ namespace Cinemachine.PostFX
                 while (sVolumes.Count < minVolumes)
                     sVolumes.Add(volumeOwner.gameObject.AddComponent<PostProcessVolume>());
             }
-            //UnityEngine.Profiling.Profiler.EndSample();
             return sVolumes;
         }
 
