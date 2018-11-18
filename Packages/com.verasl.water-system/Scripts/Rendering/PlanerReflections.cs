@@ -3,9 +3,10 @@ using Unity.Mathematics;
 using UnityEngine.Rendering;
 using WaterSystem;
 
-namespace UnityEngine.Experimental.Rendering.LightweightPipeline
+namespace UnityEngine.Rendering.LWRP
 {
     [ImageEffectAllowedInSceneView]
+
     public class PlanerReflections : MonoBehaviour, IBeforeCameraRender
     {
         [System.Serializable]
@@ -204,15 +205,18 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
             GameObject go =
                 new GameObject("Planar Refl Camera id" + GetInstanceID() + " for " + currentCamera.GetInstanceID(),
                     typeof(Camera), typeof(Skybox));
-            AdditionalCameraData lwrpCamData =
-                go.AddComponent(typeof(AdditionalCameraData)) as AdditionalCameraData;
+            LWRPAdditionalCameraData lwrpCamData =
+                go.AddComponent(typeof(LWRPAdditionalCameraData)) as LWRPAdditionalCameraData;
             lwrpCamData.renderShadows = false; // turn off shadows for the reflection camera
+            lwrpCamData.requiresColorOption = CameraOverrideOption.Off;
+            lwrpCamData.requiresDepthOption = CameraOverrideOption.Off;
             var reflectionCamera = go.GetComponent<Camera>();
             reflectionCamera.transform.SetPositionAndRotation(transform.position, transform.rotation);
             reflectionCamera.targetTexture = m_ReflectionTexture;
             reflectionCamera.allowMSAA = true;
             reflectionCamera.depth = -10;
             reflectionCamera.enabled = false;
+            reflectionCamera.allowHDR = false;
             go.hideFlags = HideFlags.HideAndDontSave;
 
             Shader.SetGlobalTexture("_PlanarReflectionTexture", m_ReflectionTexture);
@@ -235,8 +239,7 @@ namespace UnityEngine.Experimental.Rendering.LightweightPipeline
             
             UpdateReflectionCamera(camera);
 
-            CullResults cullResults = new CullResults();
-            LightweightRenderPipeline.RenderSingleCamera(pipelineInstance, context, m_ReflectionCamera, ref cullResults);
+            LightweightRenderPipeline.RenderSingleCamera(pipelineInstance, context, m_ReflectionCamera);
             
             GL.invertCulling = false;
             RenderSettings.fog = true;

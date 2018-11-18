@@ -54,8 +54,8 @@
 
             // -------------------------------------
             // Unity defined keywords
-            #pragma multi_compile _ DIRLIGHTMAP_COMBINED
-            #pragma multi_compile _ LIGHTMAP_ON
+            //#pragma multi_compile _ DIRLIGHTMAP_COMBINED
+            //#pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
             #pragma multi_compile _ LOD_FADE_CROSSFADE
 
@@ -69,7 +69,7 @@
             // Lighting.hlsl will include the light functions/data to abstract light constants. You should use GetMainLight and GetLight functions
             // that initialize Light struct. Lighting.hlsl also include GI, Light BDRF functions. It also includes Shadows.
             //#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
-                        // Not required but included here for simplicity. This defines all material related constants for the Standard surface shader like _Color, _MainTex, and so on.
+            // Not required but included here for simplicity. This defines all material related constants for the Standard surface shader like _Color, _MainTex, and so on.
             // These are specific to this shader. You should define your own constants.
             #include "InputSurfaceVegetation.hlsl"
             #include "Vegetation.hlsl"
@@ -168,6 +168,8 @@
                 inputData.normalWS *= facing;
                 surfaceData.albedo *= lerp(half3(0.4, 1.6, 0.4), 1, (facing * 0.5 + 0.5));
                 #endif
+                
+                //return half4(surfaceData.albedo, 1);
 
                 half4 color = LightweightFragmentPBR(inputData, surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, surfaceData.occlusion, surfaceData.emission, surfaceData.alpha);
 
@@ -295,7 +297,6 @@ Pass
             #pragma fragment LightweightFragmentMeta
 
             #define _METALLICSPECGLOSSMAP 1
-            #pragma shader_feature EDITOR_VISUALIZATION
 
             #pragma shader_feature _SPECGLOSSMAP
 

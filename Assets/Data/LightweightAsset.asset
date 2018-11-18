@@ -9,38 +9,37 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: bf2edee5c58d82540a51f03df9d42094, type: 3}
   m_Name: LightweightAsset
   m_EditorClassIdentifier: 
   k_AssetVersion: 4
-  m_RequireDepthTexture: 1
-  m_RequireOpaqueTexture: 1
-  m_OpaqueDownsampling: 0
+  m_RequireDepthTexture: 0
+  m_RequireOpaqueTexture: 0
+  m_OpaqueDownsampling: 1
   m_SupportsHDR: 1
   m_MSAA: 4
   m_RenderScale: 1
   m_MainLightRenderingMode: 1
   m_MainLightShadowsSupported: 1
-  m_MainLightShadowmapResolution: 1024
+  m_MainLightShadowmapResolution: 2048
   m_AdditionalLightsRenderingMode: 0
   m_AdditionalLightsPerObjectLimit: 4
   m_AdditionalLightShadowsSupported: 0
   m_AdditionalLightsShadowmapResolution: 512
   m_ShadowDistance: 250
-  m_ShadowCascades: 2
-  m_Cascade2Split: 0.13998428
+  m_ShadowCascades: 1
+  m_Cascade2Split: 0.14211619
   m_Cascade4Split: {x: 0.067, y: 0.2, z: 0.467}
+  m_ShadowDepthBias: 1
+  m_ShadowNormalBias: 1
   m_SoftShadowsSupported: 1
-  m_SupportsDynamicBatching: 1
+  m_SupportsDynamicBatching: 0
   m_MixedLightingSupported: 1
-  m_SavedXRConfig:
-    renderScale: 1
-    viewportScale: 1
-    useOcclusionMesh: 1
-    occlusionMaskScale: 1
-  m_ShadowType: 2
+  m_ShadowType: 1
   m_LocalShadowsSupported: 0
-  m_LocalShadowsAtlasResolution: 512
-  m_MaxPixelLights: 1
-  m_ShadowAtlasResolution: 2048
+  m_LocalShadowsAtlasResolution: 256
+  m_MaxPixelLights: 0
+  m_ShadowAtlasResolution: 256
   m_ResourcesAsset: {fileID: 11400000, guid: aac5a08c32552a14c89394b703f1978a, type: 2}
+  m_ShaderVariantLogLevel: 0

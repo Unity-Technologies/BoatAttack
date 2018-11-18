@@ -4,7 +4,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
-using UnityEngine.Experimental.Rendering.LightweightPipeline;
 using WaterSystem.Data;
 
 namespace WaterSystem
@@ -49,11 +48,12 @@ namespace WaterSystem
         {
             if (!computeOverride)
                 useComputeBuffer = SystemInfo.supportsComputeShaders &&
-                                   Application.platform != RuntimePlatform.WebGLPlayer;
+                                   Application.platform != RuntimePlatform.WebGLPlayer &&
+                                   Application.platform != RuntimePlatform.Android;
             else
                 useComputeBuffer = false;
             Init();
-            LightweightRenderPipeline.beginCameraRendering += BeginCameraRendering;
+            RenderPipelineManager.beginCameraRendering += BeginCameraRendering;
 
             if(resources == null)
             {
@@ -69,7 +69,7 @@ namespace WaterSystem
         {
             if(Application.isPlaying)
                 GerstnerWavesJobs.Cleanup();
-            LightweightRenderPipeline.beginCameraRendering -= BeginCameraRendering;
+            RenderPipelineManager.beginCameraRendering -= BeginCameraRendering;
             if (_depthCam)
             {
                 _depthCam.targetTexture = null;
@@ -320,11 +320,16 @@ namespace WaterSystem
             _depthCam.nearClipPlane =0.1f;
             _depthCam.farClipPlane = surfaceData._waterMaxVisibility;
             _depthCam.allowHDR = false;
-            //_depthCam.allowMSAA = false;
+            _depthCam.allowMSAA = false;
             _depthCam.cullingMask = (1 << 10);
             //Generate RT
             if (!_depthTex)
                 _depthTex = new RenderTexture(1024, 1024, 24, RenderTextureFormat.Depth, RenderTextureReadWrite.Linear);
+            if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.OpenGLES2 || SystemInfo.graphicsDeviceType == GraphicsDeviceType.OpenGLES3)
+            {
+                _depthTex.filterMode = FilterMode.Point;
+                _depthTex.wrapMode = TextureWrapMode.Clamp;
+            }
             _depthTex.name = "WaterDepthMap";
             //do depth capture
             _depthCam.targetTexture = _depthTex;
@@ -337,12 +342,12 @@ namespace WaterSystem
             //Vector4 zParams = new Vector4(1-f/n, f/n, (1-f/n)/f, (f/n)/f);//2015
             Shader.SetGlobalVector("_depthCamZParams", zParams);
             
-            #if UNITY_EDITOR
-/*            Texture2D tex2D = new Texture2D(1024, 1024, TextureFormat.Alpha8, false);
+/*            #if UNITY_EDITOR
+            Texture2D tex2D = new Texture2D(1024, 1024, TextureFormat.Alpha8, false);
             Graphics.CopyTexture(_depthTex, tex2D);
             byte[] image = tex2D.EncodeToPNG();
-            System.IO.File.WriteAllBytes(Application.dataPath + "/WaterDepth.png", image);*/
-            #endif
+            System.IO.File.WriteAllBytes(Application.dataPath + "/WaterDepth.png", image);
+            #endif*/
             
             _depthCam.enabled = false;
             _depthCam.targetTexture = null;

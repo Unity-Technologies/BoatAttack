@@ -75,7 +75,7 @@ float3 WaterDepth(float3 posWS, half2 texcoords, half4 additionalData, half2 scr
 
 half3 Refraction(half2 distortion, half mip)
 {
-	half3 refrac = SAMPLE_TEXTURE2D_LOD(_CameraOpaqueTexture, sampler_CameraOpaqueTexture_linear, distortion, mip);
+	half3 refrac = SAMPLE_TEXTURE2D_LOD(_CameraOpaqueTexture, sampler_CameraOpaqueTexture_linear_clamp, distortion, mip);
 	return refrac;
 }
 
