@@ -239,6 +239,7 @@ namespace UnityEngine.Rendering.LWRP
             
             GL.invertCulling = true;
             RenderSettings.fog = false;
+            var max = QualitySettings.maximumLODLevel;
             var bias = QualitySettings.lodBias;
             QualitySettings.maximumLODLevel = 1;
             QualitySettings.lodBias = bias * 0.5f;
@@ -249,7 +250,7 @@ namespace UnityEngine.Rendering.LWRP
             
             GL.invertCulling = false;
             RenderSettings.fog = true;
-            QualitySettings.maximumLODLevel = 0;
+            QualitySettings.maximumLODLevel = max;
             QualitySettings.lodBias = bias;
         }
     }
