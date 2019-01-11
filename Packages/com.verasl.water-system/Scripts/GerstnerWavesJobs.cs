@@ -217,24 +217,24 @@ namespace WaterSystem
                     for (var wave = 0; wave < waveData.Length; wave++) // for each wave
                     {
                         // Wave data vars
-                        float2 pos = position[i].xz;
+                        var pos = position[i].xz;
 
                         var amplitude = waveData[wave].amplitude;
                         var direction = waveData[wave].direction;
                         var wavelength = waveData[wave].wavelength;
-                        float2 omniPos = waveData[wave].origin;
+                        var omniPos = waveData[wave].origin;
                         ////////////////////////////////wave value calculations//////////////////////////
-                        float w = 6.28318f / wavelength; // 2pi over wavelength(hardcoded)
-                        float wSpeed = math.sqrt(9.8f * w); // frequency of the wave based off wavelength
-                        float peak = 0.8f; // peak value, 1 is the sharpest peaks
-                        float qi = peak / (amplitude * w * waveData.Length);
+                        var w = 6.28318f / wavelength; // 2pi over wavelength(hardcoded)
+                        var wSpeed = math.sqrt(9.8f * w); // frequency of the wave based off wavelength
+                        var peak = 0.8f; // peak value, 1 is the sharpest peaks
+                        var qi = peak / (amplitude * w * waveData.Length);
 
-                        float2 windDir = new float2(0f, 0f);
-                        float dir = 0;
+                        var windDir = new float2(0f, 0f);
+                        var dir = 0f;
 
                         direction = math.radians(direction); // convert the incoming degrees to radians
-                        float2 windDirInput = new float2(math.sin(direction), math.cos(direction)) * (1 - waveData[wave].onmiDir); // calculate wind direction - TODO - currently radians
-                        float2 windOmniInput = (pos - omniPos) * waveData[wave].onmiDir;
+                        var windDirInput = new float2(math.sin(direction), math.cos(direction)) * (1 - waveData[wave].onmiDir); // calculate wind direction - TODO - currently radians
+                        var windOmniInput = (pos - omniPos) * waveData[wave].onmiDir;
 
                         windDir += windDirInput;
                         windDir += windOmniInput;
@@ -242,9 +242,9 @@ namespace WaterSystem
                         dir = math.dot(windDir, pos - (omniPos * waveData[wave].onmiDir)); // calculate a gradient along the wind direction
 
                         ////////////////////////////position output calculations/////////////////////////
-                        float calc = dir * w + -time * wSpeed; // the wave calculation
-                        float cosCalc = math.cos(calc); // cosine version(used for horizontal undulation)
-                        float sinCalc = math.sin(calc); // sin version(used for vertical undulation)
+                        var calc = dir * w + -time * wSpeed; // the wave calculation
+                        var cosCalc = math.cos(calc); // cosine version(used for horizontal undulation)
+                        var sinCalc = math.sin(calc); // sin version(used for vertical undulation)
 
                         // calculate the offsets for the current point
                         wavePos.x += qi * amplitude * windDir.x * cosCalc;

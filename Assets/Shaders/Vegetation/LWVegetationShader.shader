@@ -2,7 +2,7 @@
 {
     Properties
     {
-        _MainTex("Albedo", 2D) = "white" {}
+        _BaseMap("Albedo", 2D) = "white" {}
         _Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
         _Gloss("Gloss", Range(0.0, 1.0)) = 0.5
         [Toggle(_CORRECTNORMALS)] _CorrectNormals("Correct Normals", Float) = 1.0
@@ -273,7 +273,7 @@ Pass
 
             half4 DepthOnlyFragment(VegetationVertexOutput IN) : SV_TARGET
             {
-                half alpha = SampleAlbedoAlpha(IN.uv.xy, TEXTURE2D_PARAM(_MainTex, sampler_MainTex)).a;
+                half alpha = SampleAlbedoAlpha(IN.uv.xy, TEXTURE2D_PARAM(_BaseMap, sampler_BaseMap)).a;
                 clip(alpha - _Cutoff);
                 #ifdef LOD_FADE_CROSSFADE // enable dithering LOD transition if user select CrossFade transition in LOD group
             	    LODDitheringTransition(IN.clipPos, unity_LODFade.x);

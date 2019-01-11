@@ -192,8 +192,8 @@ namespace UnityEngine.Rendering.LWRP
                     DestroyImmediate(m_ReflectionTexture);
 
                 bool useHDR10 = Application.isMobilePlatform &&
-                SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.ARGB2101010);
-                RenderTextureFormat hdrFormat = (useHDR10) ? RenderTextureFormat.ARGB2101010 : RenderTextureFormat.DefaultHDR;
+                SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.RGB111110Float);
+                RenderTextureFormat hdrFormat = (useHDR10) ? RenderTextureFormat.RGB111110Float : RenderTextureFormat.DefaultHDR;
             
                 m_ReflectionTexture = new RenderTexture(m_TextureSize.x, m_TextureSize.y, 0,
                     currentCamera.allowHDR ? hdrFormat : RenderTextureFormat.Default);
@@ -202,6 +202,7 @@ namespace UnityEngine.Rendering.LWRP
                 m_ReflectionTexture.name = "_PlanarReflection" + GetInstanceID();
                 m_ReflectionTexture.isPowerOfTwo = true;
                 m_ReflectionTexture.hideFlags = HideFlags.DontSave;
+                m_ReflectionTexture.depth = 32;
                 m_OldReflectionTextureSize = m_TextureSize;
             }
 

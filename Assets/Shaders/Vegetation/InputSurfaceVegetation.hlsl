@@ -6,14 +6,14 @@
 #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/SurfaceInput.hlsl"
 
 CBUFFER_START(UnityPerMaterial)
-float4 _MainTex_ST;
+float4 _BaseMap_ST;
 half _Cutoff;
 half _Gloss;
 CBUFFER_END
 
 inline void InitializeStandardLitSurfaceData(float2 uv, out SurfaceData outSurfaceData)
 {
-    half4 albedoAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_PARAM(_MainTex, sampler_MainTex));
+    half4 albedoAlpha = SampleAlbedoAlpha(uv, TEXTURE2D_PARAM(_BaseMap, sampler_BaseMap));
 
     outSurfaceData.alpha = Alpha(albedoAlpha.a, 1, _Cutoff);
 

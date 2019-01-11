@@ -50,7 +50,7 @@ VertexOutput ShadowPassVegetationVertex(VertexInput input)
 
 half4 ShadowPassVegetationFragment(VertexOutput IN) : SV_TARGET
 {
-    half alpha = SampleAlbedoAlpha(IN.uv, TEXTURE2D_PARAM(_MainTex, sampler_MainTex)).a;
+    half alpha = SampleAlbedoAlpha(IN.uv, TEXTURE2D_PARAM(_BaseMap, sampler_BaseMap)).a;
     clip(alpha - _Cutoff);
     return 1;
 }

@@ -11,169 +11,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: 8e6292b2c06870d4495f009f912b9600, type: 3}
-  m_Name: PostVolumeGlobal Profile
+  m_Name: GlobalGrading_LDR
   m_EditorClassIdentifier: 
   settings:
-  - {fileID: 114213298802087806}
   - {fileID: 114842788608805528}
-  - {fileID: 114726729492399870}
-  - {fileID: 114812438466178442}
-  - {fileID: 114451369704550768}
---- !u!114 &114213298802087806
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
-  m_Script: {fileID: 11500000, guid: 48a79b01ea5641d4aa6daa2e23605641, type: 3}
-  m_Name: Bloom
-  m_EditorClassIdentifier: 
-  active: 1
-  enabled:
-    overrideState: 1
-    value: 1
-  intensity:
-    overrideState: 1
-    value: 1
-  threshold:
-    overrideState: 1
-    value: 1
-  softKnee:
-    overrideState: 1
-    value: 1
-  clamp:
-    overrideState: 0
-    value: 5
-  diffusion:
-    overrideState: 1
-    value: 6
-  anamorphicRatio:
-    overrideState: 0
-    value: 0
-  color:
-    overrideState: 1
-    value: {r: 1, g: 1, b: 1, a: 1}
-  fastMode:
-    overrideState: 1
-    value: 1
-  dirtTexture:
-    overrideState: 1
-    value: {fileID: 2800000, guid: 0a0984ce0012b4fc8a3d20e3225bf2a7, type: 3}
-    defaultState: 1
-  dirtIntensity:
-    overrideState: 1
-    value: 1
---- !u!114 &114451369704550768
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
-  m_Script: {fileID: 11500000, guid: 9b77c5407dc277943b591ade9e6b18c5, type: 3}
-  m_Name: LensDistortion
-  m_EditorClassIdentifier: 
-  active: 1
-  enabled:
-    overrideState: 1
-    value: 1
-  intensity:
-    overrideState: 1
-    value: 10
-  intensityX:
-    overrideState: 0
-    value: 1
-  intensityY:
-    overrideState: 0
-    value: 1
-  centerX:
-    overrideState: 0
-    value: 0
-  centerY:
-    overrideState: 0
-    value: 0
-  scale:
-    overrideState: 1
-    value: 1
---- !u!114 &114726729492399870
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
-  m_Script: {fileID: 11500000, guid: 6050e2d5de785ce4d931e4dbdbf2d755, type: 3}
-  m_Name: ChromaticAberration
-  m_EditorClassIdentifier: 
-  active: 1
-  enabled:
-    overrideState: 1
-    value: 1
-  spectralLut:
-    overrideState: 1
-    value: {fileID: 0}
-    defaultState: 1
-  intensity:
-    overrideState: 1
-    value: 0.083
-  fastMode:
-    overrideState: 1
-    value: 1
---- !u!114 &114812438466178442
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
-  m_Script: {fileID: 11500000, guid: 40b924e2dad56384a8df2a1e111bb675, type: 3}
-  m_Name: Vignette
-  m_EditorClassIdentifier: 
-  active: 1
-  enabled:
-    overrideState: 1
-    value: 1
-  mode:
-    overrideState: 1
-    value: 0
-  color:
-    overrideState: 1
-    value: {r: 0.32498217, g: 0.5084405, b: 0.6320754, a: 1}
-  center:
-    overrideState: 1
-    value: {x: 0.5, y: 0.5}
-  intensity:
-    overrideState: 1
-    value: 0.148
-  smoothness:
-    overrideState: 1
-    value: 0.232
-  roundness:
-    overrideState: 1
-    value: 1
-  rounded:
-    overrideState: 1
-    value: 1
-  mask:
-    overrideState: 1
-    value: {fileID: 0}
-    defaultState: 1
-  opacity:
-    overrideState: 1
-    value: 1
 --- !u!114 &114842788608805528
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -187,13 +28,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adb84e30e02715445aeb9959894e3b4d, type: 3}
   m_Name: ColorGrading
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   enabled:
     overrideState: 1
     value: 1
   gradingMode:
     overrideState: 1
-    value: 1
+    value: 0
   externalLut:
     overrideState: 0
     value: {fileID: 0}
@@ -228,7 +69,7 @@ MonoBehaviour:
     value: 1
   temperature:
     overrideState: 1
-    value: 14.2
+    value: 20.1
   tint:
     overrideState: 1
     value: 2.6
@@ -237,19 +78,19 @@ MonoBehaviour:
     value: {r: 0.7761659, g: 0.9622642, b: 0.85592234, a: 1}
   hueShift:
     overrideState: 1
-    value: 10
+    value: 0
   saturation:
     overrideState: 1
-    value: 21.5
+    value: 19.6
   brightness:
     overrideState: 1
-    value: -12
+    value: -39.6
   postExposure:
     overrideState: 1
     value: -0.5
   contrast:
     overrideState: 1
-    value: -8.4
+    value: -8.6
   mixerRedOutRedIn:
     overrideState: 0
     value: 100
@@ -279,10 +120,10 @@ MonoBehaviour:
     value: 115
   lift:
     overrideState: 1
-    value: {x: 0.97622, y: 0.9267121, z: 1, w: 0.07167739}
+    value: {x: 0.9903223, y: 0.92931724, z: 1, w: 0.015444958}
   gamma:
     overrideState: 1
-    value: {x: 0.9372451, y: 1, z: 0.9278165, w: -0.12983726}
+    value: {x: 0.9721108, y: 1, z: 0.96379995, w: -0.09234898}
   gain:
     overrideState: 0
     value: {x: 0.9607727, y: 1, z: 0.9559133, w: 0.49387595}
