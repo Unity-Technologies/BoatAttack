@@ -53,7 +53,7 @@ GraphicsSettings:
     m_Settings:
       standardShaderQuality: 0
       renderingPath: 1
-      hdrMode: 2
+      hdrMode: 1
       realtimeGICPUUsage: 25
       useReflectionProbeBoxProjection: 0
       useReflectionProbeBlending: 0
@@ -63,14 +63,48 @@ GraphicsSettings:
       prefer32BitShadowMaps: 0
       enableLPPV: 0
       useDitherMaskForAlphaBlendedShadows: 0
-    m_Automatic: 1
+    m_Automatic: 0
   - serializedVersion: 5
     m_BuildTarget: 4
     m_Tier: 1
     m_Settings:
       standardShaderQuality: 1
       renderingPath: 1
-      hdrMode: 2
+      hdrMode: 1
+      realtimeGICPUUsage: 25
+      useReflectionProbeBoxProjection: 0
+      useReflectionProbeBlending: 0
+      useHDR: 0
+      useDetailNormalMap: 0
+      useCascadedShadowMaps: 0
+      prefer32BitShadowMaps: 0
+      enableLPPV: 0
+      useDitherMaskForAlphaBlendedShadows: 0
+    m_Automatic: 0
+  - serializedVersion: 5
+    m_BuildTarget: 4
+    m_Tier: 2
+    m_Settings:
+      standardShaderQuality: 1
+      renderingPath: 1
+      hdrMode: 1
+      realtimeGICPUUsage: 25
+      useReflectionProbeBoxProjection: 0
+      useReflectionProbeBlending: 0
+      useHDR: 0
+      useDetailNormalMap: 0
+      useCascadedShadowMaps: 0
+      prefer32BitShadowMaps: 0
+      enableLPPV: 0
+      useDitherMaskForAlphaBlendedShadows: 0
+    m_Automatic: 0
+  - serializedVersion: 5
+    m_BuildTarget: 7
+    m_Tier: 0
+    m_Settings:
+      standardShaderQuality: 0
+      renderingPath: 1
+      hdrMode: 1
       realtimeGICPUUsage: 25
       useReflectionProbeBoxProjection: 0
       useReflectionProbeBlending: 0
@@ -82,12 +116,29 @@ GraphicsSettings:
       useDitherMaskForAlphaBlendedShadows: 0
     m_Automatic: 1
   - serializedVersion: 5
-    m_BuildTarget: 4
+    m_BuildTarget: 7
+    m_Tier: 1
+    m_Settings:
+      standardShaderQuality: 1
+      renderingPath: 1
+      hdrMode: 1
+      realtimeGICPUUsage: 25
+      useReflectionProbeBoxProjection: 0
+      useReflectionProbeBlending: 0
+      useHDR: 0
+      useDetailNormalMap: 0
+      useCascadedShadowMaps: 0
+      prefer32BitShadowMaps: 0
+      enableLPPV: 0
+      useDitherMaskForAlphaBlendedShadows: 0
+    m_Automatic: 1
+  - serializedVersion: 5
+    m_BuildTarget: 7
     m_Tier: 2
     m_Settings:
       standardShaderQuality: 1
       renderingPath: 1
-      hdrMode: 2
+      hdrMode: 1
       realtimeGICPUUsage: 25
       useReflectionProbeBoxProjection: 0
       useReflectionProbeBlending: 0

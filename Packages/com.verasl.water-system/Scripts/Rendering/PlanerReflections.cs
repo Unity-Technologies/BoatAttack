@@ -31,6 +31,7 @@ namespace UnityEngine.Rendering.LWRP
         public PlanarReflectionSettings m_settings = new PlanarReflectionSettings();
 
         public GameObject target;
+        public float camOffset;
         
         private Camera m_ReflectionCamera;
         private int2 m_TextureSize = new int2(256, 128);
@@ -84,7 +85,7 @@ namespace UnityEngine.Rendering.LWRP
             Vector3 normal = Vector3.up;
             if (target != null)
             {
-                pos = target.transform.position;
+                pos = target.transform.position + Vector3.up * camOffset;
                 normal = target.transform.up;
             }
 
@@ -192,8 +193,8 @@ namespace UnityEngine.Rendering.LWRP
                     DestroyImmediate(m_ReflectionTexture);
 
                 bool useHDR10 = Application.isMobilePlatform &&
-                SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.ARGB2101010);
-                RenderTextureFormat hdrFormat = (useHDR10) ? RenderTextureFormat.ARGB2101010 : RenderTextureFormat.DefaultHDR;
+                SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.RGB111110Float);
+                RenderTextureFormat hdrFormat = (useHDR10) ? RenderTextureFormat.RGB111110Float : RenderTextureFormat.DefaultHDR;
             
                 m_ReflectionTexture = new RenderTexture(m_TextureSize.x, m_TextureSize.y, 0,
                     currentCamera.allowHDR ? hdrFormat : RenderTextureFormat.Default);
@@ -202,6 +203,7 @@ namespace UnityEngine.Rendering.LWRP
                 m_ReflectionTexture.name = "_PlanarReflection" + GetInstanceID();
                 m_ReflectionTexture.isPowerOfTwo = true;
                 m_ReflectionTexture.hideFlags = HideFlags.DontSave;
+                m_ReflectionTexture.depth = 32;
                 m_OldReflectionTextureSize = m_TextureSize;
             }
 
@@ -218,11 +220,11 @@ namespace UnityEngine.Rendering.LWRP
             var reflectionCamera = go.GetComponent<Camera>();
             reflectionCamera.transform.SetPositionAndRotation(transform.position, transform.rotation);
             reflectionCamera.targetTexture = m_ReflectionTexture;
-            reflectionCamera.allowMSAA = true;
+            reflectionCamera.allowMSAA = currentCamera.allowMSAA;
             reflectionCamera.depth = -10;
             reflectionCamera.enabled = false;
-            reflectionCamera.allowHDR = false;
-            go.hideFlags = HideFlags.HideAndDontSave;
+            reflectionCamera.allowHDR = currentCamera.allowHDR;
+            go.hideFlags = HideFlags.DontSave;
 
             Shader.SetGlobalTexture("_PlanarReflectionTexture", m_ReflectionTexture);
             return reflectionCamera;
