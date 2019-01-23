@@ -16,7 +16,7 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
   m_Fog: 1
-  m_FogColor: {r: 1.5569305, g: 1.802265, b: 1.7516098, a: 1}
+  m_FogColor: {r: 1.2723992, g: 1.7492784, b: 1.802265, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.0025
   m_LinearFogStart: 0
@@ -50,7 +50,7 @@ LightmapSettings:
     serializedVersion: 2
     m_BounceScale: 1
     m_IndirectOutputScale: 1
-    m_AlbedoBoost: 1.5
+    m_AlbedoBoost: 1
     m_EnvironmentLightingMode: 0
     m_EnableBakedLightmaps: 1
     m_EnableRealtimeLightmaps: 0
@@ -11446,7 +11446,7 @@ ReflectionProbe:
     m_Bits: 4294967295
   m_IntensityMultiplier: 1
   m_BlendDistance: 1
-  m_HDR: 1
+  m_HDR: 0
   m_BoxProjection: 0
   m_RenderDynamicObjects: 0
   m_UseOcclusionCulling: 1
@@ -13916,46 +13916,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 372c59520c69cff4498f2d5d0e7b6c7c, type: 3}
---- !u!28 &429534122
-Texture2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  serializedVersion: 2
-  m_Width: 128
-  m_Height: 4
-  m_CompleteImageSize: 2048
-  m_TextureFormat: 5
-  m_MipCount: 1
-  m_IsReadable: 1
-  m_StreamingMipmaps: 0
-  m_StreamingMipmapsPriority: 0
-  m_AlphaIsTransparency: 0
-  m_ImageCount: 1
-  m_TextureDimension: 2
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_LightmapFormat: 0
-  m_ColorSpace: 1
-  image data: 2048
-  _typelessdata: ffffffffffeffdffffdffbffffd0f9ffffc0f7ffffb0f5ffffa0f3ffff90f1ffff81efffff71eeffff61ecffff51eaffff41e8ffff32e6ffff2ee2fbff2cdef7ff2bdbf2ff29d7eeff28d3e9ff26cfe4ff25cce0ff23c8dbff22c4d7ff20c0d2ff1fbcceff1db9c9ff1cb5c5ff1ab1c0ff19adbcff17a9b7ff16a6b2ff14a2aeff139ea9ff119aa5ff1096a0ff0e939cff0d8f97ff0b8b93ff0a878eff088389ff078085ff057d82ff057b81ff057a81ff057981ff057880ff057680ff05757fff05747fff04737fff04727eff04707eff046f7dff046e7dff046d7dff046b7cff046a7cff03697bff03687bff03667bff03657aff03647aff036379ff036179ff036079ff025f78ff025e78ff025d77ff025b77ff025a77ff025976ff025876ff025675ff025575ff015475ff015374ff015174ff015073ff014f73ff014e73ff014c72ff014b72ff004a71ff004971ff004871ff004670ff00456eff00436bff004169ff004066ff003e63ff003d61ff003b5eff00395cff003859ff003656ff003454ff003351ff00314eff002f4cff002e49ff002c47ff002b44ff002941ff00273fff00263cff00243aff002237ff002134ff001f32ff001d2fff001c2cff001a2aff001927ff001725ff001522ff00141fff00121dff00101aff000f18ff000d15ff000b12ff000a10ff00080dff00070aff000508ff000305ff000203ff000000ff010403ff020807ff020c0aff03110eff041511ff051915ff061d18ff06211bff07251fff082922ff092e26ff0a3229ff0b362dff0b3a30ff0c3e34ff0d4237ff0e463aff0f4b3eff0f4f41ff105345ff115748ff125b4cff135f4fff136352ff146856ff156957ff156957ff156a58ff166a58ff166b58ff166b59ff176c59ff176c5aff176d5aff186d5aff186e5bff186e5bff186f5bff196f5cff196f5cff19705dff1a705dff1a715dff1a715eff1b725eff1b725eff1b735fff1c735fff1c745fff1c7460ff1d7560ff1d7561ff1d7661ff1d7662ff1d7863ff1d7965ff1c7b66ff1c7c68ff1c7e6aff1b7f6bff1b816dff1b826eff1a8470ff1a8572ff198773ff198975ff198a76ff188c78ff188d7aff188f7bff17907dff17927eff179380ff169582ff169683ff169885ff159986ff159b88ff149c8aff149e8bff149f8dff13a18eff13a290ff13a492ff12a593ff12a795ff12a996ff11aa98ff11ac9aff11ad9bff10af9dff10b09eff0fb2a0ff0fb3a2ff0fb5a3ff0eb6a5ff0eb8a6ff0eb9a8ff0dbbaaff0dbcabff0dbeadff0cbfaeff0cc1b0ff0cc2b2ff0bc4b3ff0bc5b5ff0ac7b6ff0ac9b8ff0acab9ff09ccbbff09cdbdff09cfbeff08d0c0ff08d2c1ff08d3c3ff07d5c5ff07d6c6ff07d8c8ff06d9c9ff06dbcbff05dccdff05deceff05dfd0ff04e1d1ff04e2d3ff04e4d5ff03e5d6ff000000ff000001ff000001ff000002ff000003ff000004ff000005ff000006ff000007ff000008ff000009ff00000bff00000cff00000dff00000fff000011ff000012ff000013ff000015ff000017ff000019ff00001cff00001dff00001fff000021ff000024ff000026ff000029ff00002bff00002eff000031ff000034ff000037ff00003aff00003dff000040ff000043ff000047ff00004bff00004eff000052ff000056ff00005aff00005eff000063ff000067ff00006cff000070ff000075ff00007aff00007fff000084ff000089ff00008eff000094ff000099ff00009fff0000a4ff0000aaff0000afff0003b5ff0006bbff0009c1ff000dc7ff0010cdff0014d3ff0018d9ff001cdeff0021e4ff0025e9ff0029efff002ef4ff0033faff0038feff003efeff0043faff0049f7ff004ef3ff0054eeff005aebff0060e6ff0067e1ff006edcff0075d7ff007cd1ff0084cbff008cc5ff0094bfff009cb7ff00a5b0ff00ada8ff00b6a1ff00be99ff00c790ff04cf88ff0cd880ff14e177ff1ce96eff24f165ff2df85cff36ff54ff40fb4bff4af643ff53f13aff5deb32ff68e52aff72df23ff7dd81bff87d214ff91cb0dff9bc507ffa5be01ffaeb800ffb6b200ffbeae00ffc5a800ffcca300ffd29f00ffd89b00ffdd9800ffe39400ffe89000ffec8d00fff08b00fff48800fff68600fff98500fffc82000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  m_StreamData:
-    offset: 0
-    size: 0
-    path: 
 --- !u!1001 &429650737
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14724,7 +14684,7 @@ ReflectionProbe:
     m_Bits: 4294967295
   m_IntensityMultiplier: 1
   m_BlendDistance: 1
-  m_HDR: 1
+  m_HDR: 0
   m_BoxProjection: 0
   m_RenderDynamicObjects: 0
   m_UseOcclusionCulling: 1
@@ -15222,7 +15182,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 074aa8ca109924e18baf19f3e26665b6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -31.25
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 074aa8ca109924e18baf19f3e26665b6, type: 3}
       propertyPath: m_LocalPosition.y
@@ -15230,7 +15190,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 074aa8ca109924e18baf19f3e26665b6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -62.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 074aa8ca109924e18baf19f3e26665b6, type: 3}
       propertyPath: m_LocalRotation.x
@@ -21956,6 +21916,7 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 4294967295
   target: {fileID: 0}
+  camOffset: 0
 --- !u!114 &627448205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22315,7 +22276,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   computeOverride: 1
-  _rampTexture: {fileID: 429534122}
+  _rampTexture: {fileID: 979223409}
   _waves:
   - amplitude: 0.30540264
     direction: -166.8483
@@ -23914,7 +23875,7 @@ ReflectionProbe:
     m_Bits: 4294967295
   m_IntensityMultiplier: 1
   m_BlendDistance: 1
-  m_HDR: 1
+  m_HDR: 0
   m_BoxProjection: 0
   m_RenderDynamicObjects: 0
   m_UseOcclusionCulling: 1
@@ -29117,7 +29078,7 @@ ReflectionProbe:
     m_Bits: 4294967295
   m_IntensityMultiplier: 1
   m_BlendDistance: 1
-  m_HDR: 1
+  m_HDR: 0
   m_BoxProjection: 0
   m_RenderDynamicObjects: 0
   m_UseOcclusionCulling: 1
@@ -32605,6 +32566,46 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 976610611}
   m_PrefabAsset: {fileID: 0}
+--- !u!28 &979223409
+Texture2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  serializedVersion: 2
+  m_Width: 128
+  m_Height: 4
+  m_CompleteImageSize: 2048
+  m_TextureFormat: 5
+  m_MipCount: 1
+  m_IsReadable: 1
+  m_StreamingMipmaps: 0
+  m_StreamingMipmapsPriority: 0
+  m_AlphaIsTransparency: 0
+  m_ImageCount: 1
+  m_TextureDimension: 2
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_LightmapFormat: 0
+  m_ColorSpace: 1
+  image data: 2048
+  _typelessdata: ffffffffffeffdffffdffbffffd0f9ffffc0f7ffffb0f5ffffa0f3ffff90f1ffff81efffff71eeffff61ecffff51eaffff41e8ffff32e6ffff2ee2fbff2cdef7ff2bdbf2ff29d7eeff28d3e9ff26cfe4ff25cce0ff23c8dbff22c4d7ff20c0d2ff1fbcceff1db9c9ff1cb5c5ff1ab1c0ff19adbcff17a9b7ff16a6b2ff14a2aeff139ea9ff119aa5ff1096a0ff0e939cff0d8f97ff0b8b93ff0a878eff088389ff078085ff057d82ff057b81ff057a81ff057981ff057880ff057680ff05757fff05747fff04737fff04727eff04707eff046f7dff046e7dff046d7dff046b7cff046a7cff03697bff03687bff03667bff03657aff03647aff036379ff036179ff036079ff025f78ff025e78ff025d77ff025b77ff025a77ff025976ff025876ff025675ff025575ff015475ff015374ff015174ff015073ff014f73ff014e73ff014c72ff014b72ff004a71ff004971ff004871ff004670ff00456eff00436bff004169ff004066ff003e63ff003d61ff003b5eff00395cff003859ff003656ff003454ff003351ff00314eff002f4cff002e49ff002c47ff002b44ff002941ff00273fff00263cff00243aff002237ff002134ff001f32ff001d2fff001c2cff001a2aff001927ff001725ff001522ff00141fff00121dff00101aff000f18ff000d15ff000b12ff000a10ff00080dff00070aff000508ff000305ff000203ff000000ff010403ff020807ff020c0aff03110eff041511ff051915ff061d18ff06211bff07251fff082922ff092e26ff0a3229ff0b362dff0b3a30ff0c3e34ff0d4237ff0e463aff0f4b3eff0f4f41ff105345ff115748ff125b4cff135f4fff136352ff146856ff156957ff156957ff156a58ff166a58ff166b58ff166b59ff176c59ff176c5aff176d5aff186d5aff186e5bff186e5bff186f5bff196f5cff196f5cff19705dff1a705dff1a715dff1a715eff1b725eff1b725eff1b735fff1c735fff1c745fff1c7460ff1d7560ff1d7561ff1d7661ff1d7662ff1d7863ff1d7965ff1c7b66ff1c7c68ff1c7e6aff1b7f6bff1b816dff1b826eff1a8470ff1a8572ff198773ff198975ff198a76ff188c78ff188d7aff188f7bff17907dff17927eff179380ff169582ff169683ff169885ff159986ff159b88ff149c8aff149e8bff149f8dff13a18eff13a290ff13a492ff12a593ff12a795ff12a996ff11aa98ff11ac9aff11ad9bff10af9dff10b09eff0fb2a0ff0fb3a2ff0fb5a3ff0eb6a5ff0eb8a6ff0eb9a8ff0dbbaaff0dbcabff0dbeadff0cbfaeff0cc1b0ff0cc2b2ff0bc4b3ff0bc5b5ff0ac7b6ff0ac9b8ff0acab9ff09ccbbff09cdbdff09cfbeff08d0c0ff08d2c1ff08d3c3ff07d5c5ff07d6c6ff07d8c8ff06d9c9ff06dbcbff05dccdff05deceff05dfd0ff04e1d1ff04e2d3ff04e4d5ff03e5d6ff000000ff000001ff000001ff000002ff000003ff000004ff000005ff000006ff000007ff000008ff000009ff00000bff00000cff00000dff00000fff000011ff000012ff000013ff000015ff000017ff000019ff00001cff00001dff00001fff000021ff000024ff000026ff000029ff00002bff00002eff000031ff000034ff000037ff00003aff00003dff000040ff000043ff000047ff00004bff00004eff000052ff000056ff00005aff00005eff000063ff000067ff00006cff000070ff000075ff00007aff00007fff000084ff000089ff00008eff000094ff000099ff00009fff0000a4ff0000aaff0000afff0003b5ff0006bbff0009c1ff000dc7ff0010cdff0014d3ff0018d9ff001cdeff0021e4ff0025e9ff0029efff002ef4ff0033faff0038feff003efeff0043faff0049f7ff004ef3ff0054eeff005aebff0060e6ff0067e1ff006edcff0075d7ff007cd1ff0084cbff008cc5ff0094bfff009cb7ff00a5b0ff00ada8ff00b6a1ff00be99ff00c790ff04cf88ff0cd880ff14e177ff1ce96eff24f165ff2df85cff36ff54ff40fb4bff4af643ff53f13aff5deb32ff68e52aff72df23ff7dd81bff87d214ff91cb0dff9bc507ffa5be01ffaeb800ffb6b200ffbeae00ffc5a800ffcca300ffd29f00ffd89b00ffdd9800ffe39400ffe89000ffec8d00fff08b00fff48800fff68600fff98500fffc82000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  m_StreamData:
+    offset: 0
+    size: 0
+    path: 
 --- !u!1001 &980927039
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33858,11 +33859,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_settings:
     m_ResolutionMultiplier: 2
-    m_ClipPlaneOffset: 0.25
+    m_ClipPlaneOffset: -0.1
     m_ReflectLayers:
       serializedVersion: 2
-      m_Bits: 3367
+      m_Bits: 2343
   target: {fileID: 633812931}
+  camOffset: -0.6
 --- !u!114 &1017609903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33914,7 +33916,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6a148fca9ac24a90b29a417c2757430, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FogColor: {r: 1.5569305, g: 1.802265, b: 1.7516098, a: 1}
+  m_FogColor: {r: 1.2723992, g: 1.7492784, b: 1.802265, a: 1}
 --- !u!1001 &1017823965
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -39397,7 +39399,7 @@ ReflectionProbe:
     m_Bits: 4294967295
   m_IntensityMultiplier: 1
   m_BlendDistance: 1
-  m_HDR: 1
+  m_HDR: 0
   m_BoxProjection: 0
   m_RenderDynamicObjects: 0
   m_UseOcclusionCulling: 1
@@ -41091,7 +41093,7 @@ ReflectionProbe:
     m_Bits: 4294967295
   m_IntensityMultiplier: 1
   m_BlendDistance: 1
-  m_HDR: 1
+  m_HDR: 0
   m_BoxProjection: 0
   m_RenderDynamicObjects: 0
   m_UseOcclusionCulling: 1
@@ -44024,7 +44026,7 @@ ReflectionProbe:
     m_Bits: 4294967295
   m_IntensityMultiplier: 1
   m_BlendDistance: 1
-  m_HDR: 1
+  m_HDR: 0
   m_BoxProjection: 0
   m_RenderDynamicObjects: 0
   m_UseOcclusionCulling: 1
@@ -44880,7 +44882,7 @@ ReflectionProbe:
     m_Bits: 4294967295
   m_IntensityMultiplier: 1
   m_BlendDistance: 1
-  m_HDR: 1
+  m_HDR: 0
   m_BoxProjection: 0
   m_RenderDynamicObjects: 0
   m_UseOcclusionCulling: 1
@@ -53486,7 +53488,7 @@ Terrain:
   m_DrawHeightmap: 1
   m_DrawInstanced: 1
   m_DrawTreesAndFoliage: 1
-  m_ReflectionProbeUsage: 3
+  m_ReflectionProbeUsage: 1
   m_MaterialType: 3
   m_LegacySpecular:
     serializedVersion: 2
@@ -59470,7 +59472,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1768035350}
-  m_LocalRotation: {x: 0.0016830746, y: 0.99828374, z: -0.03711638, w: 0.04526805}
+  m_LocalRotation: {x: 0.0016830743, y: 0.99828374, z: -0.0371164, w: 0.045268018}
   m_LocalPosition: {x: -44.940704, y: 6.7491255, z: 30.639654}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
