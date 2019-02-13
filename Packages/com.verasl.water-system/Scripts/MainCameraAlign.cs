@@ -26,7 +26,7 @@ namespace WaterSystem
             RenderPipelineManager.beginCameraRendering -= UpdatePosition;
         }
 
-        void UpdatePosition(Camera cam)
+        void UpdatePosition(ScriptableRenderContext src, Camera cam)
         {
             Vector3 newPos = cam.transform.TransformPoint(Vector3.forward * forwards);
             newPos.y = yOffset;
