@@ -166,7 +166,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	// Detail waves
 	half t = _Time.x;
 	half2 detailBump = SAMPLE_TEXTURE2D_ARRAY(_SurfaceMap, sampler_SurfaceMap, IN.uv.zw * 0.25h + t + (IN.fogFactorNoise.y * 0.1), animT).xy; // TODO - check perf
-	IN.normal += (half3(detailBump.x, 0.5h, detailBump.y) * 2 - 1) * _BumpScale;
+	IN.normal += (half3(detailBump.x, 0.5h, detailBump.y) * 2 - 1) * _WaterBumpScale;
 	IN.normal += half3(waterFX.y, 0.5h, waterFX.z) - 0.5;
 
 	// Depth

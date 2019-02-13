@@ -9,7 +9,7 @@ namespace UnityEngine.Experimental.Rendering
 {
     public class MiniProfiler : MonoBehaviour
     {
-        private bool m_Enable = true;
+        private bool m_Enable = false;
         private bool m_CurrentBatcherEnable = false;
         private const float kAverageStatDuration = 1.0f;            // stats refresh each second
         private int m_frameCount;

@@ -2,7 +2,7 @@
 {
 	Properties
 	{
-		_BumpScale("Detail Wave Amount", Range(0, 2)) = 0.2//fine detail multiplier
+		_WaterBumpScale("Detail Wave Amount", Range(0, 2)) = 0.2//fine detail multiplier
 	}
 	SubShader
 	{

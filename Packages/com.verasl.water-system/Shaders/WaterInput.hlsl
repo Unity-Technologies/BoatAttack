@@ -3,14 +3,14 @@
 
 #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
 
-CBUFFER_START(MaterialProperties)
-half _BumpScale;
+CBUFFER_START(UnityPerMaterial)
+half _WaterBumpScale;
+CBUFFER_END
 half _MaxDepth;
 half _MaxWaveHeight;
 int _DebugPass;
 half4 _depthCamZParams;
 float4x4 _InvViewProjection;
-CBUFFER_END
 
 // Screen Effects textures
 SAMPLER(sampler_ScreenTextures_linear_clamp);
