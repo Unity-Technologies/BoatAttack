@@ -181,13 +181,13 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	depth.x = depth.x < 0 ? d : depth.x;
 
 	// Seabed UVs from depth
-    float4 H = float4(distortion*2.0-1.0, UNITY_REVERSED_Z == 1 ? depth.z : 1-depth.z, 1.0);
-    float4 D = mul(_InvViewProjection,H);
-	float2 seabedWS = D.xz/D.w;
+    //float4 H = float4(distortion*2.0-1.0, UNITY_REVERSED_Z == 1 ? depth.z : 1-depth.z, 1.0);
+    //float4 D = mul(_InvViewProjection,H);
+	//float2 seabedWS = D.xz/D.w;
 
 	// Caustics
-	half2 causticUV = (seabedWS * 0.3h + t + half2((IN.fogFactorNoise.y * 0.25), (1-IN.fogFactorNoise.y) * 0.25)) + IN.additionalData.w * 0.1h;
-	half caustics = SAMPLE_TEXTURE2D_ARRAY_LOD(_SurfaceMap, sampler_SurfaceMap, causticUV, animT, depth.x * 0.5).z * saturate(depth.x); // caustics for sea floor, darkened to 25%
+	//half2 causticUV = (seabedWS * 0.3h + t + half2((IN.fogFactorNoise.y * 0.25), (1-IN.fogFactorNoise.y) * 0.25)) + IN.additionalData.w * 0.1h;
+	//half caustics = SAMPLE_TEXTURE2D_ARRAY_LOD(_SurfaceMap, sampler_SurfaceMap, causticUV, animT, depth.x * 0.5).z * saturate(depth.x); // caustics for sea floor, darkened to 25%
 
 	// Fresnel
 	half fresnelTerm = CalculateFresnelTerm(lerp(IN.normal, half3(0, 1, 0), 0.5), IN.viewDir.xyz);
@@ -221,7 +221,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 
 	// Final Colouring
 	half depthMulti = 1 / _MaxDepth;
-    half3 color = (refraction + ((caustics * refraction) * mainLight.color));
+    half3 color = refraction;// (refraction + ((caustics * refraction) * mainLight.color));
 	color *= Absorption((depth.x) * depthMulti);
 	color += Scattering(depth.x * depthMulti) * (shadow * 0.5 + 0.5);// * saturate(1-length(reflection));// TODO - scattering from main light(maybe additional lights too depending on cost)
 	color *= 1 - saturate(foam);
