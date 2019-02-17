@@ -27,7 +27,7 @@ float3 HeightToNormal(Texture2D _tex, SamplerState _sampler, float2 _uv, half _i
 
 // Simple noise from thebookofshaders.com
 // 2D Random
-float random(float2 st){
+float2 random(float2 st){
     st = float2( dot(st,float2(127.1,311.7)), dot(st,float2(269.5,183.3)) );
     return -1.0 + 2.0 * frac(sin(st) * 43758.5453123);
 }

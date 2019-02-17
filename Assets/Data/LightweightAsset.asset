@@ -14,6 +14,8 @@ MonoBehaviour:
   m_Name: LightweightAsset
   m_EditorClassIdentifier: 
   k_AssetVersion: 4
+  m_RendererType: 1
+  m_RendererData: {fileID: 11400000, guid: 618d298269e66c542b306de85db1faea, type: 2}
   m_RequireDepthTexture: 0
   m_RequireOpaqueTexture: 0
   m_OpaqueDownsampling: 1
@@ -34,7 +36,7 @@ MonoBehaviour:
   m_ShadowDepthBias: 0.75
   m_ShadowNormalBias: 0.75
   m_SoftShadowsSupported: 1
-  m_UseSRPBatcher: 0
+  m_UseSRPBatcher: 1
   m_SupportsDynamicBatching: 0
   m_MixedLightingSupported: 0
   m_ShadowType: 1
@@ -42,5 +44,4 @@ MonoBehaviour:
   m_LocalShadowsAtlasResolution: 256
   m_MaxPixelLights: 0
   m_ShadowAtlasResolution: 256
-  m_ResourcesAsset: {fileID: 11400000, guid: aac5a08c32552a14c89394b703f1978a, type: 2}
   m_ShaderVariantLogLevel: 1

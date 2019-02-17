@@ -36,10 +36,18 @@ namespace BoatAttack.Boat
         {
             if (boatRenderer)
             {
-                MaterialPropertyBlock mpb = new MaterialPropertyBlock();
-                mpb.SetColor("_Color1", PrimaryColor);
-                mpb.SetColor("_Color2", TrimColor);
-                boatRenderer.SetPropertyBlock(mpb);
+                if (Application.isEditor)
+                {
+                    MaterialPropertyBlock mpb = new MaterialPropertyBlock();
+                    mpb.SetColor("_Color1", PrimaryColor);
+                    mpb.SetColor("_Color2", TrimColor);
+                    boatRenderer.SetPropertyBlock(mpb);
+                }
+                else
+                {
+                    boatRenderer.material.SetColor("_Color1", PrimaryColor);
+                    boatRenderer.material.SetColor("_Color2", TrimColor);
+                }
             }
         }
     }
