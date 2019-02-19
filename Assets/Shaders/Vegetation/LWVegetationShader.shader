@@ -273,7 +273,7 @@ Pass
 
             half4 DepthOnlyFragment(VegetationVertexOutput IN) : SV_TARGET
             {
-                half alpha = SampleAlbedoAlpha(IN.uv.xy, TEXTURE2D_PARAM(_BaseMap, sampler_BaseMap)).a;
+                half alpha = SampleAlbedoAlpha(IN.uv.xy, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap)).a;
                 clip(alpha - _Cutoff);
                 #ifdef LOD_FADE_CROSSFADE // enable dithering LOD transition if user select CrossFade transition in LOD group
             	    LODDitheringTransition(IN.clipPos, unity_LODFade.x);

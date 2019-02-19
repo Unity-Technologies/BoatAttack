@@ -3,110 +3,169 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using UnityEngine.Profiling;
+using UnityEngine.Rendering;
 
-public class MiniProfiler : MonoBehaviour {
-
-    public bool m_Enable = false;
-
-    private int frameCount = 0;
-    private const int kAverageFrameCount = 64;
-    private float m_AccDeltaTime;
-    private float m_AvgDeltaTime;
-
-    internal class RecorderEntry
+namespace UnityEngine.Experimental.Rendering
+{
+    public class MiniProfiler : MonoBehaviour
     {
-        public string name;
-        public float time;
-        public int count;
-        public float avgTime;
-        public float avgCount;
-        public float accTime;
-        public int accCount;
-        public Recorder recorder;
-    };
+        private bool m_Enable = true;
+        private bool m_CurrentBatcherEnable = false;
+        private const float kAverageStatDuration = 1.0f;            // stats refresh each second
+        private int m_frameCount;
+		private float m_AccDeltaTime;
+        private string m_statsLabel;
+        private GUIStyle m_style;
 
-    RecorderEntry[] recordersList =
-    {
-        new RecorderEntry() { name="RenderLoop.Draw" },
-        new RecorderEntry() { name="CullScriptable" },
-        new RecorderEntry() { name="Gfx.WaitForPresent" }
-	};
-
-    void Awake()
-    {
-        for (int i=0;i<recordersList.Length;i++)
+        internal class RecorderEntry
         {
-            var sampler = Sampler.Get(recordersList[i].name);
-            if ( sampler != null )
-            {
-                recordersList[i].recorder = sampler.GetRecorder();
-            }
-        }
-    }
+            public string name;
+            public int callCount;
+            public float accTime;
+            public Recorder recorder;
+        };
 
-
-    void Update()
-    {
-
-        if (m_Enable)
+		enum SRPBMarkers
+		{
+			kStdRenderDraw,
+			kStdShadowDraw,
+			kSRPBRenderDraw,
+			kSRPBShadowDraw,
+			kRenderThreadIdle,
+			kStdFlush,
+			kSRPBFlush,
+		};
+		
+        RecorderEntry[] recordersList =
         {
+			// Warning: Keep that list in the exact same order than SRPBMarkers enum
+            new RecorderEntry() { name="RenderLoop.Draw" },
+            new RecorderEntry() { name="Shadows.Draw" },
+            new RecorderEntry() { name="RenderLoopNewBatcher.Draw" },
+            new RecorderEntry() { name="ShadowLoopNewBatcher.Draw" },
+            new RecorderEntry() { name="RenderLoopDevice.Idle" },
+            new RecorderEntry() { name="BatchRenderer.Flush" },
+            new RecorderEntry() { name="SRPBatcher.Flush" },
+        };
 
-            // get timing & update average accumulators
+        void Awake()
+        {
             for (int i = 0; i < recordersList.Length; i++)
             {
-                recordersList[i].time = recordersList[i].recorder.elapsedNanoseconds / 1000000.0f;
-                recordersList[i].count = recordersList[i].recorder.sampleBlockCount;
-                recordersList[i].accTime += recordersList[i].time;
-                recordersList[i].accCount += recordersList[i].count;
+                var sampler = Sampler.Get(recordersList[i].name);
+                if (sampler.isValid)
+                    recordersList[i].recorder = sampler.GetRecorder();
             }
 
-            m_AccDeltaTime += Time.deltaTime;
+            m_style =new GUIStyle();
+            m_style.fontSize = 30;
+            m_style.normal.textColor = Color.white;
 
-            frameCount++;
-            // time to time, update average values & reset accumulators
-            if (frameCount >= kAverageFrameCount)
+            ResetStats();
+
+        }
+
+        void RazCounters()
+        {
+            m_AccDeltaTime = 0.0f;
+            m_frameCount = 0;
+            for (int i = 0; i < recordersList.Length; i++)
             {
+                recordersList[i].accTime = 0.0f;
+                recordersList[i].callCount = 0;
+            }
+        }
+
+        void    ResetStats()
+        {
+             m_statsLabel = "Gathering data...";
+             RazCounters();
+        }
+
+        void Update()
+        {
+
+            if (Input.GetKeyDown(KeyCode.F9))
+            {
+                GraphicsSettings.useScriptableRenderPipelineBatching = !GraphicsSettings.useScriptableRenderPipelineBatching;
+            }
+
+            if (Input.GetKeyDown(KeyCode.F8))
+            {
+                m_Enable = !m_Enable;
+                ResetStats();
+            }
+
+            if ( m_CurrentBatcherEnable != GraphicsSettings.useScriptableRenderPipelineBatching )
+            {
+                ResetStats();
+                m_CurrentBatcherEnable = GraphicsSettings.useScriptableRenderPipelineBatching;
+            }
+
+            if (m_Enable)
+            {
+
+                bool SRPBatcher = GraphicsSettings.useScriptableRenderPipelineBatching;
+
+                m_AccDeltaTime += Time.unscaledDeltaTime;
+                m_frameCount++;
+
+                // get timing & update average accumulators
                 for (int i = 0; i < recordersList.Length; i++)
                 {
-                    recordersList[i].avgTime = recordersList[i].accTime * (1.0f / kAverageFrameCount);
-                    recordersList[i].avgCount = recordersList[i].accCount * (1.0f / kAverageFrameCount);
-                    recordersList[i].accTime = 0.0f;
-                    recordersList[i].accCount = 0;
-
+                    if (recordersList[i].recorder != null)
+                    {
+                        recordersList[i].accTime += recordersList[i].recorder.elapsedNanoseconds / 1000000.0f;      // acc time in ms
+                        recordersList[i].callCount += recordersList[i].recorder.sampleBlockCount;
+                    }
                 }
 
-                m_AvgDeltaTime = m_AccDeltaTime / kAverageFrameCount;
-                m_AccDeltaTime = 0.0f;
-                frameCount = 0;
+				if (m_AccDeltaTime >= kAverageStatDuration)
+				{
+
+					float ooFrameCount = 1.0f / (float)m_frameCount;
+					float avgStdRender = recordersList[(int)SRPBMarkers.kStdRenderDraw].accTime * ooFrameCount;
+					float avgStdShadow = recordersList[(int)SRPBMarkers.kStdShadowDraw].accTime * ooFrameCount;
+					float avgSRPBRender = recordersList[(int)SRPBMarkers.kSRPBRenderDraw].accTime * ooFrameCount;
+					float avgSRPBShadow = recordersList[(int)SRPBMarkers.kSRPBShadowDraw].accTime * ooFrameCount;
+					float RTIdleTime = recordersList[(int)SRPBMarkers.kRenderThreadIdle].accTime * ooFrameCount;
+
+					m_statsLabel = string.Format("Accumulated time for RenderLoop.Draw and ShadowLoop.Draw (all threads)\n{0:F2}ms CPU Rendering time ( incl {1:F2}ms RT idle )\n", avgStdRender + avgStdShadow + avgSRPBRender + avgSRPBShadow, RTIdleTime);
+					if (SRPBatcher)
+					{
+						m_statsLabel += string.Format("  {0:F2}ms SRP Batcher code path ({1} flush(s))\n", avgSRPBRender + avgSRPBShadow, recordersList[(int)SRPBMarkers.kSRPBFlush].callCount / (int)m_frameCount);
+						m_statsLabel += string.Format("    {0:F2}ms All objects\n", avgSRPBRender);
+						m_statsLabel += string.Format("    {0:F2}ms Shadows\n", avgSRPBShadow);
+					}
+					m_statsLabel += string.Format("  {0:F2}ms Standard code path ({1} flush(s))\n", avgStdRender + avgStdShadow, recordersList[(int)SRPBMarkers.kStdFlush].callCount / (int)m_frameCount);
+					m_statsLabel += string.Format("    {0:F2}ms All objects\n", avgStdRender);
+					m_statsLabel += string.Format("    {0:F2}ms Shadows\n", avgStdShadow);
+					m_statsLabel += string.Format("Global Main Loop: {0:F2}ms ({1} FPS)\n", m_AccDeltaTime * 1000.0f * ooFrameCount, (int)(((float)m_frameCount) / m_AccDeltaTime));
+
+					RazCounters();
+				}
             }
         }
 
-    }
-
-    void OnGUI()
-    {
-
-        if (m_Enable)
+        void OnGUI()
         {
-            GUI.color = new Color(0, 0.54f, 1, 0.8f);
-            float w = 500, h = 140;
-
-            GUILayout.BeginArea(new Rect(10, 10, w, h), "Mini Profiler", GUI.skin.window);
-            GUI.color = new Color(1, 0.9f, 0.3f, 1f);
-
-            float avgMs = m_AvgDeltaTime * 1000.0f;
-            float avgWait = recordersList[2].avgTime;
-
-            string sLabel = System.String.Format("<b>Total {0:F2} FPS ({1:F2}ms)</b>\n", 1.0f / m_AvgDeltaTime, avgMs);
-            sLabel += System.String.Format("<b>CPU {0:F2}ms</b>\n", avgMs - avgWait);
-            sLabel += System.String.Format("<b>GPU(guess) {0:F2}ms</b>\n", avgWait);
-            for (int i = 0; i < recordersList.Length; i++)
+            if (m_Enable)
             {
-                sLabel += string.Format("{0:F2}ms (*{1:F2})\t({2:F2}ms *{3:F2})\t<b>{4}</b>\n", recordersList[i].avgTime, recordersList[i].avgCount, recordersList[i].time, recordersList[i].count, recordersList[i].name);
+                bool SRPBatcher = GraphicsSettings.useScriptableRenderPipelineBatching;
+
+//                GUI.skin.label.fontSize = 15;
+                GUI.color = new Color(1, 1, 1, 1);
+                float w = 1000, h = 356;
+
+                if ( SRPBatcher )
+                    GUILayout.BeginArea(new Rect(32, 50, w, h), "(SRP batcher ON)", GUI.skin.window);
+                else
+                    GUILayout.BeginArea(new Rect(32, 50, w, h), "(SRP batcher OFF)", GUI.skin.window);
+
+                GUILayout.Label(m_statsLabel, m_style);
+
+                GUILayout.EndArea();
             }
-            GUILayout.Label(sLabel);
-            GUILayout.EndArea();
         }
     }
-
 }

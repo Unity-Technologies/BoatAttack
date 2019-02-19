@@ -83,7 +83,7 @@ namespace WaterSystem
                 _waveBuffer.Dispose();
         }
 
-        private void BeginCameraRendering(Camera cam)
+        private void BeginCameraRendering(ScriptableRenderContext src, Camera cam)
         {
             Vector3 fwd = cam.transform.forward;
             fwd.y = 0;
