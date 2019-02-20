@@ -183,7 +183,7 @@
             ENDHLSL
         }
 
-Pass
+        Pass
         {
             Name "ShadowCaster"
             Tags{"LightMode" = "ShadowCaster"}
@@ -276,7 +276,7 @@ Pass
                 half alpha = SampleAlbedoAlpha(IN.uv.xy, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap)).a;
                 clip(alpha - _Cutoff);
                 #ifdef LOD_FADE_CROSSFADE // enable dithering LOD transition if user select CrossFade transition in LOD group
-            	    LODDitheringTransition(IN.clipPos, unity_LODFade.x);
+            	    LODDitheringTransition(IN.clipPos.xyz, unity_LODFade.x);
             	#endif
                 return 1;
             }
