@@ -60,5 +60,10 @@ namespace BoatAttack
                 seaMat.shader = seaShader;
             }
         }
+        
+        public void ToggleSRPBatcher(bool enabled)
+        {
+            LightweightRenderPipeline.asset.useSRPBatcher = enabled;
+        }
     }
 }

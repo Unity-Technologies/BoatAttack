@@ -4,6 +4,7 @@ using UnityEngine;
 
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.LWRP;
 
 namespace UnityEngine.Experimental.Rendering
 {
@@ -87,7 +88,7 @@ namespace UnityEngine.Experimental.Rendering
 
             if (Input.GetKeyDown(KeyCode.F9))
             {
-                GraphicsSettings.useScriptableRenderPipelineBatching = !GraphicsSettings.useScriptableRenderPipelineBatching;
+                LightweightRenderPipeline.asset.useSRPBatcher = !LightweightRenderPipeline.asset.useSRPBatcher;
             }
 
             if (Input.GetKeyDown(KeyCode.F8))
@@ -96,10 +97,10 @@ namespace UnityEngine.Experimental.Rendering
                 ResetStats();
             }
 
-            if ( m_CurrentBatcherEnable != GraphicsSettings.useScriptableRenderPipelineBatching )
+            if ( m_CurrentBatcherEnable != LightweightRenderPipeline.asset.useSRPBatcher )
             {
                 ResetStats();
-                m_CurrentBatcherEnable = GraphicsSettings.useScriptableRenderPipelineBatching;
+                m_CurrentBatcherEnable = LightweightRenderPipeline.asset.useSRPBatcher;
             }
 
             if (m_Enable)
@@ -151,7 +152,7 @@ namespace UnityEngine.Experimental.Rendering
         {
             if (m_Enable)
             {
-                bool SRPBatcher = GraphicsSettings.useScriptableRenderPipelineBatching;
+                bool SRPBatcher = LightweightRenderPipeline.asset.useSRPBatcher;
 
 //                GUI.skin.label.fontSize = 15;
                 GUI.color = new Color(1, 1, 1, 1);

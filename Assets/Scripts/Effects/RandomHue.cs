@@ -20,7 +20,14 @@ namespace BoatAttack
             {
                 for (int i = 0; i < renderers.Length; i++)
                 {
-                    renderers[i].SetPropertyBlock(mtb);
+                    if (Application.isPlaying)
+                    {
+                        renderers[i].material.SetFloat("_Hue", hue);
+                    }
+                    else
+                    {
+                        renderers[i].SetPropertyBlock(mtb);
+                    }
                 }
                 
             }
