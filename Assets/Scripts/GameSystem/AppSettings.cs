@@ -17,10 +17,14 @@ namespace BoatAttack
         }
 
         public RenderRes maxRenderSize = RenderRes._720p;
+
+        public Material seaMat;
+
+        private Shader seaShader;
         // Use this for initialization
         void Start()
         {
-            Application.targetFrameRate = 60;
+            Application.targetFrameRate = 300;
 
             float res;
             
@@ -42,6 +46,24 @@ namespace BoatAttack
             var renderScale = Mathf.Clamp(res / Camera.main.pixelHeight, 0.1f, 1.0f);
             
             LightweightRenderPipeline.asset.renderScale = renderScale;
+        }
+
+        public void ToggleWaterShader(bool detailed)
+        {
+            if (detailed == false)
+            {
+                seaShader = seaMat.shader;
+                seaMat.shader = Shader.Find("Unlit/Color");
+            }
+            else
+            {
+                seaMat.shader = seaShader;
+            }
+        }
+        
+        public void ToggleSRPBatcher(bool enabled)
+        {
+            LightweightRenderPipeline.asset.useSRPBatcher = enabled;
         }
     }
 }

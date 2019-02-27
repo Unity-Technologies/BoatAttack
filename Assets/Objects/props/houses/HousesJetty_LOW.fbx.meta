@@ -1,51 +1,137 @@
 fileFormatVersion: 2
 guid: 7c7696c943ff57c4aac0e0bb9f82b3c2
 ModelImporter:
-  serializedVersion: 22
-  fileIDToRecycleName:
-    100000: //RootNode
-    100002: House01
-    100004: House02
-    100006: House03
-    100008: House04
-    100010: House05
-    100012: JettyLong01
-    100014: JettySqr01
-    400000: //RootNode
-    400002: House01
-    400004: House02
-    400006: House03
-    400008: House04
-    400010: House05
-    400012: JettyLong01
-    400014: JettySqr01
-    2100000: Matr_BuildingsJettys
-    2300000: //RootNode
-    2300002: House01
-    2300004: House02
-    2300006: House03
-    2300008: House04
-    2300010: House05
-    2300012: JettyLong01
-    2300014: JettySqr01
-    3300000: //RootNode
-    3300002: House01
-    3300004: House02
-    3300006: House03
-    3300008: House04
-    3300010: House05
-    3300012: JettyLong01
-    3300014: JettySqr01
-    4300000: HousesJetty_LOW (2)
-    4300002: House05
-    4300004: House04
-    4300006: House03
-    4300008: House02
-    4300010: House01
-    4300012: JettyLong01
-    4300014: JettySqr01
-    7400000: Take 001
-    9500000: //RootNode
+  serializedVersion: 25
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      1: 100002
+    second: House01
+  - first:
+      1: 100004
+    second: House02
+  - first:
+      1: 100006
+    second: House03
+  - first:
+      1: 100008
+    second: House04
+  - first:
+      1: 100010
+    second: House05
+  - first:
+      1: 100012
+    second: JettyLong01
+  - first:
+      1: 100014
+    second: JettySqr01
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      4: 400002
+    second: House01
+  - first:
+      4: 400004
+    second: House02
+  - first:
+      4: 400006
+    second: House03
+  - first:
+      4: 400008
+    second: House04
+  - first:
+      4: 400010
+    second: House05
+  - first:
+      4: 400012
+    second: JettyLong01
+  - first:
+      4: 400014
+    second: JettySqr01
+  - first:
+      21: 2100000
+    second: Matr_BuildingsJettys
+  - first:
+      23: 2300000
+    second: //RootNode
+  - first:
+      23: 2300002
+    second: House01
+  - first:
+      23: 2300004
+    second: House02
+  - first:
+      23: 2300006
+    second: House03
+  - first:
+      23: 2300008
+    second: House04
+  - first:
+      23: 2300010
+    second: House05
+  - first:
+      23: 2300012
+    second: JettyLong01
+  - first:
+      23: 2300014
+    second: JettySqr01
+  - first:
+      33: 3300000
+    second: //RootNode
+  - first:
+      33: 3300002
+    second: House01
+  - first:
+      33: 3300004
+    second: House02
+  - first:
+      33: 3300006
+    second: House03
+  - first:
+      33: 3300008
+    second: House04
+  - first:
+      33: 3300010
+    second: House05
+  - first:
+      33: 3300012
+    second: JettyLong01
+  - first:
+      33: 3300014
+    second: JettySqr01
+  - first:
+      43: 4300000
+    second: HousesJetty_LOW (2)
+  - first:
+      43: 4300002
+    second: House05
+  - first:
+      43: 4300004
+    second: House04
+  - first:
+      43: 4300006
+    second: House03
+  - first:
+      43: 4300008
+    second: House02
+  - first:
+      43: 4300010
+    second: House01
+  - first:
+      43: 4300012
+    second: JettyLong01
+  - first:
+      43: 4300014
+    second: JettySqr01
+  - first:
+      74: 7400000
+    second: Take 001
+  - first:
+      95: 9500000
+    second: //RootNode
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -85,6 +171,7 @@ ModelImporter:
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -92,10 +179,13 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
@@ -107,10 +197,14 @@ ModelImporter:
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 0
   copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -120,8 +214,8 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
-    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1

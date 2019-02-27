@@ -1,13 +1,11 @@
-﻿using System;
-using Unity.Mathematics;
-using UnityEngine.Rendering;
-using WaterSystem;
+﻿using Unity.Mathematics;
+using UnityEngine.Experimental.Rendering;
+using UnityEngine.Serialization;
 
 namespace UnityEngine.Rendering.LWRP
 {
     [ImageEffectAllowedInSceneView]
-
-    public class PlanerReflections : MonoBehaviour, IBeforeCameraRender
+    public class PlanarReflections : MonoBehaviour, IBeforeCameraRender
     {
         [System.Serializable]
         public enum ResolutionMulltiplier
@@ -31,26 +29,48 @@ namespace UnityEngine.Rendering.LWRP
         public PlanarReflectionSettings m_settings = new PlanarReflectionSettings();
 
         public GameObject target;
-        public float camOffset;
+        [FormerlySerializedAs("camOffset")] public float m_planeOffset;
         
-        private Camera m_ReflectionCamera;
+        private static Camera m_ReflectionCamera;
         private int2 m_TextureSize = new int2(256, 128);
         private RenderTexture m_ReflectionTexture = null;
-        
+        private int planarReflectionTextureID = Shader.PropertyToID("_PlanarReflectionTexture");
         
         private int2 m_OldReflectionTextureSize;
 
         // Cleanup all the objects we possibly have created
-        void OnDisable()
+        private void OnDisable()
+        {
+            Cleanup();
+        }
+
+        private void OnDestroy()
+        {
+            Cleanup();
+        }
+
+        void Cleanup()
         {
             if(m_ReflectionCamera)
             {
                 m_ReflectionCamera.targetTexture = null;
-                DestroyImmediate(m_ReflectionCamera.gameObject);
+                SafeDestroy(m_ReflectionCamera.gameObject);
             }
             if (m_ReflectionTexture)
             {
-                DestroyImmediate(m_ReflectionTexture);
+                RenderTexture.ReleaseTemporary(m_ReflectionTexture);
+            }
+        }
+
+        void SafeDestroy(Object obj)
+        {
+            if (Application.isEditor)
+            {
+                DestroyImmediate(obj);
+            }
+            else
+            {
+                Destroy(obj);
             }
         }
         
@@ -58,22 +78,8 @@ namespace UnityEngine.Rendering.LWRP
         {
             if (dest == null)
                 return;
-            // set camera to clear the same way as current camera
-            dest.clearFlags = src.clearFlags;
-            dest.backgroundColor = src.backgroundColor;
-            // update other values to match current camera.
-            // even if we are supplying custom camera&projection matrices,
-            // some of values are used elsewhere (e.g. skybox uses far plane)
-            dest.farClipPlane = src.farClipPlane;
-            dest.nearClipPlane = src.nearClipPlane;
-            dest.orthographic = src.orthographic;
-            dest.fieldOfView = src.fieldOfView;
-            dest.allowHDR = src.allowHDR;
-            dest.useOcclusionCulling = false;
-            dest.aspect = src.aspect;
-            dest.orthographicSize = src.orthographicSize;
+            dest.CopyFrom(src);
         }
-
         
         private void UpdateReflectionCamera(Camera realCamera)
         {
@@ -85,7 +91,7 @@ namespace UnityEngine.Rendering.LWRP
             Vector3 normal = Vector3.up;
             if (target != null)
             {
-                pos = target.transform.position + Vector3.up * camOffset;
+                pos = target.transform.position + Vector3.up * m_planeOffset;
                 normal = target.transform.up;
             }
 
@@ -112,7 +118,6 @@ namespace UnityEngine.Rendering.LWRP
             m_ReflectionCamera.projectionMatrix = projection;
             m_ReflectionCamera.cullingMask = m_settings.m_ReflectLayers; // never render water layer
             m_ReflectionCamera.transform.position = newpos;
-                
         }
         
         // Calculates reflection matrix around the given plane
@@ -182,52 +187,32 @@ namespace UnityEngine.Rendering.LWRP
 
         private Camera CreateMirrorObjects(Camera currentCamera)
         {
-            LightweightRenderPipelineAsset lwAsset = (LightweightRenderPipelineAsset) GraphicsSettings.renderPipelineAsset;
-            var resMulti = lwAsset.renderScale * GetScaleValue();
-            m_TextureSize.x = (int) Mathf.Pow(2, Mathf.RoundToInt(Mathf.Log(currentCamera.pixelWidth * resMulti, 2)));
-            m_TextureSize.y = (int) Mathf.Pow(2, Mathf.RoundToInt(Mathf.Log(currentCamera.pixelHeight * resMulti, 2)));
-            // Reflection render texture
-            if (Int2Compare(m_TextureSize, m_OldReflectionTextureSize) || !m_ReflectionTexture)
-            {
-                if (m_ReflectionTexture)
-                    DestroyImmediate(m_ReflectionTexture);
-
-                bool useHDR10 = Application.isMobilePlatform &&
-                SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.RGB111110Float);
-                RenderTextureFormat hdrFormat = (useHDR10) ? RenderTextureFormat.RGB111110Float : RenderTextureFormat.DefaultHDR;
-            
-                m_ReflectionTexture = new RenderTexture(m_TextureSize.x, m_TextureSize.y, 0,
-                    currentCamera.allowHDR ? hdrFormat : RenderTextureFormat.Default);
-                m_ReflectionTexture.useMipMap = m_ReflectionTexture.autoGenerateMips = false;
-                m_ReflectionTexture.autoGenerateMips = false; // no need for mips(unless wanting cheap roughness)
-                m_ReflectionTexture.name = "_PlanarReflection" + GetInstanceID();
-                m_ReflectionTexture.isPowerOfTwo = true;
-                m_ReflectionTexture.hideFlags = HideFlags.DontSave;
-                m_ReflectionTexture.depth = 32;
-                m_OldReflectionTextureSize = m_TextureSize;
-            }
-
-            m_ReflectionTexture.DiscardContents();
-
             GameObject go =
                 new GameObject("Planar Refl Camera id" + GetInstanceID() + " for " + currentCamera.GetInstanceID(),
-                    typeof(Camera), typeof(Skybox));
+                    typeof(Camera));
             LWRPAdditionalCameraData lwrpCamData =
                 go.AddComponent(typeof(LWRPAdditionalCameraData)) as LWRPAdditionalCameraData;
+            LWRPAdditionalCameraData lwrpCamDataCurrent = currentCamera.GetComponent<LWRPAdditionalCameraData>();
             lwrpCamData.renderShadows = false; // turn off shadows for the reflection camera
             lwrpCamData.requiresColorOption = CameraOverrideOption.Off;
             lwrpCamData.requiresDepthOption = CameraOverrideOption.Off;
             var reflectionCamera = go.GetComponent<Camera>();
             reflectionCamera.transform.SetPositionAndRotation(transform.position, transform.rotation);
-            reflectionCamera.targetTexture = m_ReflectionTexture;
+            //reflectionCamera.targetTexture = m_ReflectionTexture;
             reflectionCamera.allowMSAA = currentCamera.allowMSAA;
             reflectionCamera.depth = -10;
             reflectionCamera.enabled = false;
             reflectionCamera.allowHDR = currentCamera.allowHDR;
-            go.hideFlags = HideFlags.DontSave;
+            go.hideFlags = HideFlags.HideAndDontSave;
 
-            Shader.SetGlobalTexture("_PlanarReflectionTexture", m_ReflectionTexture);
             return reflectionCamera;
+        }
+
+        private int2 ReflectionResolution(Camera cam, float scale)
+        {
+            var x = (int)(cam.pixelWidth * scale * GetScaleValue());
+            var y = (int)(cam.pixelHeight * scale * GetScaleValue());
+            return new int2(x, y);
         }
 
         public void ExecuteBeforeCameraRender(
@@ -248,12 +233,23 @@ namespace UnityEngine.Rendering.LWRP
             
             UpdateReflectionCamera(camera);
 
-            LightweightRenderPipeline.RenderSingleCamera(pipelineInstance, context, m_ReflectionCamera);
+            var res = ReflectionResolution(camera, LightweightRenderPipeline.asset.renderScale);
+            if (m_ReflectionTexture == null)
+            {
+                m_ReflectionTexture = RenderTexture.GetTemporary(res.x, res.y, 16,
+                    GraphicsFormatUtility.GetGraphicsFormat(RenderTextureFormat.RGB111110Float, true));
+            }
+
             
+            m_ReflectionCamera.targetTexture = m_ReflectionTexture;
+
+            LightweightRenderPipeline.RenderSingleCamera(pipelineInstance, context, m_ReflectionCamera);
+
             GL.invertCulling = false;
             RenderSettings.fog = true;
             QualitySettings.maximumLODLevel = max;
             QualitySettings.lodBias = bias;
+            Shader.SetGlobalTexture(planarReflectionTextureID, m_ReflectionTexture);
         }
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine.Rendering.LWRP;
 
 namespace WaterSystem
 {
-	[CustomPropertyDrawer(typeof(PlanerReflections.PlanarReflectionSettings))]
+	[CustomPropertyDrawer(typeof(PlanarReflections.PlanarReflectionSettings))]
 	public class PlanarSettingsDrawer : PropertyDrawer
 	{
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)

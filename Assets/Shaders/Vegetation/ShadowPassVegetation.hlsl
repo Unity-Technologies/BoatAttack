@@ -29,7 +29,7 @@ VertexOutput ShadowPassVegetationVertex(VertexInput input)
     #if _VERTEXANIMATION
     /////////////////////////////////////vegetation stuff//////////////////////////////////////////////////
     float3 objectOrigin = UNITY_ACCESS_INSTANCED_PROP(Props, _Position).xyz;
-    input.positionOS.xyz = VegetationDeformation(input.positionOS, objectOrigin, input.normalOS, input.color.x, input.color.z, input.color.y);
+    input.positionOS.xyz = VegetationDeformation(input.positionOS.xyz, objectOrigin, input.normalOS.xyz, input.color.x, input.color.z, input.color.y);
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     #endif
     
@@ -50,7 +50,7 @@ VertexOutput ShadowPassVegetationVertex(VertexInput input)
 
 half4 ShadowPassVegetationFragment(VertexOutput IN) : SV_TARGET
 {
-    half alpha = SampleAlbedoAlpha(IN.uv, TEXTURE2D_PARAM(_BaseMap, sampler_BaseMap)).a;
+    half alpha = SampleAlbedoAlpha(IN.uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap)).a;
     clip(alpha - _Cutoff);
     return 1;
 }

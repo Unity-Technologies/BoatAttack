@@ -16,7 +16,7 @@ namespace BoatAttack
         /// Check to see if rendering the planar reflection camera, if so, lower LOD bias
         /// </summary>
         /// <param name="cam">The currently rendering camera from LWRP</param>
-        void SetMaxLOD(Camera cam)
+        void SetMaxLOD(ScriptableRenderContext src, Camera cam)
         {
             if (cam == Camera.main || cam.cameraType == CameraType.SceneView || cam.cameraType == CameraType.Reflection)
                 QualitySettings.lodBias = 3;

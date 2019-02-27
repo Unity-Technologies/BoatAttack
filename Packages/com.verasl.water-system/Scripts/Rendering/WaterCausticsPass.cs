@@ -1,7 +1,7 @@
-﻿/*using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Experimental.Rendering;
-using UnityEngine.Experimental.Rendering.LightweightPipeline;
+using UnityEngine.Rendering.LWRP;
+using UnityEngine.Experimental.Rendering.LWRP;
 
 namespace WaterSystem
 {
@@ -9,14 +9,17 @@ namespace WaterSystem
     public class WaterCausticsPass : MonoBehaviour, IAfterOpaquePass
     {
         private WaterCausticsPassImpl m_WaterCausticsPass;
+        public Material m_WaterCausticMaterial;
 
-        WaterCausticsPassImpl waterCausticsPass
+        private WaterCausticsPassImpl waterCausticsPass
         {
             get
             {
                 if (m_WaterCausticsPass == null)
                     m_WaterCausticsPass = new WaterCausticsPassImpl();
 
+                m_WaterCausticsPass.m_WaterCausticMaterial = m_WaterCausticMaterial;
+                
                 return m_WaterCausticsPass;
             }
         }
@@ -30,72 +33,33 @@ namespace WaterSystem
 
     public class WaterCausticsPassImpl : ScriptableRenderPass
     {
-        const string k_RenderWaterFXTag = "Render Water FX";
-        private RenderTargetHandle m_WaterFX = RenderTargetHandle.CameraTarget;
+        const string k_RenderWaterCausticsTag = "Render Water Caustics";
+        public Material m_WaterCausticMaterial;
 
-        private FilteringSettings transparentFilterSettings { get; set; }
-
-        public WaterCausticsPassImpl()
-        {
-            RegisterShaderPassName("WaterFX");
-            m_WaterFX.Init("_WaterFXMap");
-
-
-            transparentFilterSettings = new FilteringSettings(RenderQueueRange.transparent);
-        }
+        private Matrix4x4 m_view;
+        private Matrix4x4 m_proj;
 
         public override void Execute(ScriptableRenderer renderer, ScriptableRenderContext context, ref RenderingData renderingData)
         {
-            CommandBuffer cmd = CommandBufferPool.Get(k_RenderWaterFXTag);
-
-            RenderTextureDescriptor descriptor = ScriptableRenderer.CreateRenderTextureDescriptor(ref renderingData.cameraData);
-            descriptor.width = (int) (descriptor.width * 0.5f);
-            descriptor.height = (int) (descriptor.height * 0.5f);
-            descriptor.colorFormat = RenderTextureFormat.Default;
-
-            using (new ProfilingSample(cmd, k_RenderWaterFXTag))
+            if (m_WaterCausticMaterial == null)
             {
-                cmd.GetTemporaryRT(m_WaterFX.id, descriptor, FilterMode.Bilinear);
-
-                SetRenderTarget(
-                    cmd,
-                    m_WaterFX.Identifier(),
-                    RenderBufferLoadAction.DontCare,
-                    RenderBufferStoreAction.Store,
-                    ClearFlag.Color,
-                    new Color(0.0f, 0.5f, 0.5f, 0.5f),
-                    descriptor.dimension);
-
-                context.ExecuteCommandBuffer(cmd);
-                cmd.Clear();
-
-                var drawSettings = CreateDrawingSettings(renderingData.cameraData.camera,
-                    SortingCriteria.CommonTransparent, PerObjectData.None, renderingData.supportsDynamicBatching);
-                var filteringSettings = transparentFilterSettings;
-                if (renderingData.cameraData.isStereoEnabled)
-                {
-                    Camera camera = renderingData.cameraData.camera;
-                    context.StartMultiEye(camera);
-                    context.DrawRenderers(renderingData.cullResults, ref drawSettings, ref filteringSettings);
-                    context.StopMultiEye(camera);
-                }
-                else
-                {
-                    context.DrawRenderers(renderingData.cullResults, ref drawSettings, ref filteringSettings);
-                }
+                Debug.LogErrorFormat("Missing caustic material}. {0} render pass will not execute. Check for missing reference in the renderer resources.", GetType().Name);
+                return;
             }
+            CommandBuffer cmd = CommandBufferPool.Get(k_RenderWaterCausticsTag);
 
+            m_view = renderingData.cameraData.camera.worldToCameraMatrix;
+            m_proj = renderingData.cameraData.camera.projectionMatrix;
+            
+            cmd.SetViewProjectionMatrices(Matrix4x4.identity, Matrix4x4.identity);
+            ScriptableRenderer.RenderFullscreenQuad(cmd, m_WaterCausticMaterial);
+            context.ExecuteCommandBuffer(cmd);
+
+            cmd.Clear();
+
+            cmd.SetViewProjectionMatrices(m_view, m_proj);
             context.ExecuteCommandBuffer(cmd);
             CommandBufferPool.Release(cmd);
         }
-
-        public override void FrameCleanup(CommandBuffer cmd)
-        {
-            base.FrameCleanup(cmd);
-            if (m_WaterFX != RenderTargetHandle.CameraTarget)
-            {
-                cmd.ReleaseTemporaryRT(m_WaterFX.id);
-            }
-        }
     }
-}*/
+}
