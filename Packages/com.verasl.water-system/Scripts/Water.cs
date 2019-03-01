@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.LWRP;
 using WaterSystem.Data;
 
 namespace WaterSystem
@@ -26,7 +27,7 @@ namespace WaterSystem
         private bool useComputeBuffer;
         public bool computeOverride;
 
-        private RenderTexture _depthTex;
+        RenderTexture _depthTex;
         private Camera _depthCam;
         [SerializeField]
         private Texture2D _rampTexture;
@@ -310,13 +311,22 @@ namespace WaterSystem
                 GameObject go = new GameObject("depthCamera");//create the cameraObject
                 go.hideFlags = HideFlags.HideAndDontSave;
                 _depthCam = go.AddComponent<Camera>();
+                _depthCam.tag = "depthCam";
+            }
+
+            if (_depthCam.GetComponent<LWRPAdditionalCameraData>() == null)
+            {
+                LWRPAdditionalCameraData additionalCamData = _depthCam.gameObject.AddComponent<LWRPAdditionalCameraData>();
+                additionalCamData.renderShadows = false;
+                additionalCamData.requiresColorOption = CameraOverrideOption.Off;
+                additionalCamData.requiresDepthOption = CameraOverrideOption.Off;
             }
             _depthCam.transform.position = Vector3.up * 4f;//center the camera on this water plane
             _depthCam.transform.up = Vector3.forward;//face teh camera down
             _depthCam.enabled = true;
             _depthCam.orthographic = true;
             _depthCam.orthographicSize = 250;//hardcoded = 1k area - TODO
-            _depthCam.depthTextureMode = DepthTextureMode.Depth;
+            //_depthCam.depthTextureMode = DepthTextureMode.Depth;
             _depthCam.nearClipPlane =0.1f;
             _depthCam.farClipPlane = surfaceData._waterMaxVisibility;
             _depthCam.allowHDR = false;
@@ -333,7 +343,7 @@ namespace WaterSystem
             _depthTex.name = "WaterDepthMap";
             //do depth capture
             _depthCam.targetTexture = _depthTex;
-            _depthCam.Render();
+            //_depthCam.Render();
             Shader.SetGlobalTexture("_WaterDepthMap", _depthTex);
             // set depthbufferParams for depth cam(since it doesnt exist and only temporary)
             float n = _depthCam.nearClipPlane;
@@ -349,8 +359,8 @@ namespace WaterSystem
             System.IO.File.WriteAllBytes(Application.dataPath + "/WaterDepth.png", image);
             #endif*/
             
-            _depthCam.enabled = false;
-            _depthCam.targetTexture = null;
+            //_depthCam.enabled = false;
+            //_depthCam.targetTexture = null;
         }
 
         private void OnDrawGizmos() {
