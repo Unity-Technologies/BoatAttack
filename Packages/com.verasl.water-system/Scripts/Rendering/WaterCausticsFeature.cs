@@ -21,8 +21,7 @@ namespace WaterSystem
             m_WaterCausticsPass.m_WaterCausticMaterial = settings.material;
         }
 
-        public override void AddRenderPasses(ScriptableRenderer renderer, RenderTextureDescriptor cameraDescriptor,
-            RenderTargetHandle colorAttachmentHandle, RenderTargetHandle depthAttachmentHandle)
+        public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
         {
             renderer.EnqueuePass(m_WaterCausticsPass);
         }

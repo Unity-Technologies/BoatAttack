@@ -47,6 +47,8 @@ namespace BoatAttack
             
             LightweightRenderPipeline.asset.renderScale = renderScale;
         }
+        
+        
 
         public void ToggleWaterShader(bool detailed)
         {
