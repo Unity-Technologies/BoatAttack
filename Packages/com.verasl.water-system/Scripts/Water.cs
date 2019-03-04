@@ -9,7 +9,7 @@ using WaterSystem.Data;
 
 namespace WaterSystem
 {
-    [ExecuteInEditMode]
+    [ExecuteAlways]
     public class Water : MonoBehaviour
     {
         // Singleton
@@ -110,11 +110,8 @@ namespace WaterSystem
 
         void Update()
         {
-            if(Application.isPlaying)
-            {
-                waterTime = Time.time;
-                Shader.SetGlobalFloat("_GlobalTime", waterTime);
-            }
+            waterTime = Time.time;
+            Shader.SetGlobalFloat("_GlobalTime", waterTime);
         }
 
         private void LateUpdate() {

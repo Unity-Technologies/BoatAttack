@@ -5,7 +5,7 @@
 
 half CalculateFresnelTerm(half3 normalWS, half3 viewDirectionWS)
 {
-    return Pow4(1.0 - saturate(dot(normalWS, viewDirectionWS)));//fresnel TODO - find a better place
+    return pow(1.0 - saturate(dot(normalWS, viewDirectionWS)), 5);//fresnel TODO - find a better place
 }
 
 ///////////////////////////////////////////////////////////////////////////////

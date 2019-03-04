@@ -182,7 +182,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	depth.x = depth.x < 0 ? d : depth.x;
 
 	// Fresnel
-	half fresnelTerm = CalculateFresnelTerm(lerp(IN.normal, half3(0, 1, 0), 0.5), IN.viewDir.xyz);
+	half fresnelTerm = CalculateFresnelTerm(IN.normal, IN.viewDir.xyz);
 
 	// Shadows
 	half shadow = MainLightRealtimeShadow(TransformWorldToShadowCoord(IN.posWS));
@@ -228,7 +228,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
     float fogFactor = IN.fogFactorNoise.x;
     comp = MixFog(comp, fogFactor);
 	return half4(comp, 1);
-	//return half4(shadow.xxx, 1); // debug line
+	//return half4(reflection, 1); // debug line
 }
 
 #endif // WATER_COMMON_INCLUDED
