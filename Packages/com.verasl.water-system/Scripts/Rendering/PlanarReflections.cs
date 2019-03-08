@@ -86,6 +86,7 @@ namespace UnityEngine.Rendering.LWRP
             if (dest == null)
                 return;
             dest.CopyFrom(src);
+            dest.useOcclusionCulling = false;
         }
         
         private void UpdateReflectionCamera(Camera realCamera)
@@ -195,7 +196,7 @@ namespace UnityEngine.Rendering.LWRP
         private Camera CreateMirrorObjects(Camera currentCamera)
         {
             GameObject go =
-                new GameObject("Planar Refl Camera id" + GetInstanceID() + " for " + currentCamera.GetInstanceID(),
+                new GameObject($"Planar Refl Camera id{GetInstanceID().ToString()} for {currentCamera.GetInstanceID().ToString()}",
                     typeof(Camera));
             LWRPAdditionalCameraData lwrpCamData =
                 go.AddComponent(typeof(LWRPAdditionalCameraData)) as LWRPAdditionalCameraData;
@@ -226,8 +227,11 @@ namespace UnityEngine.Rendering.LWRP
             ScriptableRenderContext context,
             Camera camera)
         {
+            if (camera.cameraType == CameraType.Reflection)
+                return;
+            
             GL.invertCulling = true;
-            RenderSettings.fog = false;
+            //RenderSettings.fog = false;
             var max = QualitySettings.maximumLODLevel;
             var bias = QualitySettings.lodBias;
             QualitySettings.maximumLODLevel = 1;
@@ -248,9 +252,9 @@ namespace UnityEngine.Rendering.LWRP
             LightweightRenderPipeline.RenderSingleCamera(context, m_ReflectionCamera);
 
             GL.invertCulling = false;
-            RenderSettings.fog = true;
-            QualitySettings.maximumLODLevel = max;
-            QualitySettings.lodBias = bias;
+            //RenderSettings.fog = true;
+            QualitySettings.maximumLODLevel = 0;
+            QualitySettings.lodBias = 3;
             Shader.SetGlobalTexture(planarReflectionTextureID, m_ReflectionTexture);
         }
     }

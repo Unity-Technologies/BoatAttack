@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.LWRP;
 
@@ -39,6 +40,7 @@ namespace WaterSystem
             cameraTextureDescriptor.depthBufferBits = 0;
             cameraTextureDescriptor.width = cameraTextureDescriptor.width / 2;
             cameraTextureDescriptor.height = cameraTextureDescriptor.height / 2;
+            cameraTextureDescriptor.colorFormat = RenderTextureFormat.Default;
             cmd.GetTemporaryRT(m_WaterFX.id, cameraTextureDescriptor, FilterMode.Bilinear);
             ConfigureTarget(m_WaterFX.Identifier());
             ConfigureClear(ClearFlag.Color, m_ClearColor);

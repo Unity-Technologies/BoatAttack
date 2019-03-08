@@ -308,7 +308,6 @@ namespace WaterSystem
                 GameObject go = new GameObject("depthCamera");//create the cameraObject
                 go.hideFlags = HideFlags.HideAndDontSave;
                 _depthCam = go.AddComponent<Camera>();
-                _depthCam.tag = "depthCam";
             }
 
             if (_depthCam.GetComponent<LWRPAdditionalCameraData>() == null)
@@ -340,7 +339,7 @@ namespace WaterSystem
             _depthTex.name = "WaterDepthMap";
             //do depth capture
             _depthCam.targetTexture = _depthTex;
-            //_depthCam.Render();
+            _depthCam.Render();
             Shader.SetGlobalTexture("_WaterDepthMap", _depthTex);
             // set depthbufferParams for depth cam(since it doesnt exist and only temporary)
             float n = _depthCam.nearClipPlane;
@@ -356,8 +355,8 @@ namespace WaterSystem
             System.IO.File.WriteAllBytes(Application.dataPath + "/WaterDepth.png", image);
             #endif*/
             
-            //_depthCam.enabled = false;
-            //_depthCam.targetTexture = null;
+            _depthCam.enabled = false;
+            _depthCam.targetTexture = null;
         }
 
         private void OnDrawGizmos() {

@@ -16,7 +16,21 @@ namespace BoatAttack
             _720p
         }
 
+        public enum Framerate
+        {
+            _30,
+            _60,
+            _120
+        }
+
         public RenderRes maxRenderSize = RenderRes._720p;
+        public bool variableResolution = false;
+        [Range(0f, 1f)]
+        public float axisBias = 0.5f;
+        public float minScale = 0.5f;
+        public Framerate targetFramerate = Framerate._30;
+        private float currentDynamicScale = 1.0f;
+        private float maxScale = 1.0f;
 
         public Material seaMat;
 
@@ -44,11 +58,45 @@ namespace BoatAttack
                     break;
             }
             var renderScale = Mathf.Clamp(res / Camera.main.pixelHeight, 0.1f, 1.0f);
-            
+            maxScale = renderScale;
             LightweightRenderPipeline.asset.renderScale = renderScale;
         }
-        
-        
+
+        private void Update()
+        {
+            if (variableResolution)
+            {
+                Camera.main.allowDynamicResolution = true;
+
+                var offset = 0f;
+                var currentFrametime = Time.deltaTime;
+                var rate = 0.1f;
+
+                switch (targetFramerate)
+                {
+                    case Framerate._30:
+                        offset = currentFrametime > (1000f / 30f) ? -rate : rate;
+                        break;
+                    case Framerate._60:
+                        offset = currentFrametime > (1000f / 30f) ? -rate : rate;
+                        break;
+                    case Framerate._120:
+                        offset = currentFrametime > (1000f / 120f) ? -rate : rate;
+                        break;
+                }
+
+                currentDynamicScale = Mathf.Clamp(currentFrametime + offset, minScale, 1f);
+                
+                var offsetVec = new Vector2(Mathf.Lerp(1, currentDynamicScale, Mathf.Clamp01((1 - axisBias) * 2f)),
+                    Mathf.Lerp(1, currentDynamicScale, Mathf.Clamp01(axisBias * 2f)));
+
+                ScalableBufferManager.ResizeBuffers(offsetVec.x, offsetVec.y);
+            }
+            else
+            {
+                Camera.main.allowDynamicResolution = false;
+            }
+        }
 
         public void ToggleWaterShader(bool detailed)
         {
