@@ -52,6 +52,7 @@ half4 ShadowPassVegetationFragment(VertexOutput IN) : SV_TARGET
 {
     half alpha = SampleAlbedoAlpha(IN.uv, TEXTURE2D_ARGS(_BaseMap, sampler_BaseMap)).a;
     clip(alpha - _Cutoff);
+    
     return 1;
 }
 

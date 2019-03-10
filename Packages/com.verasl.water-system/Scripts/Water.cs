@@ -28,6 +28,7 @@ namespace WaterSystem
         public bool computeOverride;
 
         RenderTexture _depthTex;
+        public Texture _bakedDepthTex;
         private Camera _depthCam;
         [SerializeField]
         private Texture2D _rampTexture;
@@ -44,6 +45,11 @@ namespace WaterSystem
         [SerializeField]
         private WaterResources resources;
         private float waterTime = 0;
+
+        private void OnValidate()
+        {
+            Init();
+        }
 
         void OnEnable()
         {
@@ -105,7 +111,10 @@ namespace WaterSystem
         {
             SetWaves();
             GenerateColorRamp();
-            CaptureDepthMap();
+            if (_bakedDepthTex)
+            {
+                Shader.SetGlobalTexture("_WaterDepthMap", _bakedDepthTex);
+            }  
         }
 
         void Update()
@@ -231,31 +240,10 @@ namespace WaterSystem
             }
         }
 
-        void GenerateVertexColors()
-        {
-            Mesh mesh = GetComponent<MeshFilter>().sharedMesh;
-            Vector3[] vertices = mesh.vertices;
-
-            // create new colors array where the colors will be created.
-            Color[] colors = new Color[vertices.Length];
-            RaycastHit hit;
-
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                colors[i] = Color.black;
-                //seafloor Depth
-                if (Physics.Raycast(vertices[i], -Vector3.up, out hit))
-                    colors[i].r = hit.distance;
-            }
-
-            // assign the array of colors to the Mesh.
-            mesh.colors = colors;
-        }
-
         public void GenerateColorRamp()
         {
-
-            _rampTexture = new Texture2D(128, 4, TextureFormat.ARGB32, false, false);
+            if(_rampTexture == null)
+                _rampTexture = new Texture2D(128, 4, TextureFormat.ARGB32, false, false);
             _rampTexture.wrapMode = TextureWrapMode.Clamp;
 
             Texture2D _defaultFoamRamp = resources.defaultFoamRamp;

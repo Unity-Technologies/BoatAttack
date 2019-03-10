@@ -278,6 +278,7 @@
                 #ifdef LOD_FADE_CROSSFADE // enable dithering LOD transition if user select CrossFade transition in LOD group
             	    LODDitheringTransition(IN.clipPos.xyz, unity_LODFade.x);
             	#endif
+            	
                 return 1;
             }
 

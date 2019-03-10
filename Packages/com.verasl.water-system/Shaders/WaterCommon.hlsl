@@ -101,7 +101,7 @@ WaterVertexOutput WaveVertexOperations(WaterVertexOutput input)
 	screenUV.xyz /= screenUV.w;
 
     // shallows mask
-    half waterDepth = UNITY_REVERSED_Z + SAMPLE_DEPTH_TEXTURE_LOD(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, (input.posWS.xz * 0.002) + 0.5, 1).r * _ProjectionParams.x;
+    half waterDepth = UNITY_REVERSED_Z + SAMPLE_DEPTH_TEXTURE_LOD(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, (input.posWS.xz * half2(0.002, -0.002)) + 0.5, 1).r * _ProjectionParams.x;
     waterDepth = ((waterDepth * _depthCamZParams.y) - 4 - _depthCamZParams.x);
     input.posWS.y += saturate((1 - waterDepth) * 0.6 - 0.5);
 
@@ -172,7 +172,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	IN.normal += half3(1-waterFX.y, 0.5h, 1-waterFX.z) - 0.5;
 
 	// Depth
-	float3 depth = WaterDepth(IN.posWS, (IN.posWS.xz * 0.002) + 0.5, IN.additionalData, screenUV.xy);// TODO - hardcoded shore depth UVs
+	float3 depth = WaterDepth(IN.posWS, (IN.posWS.xz * half2(0.002, -0.002)) + 0.5, IN.additionalData, screenUV.xy);// TODO - hardcoded shore depth UVs
 
 	// Distortion
 	half2 distortion = DistortionUVs(depth.x, IN.normal);
