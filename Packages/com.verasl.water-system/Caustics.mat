@@ -9,7 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
@@ -36,6 +35,10 @@ Material:
     m_TexEnvs:
     - Texture2DArray_29EA5301:
         m_Texture: {fileID: 18700000, guid: 2bf4e75081aab4b5f88bfb7069f598ac, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_A294F6AA:
+        m_Texture: {fileID: 2800000, guid: f395b7d64f44848c6a3cba1f1173fe90, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -71,9 +74,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_DC11883E: 0.31
+    - Vector1_CD857B77: 0.47
+    - Vector1_DC11883E: 0.5
     - Vector1_E85F4D08: -0.15
-    - Vector1_EA2AE021: 0.32
+    - Vector1_EA2AE021: 0.4
     - Vector1_F3303B3C: 0.5
     - _AlphaClip: 0
     - _Blend: 0

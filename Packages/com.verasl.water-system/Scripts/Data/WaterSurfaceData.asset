@@ -9,7 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: b17284ebf5e80436eb6089f8c7459dab, type: 3}
   m_Name: WaterSurfaceData
   m_EditorClassIdentifier: 
@@ -47,15 +46,15 @@ MonoBehaviour:
     serializedVersion: 2
     key0: {r: 0, g: 0, b: 0, a: 1}
     key1: {r: 0.08, g: 0.41, b: 0.34, a: 1}
-    key2: {r: 0.115566045, g: 0.46226418, b: 0.38125992, a: 0}
-    key3: {r: 0.01176471, g: 0.90588236, b: 0.84650886, a: 0}
+    key2: {r: 0.124154516, g: 0.5849056, b: 0.4761891, a: 0}
+    key3: {r: 0, g: 0.54324543, b: 0.5754717, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 0
-    ctime1: 12914
-    ctime2: 27525
+    ctime1: 9808
+    ctime2: 24097
     ctime3: 65535
     ctime4: 0
     ctime5: 0
@@ -76,32 +75,44 @@ MonoBehaviour:
   - amplitude: 1
     direction: -6.03
     wavelength: 10
-    origin: {x: -146.4, y: 326.2}
+    origin:
+      x: -146.4
+      y: 326.2
     onmiDir: 1
   - amplitude: 0.9
     direction: 166
     wavelength: 8
-    origin: {x: 0, y: 0}
+    origin:
+      x: 0
+      y: 0
     onmiDir: 0
   - amplitude: 0.5
     direction: 6.532788
     wavelength: 7.455916
-    origin: {x: -63.14, y: 931.6}
+    origin:
+      x: -63.14
+      y: 931.6
     onmiDir: 1
   - amplitude: 0.7
     direction: 4.051435
     wavelength: 4.6626315
-    origin: {x: -72.74, y: -16.01}
+    origin:
+      x: -72.74
+      y: -16.01
     onmiDir: 1
   - amplitude: 0.5
     direction: 180
     wavelength: 2.6733496
-    origin: {x: -50.43, y: 0}
+    origin:
+      x: -50.43
+      y: 0
     onmiDir: 0
   - amplitude: 0.5
     direction: -151
     wavelength: 2.9848163
-    origin: {x: 0, y: 0}
+    origin:
+      x: 0
+      y: 0
     onmiDir: 0
   _customWaves: 0
   randomSeed: 891

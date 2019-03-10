@@ -4,11 +4,12 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.LWRP;
 using WaterSystem.Data;
 
 namespace WaterSystem
 {
-    [ExecuteInEditMode]
+    [ExecuteAlways]
     public class Water : MonoBehaviour
     {
         // Singleton
@@ -26,7 +27,7 @@ namespace WaterSystem
         private bool useComputeBuffer;
         public bool computeOverride;
 
-        private RenderTexture _depthTex;
+        RenderTexture _depthTex;
         private Camera _depthCam;
         [SerializeField]
         private Texture2D _rampTexture;
@@ -109,11 +110,8 @@ namespace WaterSystem
 
         void Update()
         {
-            if(Application.isPlaying)
-            {
-                waterTime = Time.time;
-                Shader.SetGlobalFloat("_GlobalTime", waterTime);
-            }
+            waterTime = Time.time;
+            Shader.SetGlobalFloat("_GlobalTime", waterTime);
         }
 
         private void LateUpdate() {
@@ -311,12 +309,20 @@ namespace WaterSystem
                 go.hideFlags = HideFlags.HideAndDontSave;
                 _depthCam = go.AddComponent<Camera>();
             }
+
+            if (_depthCam.GetComponent<LWRPAdditionalCameraData>() == null)
+            {
+                LWRPAdditionalCameraData additionalCamData = _depthCam.gameObject.AddComponent<LWRPAdditionalCameraData>();
+                additionalCamData.renderShadows = false;
+                additionalCamData.requiresColorOption = CameraOverrideOption.Off;
+                additionalCamData.requiresDepthOption = CameraOverrideOption.Off;
+            }
             _depthCam.transform.position = Vector3.up * 4f;//center the camera on this water plane
             _depthCam.transform.up = Vector3.forward;//face teh camera down
             _depthCam.enabled = true;
             _depthCam.orthographic = true;
             _depthCam.orthographicSize = 250;//hardcoded = 1k area - TODO
-            _depthCam.depthTextureMode = DepthTextureMode.Depth;
+            //_depthCam.depthTextureMode = DepthTextureMode.Depth;
             _depthCam.nearClipPlane =0.1f;
             _depthCam.farClipPlane = surfaceData._waterMaxVisibility;
             _depthCam.allowHDR = false;

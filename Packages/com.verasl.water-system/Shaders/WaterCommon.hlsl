@@ -166,9 +166,10 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	
 	// Detail waves
 	half t = _Time.x;
-	half2 detailBump = SAMPLE_TEXTURE2D_ARRAY(_SurfaceMap, sampler_SurfaceMap, IN.uv.zw * 0.25h + t + (IN.fogFactorNoise.y * 0.1), animT).xy; // TODO - check perf
+	half2 detailBump = SAMPLE_TEXTURE2D(_SurfaceMap, sampler_SurfaceMap, IN.uv.zw * 0.25h + t + (IN.fogFactorNoise.y * 0.1)).xy; // TODO - check perf
+	
 	IN.normal += (half3(detailBump.x, 0.5h, detailBump.y) * 2 - 1) * _BumpScale;
-	IN.normal += half3(waterFX.y, 0.5h, waterFX.z) - 0.5;
+	IN.normal += half3(1-waterFX.y, 0.5h, 1-waterFX.z) - 0.5;
 
 	// Depth
 	float3 depth = WaterDepth(IN.posWS, (IN.posWS.xz * 0.002) + 0.5, IN.additionalData, screenUV.xy);// TODO - hardcoded shore depth UVs
@@ -182,7 +183,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	depth.x = depth.x < 0 ? d : depth.x;
 
 	// Fresnel
-	half fresnelTerm = CalculateFresnelTerm(lerp(IN.normal, half3(0, 1, 0), 0.5), IN.viewDir.xyz);
+	half fresnelTerm = CalculateFresnelTerm(IN.normal, IN.viewDir.xyz);
 
 	// Shadows
 	half shadow = MainLightRealtimeShadow(TransformWorldToShadowCoord(IN.posWS));
@@ -205,7 +206,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	// Reflections
 	half3 reflection = SampleReflections(IN.normal, IN.viewDir.xyz, screenUV.xy, fresnelTerm, 0.0);
 	reflection = reflection + spec;
-	reflection *= 1 - saturate(foam);
+	reflection *= 1 - saturate(foam * 2);
 
 	// Refraction
 	half3 refraction = Refraction(distortion, depth.x * 0.25);
@@ -228,7 +229,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
     float fogFactor = IN.fogFactorNoise.x;
     comp = MixFog(comp, fogFactor);
 	return half4(comp, 1);
-	//return half4(shadow.xxx, 1); // debug line
+	//return half4(reflection, 1); // debug line
 }
 
 #endif // WATER_COMMON_INCLUDED

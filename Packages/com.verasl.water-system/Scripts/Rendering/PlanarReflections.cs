@@ -4,8 +4,8 @@ using UnityEngine.Serialization;
 
 namespace UnityEngine.Rendering.LWRP
 {
-    [ImageEffectAllowedInSceneView]
-    public class PlanarReflections : MonoBehaviour, IBeforeCameraRender
+    [ExecuteAlways]
+    public class PlanarReflections : MonoBehaviour
     {
         [System.Serializable]
         public enum ResolutionMulltiplier
@@ -38,6 +38,11 @@ namespace UnityEngine.Rendering.LWRP
         
         private int2 m_OldReflectionTextureSize;
 
+        private void OnEnable()
+        {
+            RenderPipelineManager.beginCameraRendering += ExecutePlanarReflections;
+        }
+
         // Cleanup all the objects we possibly have created
         private void OnDisable()
         {
@@ -51,6 +56,8 @@ namespace UnityEngine.Rendering.LWRP
 
         void Cleanup()
         {
+            RenderPipelineManager.beginCameraRendering -= ExecutePlanarReflections;
+            
             if(m_ReflectionCamera)
             {
                 m_ReflectionCamera.targetTexture = null;
@@ -79,6 +86,7 @@ namespace UnityEngine.Rendering.LWRP
             if (dest == null)
                 return;
             dest.CopyFrom(src);
+            dest.useOcclusionCulling = false;
         }
         
         private void UpdateReflectionCamera(Camera realCamera)
@@ -188,7 +196,7 @@ namespace UnityEngine.Rendering.LWRP
         private Camera CreateMirrorObjects(Camera currentCamera)
         {
             GameObject go =
-                new GameObject("Planar Refl Camera id" + GetInstanceID() + " for " + currentCamera.GetInstanceID(),
+                new GameObject($"Planar Refl Camera id{GetInstanceID().ToString()} for {currentCamera.GetInstanceID().ToString()}",
                     typeof(Camera));
             LWRPAdditionalCameraData lwrpCamData =
                 go.AddComponent(typeof(LWRPAdditionalCameraData)) as LWRPAdditionalCameraData;
@@ -215,23 +223,22 @@ namespace UnityEngine.Rendering.LWRP
             return new int2(x, y);
         }
 
-        public void ExecuteBeforeCameraRender(
-            LightweightRenderPipeline pipelineInstance,
+        public void ExecutePlanarReflections(
             ScriptableRenderContext context,
             Camera camera)
         {
-
-            if (!enabled)
+            if (camera.cameraType == CameraType.Reflection)
                 return;
             
             GL.invertCulling = true;
-            RenderSettings.fog = false;
+            //RenderSettings.fog = false;
             var max = QualitySettings.maximumLODLevel;
             var bias = QualitySettings.lodBias;
             QualitySettings.maximumLODLevel = 1;
             QualitySettings.lodBias = bias * 0.5f;
-            
+
             UpdateReflectionCamera(camera);
+            m_ReflectionCamera.cameraType = camera.cameraType;
 
             var res = ReflectionResolution(camera, LightweightRenderPipeline.asset.renderScale);
             if (m_ReflectionTexture == null)
@@ -240,15 +247,14 @@ namespace UnityEngine.Rendering.LWRP
                     GraphicsFormatUtility.GetGraphicsFormat(RenderTextureFormat.RGB111110Float, true));
             }
 
-            
             m_ReflectionCamera.targetTexture = m_ReflectionTexture;
 
-            LightweightRenderPipeline.RenderSingleCamera(pipelineInstance, context, m_ReflectionCamera);
+            LightweightRenderPipeline.RenderSingleCamera(context, m_ReflectionCamera);
 
             GL.invertCulling = false;
-            RenderSettings.fog = true;
-            QualitySettings.maximumLODLevel = max;
-            QualitySettings.lodBias = bias;
+            //RenderSettings.fog = true;
+            QualitySettings.maximumLODLevel = 0;
+            QualitySettings.lodBias = 3;
             Shader.SetGlobalTexture(planarReflectionTextureID, m_ReflectionTexture);
         }
     }

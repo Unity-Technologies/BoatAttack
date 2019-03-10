@@ -28,7 +28,7 @@ TEXTURE2D(_WaterDepthMap); SAMPLER(sampler_WaterDepthMap_linear_clamp);
 
 // Surface textures
 TEXTURE2D(_AbsorptionScatteringRamp); SAMPLER(sampler_AbsorptionScatteringRamp);
-TEXTURE2D_ARRAY(_SurfaceMap); SAMPLER(sampler_SurfaceMap);
+TEXTURE2D(_SurfaceMap); SAMPLER(sampler_SurfaceMap);
 TEXTURE2D(_FoamMap); SAMPLER(sampler_FoamMap);
 
 // Must match Lightweigth ShaderGraph master node
