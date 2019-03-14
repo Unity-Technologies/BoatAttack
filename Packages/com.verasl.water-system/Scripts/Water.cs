@@ -111,10 +111,11 @@ namespace WaterSystem
         {
             SetWaves();
             GenerateColorRamp();
-            if (_bakedDepthTex)
+            /*if (_bakedDepthTex)
             {
                 Shader.SetGlobalTexture("_WaterDepthMap", _bakedDepthTex);
-            }  
+            }*/
+            CaptureDepthMap();
         }
 
         void Update()
