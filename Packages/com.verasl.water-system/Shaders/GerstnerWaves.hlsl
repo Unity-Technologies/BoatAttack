@@ -60,7 +60,7 @@ WaveStruct GerstnerWave(half2 pos, float waveCountMulti, half amplitude, half di
 
 	////////////////////////////////assign to output///////////////////////////////
 	waveOut.position = wave * saturate(amplitude * 10000);
-	waveOut.normal = (n * waveCountMulti) * amplitude;
+	waveOut.normal = (n * waveCountMulti);
 
 	return waveOut;
 }

@@ -8,6 +8,7 @@
         [Toggle(_CORRECTNORMALS)] _CorrectNormals("Correct Normals", Float) = 1.0
         [Toggle(_VERTEXANIMATION)] _VertexAnimation("Vertex Animation", Float) = 1.0
         _BumpMap("Normal Map", 2D) = "bump" {}
+        _BendStrength("Bend Strength", Range(0.00, 0.20)) = 0.05
     }
 
     SubShader
@@ -114,8 +115,8 @@
 
                 #if _VERTEXANIMATION
 				/////////////////////////////////////vegetation stuff//////////////////////////////////////////////////
-                float3 objectOrigin = UNITY_ACCESS_INSTANCED_PROP(Props, _Position).xyz;
-                input.positionOS = VegetationDeformation(input.positionOS, objectOrigin, input.normalOS, input.color.x, input.color.z, input.color.y);
+                float4 objectOrigin = UNITY_MATRIX_M[1];
+                input.positionOS = VegetationDeformation(input.positionOS, objectOrigin.xyz, input.normalOS, input.color.x, input.color.z, input.color.y, _BendStrength);
 				//////////////////////////////////////////////////////////////////////////////////////////////////////
                 #endif
                 VertexPositionInputs vertexPosition = GetVertexPositionInputs(input.positionOS);
@@ -177,6 +178,7 @@
                 #ifdef LOD_FADE_CROSSFADE // enable dithering LOD transition if user select CrossFade transition in LOD group
             	    LODDitheringTransition(IN.clipPos.xyz, unity_LODFade.x);
             	#endif
+            	//return half4(UNITY_MATRIX_M[0].xyz, 1);
                 return color;
 			}
 
@@ -258,10 +260,9 @@
 
                 #if _VERTEXANIMATION
                 /////////////////////////////////////vegetation stuff//////////////////////////////////////////////////
-                //half phaseOffset = UNITY_ACCESS_INSTANCED_PROP(Props, _PhaseOffset);
-                float3 objectOrigin = UNITY_ACCESS_INSTANCED_PROP(Props, _Position).xyz;
+                float4 objectOrigin = UNITY_MATRIX_M[1];
 
-                input.positionOS = VegetationDeformation(input.positionOS, objectOrigin, input.normalOS, input.color.x, input.color.z, input.color.y);
+                input.positionOS = VegetationDeformation(input.positionOS, objectOrigin.xyz, input.normalOS, input.color.x, input.color.z, input.color.y, _BendStrength);
                 #endif
                 
                 VertexPositionInputs vertexPosition = GetVertexPositionInputs(input.positionOS);

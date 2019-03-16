@@ -58,12 +58,12 @@ half4 SmoothTriangleWave( half4 x ) {
     return SmoothCurve( TriangleWave( x ) );
 }
 
-float3 VegetationDeformation(float3 position, float3 origin, float3 normal, half leafStiffness, half branchStiffness, half phaseOffset)
+float3 VegetationDeformation(float3 position, float3 origin, float3 normal, half leafStiffness, half branchStiffness, half phaseOffset, float bendStrength)
 {
     ///////Main Bending
-    float fBendScale = 0.05;//main bend opacity
+    float fBendScale = bendStrength;//main bend opacity
     float fLength = length(position);//distance to origin
-    float2 vWind = float2(sin(_GlobalTime + origin.x) * 0.1, sin(_GlobalTime + origin.z) * 0.1);//wind direction
+    float2 vWind = float2(sin(_GlobalTime + origin.x + origin.y) * 0.1, sin(_GlobalTime + origin.z) * 0.1);//wind direction
 
     // Bend factor - Wind variation is done on the CPU.
     float fBF = position.y * fBendScale;
@@ -84,7 +84,7 @@ float3 VegetationDeformation(float3 position, float3 origin, float3 normal, half
     float fDetailAmp = 0.05;//leaf edge amplitude of movement
     float fDetailPhase = phaseOffset * 1.2;// detail phase(red)
     float fBranchAtten = 1 - branchStiffness;//branch stiffness(blue)
-    float fBranchAmp = 0.25;//branch amplitude of movement
+    float fBranchAmp = 0.35;//branch amplitude of movement
     float fBranchPhase = phaseOffset * 3.3;// leaf phase(green)
 
     // Phases (object, vertex, branch)

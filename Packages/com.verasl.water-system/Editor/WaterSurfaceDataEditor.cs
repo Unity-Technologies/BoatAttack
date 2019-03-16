@@ -12,10 +12,10 @@ namespace WaterSystem.Data
         [SerializeField]
         ReorderableList waveList;
 
-        private void OnEnable()
+        private void OnValidate()
         {
             var init = serializedObject.FindProperty("_init");
-            if(init.boolValue == false)
+            if(init?.boolValue == false)
                 Setup();
 
             var standardHeight = EditorGUIUtility.singleLineHeight;
