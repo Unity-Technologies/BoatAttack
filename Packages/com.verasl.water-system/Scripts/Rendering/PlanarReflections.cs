@@ -243,8 +243,10 @@ namespace UnityEngine.Rendering.LWRP
             var res = ReflectionResolution(camera, LightweightRenderPipeline.asset.renderScale);
             if (m_ReflectionTexture == null)
             {
+                bool useRGB111110 = SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.RGB111110Float);
+                RenderTextureFormat hdrFormat = (useRGB111110) ? RenderTextureFormat.RGB111110Float : RenderTextureFormat.DefaultHDR;
                 m_ReflectionTexture = RenderTexture.GetTemporary(res.x, res.y, 16,
-                    GraphicsFormatUtility.GetGraphicsFormat(RenderTextureFormat.RGB111110Float, true));
+                    GraphicsFormatUtility.GetGraphicsFormat(hdrFormat, true));
             }
 
             m_ReflectionCamera.targetTexture = m_ReflectionTexture;
