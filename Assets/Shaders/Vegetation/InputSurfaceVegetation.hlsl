@@ -9,6 +9,7 @@ CBUFFER_START(UnityPerMaterial)
 float4 _BaseMap_ST;
 half _Cutoff;
 half _Gloss;
+half _BendStrength;
 CBUFFER_END
 
 inline void InitializeStandardLitSurfaceData(float2 uv, out SurfaceData outSurfaceData)

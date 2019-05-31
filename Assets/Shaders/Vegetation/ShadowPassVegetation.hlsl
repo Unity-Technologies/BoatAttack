@@ -28,8 +28,8 @@ VertexOutput ShadowPassVegetationVertex(VertexInput input)
     
     #if _VERTEXANIMATION
     /////////////////////////////////////vegetation stuff//////////////////////////////////////////////////
-    float3 objectOrigin = UNITY_ACCESS_INSTANCED_PROP(Props, _Position).xyz;
-    input.positionOS.xyz = VegetationDeformation(input.positionOS.xyz, objectOrigin, input.normalOS.xyz, input.color.x, input.color.z, input.color.y);
+    float4 objectOrigin = UNITY_MATRIX_M[1];
+    input.positionOS.xyz = VegetationDeformation(input.positionOS.xyz, objectOrigin.xyz, input.normalOS.xyz, input.color.x, input.color.z, input.color.y, _BendStrength);
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     #endif
     
