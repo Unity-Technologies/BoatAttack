@@ -10,26 +10,40 @@ namespace BoatAttack
     public class RandomHue : MonoBehaviour
     {
         public MeshRenderer[] renderers;
-        void OnValidate()
+
+        private void OnEnable()
+        {
+            RandomizeHUE();
+        }
+
+        private void OnValidate()
+        {
+            RandomizeHUE();
+        }
+
+        void RandomizeHUE()
         {
             float hue = Random.Range(0f, 1f);
-            MaterialPropertyBlock mtb = new MaterialPropertyBlock();
-            mtb.SetFloat("_Hue", hue);
-
-            if (renderers.Length > 0)
+            
+            if (renderers != null || renderers.Length > 0)
             {
                 for (int i = 0; i < renderers.Length; i++)
                 {
-                    if (Application.isPlaying)
+                    if (renderers[i] != null)
                     {
-                        renderers[i].material.SetFloat("_Hue", hue);
-                    }
-                    else
-                    {
-                        renderers[i].SetPropertyBlock(mtb);
+                        // Set as MPB in editor but in playmode(runtime) create instance for SRP batcher to work
+                        if (Application.isPlaying)
+                        {
+                            renderers[i].material.SetFloat("_Hue", hue);
+                        }
+                        else
+                        {
+                            MaterialPropertyBlock mtb = new MaterialPropertyBlock();
+                            mtb.SetFloat("_Hue", hue);
+                            renderers[i].SetPropertyBlock(mtb);
+                        }
                     }
                 }
-                
             }
         }
     }
