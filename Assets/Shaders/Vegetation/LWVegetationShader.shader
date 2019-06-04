@@ -167,18 +167,15 @@
 
                 #if _CORRECTNORMALS
                 inputData.normalWS *= facing;
-                surfaceData.albedo *= lerp(half3(0.4, 1.6, 0.4), 1, (facing * 0.5 + 0.5));
                 #endif
                 
-                //return half4(surfaceData.albedo, 1);
-
                 half4 color = LightweightFragmentPBR(inputData, surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, surfaceData.occlusion, surfaceData.emission, surfaceData.alpha);
 
                 color.rgb = MixFog(color.rgb, inputData.fogCoord);
                 #ifdef LOD_FADE_CROSSFADE // enable dithering LOD transition if user select CrossFade transition in LOD group
             	    LODDitheringTransition(IN.clipPos.xyz, unity_LODFade.x);
             	#endif
-            	//return half4(UNITY_MATRIX_M[0].xyz, 1);
+            	//return half4(unity_ObjectToWorld.xyz, 1);
                 return color;
 			}
 
