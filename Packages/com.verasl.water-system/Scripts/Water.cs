@@ -111,11 +111,11 @@ namespace WaterSystem
         {
             SetWaves();
             GenerateColorRamp();
-            /*if (_bakedDepthTex)
+            if (_bakedDepthTex)
             {
                 Shader.SetGlobalTexture("_WaterDepthMap", _bakedDepthTex);
-            }*/
-            CaptureDepthMap();
+            }
+            //CaptureDepthMap();
         }
 
         void Update()
@@ -329,7 +329,7 @@ namespace WaterSystem
             //do depth capture
             _depthCam.targetTexture = _depthTex;
             _depthCam.Render();
-            Shader.SetGlobalTexture("_WaterDepthMap", _depthTex);
+            //Shader.SetGlobalTexture("_WaterDepthMap", _depthTex);
             // set depthbufferParams for depth cam(since it doesnt exist and only temporary)
             float n = _depthCam.nearClipPlane;
             float f = _depthCam.farClipPlane;

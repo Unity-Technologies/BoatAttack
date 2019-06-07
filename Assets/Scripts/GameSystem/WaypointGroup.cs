@@ -26,6 +26,8 @@ namespace BoatAttack
 		void Awake()
 		{
 			Instance = this;
+			if (reverse)
+				WPs.Reverse();
 			Invoke("StartRace", raceDelay);
 		}
 
@@ -85,7 +87,7 @@ namespace BoatAttack
 		{
 			var index = WPs.IndexOf(wp);
 			index = (int)Mathf.Repeat(index + 1, WPs.Count);
-			return WPs[index];
+			return GetWaypoint(index);
 		}
 
 		public Waypoint GetClosestWaypoint(Vector3 point)

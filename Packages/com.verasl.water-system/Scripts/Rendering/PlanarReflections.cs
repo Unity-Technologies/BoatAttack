@@ -201,7 +201,7 @@ namespace UnityEngine.Rendering.LWRP
             LWRPAdditionalCameraData lwrpCamData =
                 go.AddComponent(typeof(LWRPAdditionalCameraData)) as LWRPAdditionalCameraData;
             LWRPAdditionalCameraData lwrpCamDataCurrent = currentCamera.GetComponent<LWRPAdditionalCameraData>();
-            lwrpCamData.renderShadows = false; // turn off shadows for the reflection camera
+            lwrpCamData.renderShadows = true; // turn off shadows for the reflection camera
             lwrpCamData.requiresColorOption = CameraOverrideOption.Off;
             lwrpCamData.requiresDepthOption = CameraOverrideOption.Off;
             var reflectionCamera = go.GetComponent<Camera>();
@@ -231,11 +231,11 @@ namespace UnityEngine.Rendering.LWRP
                 return;
             
             GL.invertCulling = true;
-            //RenderSettings.fog = false;
+            RenderSettings.fog = false;
             var max = QualitySettings.maximumLODLevel;
             var bias = QualitySettings.lodBias;
-            QualitySettings.maximumLODLevel = 1;
-            QualitySettings.lodBias = bias * 0.5f;
+            QualitySettings.maximumLODLevel = 0;
+            QualitySettings.lodBias = bias * 2f;
 
             UpdateReflectionCamera(camera);
             m_ReflectionCamera.cameraType = camera.cameraType;
@@ -252,9 +252,9 @@ namespace UnityEngine.Rendering.LWRP
             LightweightRenderPipeline.RenderSingleCamera(context, m_ReflectionCamera);
 
             GL.invertCulling = false;
-            //RenderSettings.fog = true;
+            RenderSettings.fog = true;
             QualitySettings.maximumLODLevel = 0;
-            QualitySettings.lodBias = 3;
+            QualitySettings.lodBias = 8;
             Shader.SetGlobalTexture(planarReflectionTextureID, m_ReflectionTexture);
         }
     }

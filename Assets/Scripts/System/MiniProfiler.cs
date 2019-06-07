@@ -23,7 +23,7 @@ namespace UnityEngine.Experimental.Rendering
             public string name;
             public int callCount;
             public float accTime;
-            public Recorder recorder;
+            public Profiling.Recorder recorder;
         };
 
 		enum SRPBMarkers

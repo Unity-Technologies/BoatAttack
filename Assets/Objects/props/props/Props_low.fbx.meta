@@ -1,112 +1,320 @@
 fileFormatVersion: 2
 guid: 92a669df93f0d4f99bd8fa27767e8c9e
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: Geo_Props_ArrowSign
-    100002: Geo_Props_Blimp
-    100004: Geo_Props_Bouy
-    100006: Geo_Props_Chair
-    100008: Geo_Props_Kayak
-    100010: Geo_Props_Paraglider
-    100012: Geo_Props_Umbrella
-    100014: Geo_Props_WindSurfer
-    100016: //RootNode
-    100018: Geo_Props_ArrowSign_LOD_0
-    100020: Geo_Props_ArrowSign_LOD_1
-    100022: Geo_Props_Bouy_LOD_0
-    100024: Geo_Props_Bouy_LOD_1
-    100026: Geo_Props_Chair_LOD_0
-    100028: Geo_Props_Chair_LOD_1
-    100030: Geo_Props_Paraglider_LOD_0
-    100032: Geo_Props_Paraglider_LOD_1
-    100034: Geo_Props_Umbrella_LOD_0
-    100036: Geo_Props_Umbrella_LOD_1
-    100038: Geo_Props_WindSurfer_LOD_0
-    100040: Geo_Props_WindSurfer_LOD_1
-    400000: Geo_Props_ArrowSign
-    400002: Geo_Props_Blimp
-    400004: Geo_Props_Bouy
-    400006: Geo_Props_Chair
-    400008: Geo_Props_Kayak
-    400010: Geo_Props_Paraglider
-    400012: Geo_Props_Umbrella
-    400014: Geo_Props_WindSurfer
-    400016: //RootNode
-    400018: Geo_Props_ArrowSign_LOD_0
-    400020: Geo_Props_ArrowSign_LOD_1
-    400022: Geo_Props_Bouy_LOD_0
-    400024: Geo_Props_Bouy_LOD_1
-    400026: Geo_Props_Chair_LOD_0
-    400028: Geo_Props_Chair_LOD_1
-    400030: Geo_Props_Paraglider_LOD_0
-    400032: Geo_Props_Paraglider_LOD_1
-    400034: Geo_Props_Umbrella_LOD_0
-    400036: Geo_Props_Umbrella_LOD_1
-    400038: Geo_Props_WindSurfer_LOD_0
-    400040: Geo_Props_WindSurfer_LOD_1
-    2100000: Matr_Props
-    2300000: Geo_Props_ArrowSign
-    2300002: Geo_Props_Blimp
-    2300004: Geo_Props_Bouy
-    2300006: Geo_Props_Chair
-    2300008: Geo_Props_Kayak
-    2300010: Geo_Props_Paraglider
-    2300012: Geo_Props_Umbrella
-    2300014: Geo_Props_WindSurfer
-    2300016: Geo_Props_ArrowSign_LOD_0
-    2300018: Geo_Props_ArrowSign_LOD_1
-    2300020: Geo_Props_Bouy_LOD_0
-    2300022: Geo_Props_Bouy_LOD_1
-    2300024: Geo_Props_Chair_LOD_0
-    2300026: Geo_Props_Chair_LOD_1
-    2300028: Geo_Props_Paraglider_LOD_0
-    2300030: Geo_Props_Paraglider_LOD_1
-    2300032: Geo_Props_Umbrella_LOD_0
-    2300034: Geo_Props_Umbrella_LOD_1
-    2300036: Geo_Props_WindSurfer_LOD_0
-    2300038: Geo_Props_WindSurfer_LOD_1
-    3300000: Geo_Props_ArrowSign
-    3300002: Geo_Props_Blimp
-    3300004: Geo_Props_Bouy
-    3300006: Geo_Props_Chair
-    3300008: Geo_Props_Kayak
-    3300010: Geo_Props_Paraglider
-    3300012: Geo_Props_Umbrella
-    3300014: Geo_Props_WindSurfer
-    3300016: Geo_Props_ArrowSign_LOD_0
-    3300018: Geo_Props_ArrowSign_LOD_1
-    3300020: Geo_Props_Bouy_LOD_0
-    3300022: Geo_Props_Bouy_LOD_1
-    3300024: Geo_Props_Chair_LOD_0
-    3300026: Geo_Props_Chair_LOD_1
-    3300028: Geo_Props_Paraglider_LOD_0
-    3300030: Geo_Props_Paraglider_LOD_1
-    3300032: Geo_Props_Umbrella_LOD_0
-    3300034: Geo_Props_Umbrella_LOD_1
-    3300036: Geo_Props_WindSurfer_LOD_0
-    3300038: Geo_Props_WindSurfer_LOD_1
-    4300000: Geo_Props_Blimp
-    4300002: Geo_Props_Bouy
-    4300004: Geo_Props_Umbrella
-    4300006: Geo_Props_Kayak
-    4300008: Geo_Props_WindSurfer
-    4300010: Geo_Props_Chair
-    4300012: Geo_Props_Paraglider
-    4300014: Geo_Props_ArrowSign
-    4300016: Geo_Props_Bouy_LOD_0
-    4300018: Geo_Props_Umbrella_LOD_0
-    4300020: Geo_Props_WindSurfer_LOD_0
-    4300022: Geo_Props_Chair_LOD_0
-    4300024: Geo_Props_Paraglider_LOD_0
-    4300026: Geo_Props_ArrowSign_LOD_0
-    4300028: Geo_Props_Bouy_LOD_1
-    4300030: Geo_Props_Umbrella_LOD_1
-    4300032: Geo_Props_Chair_LOD_1
-    4300034: Geo_Props_WindSurfer_LOD_1
-    4300036: Geo_Props_Paraglider_LOD_1
-    4300038: Geo_Props_ArrowSign_LOD_1
-    2186277476908879412: ImportLogs
+  serializedVersion: 27
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: Geo_Props_ArrowSign
+  - first:
+      1: 100002
+    second: Geo_Props_Blimp
+  - first:
+      1: 100004
+    second: Geo_Props_Bouy
+  - first:
+      1: 100006
+    second: Geo_Props_Chair
+  - first:
+      1: 100008
+    second: Geo_Props_Kayak
+  - first:
+      1: 100010
+    second: Geo_Props_Paraglider
+  - first:
+      1: 100012
+    second: Geo_Props_Umbrella
+  - first:
+      1: 100014
+    second: Geo_Props_WindSurfer
+  - first:
+      1: 100016
+    second: //RootNode
+  - first:
+      1: 100018
+    second: Geo_Props_ArrowSign_LOD_0
+  - first:
+      1: 100020
+    second: Geo_Props_ArrowSign_LOD_1
+  - first:
+      1: 100022
+    second: Geo_Props_Bouy_LOD_0
+  - first:
+      1: 100024
+    second: Geo_Props_Bouy_LOD_1
+  - first:
+      1: 100026
+    second: Geo_Props_Chair_LOD_0
+  - first:
+      1: 100028
+    second: Geo_Props_Chair_LOD_1
+  - first:
+      1: 100030
+    second: Geo_Props_Paraglider_LOD_0
+  - first:
+      1: 100032
+    second: Geo_Props_Paraglider_LOD_1
+  - first:
+      1: 100034
+    second: Geo_Props_Umbrella_LOD_0
+  - first:
+      1: 100036
+    second: Geo_Props_Umbrella_LOD_1
+  - first:
+      1: 100038
+    second: Geo_Props_WindSurfer_LOD_0
+  - first:
+      1: 100040
+    second: Geo_Props_WindSurfer_LOD_1
+  - first:
+      4: 400000
+    second: Geo_Props_ArrowSign
+  - first:
+      4: 400002
+    second: Geo_Props_Blimp
+  - first:
+      4: 400004
+    second: Geo_Props_Bouy
+  - first:
+      4: 400006
+    second: Geo_Props_Chair
+  - first:
+      4: 400008
+    second: Geo_Props_Kayak
+  - first:
+      4: 400010
+    second: Geo_Props_Paraglider
+  - first:
+      4: 400012
+    second: Geo_Props_Umbrella
+  - first:
+      4: 400014
+    second: Geo_Props_WindSurfer
+  - first:
+      4: 400016
+    second: //RootNode
+  - first:
+      4: 400018
+    second: Geo_Props_ArrowSign_LOD_0
+  - first:
+      4: 400020
+    second: Geo_Props_ArrowSign_LOD_1
+  - first:
+      4: 400022
+    second: Geo_Props_Bouy_LOD_0
+  - first:
+      4: 400024
+    second: Geo_Props_Bouy_LOD_1
+  - first:
+      4: 400026
+    second: Geo_Props_Chair_LOD_0
+  - first:
+      4: 400028
+    second: Geo_Props_Chair_LOD_1
+  - first:
+      4: 400030
+    second: Geo_Props_Paraglider_LOD_0
+  - first:
+      4: 400032
+    second: Geo_Props_Paraglider_LOD_1
+  - first:
+      4: 400034
+    second: Geo_Props_Umbrella_LOD_0
+  - first:
+      4: 400036
+    second: Geo_Props_Umbrella_LOD_1
+  - first:
+      4: 400038
+    second: Geo_Props_WindSurfer_LOD_0
+  - first:
+      4: 400040
+    second: Geo_Props_WindSurfer_LOD_1
+  - first:
+      21: 2100000
+    second: Matr_Props
+  - first:
+      23: 2300000
+    second: Geo_Props_ArrowSign
+  - first:
+      23: 2300002
+    second: Geo_Props_Blimp
+  - first:
+      23: 2300004
+    second: Geo_Props_Bouy
+  - first:
+      23: 2300006
+    second: Geo_Props_Chair
+  - first:
+      23: 2300008
+    second: Geo_Props_Kayak
+  - first:
+      23: 2300010
+    second: Geo_Props_Paraglider
+  - first:
+      23: 2300012
+    second: Geo_Props_Umbrella
+  - first:
+      23: 2300014
+    second: Geo_Props_WindSurfer
+  - first:
+      23: 2300016
+    second: Geo_Props_ArrowSign_LOD_0
+  - first:
+      23: 2300018
+    second: Geo_Props_ArrowSign_LOD_1
+  - first:
+      23: 2300020
+    second: Geo_Props_Bouy_LOD_0
+  - first:
+      23: 2300022
+    second: Geo_Props_Bouy_LOD_1
+  - first:
+      23: 2300024
+    second: Geo_Props_Chair_LOD_0
+  - first:
+      23: 2300026
+    second: Geo_Props_Chair_LOD_1
+  - first:
+      23: 2300028
+    second: Geo_Props_Paraglider_LOD_0
+  - first:
+      23: 2300030
+    second: Geo_Props_Paraglider_LOD_1
+  - first:
+      23: 2300032
+    second: Geo_Props_Umbrella_LOD_0
+  - first:
+      23: 2300034
+    second: Geo_Props_Umbrella_LOD_1
+  - first:
+      23: 2300036
+    second: Geo_Props_WindSurfer_LOD_0
+  - first:
+      23: 2300038
+    second: Geo_Props_WindSurfer_LOD_1
+  - first:
+      33: 3300000
+    second: Geo_Props_ArrowSign
+  - first:
+      33: 3300002
+    second: Geo_Props_Blimp
+  - first:
+      33: 3300004
+    second: Geo_Props_Bouy
+  - first:
+      33: 3300006
+    second: Geo_Props_Chair
+  - first:
+      33: 3300008
+    second: Geo_Props_Kayak
+  - first:
+      33: 3300010
+    second: Geo_Props_Paraglider
+  - first:
+      33: 3300012
+    second: Geo_Props_Umbrella
+  - first:
+      33: 3300014
+    second: Geo_Props_WindSurfer
+  - first:
+      33: 3300016
+    second: Geo_Props_ArrowSign_LOD_0
+  - first:
+      33: 3300018
+    second: Geo_Props_ArrowSign_LOD_1
+  - first:
+      33: 3300020
+    second: Geo_Props_Bouy_LOD_0
+  - first:
+      33: 3300022
+    second: Geo_Props_Bouy_LOD_1
+  - first:
+      33: 3300024
+    second: Geo_Props_Chair_LOD_0
+  - first:
+      33: 3300026
+    second: Geo_Props_Chair_LOD_1
+  - first:
+      33: 3300028
+    second: Geo_Props_Paraglider_LOD_0
+  - first:
+      33: 3300030
+    second: Geo_Props_Paraglider_LOD_1
+  - first:
+      33: 3300032
+    second: Geo_Props_Umbrella_LOD_0
+  - first:
+      33: 3300034
+    second: Geo_Props_Umbrella_LOD_1
+  - first:
+      33: 3300036
+    second: Geo_Props_WindSurfer_LOD_0
+  - first:
+      33: 3300038
+    second: Geo_Props_WindSurfer_LOD_1
+  - first:
+      43: 4300000
+    second: Geo_Props_Blimp
+  - first:
+      43: 4300002
+    second: Geo_Props_Bouy
+  - first:
+      43: 4300004
+    second: Geo_Props_Umbrella
+  - first:
+      43: 4300006
+    second: Geo_Props_Kayak
+  - first:
+      43: 4300008
+    second: Geo_Props_WindSurfer
+  - first:
+      43: 4300010
+    second: Geo_Props_Chair
+  - first:
+      43: 4300012
+    second: Geo_Props_Paraglider
+  - first:
+      43: 4300014
+    second: Geo_Props_ArrowSign
+  - first:
+      43: 4300016
+    second: Geo_Props_Bouy_LOD_0
+  - first:
+      43: 4300018
+    second: Geo_Props_Umbrella_LOD_0
+  - first:
+      43: 4300020
+    second: Geo_Props_WindSurfer_LOD_0
+  - first:
+      43: 4300022
+    second: Geo_Props_Chair_LOD_0
+  - first:
+      43: 4300024
+    second: Geo_Props_Paraglider_LOD_0
+  - first:
+      43: 4300026
+    second: Geo_Props_ArrowSign_LOD_0
+  - first:
+      43: 4300028
+    second: Geo_Props_Bouy_LOD_1
+  - first:
+      43: 4300030
+    second: Geo_Props_Umbrella_LOD_1
+  - first:
+      43: 4300032
+    second: Geo_Props_Chair_LOD_1
+  - first:
+      43: 4300034
+    second: Geo_Props_WindSurfer_LOD_1
+  - first:
+      43: 4300036
+    second: Geo_Props_Paraglider_LOD_1
+  - first:
+      43: 4300038
+    second: Geo_Props_ArrowSign_LOD_1
+  - first:
+      41386430: 2186277476908879412
+    second: ImportLogs
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -147,6 +355,7 @@ ModelImporter:
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
@@ -154,18 +363,19 @@ ModelImporter:
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -174,10 +384,10 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
-  importAnimation: 1
-  copyAvatar: 0
+  referencedClips: []
+  importAnimation: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -187,6 +397,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
@@ -194,6 +405,7 @@ ModelImporter:
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
   additionalBone: 0
   userData: 
   assetBundleName: 

@@ -82,10 +82,10 @@ namespace BoatAttack.Boat
         void GetNearestWP()
         {
             WaypointGroup.Waypoint wp = WaypointGroup.Instance.GetClosestWaypoint(transform.position);
-            if (Vector3.Dot(wp.point - transform.position, transform.forward) < 0)
+            //if (Vector3.Dot(wp.point - transform.position, transform.forward) < 0)
                 AssignWP(WaypointGroup.Instance.GetNextWaypoint(wp));
-            else
-                AssignWP(WaypointGroup.Instance.GetClosestWaypoint(transform.position));
+            //else
+                //AssignWP(WaypointGroup.Instance.GetClosestWaypoint(transform.position));
         }
     
         void GetNextWP()

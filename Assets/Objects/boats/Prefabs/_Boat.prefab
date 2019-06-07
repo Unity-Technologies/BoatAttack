@@ -918,7 +918,7 @@ ParticleSystem:
     rateOverDistance:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 6
+      scalar: 4
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -2298,8 +2298,61 @@ ParticleSystem:
     inWorldSpace: 0
     randomizePerFrame: 0
   ExternalForcesModule:
+    serializedVersion: 2
     enabled: 0
-    multiplier: 1
+    multiplierCurve:
+      serializedVersion: 2
+      minMaxState: 0
+      scalar: 1
+      minScalar: 1
+      maxCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      minCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
     influenceFilter: 0
     influenceMask:
       serializedVersion: 2
@@ -4649,7 +4702,7 @@ ParticleSystem:
 --- !u!199 &199152748015587266
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 2
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -4659,7 +4712,7 @@ ParticleSystemRenderer:
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 0
+  m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
@@ -4673,6 +4726,7 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -5626,7 +5680,7 @@ ParticleSystem:
     rateOverDistance:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 6
+      scalar: 4
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -6198,8 +6252,8 @@ ParticleSystem:
     rowMode: 1
     sprites:
     - sprite: {fileID: 0}
-    flipU: 0.5
-    flipV: 0.5
+    flipU: 0
+    flipV: 0
   VelocityModule:
     enabled: 0
     x:
@@ -7006,8 +7060,61 @@ ParticleSystem:
     inWorldSpace: 0
     randomizePerFrame: 0
   ExternalForcesModule:
+    serializedVersion: 2
     enabled: 0
-    multiplier: 1
+    multiplierCurve:
+      serializedVersion: 2
+      minMaxState: 0
+      scalar: 1
+      minScalar: 1
+      maxCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      minCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
     influenceFilter: 0
     influenceMask:
       serializedVersion: 2
@@ -9357,7 +9464,7 @@ ParticleSystem:
 --- !u!199 &199628764852399946
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 2
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -9367,7 +9474,7 @@ ParticleSystemRenderer:
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 0
+  m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
@@ -9381,6 +9488,7 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -9405,7 +9513,7 @@ ParticleSystemRenderer:
   m_ShadowBias: 0
   m_RenderAlignment: 2
   m_Pivot: {x: 0, y: 0, z: 0}
-  m_Flip: {x: 0, y: 0, z: 0}
+  m_Flip: {x: 0.5, y: 0.5, z: 0}
   m_UseCustomVertexStreams: 1
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 0
@@ -11995,8 +12103,61 @@ ParticleSystem:
     inWorldSpace: 0
     randomizePerFrame: 0
   ExternalForcesModule:
+    serializedVersion: 2
     enabled: 0
-    multiplier: 1
+    multiplierCurve:
+      serializedVersion: 2
+      minMaxState: 0
+      scalar: 1
+      minScalar: 1
+      maxCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      minCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
     influenceFilter: 0
     influenceMask:
       serializedVersion: 2
@@ -14352,7 +14513,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1371637880153344}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: b340a95f59c7d4f4c80dc5c0a3df1f69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
@@ -14362,7 +14522,7 @@ MonoBehaviour:
 --- !u!199 &199967527911923330
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 2
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -14386,6 +14546,7 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -14705,7 +14866,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 2
+      scalar: 1
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -15339,7 +15500,7 @@ ParticleSystem:
     rateOverDistance:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 7
+      scalar: 6
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -16719,8 +16880,61 @@ ParticleSystem:
     inWorldSpace: 0
     randomizePerFrame: 0
   ExternalForcesModule:
+    serializedVersion: 2
     enabled: 0
-    multiplier: 1
+    multiplierCurve:
+      serializedVersion: 2
+      minMaxState: 0
+      scalar: 1
+      minScalar: 1
+      maxCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      minCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
     influenceFilter: 0
     influenceMask:
       serializedVersion: 2
@@ -19070,7 +19284,7 @@ ParticleSystem:
 --- !u!199 &199341962634037936
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 2
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -19080,7 +19294,7 @@ ParticleSystemRenderer:
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 0
+  m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
@@ -19094,6 +19308,7 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -19114,7 +19329,7 @@ ParticleSystemRenderer:
   m_VelocityScale: 0
   m_LengthScale: 2
   m_SortingFudge: 0
-  m_NormalDirection: 1
+  m_NormalDirection: 0
   m_ShadowBias: 0
   m_RenderAlignment: 0
   m_Pivot: {x: 0, y: 0, z: 0}
@@ -21419,8 +21634,61 @@ ParticleSystem:
     inWorldSpace: 0
     randomizePerFrame: 0
   ExternalForcesModule:
+    serializedVersion: 2
     enabled: 0
-    multiplier: 1
+    multiplierCurve:
+      serializedVersion: 2
+      minMaxState: 0
+      scalar: 1
+      minScalar: 1
+      maxCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      minCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
     influenceFilter: 0
     influenceMask:
       serializedVersion: 2
@@ -23776,7 +24044,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1500772317517024}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: b340a95f59c7d4f4c80dc5c0a3df1f69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
@@ -23786,7 +24053,7 @@ MonoBehaviour:
 --- !u!199 &199879863142729572
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 2
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -23810,6 +24077,7 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -23891,9 +24159,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1553288845585282}
   serializedVersion: 2
-  m_Mass: 2400
+  m_Mass: 3200
   m_Drag: 0.1
-  m_AngularDrag: 0.1
+  m_AngularDrag: 0.2
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1
@@ -23912,7 +24180,7 @@ MeshCollider:
   serializedVersion: 3
   m_Convex: 1
   m_CookingOptions: 14
-  m_Mesh: {fileID: 4300000, guid: 2df96455c7a214a93aef825dcf7042d5, type: 3}
+  m_Mesh: {fileID: 2899951614431091848, guid: a362db008c5274e03bf6f3d2387cf617, type: 3}
 --- !u!114 &114559526544640098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23922,7 +24190,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1553288845585282}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: 01c46922a8ed04b0081de10e51b3762f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
@@ -23930,7 +24197,7 @@ MonoBehaviour:
   engineSound: {fileID: 82633756123786494}
   waterSound: {fileID: 82912682702107868}
   torque: 5
-  horsePower: 15
+  horsePower: 18
   enginePosition: {x: 0, y: 0.05, z: -3.31}
 --- !u!114 &114129291822198474
 MonoBehaviour:
@@ -23941,7 +24208,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1553288845585282}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: 8e14db15b85a74d2288a792b27ee0fa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
@@ -23958,224 +24224,232 @@ MonoBehaviour:
   m_GameObject: {fileID: 1553288845585282}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: 3d5ac9593b59d4847815e4528b52a6d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _buoyancyType: 3
-  density: 427.35037
-  volume: 5.6160007
+  density: 546.1682
+  volume: 5.8590007
   voxelResolution: 0.3
-  centerOfMass: {x: 0, y: -0.15, z: -0.5}
+  centerOfMass: {x: 0, y: -0.25, z: -0.55}
   voxels:
-  - {x: -0.9000001, y: 0.12409976, z: -1.7381934}
-  - {x: -0.9000001, y: 0.12409976, z: -1.4381934}
-  - {x: -0.9000001, y: 0.12409976, z: -1.1381935}
-  - {x: -0.9000001, y: 0.12409976, z: -0.8381934}
-  - {x: -0.9000001, y: 0.12409976, z: -0.53819346}
-  - {x: -0.9000001, y: 0.12409976, z: -0.23819342}
-  - {x: -0.6, y: 0.12409976, z: -2.938193}
-  - {x: -0.6, y: 0.12409976, z: -2.6381931}
-  - {x: -0.6, y: 0.12409976, z: -2.3381932}
-  - {x: -0.6, y: 0.12409976, z: -2.0381932}
-  - {x: -0.6, y: 0.12409976, z: -1.7381934}
-  - {x: -0.6, y: 0.12409976, z: -1.4381934}
-  - {x: -0.6, y: 0.12409976, z: -1.1381935}
-  - {x: -0.6, y: 0.12409976, z: -0.8381934}
-  - {x: -0.6, y: 0.12409976, z: -0.53819346}
-  - {x: -0.6, y: 0.12409976, z: -0.23819342}
-  - {x: -0.6, y: 0.12409976, z: 0.06180659}
-  - {x: -0.6, y: 0.12409976, z: 0.36180663}
-  - {x: -0.6, y: 0.12409976, z: 0.6618066}
-  - {x: -0.6, y: 0.12409976, z: 0.96180665}
-  - {x: -0.6, y: 0.12409976, z: 1.2618066}
-  - {x: -0.6, y: 0.42409977, z: -2.6381931}
-  - {x: -0.6, y: 0.42409977, z: -2.3381932}
-  - {x: -0.6, y: 0.42409977, z: -2.0381932}
-  - {x: -0.6, y: 0.42409977, z: -1.7381934}
-  - {x: -0.6, y: 0.42409977, z: -1.4381934}
-  - {x: -0.6, y: 0.42409977, z: -1.1381935}
-  - {x: -0.6, y: 0.42409977, z: -0.8381934}
-  - {x: -0.6, y: 0.42409977, z: -0.53819346}
-  - {x: -0.6, y: 0.42409977, z: -0.23819342}
-  - {x: -0.6, y: 0.42409977, z: 0.06180659}
-  - {x: -0.6, y: 0.42409977, z: 0.36180663}
-  - {x: -0.6, y: 0.42409977, z: 0.6618066}
-  - {x: -0.6, y: 0.42409977, z: 0.96180665}
-  - {x: -0.30000004, y: -0.17590025, z: -1.4381934}
-  - {x: -0.30000004, y: -0.17590025, z: -1.1381935}
-  - {x: -0.30000004, y: -0.17590025, z: -0.8381934}
-  - {x: -0.30000004, y: -0.17590025, z: -0.53819346}
-  - {x: -0.30000004, y: -0.17590025, z: -0.23819342}
-  - {x: -0.30000004, y: -0.17590025, z: 0.06180659}
-  - {x: -0.30000004, y: -0.17590025, z: 0.36180663}
-  - {x: -0.30000004, y: -0.17590025, z: 0.6618066}
-  - {x: -0.30000004, y: 0.12409976, z: -2.938193}
-  - {x: -0.30000004, y: 0.12409976, z: -2.6381931}
-  - {x: -0.30000004, y: 0.12409976, z: -2.3381932}
-  - {x: -0.30000004, y: 0.12409976, z: -2.0381932}
-  - {x: -0.30000004, y: 0.12409976, z: -1.7381934}
-  - {x: -0.30000004, y: 0.12409976, z: -1.4381934}
-  - {x: -0.30000004, y: 0.12409976, z: -1.1381935}
-  - {x: -0.30000004, y: 0.12409976, z: -0.8381934}
-  - {x: -0.30000004, y: 0.12409976, z: -0.53819346}
-  - {x: -0.30000004, y: 0.12409976, z: -0.23819342}
-  - {x: -0.30000004, y: 0.12409976, z: 0.06180659}
-  - {x: -0.30000004, y: 0.12409976, z: 0.36180663}
-  - {x: -0.30000004, y: 0.12409976, z: 0.6618066}
-  - {x: -0.30000004, y: 0.12409976, z: 0.96180665}
-  - {x: -0.30000004, y: 0.12409976, z: 1.2618066}
-  - {x: -0.30000004, y: 0.12409976, z: 1.5618066}
-  - {x: -0.30000004, y: 0.12409976, z: 1.8618066}
-  - {x: -0.30000004, y: 0.42409977, z: -2.938193}
-  - {x: -0.30000004, y: 0.42409977, z: -2.6381931}
-  - {x: -0.30000004, y: 0.42409977, z: -2.3381932}
-  - {x: -0.30000004, y: 0.42409977, z: -2.0381932}
-  - {x: -0.30000004, y: 0.42409977, z: -1.7381934}
-  - {x: -0.30000004, y: 0.42409977, z: -1.4381934}
-  - {x: -0.30000004, y: 0.42409977, z: -1.1381935}
-  - {x: -0.30000004, y: 0.42409977, z: -0.8381934}
-  - {x: -0.30000004, y: 0.42409977, z: -0.53819346}
-  - {x: -0.30000004, y: 0.42409977, z: -0.23819342}
-  - {x: -0.30000004, y: 0.42409977, z: 0.06180659}
-  - {x: -0.30000004, y: 0.42409977, z: 0.36180663}
-  - {x: -0.30000004, y: 0.42409977, z: 0.6618066}
-  - {x: -0.30000004, y: 0.42409977, z: 0.96180665}
-  - {x: -0.30000004, y: 0.42409977, z: 1.2618066}
-  - {x: -0.30000004, y: 0.42409977, z: 1.5618066}
-  - {x: -0.30000004, y: 0.42409977, z: 1.8618066}
-  - {x: -0.30000004, y: 0.72409976, z: -1.1381935}
-  - {x: -0.30000004, y: 0.72409976, z: -0.8381934}
-  - {x: -0.30000004, y: 0.72409976, z: -0.53819346}
-  - {x: -0.30000004, y: 0.72409976, z: -0.23819342}
-  - {x: -0.000000029802322, y: -0.17590025, z: -2.6381931}
-  - {x: -0.000000029802322, y: -0.17590025, z: -2.3381932}
-  - {x: -0.000000029802322, y: -0.17590025, z: -2.0381932}
-  - {x: -0.000000029802322, y: -0.17590025, z: -1.7381934}
-  - {x: -0.000000029802322, y: -0.17590025, z: -1.4381934}
-  - {x: -0.000000029802322, y: -0.17590025, z: -1.1381935}
-  - {x: -0.000000029802322, y: -0.17590025, z: -0.8381934}
-  - {x: -0.000000029802322, y: -0.17590025, z: -0.53819346}
-  - {x: -0.000000029802322, y: -0.17590025, z: -0.23819342}
-  - {x: -0.000000029802322, y: -0.17590025, z: 0.06180659}
-  - {x: -0.000000029802322, y: -0.17590025, z: 0.36180663}
-  - {x: -0.000000029802322, y: -0.17590025, z: 0.6618066}
-  - {x: -0.000000029802322, y: 0.12409976, z: -2.938193}
-  - {x: -0.000000029802322, y: 0.12409976, z: -2.6381931}
-  - {x: -0.000000029802322, y: 0.12409976, z: -2.3381932}
-  - {x: -0.000000029802322, y: 0.12409976, z: -2.0381932}
-  - {x: -0.000000029802322, y: 0.12409976, z: -1.7381934}
-  - {x: -0.000000029802322, y: 0.12409976, z: -1.4381934}
-  - {x: -0.000000029802322, y: 0.12409976, z: -1.1381935}
-  - {x: -0.000000029802322, y: 0.12409976, z: -0.8381934}
-  - {x: -0.000000029802322, y: 0.12409976, z: -0.53819346}
-  - {x: -0.000000029802322, y: 0.12409976, z: -0.23819342}
-  - {x: -0.000000029802322, y: 0.12409976, z: 0.06180659}
-  - {x: -0.000000029802322, y: 0.12409976, z: 0.36180663}
-  - {x: -0.000000029802322, y: 0.12409976, z: 0.6618066}
-  - {x: -0.000000029802322, y: 0.12409976, z: 0.96180665}
-  - {x: -0.000000029802322, y: 0.12409976, z: 1.2618066}
-  - {x: -0.000000029802322, y: 0.12409976, z: 1.5618066}
-  - {x: -0.000000029802322, y: 0.12409976, z: 1.8618066}
-  - {x: -0.000000029802322, y: 0.12409976, z: 2.1618066}
-  - {x: -0.000000029802322, y: 0.42409977, z: -2.938193}
-  - {x: -0.000000029802322, y: 0.42409977, z: -2.6381931}
-  - {x: -0.000000029802322, y: 0.42409977, z: -2.3381932}
-  - {x: -0.000000029802322, y: 0.42409977, z: -2.0381932}
-  - {x: -0.000000029802322, y: 0.42409977, z: -1.7381934}
-  - {x: -0.000000029802322, y: 0.42409977, z: -1.4381934}
-  - {x: -0.000000029802322, y: 0.42409977, z: -1.1381935}
-  - {x: -0.000000029802322, y: 0.42409977, z: -0.8381934}
-  - {x: -0.000000029802322, y: 0.42409977, z: 0.06180659}
-  - {x: -0.000000029802322, y: 0.42409977, z: 0.36180663}
-  - {x: -0.000000029802322, y: 0.42409977, z: 0.6618066}
-  - {x: -0.000000029802322, y: 0.42409977, z: 0.96180665}
-  - {x: -0.000000029802322, y: 0.42409977, z: 1.2618066}
-  - {x: -0.000000029802322, y: 0.42409977, z: 1.5618066}
-  - {x: -0.000000029802322, y: 0.42409977, z: 1.8618066}
-  - {x: -0.000000029802322, y: 0.42409977, z: 2.1618066}
-  - {x: -0.000000029802322, y: 0.42409977, z: 2.4618065}
-  - {x: -0.000000029802322, y: 0.72409976, z: -1.4381934}
-  - {x: 0.29999998, y: -0.17590025, z: -1.4381934}
-  - {x: 0.29999998, y: -0.17590025, z: -1.1381935}
-  - {x: 0.29999998, y: -0.17590025, z: -0.8381934}
-  - {x: 0.29999998, y: -0.17590025, z: -0.53819346}
-  - {x: 0.29999998, y: -0.17590025, z: -0.23819342}
-  - {x: 0.29999998, y: -0.17590025, z: 0.06180659}
-  - {x: 0.29999998, y: -0.17590025, z: 0.36180663}
-  - {x: 0.29999998, y: -0.17590025, z: 0.6618066}
-  - {x: 0.29999998, y: 0.12409976, z: -2.938193}
-  - {x: 0.29999998, y: 0.12409976, z: -2.6381931}
-  - {x: 0.29999998, y: 0.12409976, z: -2.3381932}
-  - {x: 0.29999998, y: 0.12409976, z: -2.0381932}
-  - {x: 0.29999998, y: 0.12409976, z: -1.7381934}
-  - {x: 0.29999998, y: 0.12409976, z: -1.4381934}
-  - {x: 0.29999998, y: 0.12409976, z: -1.1381935}
-  - {x: 0.29999998, y: 0.12409976, z: -0.8381934}
-  - {x: 0.29999998, y: 0.12409976, z: -0.53819346}
-  - {x: 0.29999998, y: 0.12409976, z: -0.23819342}
-  - {x: 0.29999998, y: 0.12409976, z: 0.06180659}
-  - {x: 0.29999998, y: 0.12409976, z: 0.36180663}
-  - {x: 0.29999998, y: 0.12409976, z: 0.6618066}
-  - {x: 0.29999998, y: 0.12409976, z: 0.96180665}
-  - {x: 0.29999998, y: 0.12409976, z: 1.2618066}
-  - {x: 0.29999998, y: 0.12409976, z: 1.5618066}
-  - {x: 0.29999998, y: 0.12409976, z: 1.8618066}
-  - {x: 0.29999998, y: 0.42409977, z: -2.938193}
-  - {x: 0.29999998, y: 0.42409977, z: -2.6381931}
-  - {x: 0.29999998, y: 0.42409977, z: -2.3381932}
-  - {x: 0.29999998, y: 0.42409977, z: -2.0381932}
-  - {x: 0.29999998, y: 0.42409977, z: -1.7381934}
-  - {x: 0.29999998, y: 0.42409977, z: -1.4381934}
-  - {x: 0.29999998, y: 0.42409977, z: -1.1381935}
-  - {x: 0.29999998, y: 0.42409977, z: -0.8381934}
-  - {x: 0.29999998, y: 0.42409977, z: -0.53819346}
-  - {x: 0.29999998, y: 0.42409977, z: -0.23819342}
-  - {x: 0.29999998, y: 0.42409977, z: 0.06180659}
-  - {x: 0.29999998, y: 0.42409977, z: 0.36180663}
-  - {x: 0.29999998, y: 0.42409977, z: 0.6618066}
-  - {x: 0.29999998, y: 0.42409977, z: 0.96180665}
-  - {x: 0.29999998, y: 0.42409977, z: 1.2618066}
-  - {x: 0.29999998, y: 0.42409977, z: 1.5618066}
-  - {x: 0.29999998, y: 0.42409977, z: 1.8618066}
-  - {x: 0.29999998, y: 0.72409976, z: -1.1381935}
-  - {x: 0.29999998, y: 0.72409976, z: -0.8381934}
-  - {x: 0.29999998, y: 0.72409976, z: -0.53819346}
-  - {x: 0.29999998, y: 0.72409976, z: -0.23819342}
-  - {x: 0.6, y: 0.12409976, z: -2.938193}
-  - {x: 0.6, y: 0.12409976, z: -2.6381931}
-  - {x: 0.6, y: 0.12409976, z: -2.3381932}
-  - {x: 0.6, y: 0.12409976, z: -2.0381932}
-  - {x: 0.6, y: 0.12409976, z: -1.7381934}
-  - {x: 0.6, y: 0.12409976, z: -1.4381934}
-  - {x: 0.6, y: 0.12409976, z: -1.1381935}
-  - {x: 0.6, y: 0.12409976, z: -0.8381934}
-  - {x: 0.6, y: 0.12409976, z: -0.53819346}
-  - {x: 0.6, y: 0.12409976, z: -0.23819342}
-  - {x: 0.6, y: 0.12409976, z: 0.06180659}
-  - {x: 0.6, y: 0.12409976, z: 0.36180663}
-  - {x: 0.6, y: 0.12409976, z: 0.6618066}
-  - {x: 0.6, y: 0.12409976, z: 0.96180665}
-  - {x: 0.6, y: 0.12409976, z: 1.2618066}
-  - {x: 0.6, y: 0.42409977, z: -2.6381931}
-  - {x: 0.6, y: 0.42409977, z: -2.3381932}
-  - {x: 0.6, y: 0.42409977, z: -2.0381932}
-  - {x: 0.6, y: 0.42409977, z: -1.7381934}
-  - {x: 0.6, y: 0.42409977, z: -1.4381934}
-  - {x: 0.6, y: 0.42409977, z: -1.1381935}
-  - {x: 0.6, y: 0.42409977, z: -0.8381934}
-  - {x: 0.6, y: 0.42409977, z: -0.53819346}
-  - {x: 0.6, y: 0.42409977, z: -0.23819342}
-  - {x: 0.6, y: 0.42409977, z: 0.06180659}
-  - {x: 0.6, y: 0.42409977, z: 0.36180663}
-  - {x: 0.6, y: 0.42409977, z: 0.6618066}
-  - {x: 0.6, y: 0.42409977, z: 0.96180665}
-  - {x: 0.9, y: 0.12409976, z: -1.7381934}
-  - {x: 0.9, y: 0.12409976, z: -1.4381934}
-  - {x: 0.9, y: 0.12409976, z: -1.1381935}
-  - {x: 0.9, y: 0.12409976, z: -0.8381934}
-  - {x: 0.9, y: 0.12409976, z: -0.53819346}
-  - {x: 0.9, y: 0.12409976, z: -0.23819342}
+  - {x: -0.9000001, y: 0.12409994, z: -1.7381939}
+  - {x: -0.9000001, y: 0.12409994, z: -1.4381939}
+  - {x: -0.9000001, y: 0.12409994, z: -1.138194}
+  - {x: -0.9000001, y: 0.12409994, z: -0.8381939}
+  - {x: -0.9000001, y: 0.12409994, z: -0.53819394}
+  - {x: -0.9000001, y: 0.12409994, z: -0.2381939}
+  - {x: -0.6, y: 0.12409994, z: -2.9381936}
+  - {x: -0.6, y: 0.12409994, z: -2.6381936}
+  - {x: -0.6, y: 0.12409994, z: -2.3381937}
+  - {x: -0.6, y: 0.12409994, z: -2.0381937}
+  - {x: -0.6, y: 0.12409994, z: -1.7381939}
+  - {x: -0.6, y: 0.12409994, z: -1.4381939}
+  - {x: -0.6, y: 0.12409994, z: -1.138194}
+  - {x: -0.6, y: 0.12409994, z: -0.8381939}
+  - {x: -0.6, y: 0.12409994, z: -0.53819394}
+  - {x: -0.6, y: 0.12409994, z: -0.2381939}
+  - {x: -0.6, y: 0.12409994, z: 0.061806113}
+  - {x: -0.6, y: 0.12409994, z: 0.36180615}
+  - {x: -0.6, y: 0.12409994, z: 0.6618061}
+  - {x: -0.6, y: 0.12409994, z: 0.9618062}
+  - {x: -0.6, y: 0.12409994, z: 1.2618061}
+  - {x: -0.6, y: 0.42409995, z: -2.6381936}
+  - {x: -0.6, y: 0.42409995, z: -2.3381937}
+  - {x: -0.6, y: 0.42409995, z: -2.0381937}
+  - {x: -0.6, y: 0.42409995, z: -1.7381939}
+  - {x: -0.6, y: 0.42409995, z: -1.4381939}
+  - {x: -0.6, y: 0.42409995, z: -1.138194}
+  - {x: -0.6, y: 0.42409995, z: -0.8381939}
+  - {x: -0.6, y: 0.42409995, z: -0.53819394}
+  - {x: -0.6, y: 0.42409995, z: -0.2381939}
+  - {x: -0.6, y: 0.42409995, z: 0.061806113}
+  - {x: -0.6, y: 0.42409995, z: 0.36180615}
+  - {x: -0.6, y: 0.42409995, z: 0.6618061}
+  - {x: -0.6, y: 0.42409995, z: 0.9618062}
+  - {x: -0.30000004, y: -0.17590007, z: -1.4381939}
+  - {x: -0.30000004, y: -0.17590007, z: -1.138194}
+  - {x: -0.30000004, y: -0.17590007, z: -0.8381939}
+  - {x: -0.30000004, y: -0.17590007, z: -0.53819394}
+  - {x: -0.30000004, y: -0.17590007, z: -0.2381939}
+  - {x: -0.30000004, y: -0.17590007, z: 0.061806113}
+  - {x: -0.30000004, y: -0.17590007, z: 0.36180615}
+  - {x: -0.30000004, y: -0.17590007, z: 0.6618061}
+  - {x: -0.30000004, y: 0.12409994, z: -2.9381936}
+  - {x: -0.30000004, y: 0.12409994, z: -2.6381936}
+  - {x: -0.30000004, y: 0.12409994, z: -2.3381937}
+  - {x: -0.30000004, y: 0.12409994, z: -2.0381937}
+  - {x: -0.30000004, y: 0.12409994, z: -1.7381939}
+  - {x: -0.30000004, y: 0.12409994, z: -1.4381939}
+  - {x: -0.30000004, y: 0.12409994, z: -1.138194}
+  - {x: -0.30000004, y: 0.12409994, z: -0.8381939}
+  - {x: -0.30000004, y: 0.12409994, z: -0.53819394}
+  - {x: -0.30000004, y: 0.12409994, z: -0.2381939}
+  - {x: -0.30000004, y: 0.12409994, z: 0.061806113}
+  - {x: -0.30000004, y: 0.12409994, z: 0.36180615}
+  - {x: -0.30000004, y: 0.12409994, z: 0.6618061}
+  - {x: -0.30000004, y: 0.12409994, z: 0.9618062}
+  - {x: -0.30000004, y: 0.12409994, z: 1.2618061}
+  - {x: -0.30000004, y: 0.12409994, z: 1.5618061}
+  - {x: -0.30000004, y: 0.12409994, z: 1.8618062}
+  - {x: -0.30000004, y: 0.42409995, z: -2.9381936}
+  - {x: -0.30000004, y: 0.42409995, z: -2.6381936}
+  - {x: -0.30000004, y: 0.42409995, z: -2.3381937}
+  - {x: -0.30000004, y: 0.42409995, z: -2.0381937}
+  - {x: -0.30000004, y: 0.42409995, z: -1.7381939}
+  - {x: -0.30000004, y: 0.42409995, z: -1.4381939}
+  - {x: -0.30000004, y: 0.42409995, z: -1.138194}
+  - {x: -0.30000004, y: 0.42409995, z: -0.8381939}
+  - {x: -0.30000004, y: 0.42409995, z: -0.53819394}
+  - {x: -0.30000004, y: 0.42409995, z: -0.2381939}
+  - {x: -0.30000004, y: 0.42409995, z: 0.061806113}
+  - {x: -0.30000004, y: 0.42409995, z: 0.36180615}
+  - {x: -0.30000004, y: 0.42409995, z: 0.6618061}
+  - {x: -0.30000004, y: 0.42409995, z: 0.9618062}
+  - {x: -0.30000004, y: 0.42409995, z: 1.2618061}
+  - {x: -0.30000004, y: 0.42409995, z: 1.5618061}
+  - {x: -0.30000004, y: 0.42409995, z: 1.8618062}
+  - {x: -0.30000004, y: 0.7241, z: -1.138194}
+  - {x: -0.30000004, y: 0.7241, z: -0.8381939}
+  - {x: -0.30000004, y: 0.7241, z: -0.53819394}
+  - {x: -0.30000004, y: 0.7241, z: -0.2381939}
+  - {x: -0.000000029802322, y: -0.17590007, z: -2.6381936}
+  - {x: -0.000000029802322, y: -0.17590007, z: -2.3381937}
+  - {x: -0.000000029802322, y: -0.17590007, z: -2.0381937}
+  - {x: -0.000000029802322, y: -0.17590007, z: -1.7381939}
+  - {x: -0.000000029802322, y: -0.17590007, z: -1.4381939}
+  - {x: -0.000000029802322, y: -0.17590007, z: -1.138194}
+  - {x: -0.000000029802322, y: -0.17590007, z: -0.8381939}
+  - {x: -0.000000029802322, y: -0.17590007, z: -0.53819394}
+  - {x: -0.000000029802322, y: -0.17590007, z: -0.2381939}
+  - {x: -0.000000029802322, y: -0.17590007, z: 0.061806113}
+  - {x: -0.000000029802322, y: -0.17590007, z: 0.36180615}
+  - {x: -0.000000029802322, y: -0.17590007, z: 0.6618061}
+  - {x: -0.000000029802322, y: -0.17590007, z: 0.9618062}
+  - {x: -0.000000029802322, y: 0.12409994, z: -2.9381936}
+  - {x: -0.000000029802322, y: 0.12409994, z: -2.6381936}
+  - {x: -0.000000029802322, y: 0.12409994, z: -2.3381937}
+  - {x: -0.000000029802322, y: 0.12409994, z: -2.0381937}
+  - {x: -0.000000029802322, y: 0.12409994, z: -1.7381939}
+  - {x: -0.000000029802322, y: 0.12409994, z: -1.4381939}
+  - {x: -0.000000029802322, y: 0.12409994, z: -1.138194}
+  - {x: -0.000000029802322, y: 0.12409994, z: -0.8381939}
+  - {x: -0.000000029802322, y: 0.12409994, z: -0.53819394}
+  - {x: -0.000000029802322, y: 0.12409994, z: -0.2381939}
+  - {x: -0.000000029802322, y: 0.12409994, z: 0.061806113}
+  - {x: -0.000000029802322, y: 0.12409994, z: 0.36180615}
+  - {x: -0.000000029802322, y: 0.12409994, z: 0.6618061}
+  - {x: -0.000000029802322, y: 0.12409994, z: 0.9618062}
+  - {x: -0.000000029802322, y: 0.12409994, z: 1.2618061}
+  - {x: -0.000000029802322, y: 0.12409994, z: 1.5618061}
+  - {x: -0.000000029802322, y: 0.12409994, z: 1.8618062}
+  - {x: -0.000000029802322, y: 0.12409994, z: 2.161806}
+  - {x: -0.000000029802322, y: 0.42409995, z: -2.9381936}
+  - {x: -0.000000029802322, y: 0.42409995, z: -2.6381936}
+  - {x: -0.000000029802322, y: 0.42409995, z: -2.3381937}
+  - {x: -0.000000029802322, y: 0.42409995, z: -2.0381937}
+  - {x: -0.000000029802322, y: 0.42409995, z: -1.7381939}
+  - {x: -0.000000029802322, y: 0.42409995, z: -1.4381939}
+  - {x: -0.000000029802322, y: 0.42409995, z: -1.138194}
+  - {x: -0.000000029802322, y: 0.42409995, z: -0.8381939}
+  - {x: -0.000000029802322, y: 0.42409995, z: -0.53819394}
+  - {x: -0.000000029802322, y: 0.42409995, z: -0.2381939}
+  - {x: -0.000000029802322, y: 0.42409995, z: 0.061806113}
+  - {x: -0.000000029802322, y: 0.42409995, z: 0.36180615}
+  - {x: -0.000000029802322, y: 0.42409995, z: 0.6618061}
+  - {x: -0.000000029802322, y: 0.42409995, z: 0.9618062}
+  - {x: -0.000000029802322, y: 0.42409995, z: 1.2618061}
+  - {x: -0.000000029802322, y: 0.42409995, z: 1.5618061}
+  - {x: -0.000000029802322, y: 0.42409995, z: 1.8618062}
+  - {x: -0.000000029802322, y: 0.42409995, z: 2.161806}
+  - {x: -0.000000029802322, y: 0.42409995, z: 2.461806}
+  - {x: -0.000000029802322, y: 0.7241, z: -1.4381939}
+  - {x: -0.000000029802322, y: 0.7241, z: -1.138194}
+  - {x: -0.000000029802322, y: 0.7241, z: -0.8381939}
+  - {x: -0.000000029802322, y: 0.7241, z: -0.53819394}
+  - {x: -0.000000029802322, y: 0.7241, z: -0.2381939}
+  - {x: -0.000000029802322, y: 0.7241, z: 0.061806113}
+  - {x: -0.000000029802322, y: 0.7241, z: 0.36180615}
+  - {x: 0.29999998, y: -0.17590007, z: -1.4381939}
+  - {x: 0.29999998, y: -0.17590007, z: -1.138194}
+  - {x: 0.29999998, y: -0.17590007, z: -0.8381939}
+  - {x: 0.29999998, y: -0.17590007, z: -0.53819394}
+  - {x: 0.29999998, y: -0.17590007, z: -0.2381939}
+  - {x: 0.29999998, y: -0.17590007, z: 0.061806113}
+  - {x: 0.29999998, y: -0.17590007, z: 0.36180615}
+  - {x: 0.29999998, y: -0.17590007, z: 0.6618061}
+  - {x: 0.29999998, y: 0.12409994, z: -2.9381936}
+  - {x: 0.29999998, y: 0.12409994, z: -2.6381936}
+  - {x: 0.29999998, y: 0.12409994, z: -2.3381937}
+  - {x: 0.29999998, y: 0.12409994, z: -2.0381937}
+  - {x: 0.29999998, y: 0.12409994, z: -1.7381939}
+  - {x: 0.29999998, y: 0.12409994, z: -1.4381939}
+  - {x: 0.29999998, y: 0.12409994, z: -1.138194}
+  - {x: 0.29999998, y: 0.12409994, z: -0.8381939}
+  - {x: 0.29999998, y: 0.12409994, z: -0.53819394}
+  - {x: 0.29999998, y: 0.12409994, z: -0.2381939}
+  - {x: 0.29999998, y: 0.12409994, z: 0.061806113}
+  - {x: 0.29999998, y: 0.12409994, z: 0.36180615}
+  - {x: 0.29999998, y: 0.12409994, z: 0.6618061}
+  - {x: 0.29999998, y: 0.12409994, z: 0.9618062}
+  - {x: 0.29999998, y: 0.12409994, z: 1.2618061}
+  - {x: 0.29999998, y: 0.12409994, z: 1.5618061}
+  - {x: 0.29999998, y: 0.12409994, z: 1.8618062}
+  - {x: 0.29999998, y: 0.42409995, z: -2.9381936}
+  - {x: 0.29999998, y: 0.42409995, z: -2.6381936}
+  - {x: 0.29999998, y: 0.42409995, z: -2.3381937}
+  - {x: 0.29999998, y: 0.42409995, z: -2.0381937}
+  - {x: 0.29999998, y: 0.42409995, z: -1.7381939}
+  - {x: 0.29999998, y: 0.42409995, z: -1.4381939}
+  - {x: 0.29999998, y: 0.42409995, z: -1.138194}
+  - {x: 0.29999998, y: 0.42409995, z: -0.8381939}
+  - {x: 0.29999998, y: 0.42409995, z: -0.53819394}
+  - {x: 0.29999998, y: 0.42409995, z: -0.2381939}
+  - {x: 0.29999998, y: 0.42409995, z: 0.061806113}
+  - {x: 0.29999998, y: 0.42409995, z: 0.36180615}
+  - {x: 0.29999998, y: 0.42409995, z: 0.6618061}
+  - {x: 0.29999998, y: 0.42409995, z: 0.9618062}
+  - {x: 0.29999998, y: 0.42409995, z: 1.2618061}
+  - {x: 0.29999998, y: 0.42409995, z: 1.5618061}
+  - {x: 0.29999998, y: 0.42409995, z: 1.8618062}
+  - {x: 0.29999998, y: 0.7241, z: -1.138194}
+  - {x: 0.29999998, y: 0.7241, z: -0.8381939}
+  - {x: 0.29999998, y: 0.7241, z: -0.53819394}
+  - {x: 0.29999998, y: 0.7241, z: -0.2381939}
+  - {x: 0.6, y: 0.12409994, z: -2.9381936}
+  - {x: 0.6, y: 0.12409994, z: -2.6381936}
+  - {x: 0.6, y: 0.12409994, z: -2.3381937}
+  - {x: 0.6, y: 0.12409994, z: -2.0381937}
+  - {x: 0.6, y: 0.12409994, z: -1.7381939}
+  - {x: 0.6, y: 0.12409994, z: -1.4381939}
+  - {x: 0.6, y: 0.12409994, z: -1.138194}
+  - {x: 0.6, y: 0.12409994, z: -0.8381939}
+  - {x: 0.6, y: 0.12409994, z: -0.53819394}
+  - {x: 0.6, y: 0.12409994, z: -0.2381939}
+  - {x: 0.6, y: 0.12409994, z: 0.061806113}
+  - {x: 0.6, y: 0.12409994, z: 0.36180615}
+  - {x: 0.6, y: 0.12409994, z: 0.6618061}
+  - {x: 0.6, y: 0.12409994, z: 0.9618062}
+  - {x: 0.6, y: 0.12409994, z: 1.2618061}
+  - {x: 0.6, y: 0.42409995, z: -2.6381936}
+  - {x: 0.6, y: 0.42409995, z: -2.3381937}
+  - {x: 0.6, y: 0.42409995, z: -2.0381937}
+  - {x: 0.6, y: 0.42409995, z: -1.7381939}
+  - {x: 0.6, y: 0.42409995, z: -1.4381939}
+  - {x: 0.6, y: 0.42409995, z: -1.138194}
+  - {x: 0.6, y: 0.42409995, z: -0.8381939}
+  - {x: 0.6, y: 0.42409995, z: -0.53819394}
+  - {x: 0.6, y: 0.42409995, z: -0.2381939}
+  - {x: 0.6, y: 0.42409995, z: 0.061806113}
+  - {x: 0.6, y: 0.42409995, z: 0.36180615}
+  - {x: 0.6, y: 0.42409995, z: 0.6618061}
+  - {x: 0.6, y: 0.42409995, z: 0.9618062}
+  - {x: 0.9, y: 0.12409994, z: -1.7381939}
+  - {x: 0.9, y: 0.12409994, z: -1.4381939}
+  - {x: 0.9, y: 0.12409994, z: -1.138194}
+  - {x: 0.9, y: 0.12409994, z: -0.8381939}
+  - {x: 0.9, y: 0.12409994, z: -0.53819394}
+  - {x: 0.9, y: 0.12409994, z: -0.2381939}
   colliders:
   - {fileID: 64258884862185400}
   percentSubmerged: 0
@@ -24222,7 +24496,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1610670695541802}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_GeneratorAsset: {fileID: 0}
   m_Script: {fileID: 11500000, guid: 0e8a6257865674c219fc5cdb6145cc12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
@@ -25153,7 +25426,7 @@ ParticleSystem:
     rateOverDistance:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 6
+      scalar: 4
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -26533,8 +26806,61 @@ ParticleSystem:
     inWorldSpace: 0
     randomizePerFrame: 0
   ExternalForcesModule:
+    serializedVersion: 2
     enabled: 0
-    multiplier: 1
+    multiplierCurve:
+      serializedVersion: 2
+      minMaxState: 0
+      scalar: 1
+      minScalar: 1
+      maxCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      minCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
     influenceFilter: 0
     influenceMask:
       serializedVersion: 2
@@ -28884,7 +29210,7 @@ ParticleSystem:
 --- !u!199 &199393572592775896
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 2
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -28894,7 +29220,7 @@ ParticleSystemRenderer:
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 0
+  m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
@@ -28908,6 +29234,7 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -29861,7 +30188,7 @@ ParticleSystem:
     rateOverDistance:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 6
+      scalar: 4
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -31241,8 +31568,61 @@ ParticleSystem:
     inWorldSpace: 0
     randomizePerFrame: 0
   ExternalForcesModule:
+    serializedVersion: 2
     enabled: 0
-    multiplier: 1
+    multiplierCurve:
+      serializedVersion: 2
+      minMaxState: 0
+      scalar: 1
+      minScalar: 1
+      maxCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      minCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
     influenceFilter: 0
     influenceMask:
       serializedVersion: 2
@@ -33592,7 +33972,7 @@ ParticleSystem:
 --- !u!199 &199225191338268698
 ParticleSystemRenderer:
   serializedVersion: 6
-  m_ObjectHideFlags: 2
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -33602,7 +33982,7 @@ ParticleSystemRenderer:
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 0
+  m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
@@ -33616,6 +33996,7 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -33748,6 +34129,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0

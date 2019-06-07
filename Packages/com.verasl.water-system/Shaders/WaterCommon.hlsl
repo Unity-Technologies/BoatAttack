@@ -62,8 +62,8 @@ float3 WaterDepth(float3 posWS, half2 texcoords, half4 additionalData, half2 scr
 {
 	float3 outDepth = 0;
 	outDepth.xz = AdjustedDepth(screenUVs, additionalData);
-	float wd = UNITY_REVERSED_Z + (SAMPLE_DEPTH_TEXTURE(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, texcoords).r * _ProjectionParams.x);
-	outDepth.y = ((wd * _depthCamZParams.y) - 4 - _depthCamZParams.x) + posWS.y;
+	float wd = (1 - SAMPLE_TEXTURE2D(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, texcoords).r) * 19.1;
+	outDepth.y = (wd - 3.5) + posWS.y;
 	return outDepth;
 }
 
@@ -101,15 +101,15 @@ WaterVertexOutput WaveVertexOperations(WaterVertexOutput input)
 	screenUV.xyz /= screenUV.w;
 
     // shallows mask
-    half waterDepth = UNITY_REVERSED_Z + SAMPLE_DEPTH_TEXTURE_LOD(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, (input.posWS.xz * 0.002) + 0.5, 1).r * _ProjectionParams.x;
-    waterDepth = ((waterDepth * _depthCamZParams.y) - 4 - _depthCamZParams.x);
-    input.posWS.y += saturate((1 - waterDepth) * 0.6 - 0.5);
+    half waterDepth = (1 - SAMPLE_TEXTURE2D_LOD(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, (input.posWS.xz * half2(0.002, -0.002)) + 0.5, 1).r) * 19.1;
+    waterDepth = waterDepth - 4.1;
+    input.posWS.y += saturate((1-waterDepth) * 0.6 - 0.5);
 
 	//Gerstner here
 	WaveStruct wave;
 	SampleWaves(input.posWS, saturate((waterDepth * 0.25)) + 0.1, wave);
 	input.normal = normalize(wave.normal.xzy);
-	input.posWS += wave.position;
+    input.posWS += wave.position;
 
     // Dynamic displacement
 	half4 waterFX = SAMPLE_TEXTURE2D_LOD(_WaterFXMap, sampler_ScreenTextures_linear_clamp, screenUV.xy, 0);
@@ -172,7 +172,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	IN.normal += half3(1-waterFX.y, 0.5h, 1-waterFX.z) - 0.5;
 
 	// Depth
-	float3 depth = WaterDepth(IN.posWS, (IN.posWS.xz * 0.002) + 0.5, IN.additionalData, screenUV.xy);// TODO - hardcoded shore depth UVs
+	float3 depth = WaterDepth(IN.posWS, (IN.posWS.xz * half2(0.002, -0.002)) + 0.5, IN.additionalData, screenUV.xy);// TODO - hardcoded shore depth UVs
 
 	// Distortion
 	half2 distortion = DistortionUVs(depth.x, IN.normal);
@@ -229,7 +229,8 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
     float fogFactor = IN.fogFactorNoise.x;
     comp = MixFog(comp, fogFactor);
 	return half4(comp, 1);
-	//return half4(reflection, 1); // debug line
+	//return half4(frac(IN.posWS.yyy), 1); // debug line
+	//return half4(frac(IN.posWS.yyy), 1); // debug line
 }
 
 #endif // WATER_COMMON_INCLUDED

@@ -12,6 +12,7 @@ namespace WaterSystem
         public override void Create()
         {
             m_WaterFXPass = new WaterFXPass();
+            m_WaterFXPass.renderPassEvent = RenderPassEvent.BeforeRenderingOpaques;
         }
         
         public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
