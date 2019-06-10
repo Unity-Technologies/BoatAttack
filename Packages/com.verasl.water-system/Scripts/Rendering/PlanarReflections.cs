@@ -22,6 +22,7 @@ namespace UnityEngine.Rendering.LWRP
             public ResolutionMulltiplier m_ResolutionMultiplier = ResolutionMulltiplier.Third;
             public float m_ClipPlaneOffset = 0.07f;
             public LayerMask m_ReflectLayers = -1;
+            public bool m_Shadows;
         }
 
         
