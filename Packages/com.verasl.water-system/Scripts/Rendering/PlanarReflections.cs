@@ -203,6 +203,7 @@ namespace UnityEngine.Rendering.LWRP
                 go.AddComponent(typeof(LWRPAdditionalCameraData)) as LWRPAdditionalCameraData;
             LWRPAdditionalCameraData lwrpCamDataCurrent = currentCamera.GetComponent<LWRPAdditionalCameraData>();
             lwrpCamData.renderShadows = true; // turn off shadows for the reflection camera
+            lwrpCamData.renderPostProcessing = false;
             lwrpCamData.requiresColorOption = CameraOverrideOption.Off;
             lwrpCamData.requiresDepthOption = CameraOverrideOption.Off;
             var reflectionCamera = go.GetComponent<Camera>();
