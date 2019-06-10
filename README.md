@@ -3,7 +3,7 @@
 # Boat Attack
 ###### Demo Project using the Lightweight Render Pipeline from Unity3D
 
-[![Click for Youtube Video](http://gdurl.com/6ISqD)](http://www.youtube.com/watch?v=8ancNOmt4pA)
+[![Click for Youtube Video](https://gdurl.com/gRZYX)](https://drive.google.com/file/d/1PTNdhnqbhzSWUCfAinIefP5cfr6Dezuw/view)
 
 This Unity project has been created to aid the testing and development of LWRP. The project is a small vertical slice of a boat racing game, complete with raceable boats and island environment.
 
@@ -19,7 +19,7 @@ This Unity project has been created to aid the testing and development of LWRP. 
   * Gestner based water system in local package(WIP)
   * Much more..
 
-[Youtube Video](http://www.youtube.com/watch?v=8ancNOmt4pA)
+[Demo Footage](https://drive.google.com/file/d/1PTNdhnqbhzSWUCfAinIefP5cfr6Dezuw/view)
 
 # Usage
 Via your Git GUI(or terminal/commandline) clone* down and open in Unity. Make sure you clone down the relative branch depending on unity version you are using, you will find them via `release/20xx.x` for the version you are using. `master` branch is a development branch and used with the latest version of [SRP](https://github.com/Unity-Technologies/ScriptableRenderPipeline), due to this the project has local links to the directory of the SRP cloned down on a specific machine, meaning to use this you will need to clone down SRP and point to the directories via package manager, more info can be found [here](https://docs.unity3d.com/Manual/upm-ui-local.html).
@@ -40,6 +40,8 @@ Some of the things left to do:
  * Code cleanup
  * Wiki explaning features/systems in more depth
  * Add more sizzle....
+
+![Sunny Island](https://gdurl.com/X9mK)
 
 # Credits
 [Andre McGrail](http://www.andremcgrail.com) - Design, Programming, Modeling, Texturing, Sound
