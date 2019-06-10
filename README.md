@@ -45,11 +45,15 @@ Some of the things left to do:
 
 # Credits
 [Andre McGrail](http://www.andremcgrail.com) - Design, Programming, Modeling, Texturing, Sound
+
 [Alex Best](https://big_ally.artstation.com) - Modeling, Texturing
+
 [Stintah](https://soundcloud.com/stintah) - Soundtrack
 
 Special thanks to:
+
 [Felipe Lira](https://github.com/phi-lira) - For Making LWRP
+
 [Tim Cooper](https://github.com/stramit) - Assorted SRP code help
 
 And thanks to many more who have helped with suggestions and feedback!
