@@ -22,6 +22,7 @@ namespace UnityEngine.Rendering.LWRP
             public ResolutionMulltiplier m_ResolutionMultiplier = ResolutionMulltiplier.Third;
             public float m_ClipPlaneOffset = 0.07f;
             public LayerMask m_ReflectLayers = -1;
+            public bool m_Shadows;
         }
 
         
@@ -243,8 +244,11 @@ namespace UnityEngine.Rendering.LWRP
             var res = ReflectionResolution(camera, LightweightRenderPipeline.asset.renderScale);
             if (m_ReflectionTexture == null)
             {
+                bool useHDR10 = SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.RGB111110Float);
+                RenderTextureFormat hdrFormat =
+                    useHDR10 ? RenderTextureFormat.RGB111110Float : RenderTextureFormat.DefaultHDR;
                 m_ReflectionTexture = RenderTexture.GetTemporary(res.x, res.y, 16,
-                    GraphicsFormatUtility.GetGraphicsFormat(RenderTextureFormat.RGB111110Float, true));
+                    GraphicsFormatUtility.GetGraphicsFormat(hdrFormat, true));
             }
 
             m_ReflectionCamera.targetTexture = m_ReflectionTexture;

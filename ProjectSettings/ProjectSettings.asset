@@ -500,6 +500,11 @@ PlayerSettings:
     m_Devices:
     - Oculus
     - MockHMD
+  - m_BuildTarget: Standalone
+    m_Enabled: 0
+    m_Devices:
+    - OpenVR
+    - Oculus
   openGLRequireES31: 1
   openGLRequireES31AEP: 0
   openGLRequireES32: 0
@@ -513,7 +518,9 @@ PlayerSettings:
   - m_BuildTarget: iPhone
     m_EncodingQuality: 1
   - m_BuildTarget: Android
-    m_EncodingQuality: 2
+    m_EncodingQuality: 1
+  - m_BuildTarget: Standalone
+    m_EncodingQuality: 1
   m_BuildTargetGroupLightmapSettings: []
   playModeTestRunnerEnabled: 0
   runPlayModeTestAsEditModeTest: 0
