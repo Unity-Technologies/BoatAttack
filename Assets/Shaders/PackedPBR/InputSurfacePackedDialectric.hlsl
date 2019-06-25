@@ -6,15 +6,15 @@
 #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/SurfaceInput.hlsl"
 
 CBUFFER_START(UnityPerMaterial)
-float4 _MainTex_ST;
-half4 _Color; // only temp
+float4 _BaseMap_ST;
+half4 _BaseColor; // only temp
 half _Cutoff; // only temp
 half _BumpScale;
 CBUFFER_END
 
 inline void InitializeStandardLitSurfaceData(float2 uv, out SurfaceData outSurfaceData)
 {
-    half4 albedoRoughness = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv);
+    half4 albedoRoughness = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
     outSurfaceData.alpha = 1;
 
     outSurfaceData.albedo = albedoRoughness.rgb;

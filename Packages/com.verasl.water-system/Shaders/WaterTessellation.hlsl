@@ -87,10 +87,11 @@ WaterVertexOutput Domain( HS_ConstantOutput HSConstantData, const OutputPatch<Te
 	float fW = BarycentricCoords.z;
 
 	float4 vertex = Input[0].vertex * fU + Input[1].vertex * fV + Input[2].vertex * fW;
+	VertexPositionInputs vertexInput = GetVertexPositionInputs(vertex.xyz);
 	o.uv = Input[0].texcoord * fU + Input[1].texcoord * fV + Input[2].texcoord * fW;
 	o.posWS = Input[0].posWS * fU + Input[1].posWS * fV + Input[2].posWS * fW;
 
-    o = WaveVertexOperations(o);
+    o = WaveVertexOperations(o, vertexInput);
 
     return o;
 }

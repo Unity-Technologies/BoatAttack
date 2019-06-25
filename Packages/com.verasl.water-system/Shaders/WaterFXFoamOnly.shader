@@ -22,7 +22,7 @@
 
 			#define _NORMALMAP 1
 			
-			#include "LWRP/ShaderLibrary/Core.hlsl"
+			#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
 
 			struct appdata
 			{

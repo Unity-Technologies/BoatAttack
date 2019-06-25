@@ -122,7 +122,7 @@
                 VertexPositionInputs vertexPosition = GetVertexPositionInputs(input.positionOS);
                 VertexNormalInputs vertexTBN = GetVertexNormalInputs(input.normalOS, input.tangentOS);
                 half3 vertexLight = VertexLighting(vertexPosition.positionWS, output.normal.xyz);
-                half fogFactor = ComputeFogFactor(vertexPosition.positionCS.z);
+                half fogFactor = ComputeFogFactor(vertexPosition);
                 half3 viewDir = GetCameraPositionWS() - vertexPosition.positionWS;
                 output.clipPos = vertexPosition.positionCS;
 

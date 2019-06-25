@@ -91,7 +91,7 @@ half4 AdditionalData(float3 postionWS, WaveStruct wave)
 	return data;
 }
 
-WaterVertexOutput WaveVertexOperations(WaterVertexOutput input)
+WaterVertexOutput WaveVertexOperations(WaterVertexOutput input, VertexPositionInputs vertexInput)
 {
     input.normal = float3(0, 1, 0);
     input.uv.zw = input.posWS.xz;
@@ -121,7 +121,7 @@ WaterVertexOutput WaveVertexOperations(WaterVertexOutput input)
     input.viewDir = SafeNormalize(_WorldSpaceCameraPos - input.posWS);
 
     // Fog
-	input.fogFactorNoise.x = ComputeFogFactor(input.clipPos.z);
+	input.fogFactorNoise.x = ComputeFogFactor(vertexInput);
 	input.preWaveSP = screenUV.xyz; // pre-displaced screenUVs
 	
 	// Additional data
@@ -147,10 +147,11 @@ WaterVertexOutput WaterVertex(WaterVertexInput v)
     UNITY_TRANSFER_INSTANCE_ID(v, o);
 	UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
+    VertexPositionInputs vertexInput = GetVertexPositionInputs(v.vertex.xyz);
     o.uv.xy = v.texcoord; // geo uvs
-    o.posWS = TransformObjectToWorld(v.vertex.xyz);
+    o.posWS = vertexInput.positionWS;
 
-	o = WaveVertexOperations(o);
+	o = WaveVertexOperations(o, vertexInput);
     return o;
 }
 

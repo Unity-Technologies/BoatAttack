@@ -13,12 +13,12 @@ half CalculateFresnelTerm(half3 normalWS, half3 viewDirectionWS)
 ///////////////////////////////////////////////////////////////////////////////
 
 //diffuse
-half4 VertexLightingAndFog(half3 normalWS, half3 posWS, half3 clipPos)
-{
-    half3 vertexLight = VertexLighting(posWS, normalWS);
-    half fogFactor = ComputeFogFactor(clipPos.z);
-    return half4(fogFactor, vertexLight);
-}
+//half4 VertexLightingAndFog(half3 normalWS, half3 posWS, half3 clipPos)
+//{
+//    half3 vertexLight = VertexLighting(posWS, normalWS);
+//    half fogFactor = ComputeFogFactor(clipPos.z);
+//    return half4(fogFactor, vertexLight);
+//}
 
 //specular
 half3 Highlights(half3 positionWS, half roughness, half3 normalWS, half3 viewDirectionWS)
