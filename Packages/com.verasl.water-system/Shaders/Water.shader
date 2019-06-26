@@ -29,6 +29,7 @@
             // GPU Instancing
             #pragma multi_compile_instancing
             #pragma multi_compile_fog
+            #pragma multi_compile _ FOGMAP
 
 			////////////////////INCLUDES//////////////////////
 			#include "WaterCommon.hlsl"

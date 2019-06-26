@@ -58,6 +58,7 @@
             //#pragma multi_compile _ DIRLIGHTMAP_COMBINED
             //#pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
+            #pragma multi_compile _ FOGMAP
             #pragma multi_compile _ LOD_FADE_CROSSFADE
 
             //--------------------------------------
@@ -171,7 +172,7 @@
                 
                 half4 color = LightweightFragmentPBR(inputData, surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, surfaceData.occlusion, surfaceData.emission, surfaceData.alpha);
 
-                color.rgb = MixFog(color.rgb, inputData.fogCoord);
+                color.rgb = MixFog(color.rgb, inputData.fogCoord, inputData.viewDirectionWS, IN.clipPos.z);
                 #ifdef LOD_FADE_CROSSFADE // enable dithering LOD transition if user select CrossFade transition in LOD group
             	    LODDitheringTransition(IN.clipPos.xyz, unity_LODFade.x);
             	#endif

@@ -53,7 +53,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c01700fd266d6914ababb731e09af2eb, type: 3}
   m_Name: DepthOfField
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   m_AdvancedMode: 0
   mode:
     m_OverrideState: 1
@@ -76,7 +76,7 @@ MonoBehaviour:
     m_Value: 0
   focusDistance:
     m_OverrideState: 1
-    m_Value: 10.599796
+    m_Value: 0.1
     min: 0.1
   aperture:
     m_OverrideState: 1
@@ -215,7 +215,7 @@ MonoBehaviour:
   m_AdvancedMode: 0
   postExposure:
     m_OverrideState: 1
-    m_Value: -0.66
+    m_Value: 0
   contrast:
     m_OverrideState: 1
     m_Value: -3.8
@@ -259,6 +259,7 @@ MonoBehaviour:
   - {fileID: -477900410362853418}
   - {fileID: -5880084817896221590}
   - {fileID: 2179960825523627355}
+  - {fileID: 4837244660630988729}
 --- !u!114 &1950431032137305519
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -368,6 +369,56 @@ MonoBehaviour:
   gain:
     m_OverrideState: 1
     m_Value: {x: 0.924126, y: 0.979836, z: 1, w: 0.17305313}
+--- !u!114 &4837244660630988729
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f53bfc0f6b674cb9b25725bf02ed9b4, type: 3}
+  m_Name: Fog
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  type:
+    m_OverrideState: 1
+    m_Value: 2
+  density:
+    m_OverrideState: 1
+    m_Value: 0.01
+  nearFog:
+    m_OverrideState: 1
+    m_Value: 0.36
+  farFog:
+    m_OverrideState: 1
+    m_Value: 47.91
+  height:
+    m_OverrideState: 0
+    m_Value: 0.5
+  heightFalloff:
+    m_OverrideState: 0
+    m_Value: 50
+  distanceOffset:
+    m_OverrideState: 0
+    m_Value: 5
+  distanceFalloff:
+    m_OverrideState: 1
+    m_Value: 103.7
+  colorType:
+    m_OverrideState: 1
+    m_Value: 2
+  fogColor:
+    m_OverrideState: 1
+    m_Value: {r: 0.9339623, g: 0.6914022, b: 0, a: 1}
+    hdr: 1
+    showAlpha: 0
+    showEyeDropper: 1
+  cubemap:
+    m_OverrideState: 1
+    m_Value: {fileID: 8900000, guid: 33a2cc84be3c343d48273b4e84044504, type: 3}
 --- !u!114 &5329007838864390274
 MonoBehaviour:
   m_ObjectHideFlags: 3

@@ -228,7 +228,8 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	
 	// Fog
     float fogFactor = IN.fogFactorNoise.x;
-    comp = MixFog(comp, fogFactor);
+    comp = MixFog(comp, fogFactor, IN.viewDir, IN.clipPos.z);
+    
 	return half4(comp, 1);
 	//return half4(frac(IN.posWS.yyy), 1); // debug line
 	//return half4(frac(IN.posWS.yyy), 1); // debug line

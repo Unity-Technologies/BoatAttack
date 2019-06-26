@@ -54,6 +54,7 @@ Shader "LightweightPipeline/PBR/Packed Dialectric"
             #pragma multi_compile _ DIRLIGHTMAP_COMBINED
             #pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
+            #pragma multi_compile _ FOGMAP
 
             //--------------------------------------
             // GPU Instancing
