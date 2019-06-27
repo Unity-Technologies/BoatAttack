@@ -30,19 +30,22 @@ MonoBehaviour:
   m_AdvancedMode: 0
   type:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 3
   density:
     m_OverrideState: 1
-    m_Value: 0.005
+    m_Value: 0.01
   nearFog:
     m_OverrideState: 0
     m_Value: 5
   farFog:
     m_OverrideState: 0
     m_Value: 50
-  colorType:
+  heightOffset:
     m_OverrideState: 1
     m_Value: 0
+  colorType:
+    m_OverrideState: 1
+    m_Value: 2
   fogColor:
     m_OverrideState: 1
     m_Value: {r: 0.38679242, g: 1.4780798, b: 2, a: 1}
@@ -51,4 +54,9 @@ MonoBehaviour:
     showEyeDropper: 1
   cubemap:
     m_OverrideState: 0
-    m_Value: {fileID: 0}
+    m_Value: {fileID: 8900000, guid: 0aacfece78d124807a3ac6440df34ccb, type: 3}
+  rotation:
+    m_OverrideState: 1
+    m_Value: 90
+    min: -180
+    max: 180

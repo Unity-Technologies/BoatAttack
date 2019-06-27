@@ -76,7 +76,7 @@ MonoBehaviour:
     m_Value: 0
   focusDistance:
     m_OverrideState: 1
-    m_Value: 0.1
+    m_Value: 16.866175
     min: 0.1
   aperture:
     m_OverrideState: 1
@@ -215,7 +215,7 @@ MonoBehaviour:
   m_AdvancedMode: 0
   postExposure:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   contrast:
     m_OverrideState: 1
     m_Value: -3.8
@@ -385,28 +385,19 @@ MonoBehaviour:
   m_AdvancedMode: 0
   type:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 3
   density:
     m_OverrideState: 1
-    m_Value: 0.01
+    m_Value: 0.02
   nearFog:
     m_OverrideState: 1
     m_Value: 0.36
   farFog:
     m_OverrideState: 1
     m_Value: 47.91
-  height:
+  heightOffset:
     m_OverrideState: 0
-    m_Value: 0.5
-  heightFalloff:
-    m_OverrideState: 0
-    m_Value: 50
-  distanceOffset:
-    m_OverrideState: 0
-    m_Value: 5
-  distanceFalloff:
-    m_OverrideState: 1
-    m_Value: 103.7
+    m_Value: 0
   colorType:
     m_OverrideState: 1
     m_Value: 2
@@ -419,6 +410,11 @@ MonoBehaviour:
   cubemap:
     m_OverrideState: 1
     m_Value: {fileID: 8900000, guid: 33a2cc84be3c343d48273b4e84044504, type: 3}
+  rotation:
+    m_OverrideState: 0
+    m_Value: 0
+    min: -180
+    max: 180
 --- !u!114 &5329007838864390274
 MonoBehaviour:
   m_ObjectHideFlags: 3

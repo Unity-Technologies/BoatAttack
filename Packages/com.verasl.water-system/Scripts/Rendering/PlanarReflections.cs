@@ -233,7 +233,6 @@ namespace UnityEngine.Rendering.LWRP
                 return;
             
             GL.invertCulling = true;
-            RenderSettings.fog = false;
             var max = QualitySettings.maximumLODLevel;
             var bias = QualitySettings.lodBias;
             QualitySettings.maximumLODLevel = 0;
@@ -257,7 +256,6 @@ namespace UnityEngine.Rendering.LWRP
             LightweightRenderPipeline.RenderSingleCamera(context, m_ReflectionCamera);
 
             GL.invertCulling = false;
-            RenderSettings.fog = true;
             QualitySettings.maximumLODLevel = 0;
             QualitySettings.lodBias = 8;
             Shader.SetGlobalTexture(planarReflectionTextureID, m_ReflectionTexture);
