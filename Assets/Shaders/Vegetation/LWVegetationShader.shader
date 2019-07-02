@@ -59,6 +59,7 @@
             //#pragma multi_compile _ LIGHTMAP_ON
             #pragma multi_compile_fog
             #pragma multi_compile _ FOGMAP
+            #pragma multi_compile _ PHYSICAL_SKY
             #pragma multi_compile _ LOD_FADE_CROSSFADE
 
             //--------------------------------------
