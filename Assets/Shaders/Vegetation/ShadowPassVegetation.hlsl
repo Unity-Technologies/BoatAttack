@@ -1,8 +1,9 @@
 #ifndef SHADOW_PASS_VEGETATION_INCLUDED
 #define SHADOW_PASS_VEGETATION_INCLUDED
 
-#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
-#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Shadows.hlsl"
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
+#include "Vegetation.hlsl"
 
 float3 _LightDirection;
 

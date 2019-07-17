@@ -16,7 +16,7 @@
         // Lightweight Pipeline tag is required. If Lightweight pipeline is not set in the graphics settings
         // this Subshader will fail. One can add a subshader below or fallback to Standard built-in to make this
         // material work with both Lightweight Pipeline and Builtin Unity Pipeline
-        Tags{"RenderType" = "Opaque" "RenderPipeline" = "LightweightPipeline" "IgnoreProjector" = "True"}
+        Tags{"RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "IgnoreProjector" = "True"}
 
         // ------------------------------------------------------------------
         //  Base forward pass (directional light, emission, lightmaps, ...)
@@ -24,7 +24,7 @@
         {
             // Lightmode matches the ShaderPassName set in LightweightPipeline.cs. SRPDefaultUnlit and passes with
             // no LightMode tag are also rendered by Lightweight Pipeline
-            Tags{"LightMode" = "LightweightForward"}
+            Tags{"LightMode" = "UniversalForward"}
 
             ZWrite On
             AlphaToMask On
@@ -169,13 +169,13 @@
                 inputData.normalWS *= facing;
                 #endif
                 
-                half4 color = LightweightFragmentPBR(inputData, surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, surfaceData.occlusion, surfaceData.emission, surfaceData.alpha);
+                half4 color = UniversalFragmentPBR(inputData, surfaceData.albedo, surfaceData.metallic, surfaceData.specular, surfaceData.smoothness, surfaceData.occlusion, surfaceData.emission, surfaceData.alpha);
 
                 color.rgb = MixFog(color.rgb, inputData.fogCoord);
                 #ifdef LOD_FADE_CROSSFADE // enable dithering LOD transition if user select CrossFade transition in LOD group
             	    LODDitheringTransition(IN.clipPos.xyz, unity_LODFade.x);
             	#endif
-            	//return half4(unity_ObjectToWorld.xyz, 1);
+            	//return half4(inputData.normalWS.xyz, 1);
                 return color;
 			}
 
@@ -210,7 +210,6 @@
             #pragma vertex ShadowPassVegetationVertex
             #pragma fragment ShadowPassVegetationFragment
 
-            #include "Vegetation.hlsl"
             #include "InputSurfaceVegetation.hlsl"
             #include "ShadowPassVegetation.hlsl"
 
@@ -246,7 +245,7 @@
             #pragma multi_compile _ LOD_FADE_CROSSFADE
 
             #include "InputSurfaceVegetation.hlsl"
-            #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Vegetation.hlsl"
 
             VegetationVertexOutput DepthOnlyVertex(VegetationVertexInput input)
@@ -294,15 +293,15 @@
             // Required to compile gles 2.0 with standard srp library
             #pragma prefer_hlslcc gles
 
-            #pragma vertex LightweightVertexMeta
-            #pragma fragment LightweightFragmentMeta
+            #pragma vertex UniversalVertexMeta
+            #pragma fragment UniversalFragmentMeta
 
             #define _METALLICSPECGLOSSMAP 1
 
             #pragma shader_feature _SPECGLOSSMAP
 
             #include "InputSurfaceVegetation.hlsl"
-            #include "Packages/com.unity.render-pipelines.lightweight/Shaders/LitMetaPass.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitMetaPass.hlsl"
 
             ENDHLSL
         }

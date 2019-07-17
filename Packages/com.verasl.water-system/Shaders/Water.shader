@@ -6,13 +6,13 @@
 	}
 	SubShader
 	{
-		Tags { "RenderType"="Transparent" "Queue"="Transparent-100" "RenderPipeline" = "LightweightPipeline" }
+		Tags { "RenderType"="Transparent" "Queue"="Transparent-100" "RenderPipeline" = "UniversalPipeline" }
 		ZWrite On
 
 		Pass
 		{
 			Name "WaterShading"
-			Tags{"LightMode" = "LightweightForward"}
+			Tags{"LightMode" = "UniversalForward"}
 
 			HLSLPROGRAM
 			#pragma prefer_hlslcc gles

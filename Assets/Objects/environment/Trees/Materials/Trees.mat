@@ -8,8 +8,10 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Trees
-  m_Shader: {fileID: 4800000, guid: 1adca499d9899854aa1b4011854d49fb, type: 3}
-  m_ShaderKeywords: _CORRECTNORMALS _VERTEXANIMATION _NORMALMAP
+  m_Shader: {fileID: -6465566751694194690, guid: 4003ffa965d444d209561b52e55c61fc,
+    type: 3}
+  m_ShaderKeywords: BOOLEAN_D0D03BFD_ON VERTEX_ANIMATION_ON _CORRECTNORMALS _NORMALMAP
+    _VERTEXANIMATION
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
@@ -19,6 +21,14 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_B222E8F:
+        m_Texture: {fileID: 2800000, guid: 8fd1a09f036e77d46a48c04c8d159cb9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_D9BFD5F1:
+        m_Texture: {fileID: 2800000, guid: a126c1899a0b2034d99edbc3eb746652, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 2800000, guid: 8fd1a09f036e77d46a48c04c8d159cb9, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -64,6 +74,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - BOOLEAN_D0D03BFD: 1
+    - VERTEX_ANIMATION: 1
+    - Vector1_19FBDA45: 0.5
+    - Vector1_4F6BB00E: 0.5
     - _AlphaClip: 0
     - _BendStrength: 0.05
     - _Blend: 1

@@ -9,7 +9,7 @@ Shader "Unlit/InfiniteWater"
 	}
 	SubShader
 	{
-		Tags { "RenderType"="Transparent" "Queue"="Transparent-101" "RenderPipeline" = "LightweightPipeline" }
+		Tags { "RenderType"="Transparent" "Queue"="Transparent-101" "RenderPipeline" = "UniversalPipeline" }
 		LOD 100
 
 		Pass
@@ -22,7 +22,7 @@ Shader "Unlit/InfiniteWater"
 			// make fog work
 			#pragma multi_compile_fog
 
-			#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
+			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 			#include "WaterInput.hlsl"
 			#include "CommonUtilities.hlsl"
 			#include "WaterLighting.hlsl"

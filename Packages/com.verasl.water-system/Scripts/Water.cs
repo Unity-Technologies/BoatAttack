@@ -299,12 +299,12 @@ namespace WaterSystem
                 _depthCam = go.AddComponent<Camera>();
             }
 
-            if (_depthCam.GetComponent<LWRPAdditionalCameraData>() == null)
+            if (_depthCam.GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>() == null)
             {
-                LWRPAdditionalCameraData additionalCamData = _depthCam.gameObject.AddComponent<LWRPAdditionalCameraData>();
+                UnityEngine.Rendering.Universal.UniversalAdditionalCameraData additionalCamData = _depthCam.gameObject.AddComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>();
                 additionalCamData.renderShadows = false;
-                additionalCamData.requiresColorOption = CameraOverrideOption.Off;
-                additionalCamData.requiresDepthOption = CameraOverrideOption.Off;
+                additionalCamData.requiresColorOption = UnityEngine.Rendering.Universal.CameraOverrideOption.Off;
+                additionalCamData.requiresDepthOption = UnityEngine.Rendering.Universal.CameraOverrideOption.Off;
             }
             _depthCam.transform.position = Vector3.up * 4f;//center the camera on this water plane
             _depthCam.transform.up = Vector3.forward;//face teh camera down

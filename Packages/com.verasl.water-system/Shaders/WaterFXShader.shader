@@ -12,7 +12,7 @@
 	}
 	SubShader
 	{
-		Tags { "RenderType"="Transparent" "Queue"="Transparent" "RenderPipeline" = "LightweightPipeline" }
+		Tags { "RenderType"="Transparent" "Queue"="Transparent" "RenderPipeline" = "UniversalPipeline" }
 		ZWrite Off
 		Blend[_SrcBlend][_DstBlend]
 		LOD 100
@@ -26,7 +26,7 @@
 			#pragma fragment WaterFXFragment
 			#pragma shader_feature _INVERT_ON
 			
-			#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
+			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
 			struct Attributes
 			{
