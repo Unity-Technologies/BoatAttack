@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 using UnityEngine.Rendering.LWRP;
 
@@ -31,6 +29,8 @@ namespace WaterSystem
 		EditorGUI.Slider(offsetRect, offset, -0.500f, 0.500f);
 		var layerMask = property.FindPropertyRelative("m_ReflectLayers");
 		EditorGUI.PropertyField(layerMaskRect, layerMask);
+		var shadows = property.FindPropertyRelative("m_Shadows");
+		EditorGUI.PropertyField(shadowRect, shadows);
 	
 			// Set indent back to what it was
 			EditorGUI.indentLevel = indent;
