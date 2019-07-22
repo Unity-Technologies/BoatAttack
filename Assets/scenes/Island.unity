@@ -550,7 +550,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 10
+  m_Priority: 5
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 1066609277}
   m_Follow: {fileID: 1066609277}
@@ -1705,7 +1705,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 074aa8ca109924e18baf19f3e26665b6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -25
+      value: -12.5
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 074aa8ca109924e18baf19f3e26665b6, type: 3}
       propertyPath: m_LocalRotation.x
@@ -3523,8 +3523,8 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.1
-  far clip plane: 500
-  field of view: 60
+  far clip plane: 350
+  field of view: 80
   orthographic: 0
   orthographic size: 10
   m_Depth: -5
@@ -3549,8 +3549,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1017609894}
-  m_LocalRotation: {x: 0.16890061, y: -0.81706506, z: 0.3275648, w: 0.44337186}
-  m_LocalPosition: {x: -77.74759, y: 8.297212, z: -21.408878}
+  m_LocalRotation: {x: 0.009573031, y: 0.9497188, z: -0.029177096, w: 0.31159484}
+  m_LocalPosition: {x: -88.44125, y: 2, z: -10.416151}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 208737146}
@@ -3569,7 +3569,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_settings:
-    m_ResolutionMultiplier: 3
+    m_ResolutionMultiplier: 2
     m_ClipPlaneOffset: -0.104
     m_ReflectLayers:
       serializedVersion: 2
@@ -3844,7 +3844,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 5
+  m_Priority: 10
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 597900507}
   m_Follow: {fileID: 597900507}
@@ -5696,7 +5696,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1973407761}
-  m_LocalRotation: {x: -0.057876512, y: 0.3076704, z: -0.018753057, w: -0.94954604}
+  m_LocalRotation: {x: -0.05787651, y: 0.3076704, z: -0.018753057, w: -0.94954604}
   m_LocalPosition: {x: -78.2276, y: 1.1, z: -34.651066}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
