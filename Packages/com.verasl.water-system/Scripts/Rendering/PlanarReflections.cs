@@ -1,4 +1,5 @@
 ﻿using Unity.Mathematics;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Serialization;
 
@@ -199,10 +200,10 @@ namespace UnityEngine.Rendering.LWRP
             GameObject go =
                 new GameObject($"Planar Refl Camera id{GetInstanceID().ToString()} for {currentCamera.GetInstanceID().ToString()}",
                     typeof(Camera));
-            LWRPAdditionalCameraData lwrpCamData =
-                go.AddComponent(typeof(LWRPAdditionalCameraData)) as LWRPAdditionalCameraData;
-            LWRPAdditionalCameraData lwrpCamDataCurrent = currentCamera.GetComponent<LWRPAdditionalCameraData>();
-            lwrpCamData.renderShadows = true; // turn off shadows for the reflection camera
+            UniversalAdditionalCameraData lwrpCamData =
+                go.AddComponent(typeof(UniversalAdditionalCameraData)) as UniversalAdditionalCameraData;
+            //UniversalAdditionalCameraData lwrpCamDataCurrent = currentCamera.GetComponent<UniversalAdditionalCameraData>();
+            lwrpCamData.renderShadows = m_settings.m_Shadows; // turn off shadows for the reflection camera
             lwrpCamData.requiresColorOption = CameraOverrideOption.Off;
             lwrpCamData.requiresDepthOption = CameraOverrideOption.Off;
             var reflectionCamera = go.GetComponent<Camera>();
@@ -241,10 +242,10 @@ namespace UnityEngine.Rendering.LWRP
             UpdateReflectionCamera(camera);
             m_ReflectionCamera.cameraType = camera.cameraType;
 
-            var res = ReflectionResolution(camera, LightweightRenderPipeline.asset.renderScale);
+            var res = ReflectionResolution(camera, UniversalRenderPipeline.asset.renderScale);
             if (m_ReflectionTexture == null)
             {
-                bool useHDR10 = SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.RGB111110Float);
+                bool useHDR10 = true;// SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.RGB111110Float);
                 RenderTextureFormat hdrFormat =
                     useHDR10 ? RenderTextureFormat.RGB111110Float : RenderTextureFormat.DefaultHDR;
                 m_ReflectionTexture = RenderTexture.GetTemporary(res.x, res.y, 16,
@@ -253,7 +254,7 @@ namespace UnityEngine.Rendering.LWRP
 
             m_ReflectionCamera.targetTexture = m_ReflectionTexture;
 
-            LightweightRenderPipeline.RenderSingleCamera(context, m_ReflectionCamera);
+            UniversalRenderPipeline.RenderSingleCamera(context, m_ReflectionCamera);
 
             GL.invertCulling = false;
             RenderSettings.fog = true;

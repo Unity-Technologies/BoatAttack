@@ -4,7 +4,7 @@
 #define _MAIN_LIGHT_SHADOWS_CASCADE 1
 #define SHADOWS_SCREEN 0
 
-#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "WaterInput.hlsl"
 #include "CommonUtilities.hlsl"
 #include "GerstnerWaves.hlsl"

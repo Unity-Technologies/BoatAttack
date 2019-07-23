@@ -1,32 +1,32 @@
 ﻿using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.LWRP;
+
 
 namespace WaterSystem
 {
-    public class WaterFXFeature : ScriptableRendererFeature
+    public class WaterFXFeature : UnityEngine.Rendering.Universal.ScriptableRendererFeature
     {
         WaterFXPass m_WaterFXPass;
         
         public override void Create()
         {
             m_WaterFXPass = new WaterFXPass();
-            m_WaterFXPass.renderPassEvent = RenderPassEvent.BeforeRenderingOpaques;
+            m_WaterFXPass.renderPassEvent = UnityEngine.Rendering.Universal.RenderPassEvent.BeforeRenderingOpaques;
         }
         
-        public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
+        public override void AddRenderPasses(UnityEngine.Rendering.Universal.ScriptableRenderer renderer, ref UnityEngine.Rendering.Universal.RenderingData renderingData)
         {
             renderer.EnqueuePass(m_WaterFXPass);
         }
     }
 
-    public class WaterFXPass : ScriptableRenderPass
+    public class WaterFXPass : UnityEngine.Rendering.Universal.ScriptableRenderPass
     {
         const string k_RenderWaterFXTag = "Render Water FX";
         ShaderTagId m_WaterFXShaderTag = new ShaderTagId("WaterFX");
         Color m_ClearColor = new Color(0.0f, 0.5f, 0.5f, 0.5f);
-        RenderTargetHandle m_WaterFX = RenderTargetHandle.CameraTarget;
+        UnityEngine.Rendering.Universal.RenderTargetHandle m_WaterFX = UnityEngine.Rendering.Universal.RenderTargetHandle.CameraTarget;
 
         private FilteringSettings transparentFilterSettings { get; set; }
 
@@ -47,7 +47,7 @@ namespace WaterSystem
             ConfigureClear(ClearFlag.Color, m_ClearColor);
         }
 
-        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+        public override void Execute(ScriptableRenderContext context, ref UnityEngine.Rendering.Universal.RenderingData renderingData)
         {
             CommandBuffer cmd = CommandBufferPool.Get(k_RenderWaterFXTag);
 

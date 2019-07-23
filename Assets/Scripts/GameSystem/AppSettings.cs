@@ -59,7 +59,7 @@ namespace BoatAttack
             }
             var renderScale = Mathf.Clamp(res / Camera.main.pixelHeight, 0.1f, 1.0f);
             maxScale = renderScale;
-            LightweightRenderPipeline.asset.renderScale = renderScale;
+            UnityEngine.Rendering.Universal.UniversalRenderPipeline.asset.renderScale = renderScale;
         }
 
         private void Update()
@@ -113,7 +113,7 @@ namespace BoatAttack
         
         public void ToggleSRPBatcher(bool enabled)
         {
-            LightweightRenderPipeline.asset.useSRPBatcher = enabled;
+            UnityEngine.Rendering.Universal.UniversalRenderPipeline.asset.useSRPBatcher = enabled;
         }
     }
 }

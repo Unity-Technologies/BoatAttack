@@ -42,7 +42,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7473329029991716460}
-  - component: {fileID: 7473329029991716462}
   - component: {fileID: 7473329029991716461}
   m_Layer: 8
   m_Name: Vol_Main
@@ -65,23 +64,6 @@ Transform:
   m_Father: {fileID: 7473329029648627037}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7473329029991716462
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7473329029991716459}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: 819fc292d8c344a2d9ff5eaca5e6d723, type: 2}
-  isGlobal: 0
-  blendDistance: 1
-  weight: 1
-  priority: 1
 --- !u!65 &7473329029991716461
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -104,7 +86,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7473329030308491848}
-  - component: {fileID: 7473329030308491850}
   - component: {fileID: 7473329030308491849}
   m_Layer: 8
   m_Name: Vol_Entrance
@@ -127,23 +108,6 @@ Transform:
   m_Father: {fileID: 7473329029648627037}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: -75.25201, z: 0}
---- !u!114 &7473329030308491850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7473329030308491863}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: 819fc292d8c344a2d9ff5eaca5e6d723, type: 2}
-  isGlobal: 0
-  blendDistance: 6
-  weight: 1
-  priority: 1
 --- !u!65 &7473329030308491849
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -166,7 +130,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7473329030466396889}
-  - component: {fileID: 7473329030466396891}
   - component: {fileID: 7473329030466396890}
   m_Layer: 8
   m_Name: Vol_Exit
@@ -189,23 +152,6 @@ Transform:
   m_Father: {fileID: 7473329029648627037}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: -29.647001, z: 0}
---- !u!114 &7473329030466396891
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7473329030466396888}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: 819fc292d8c344a2d9ff5eaca5e6d723, type: 2}
-  isGlobal: 0
-  blendDistance: 4
-  weight: 1
-  priority: 1
 --- !u!65 &7473329030466396890
 BoxCollider:
   m_ObjectHideFlags: 0
