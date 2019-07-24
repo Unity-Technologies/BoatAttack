@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
+using Random = UnityEngine.Random;
 
 namespace BoatAttack.Boat
 {
@@ -10,12 +12,15 @@ namespace BoatAttack.Boat
     {
         //Boat stats
         public bool Human; // Is human
+        public bool RandomizeColors = true;
         public Color PrimaryColor; // Boat primary colour
         public Color TrimColor; // Boat secondary colour
         public Renderer boatRenderer; // The renderer for the boat mesh
 
         void OnValidate()
         {
+            Random.InitState(this.gameObject.GetInstanceID() + DateTime.Now.Millisecond + DateTime.UtcNow.Second);
+            Randomize();
             Colourize(); // Update the colour material property block
         }
 
@@ -48,6 +53,34 @@ namespace BoatAttack.Boat
                     boatRenderer.material.SetColor("_Color1", PrimaryColor);
                     boatRenderer.material.SetColor("_Color2", TrimColor);
                 }
+            }
+        }
+
+        void Randomize()
+        {
+            if (RandomizeColors)
+            {
+                var H = Random.Range(0f, 1f);
+                var S = 0f;
+                var V = 0.9f;
+                
+                var rand = Random.insideUnitCircle;
+
+                if (rand.x > 0.5f)
+                    S = 0f;
+                else
+                    S = 0.9f;
+                
+                if (rand.y > 0.8f)
+                    V = 0f;
+                else
+                    V = Random.Range(0.5f, 0.9f);
+
+                var h2 = Mathf.Repeat(H + (rand.x + rand.y > 0 ? 0.5f : 0f), 1f);
+                var s2 = S <= 0.1f ? 0.9f : Random.Range(0.5f, 0.9f);
+                
+                PrimaryColor = Color.HSVToRGB(H, S, V);
+                TrimColor = Color.HSVToRGB(h2, s2, 1f - V);
             }
         }
     }
