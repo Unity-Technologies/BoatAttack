@@ -34,7 +34,7 @@ namespace BoatAttack
                         // Set as MPB in editor but in playmode(runtime) create instance for SRP batcher to work
                         if (Application.isPlaying)
                         {
-                            renderers[i].material.SetFloat("_Hue", hue);
+                            renderers[i].sharedMaterial.SetFloat("_Hue", hue);
                         }
                         else
                         {
