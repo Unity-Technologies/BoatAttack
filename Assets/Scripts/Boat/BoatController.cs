@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
+using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 namespace BoatAttack.Boat
@@ -83,5 +84,21 @@ namespace BoatAttack.Boat
                 TrimColor = Color.HSVToRGB(h2, s2, 1f - V);
             }
         }
+    }
+
+    [Serializable]
+    public class BoatData
+    {
+        public string boatName;
+        //public BoatType boatType = BoatType.Interceptor;
+        public Object boatPrefab;
+        public bool Human = false;
+    }
+
+    [Serializable]
+    public enum BoatType
+    {
+        Interceptor,
+        Classic,
     }
 }

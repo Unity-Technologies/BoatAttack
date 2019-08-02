@@ -1,17 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.LWRP;
 
 namespace UnityEngine.Experimental.Rendering
 {
     public class MiniProfiler : MonoBehaviour
     {
         private bool m_Enable = true;
-        private bool m_CurrentBatcherEnable = false;
         private const float kAverageStatDuration = 1.0f;            // stats refresh each second
         private int m_frameCount;
 		private float m_AccDeltaTime;
@@ -26,27 +20,23 @@ namespace UnityEngine.Experimental.Rendering
             public Profiling.Recorder recorder;
         };
 
-		enum SRPBMarkers
+		enum Markers
 		{
-			kStdRenderDraw,
-			kStdShadowDraw,
-			kSRPBRenderDraw,
-			kSRPBShadowDraw,
-			kRenderThreadIdle,
-			kStdFlush,
-			kSRPBFlush,
+			kRenderloop,
+			kCulling,
+            kShadows,
+            kDraw,
+            kPost,
 		};
 		
         RecorderEntry[] recordersList =
         {
 			// Warning: Keep that list in the exact same order than SRPBMarkers enum
-            new RecorderEntry() { name="RenderLoop.Draw" },
-            new RecorderEntry() { name="Shadows.Draw" },
-            new RecorderEntry() { name="RenderLoopNewBatcher.Draw" },
-            new RecorderEntry() { name="ShadowLoopNewBatcher.Draw" },
-            new RecorderEntry() { name="RenderLoopDevice.Idle" },
-            new RecorderEntry() { name="BatchRenderer.Flush" },
-            new RecorderEntry() { name="SRPBatcher.Flush" },
+            new RecorderEntry() { name="UnityEngine.CoreModule.dll!UnityEngine.Rendering::RenderPipelineManager.DoRenderLoop_Internal()" },
+            new RecorderEntry() { name="CullScriptable" },
+            new RecorderEntry() { name="Shadows.ExecuteDrawShadows" },
+            new RecorderEntry() { name="RenderLoop.ScheduleDraw" },
+            new RecorderEntry() { name="Render PostProcessing Effects" },
         };
 
         void Awake()
@@ -85,29 +75,8 @@ namespace UnityEngine.Experimental.Rendering
 
         void Update()
         {
-
-            if (Input.GetKeyDown(KeyCode.F9))
-            {
-                UnityEngine.Rendering.Universal.UniversalRenderPipeline.asset.useSRPBatcher = !UnityEngine.Rendering.Universal.UniversalRenderPipeline.asset.useSRPBatcher;
-            }
-
-            if (Input.GetKeyDown(KeyCode.F8))
-            {
-                m_Enable = !m_Enable;
-                ResetStats();
-            }
-
-            if ( m_CurrentBatcherEnable != UnityEngine.Rendering.Universal.UniversalRenderPipeline.asset.useSRPBatcher )
-            {
-                ResetStats();
-                m_CurrentBatcherEnable = UnityEngine.Rendering.Universal.UniversalRenderPipeline.asset.useSRPBatcher;
-            }
-
             if (m_Enable)
             {
-
-                bool SRPBatcher = GraphicsSettings.useScriptableRenderPipelineBatching;
-
                 m_AccDeltaTime += Time.unscaledDeltaTime;
                 m_frameCount++;
 
@@ -125,23 +94,18 @@ namespace UnityEngine.Experimental.Rendering
 				{
 
 					float ooFrameCount = 1.0f / (float)m_frameCount;
-					float avgStdRender = recordersList[(int)SRPBMarkers.kStdRenderDraw].accTime * ooFrameCount;
-					float avgStdShadow = recordersList[(int)SRPBMarkers.kStdShadowDraw].accTime * ooFrameCount;
-					float avgSRPBRender = recordersList[(int)SRPBMarkers.kSRPBRenderDraw].accTime * ooFrameCount;
-					float avgSRPBShadow = recordersList[(int)SRPBMarkers.kSRPBShadowDraw].accTime * ooFrameCount;
-					float RTIdleTime = recordersList[(int)SRPBMarkers.kRenderThreadIdle].accTime * ooFrameCount;
+					float avgLoop = recordersList[(int)Markers.kRenderloop].accTime * ooFrameCount;
+					float avgCulling = recordersList[(int)Markers.kCulling].accTime * ooFrameCount;
+					float avgShadow = recordersList[(int)Markers.kShadows].accTime * ooFrameCount;
+					float avgDraw = recordersList[(int)Markers.kDraw].accTime * ooFrameCount;
+					float avgPost = recordersList[(int)Markers.kPost].accTime * ooFrameCount;
 
-					m_statsLabel = string.Format("Accumulated time for RenderLoop.Draw and ShadowLoop.Draw (all threads)\n{0:F2}ms CPU Rendering time ( incl {1:F2}ms RT idle )\n", avgStdRender + avgStdShadow + avgSRPBRender + avgSRPBShadow, RTIdleTime);
-					if (SRPBatcher)
-					{
-						m_statsLabel += string.Format("  {0:F2}ms SRP Batcher code path ({1} flush(s))\n", avgSRPBRender + avgSRPBShadow, recordersList[(int)SRPBMarkers.kSRPBFlush].callCount / (int)m_frameCount);
-						m_statsLabel += string.Format("    {0:F2}ms All objects\n", avgSRPBRender);
-						m_statsLabel += string.Format("    {0:F2}ms Shadows\n", avgSRPBShadow);
-					}
-					m_statsLabel += string.Format("  {0:F2}ms Standard code path ({1} flush(s))\n", avgStdRender + avgStdShadow, recordersList[(int)SRPBMarkers.kStdFlush].callCount / (int)m_frameCount);
-					m_statsLabel += string.Format("    {0:F2}ms All objects\n", avgStdRender);
-					m_statsLabel += string.Format("    {0:F2}ms Shadows\n", avgStdShadow);
-					m_statsLabel += string.Format("Global Main Loop: {0:F2}ms ({1} FPS)\n", m_AccDeltaTime * 1000.0f * ooFrameCount, (int)(((float)m_frameCount) / m_AccDeltaTime));
+					m_statsLabel = $"Rendering Loop Main Thread:{avgLoop:N}ms\n";
+					m_statsLabel += $"    Culling:{avgCulling:N}ms\n";
+					m_statsLabel += $"    Shadows:{avgShadow:N}ms\n";
+					m_statsLabel += $"    Draws:{avgDraw:F2}ms\n";
+					m_statsLabel += $"    PostProcessing:{avgPost:F2}ms\n";
+					m_statsLabel += $"Total: {(m_AccDeltaTime * 1000.0f * ooFrameCount):F2}ms ({(int)(((float)m_frameCount) / m_AccDeltaTime)} FPS)\n";
 
 					RazCounters();
 				}

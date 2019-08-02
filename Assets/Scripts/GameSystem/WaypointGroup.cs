@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using Random = UnityEngine.Random;
 using System.Linq;
+using UnityEngine.Serialization;
 
 namespace BoatAttack
 {
@@ -18,6 +19,8 @@ namespace BoatAttack
 		public float raceDelay = 4f;
 		public bool raceStarted = false;
 		public bool reverse = false;
+		
+		public Matrix4x4[] startingPositons = new Matrix4x4[4];
 
 		[SerializeField] public List<Waypoint> WPs = new List<Waypoint>();
 		private int curWpID;
@@ -29,6 +32,7 @@ namespace BoatAttack
 			if (reverse)
 				WPs.Reverse();
 			Invoke("StartRace", raceDelay);
+			GetStartPositions();
 		}
 
 		public void StartRace()
@@ -40,7 +44,8 @@ namespace BoatAttack
 		public class Waypoint
 		{
 			public Vector3 point;
-			public float WPradius;
+			[FormerlySerializedAs("WPradius")] public float WPwidth;
+			public Quaternion rotation = Quaternion.identity;
 			public int WPnumber;
 			public int WPgroup;
 
@@ -48,7 +53,7 @@ namespace BoatAttack
 			{
 
 				point = position;
-				WPradius = radius;
+				WPwidth = radius;
 				WPnumber = ID;
 				WPgroup = group;
 			}
@@ -75,7 +80,7 @@ namespace BoatAttack
 				wp = WPs[index];
 			else
 				wp = null;
-			return wp.point + (Random.insideUnitSphere * wp.WPradius);
+			return wp.point + (Random.insideUnitSphere * wp.WPwidth);
 		}
 
 		public Waypoint GetWaypoint(int index)
@@ -103,6 +108,23 @@ namespace BoatAttack
 			return closest;
 		}
 
+		public Matrix4x4[] GetStartPositions()
+		{
+			var position = WPs[0].point;
+			var rotation = WPs[0].rotation;
+			for (int i = 0; i < startingPositons.Length; i++)
+			{
+				var pos = new Vector3(i % 2 == 0 ? 3f : -3f, 0f, (i * 6f) + 4f);
+
+				pos.z = reverse ? pos.z : -pos.z;
+				
+				startingPositons[i].SetTRS(position, rotation, Vector3.one);
+				startingPositons[i] *= Matrix4x4.Translate(pos);
+			}
+			
+			return startingPositons;
+		}
+
 		public void DeleteLastWaypoint()
 		{
 			WPs.RemoveAt(curWpID);
@@ -115,29 +137,39 @@ namespace BoatAttack
 			curWpID = 0;
 		}
 
-		void OnDrawGizmosSelected()
+		void OnDrawGizmos()
 		{
-			Gizmos.color = WaypointColour;
-
-			Gizmos.DrawSphere(gameObject.transform.position, NextWPradius);
+			var c = WaypointColour;
 
 			for (int i = 0; i < WPs.Count; i++)
 			{
-				Gizmos.DrawWireSphere(WPs[i].point, WPs[i].WPradius);
-
-#if UnityEditor
-			UnityEditor.Handles.Label(WPs[i].point, "WP " + WPs[i].WPnumber);
-			#endif
-				if (i < WPs.Count - 1)
-				{
-					Gizmos.DrawLine(WPs[i].point, WPs[i + 1].point);
-				}
-				else if (Loop)
-				{
-					Gizmos.color = Color.red;
-					Gizmos.DrawLine(WPs[i].point, WPs[0].point);
-				}
+				Gizmos.matrix = Matrix4x4.TRS(WPs[i].point, WPs[i].rotation, Vector3.one);
+				var cube = new Vector3(WPs[i].WPwidth * 2f, 4f, 0.5f);
+				// Fill
+				c.a = 0.5f;
+				Gizmos.color = c;
+				Gizmos.DrawCube(Vector3.zero, cube);
+				// Outline
+				c.a = 1f;
+				Gizmos.color = c;
+				Gizmos.DrawWireCube(Vector3.zero, cube);
 			}
+
+			startingPositons = GetStartPositions();
+
+			c = Color.green;
+			var startBox = new Vector3(2f, 0.1f, 6f);
+			foreach (var startPos in startingPositons)
+			{
+				Gizmos.matrix = startPos;
+				c.a = 0.5f;
+				Gizmos.color = c;
+				Gizmos.DrawCube(Vector3.zero, startBox);
+				c.a = 1f;
+				Gizmos.color = c;
+				Gizmos.DrawWireCube(Vector3.zero, startBox);
+			}
+			
 		}
 	}
 }

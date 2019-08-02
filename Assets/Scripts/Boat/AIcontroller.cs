@@ -95,7 +95,7 @@ namespace BoatAttack.Boat
     
         void AssignWP(WaypointGroup.Waypoint wp)
         {
-            curWPsize = wp.WPradius;
+            curWPsize = wp.WPwidth;
             Vector3 offset = Random.insideUnitSphere * curWPsize;
             offset.y = 0f;
             curWPPos = wp.point + offset;
