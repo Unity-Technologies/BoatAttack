@@ -123,12 +123,7 @@ namespace WaterSystem
             waterTime = Time.time;
             Shader.SetGlobalFloat("_GlobalTime", waterTime);
         }
-
-        private void LateUpdate() {
-            if(Application.isPlaying)
-                GerstnerWavesJobs.UpdateHeights();
-        }
-
+        
         public void FragWaveNormals(bool toggle)
         {
             Material mat = GetComponent<Renderer>().sharedMaterial;

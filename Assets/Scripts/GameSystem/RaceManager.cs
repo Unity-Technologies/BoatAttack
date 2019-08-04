@@ -21,6 +21,7 @@ namespace BoatAttack
         private void OnEnable()
         {
             WaypointGroup.Instance.reverse = raceData.reversed;
+            WaypointGroup.Instance.Setup();
             CreateBoats();
         }
 
@@ -32,7 +33,10 @@ namespace BoatAttack
                 var matrix = WaypointGroup.Instance.startingPositons[i];
 
                 GameObject boatObject = Instantiate(boat.boatPrefab, matrix.GetColumn(3), Quaternion.LookRotation(matrix.GetColumn(2))) as GameObject;
-
+                boatObject.name = boat.boatName;
+                BoatController boatController = boatObject.GetComponent<BoatController>();
+                boatController.Human = boat.Human;
+                boatController.cam.gameObject.layer = LayerMask.NameToLayer("Player" + (i + 1));
                 i++;
             }
         }

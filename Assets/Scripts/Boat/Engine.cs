@@ -7,15 +7,17 @@ namespace BoatAttack.Boat
 {
     public class Engine : MonoBehaviour
     {
-        private Rigidbody RB; // The rigid body attatched to the boat
-        public Vector3 vel; // Boats velocity
+        public Rigidbody RB; // The rigid body attatched to the boat
+        public float vel; // Boats velocity
 
         public AudioSource engineSound; // Engine sound clip
         public AudioSource waterSound; // Water sound clip
 
+
+        private float turnVel = 0f;
         //engine stats
-        public float torque = 5f;
         public float horsePower = 15f;
+        public float turnAngle = 45f;
         private float3[] point = new float3[1]; // engine submerged check
         private float3[] heights = new float3[1]; // engine submerged check
         private int _guid;
@@ -26,7 +28,6 @@ namespace BoatAttack.Boat
 
         void Awake()
         {
-            RB = gameObject.GetComponent<Rigidbody>(); // get the RB
             engineSound.time = UnityEngine.Random.Range(0f, engineSound.clip.length); // randomly start the engine sound
             waterSound.time = UnityEngine.Random.Range(0f, waterSound.clip.length); // randomly start the water sound
 
@@ -35,9 +36,8 @@ namespace BoatAttack.Boat
 
         void FixedUpdate()
         {
-            vel = RB.velocity; // store the velocity
-            float velMag = vel.sqrMagnitude; // get the sqr mag
-            engineSound.pitch = Mathf.Max(velMag * 0.01f, 0.3f); // use some magice numbers to control the pitch of the engine sound
+            vel = RB.velocity.sqrMagnitude; // get the sqr mag
+            engineSound.pitch = Mathf.Max(vel * 0.01f, 0.3f); // use some magice numbers to control the pitch of the engine sound
 
             // Get the water level from the engines position and store it
             point[0] = transform.TransformPoint(enginePosition);
@@ -52,13 +52,12 @@ namespace BoatAttack.Boat
         /// <param name="modifier">Acceleration modifier, adds force in the 0-1 range</param>
         public void Accel(float modifier)
         {
-            if (yHeight > -0.1f) // if the engine is deeper than 0.1
+            if (yHeight > -0.2f) // if the engine is deeper than 0.1
             {
-                modifier = Mathf.Clamp(modifier, 0f, 1f); // clamp for reasonable values
-                Vector3 forward = transform.forward;
-                forward.y = 0f;
-                forward.Normalize();
-                RB.AddForce(forward * modifier * horsePower, ForceMode.Acceleration); // add force forward based on input and horsepower
+                Vector3 forward = Vector3.Slerp(RB.transform.forward, transform.forward, 0.2f);
+                //forward.y = 0f;
+                //forward.Normalize();
+                RB.AddForceAtPosition(forward * modifier * horsePower, point[0], ForceMode.Acceleration); // add force forward based on input and horsepower
                 RB.AddRelativeTorque(-Vector3.right * modifier, ForceMode.Acceleration);
             }
         }
@@ -69,11 +68,13 @@ namespace BoatAttack.Boat
         /// <param name="modifier">Steering modifier, positive for right, negative for negative</param>
         public void Turn(float modifier)
         {
-            if (yHeight > -0.1f) // if the engine is deeper than 0.1
-            {
-                modifier = Mathf.Clamp(modifier, -1f, 1f); // clamp for reasonable values
-                RB.AddRelativeTorque(new Vector3(0f, torque, -torque * 0.5f) * modifier, ForceMode.Acceleration); // add torque based on input and torque amount
-            }
+            var curAngle = transform.localEulerAngles.y;
+
+            var angle = Mathf.SmoothDampAngle(curAngle, -modifier * turnAngle, ref turnVel, 0.2f);
+            
+            transform.localEulerAngles = new Vector3(0f, angle, 0f);
+            
+            //RB.AddRelativeTorque(vel * -0.001f * new Vector3(0f, angle > 180 ? angle - 360 : angle, 0f), ForceMode.Acceleration); // add torque based on input and torque amount
         }
 
         // Draw some helper gizmos

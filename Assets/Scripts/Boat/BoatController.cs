@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
+using Cinemachine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
@@ -17,11 +18,12 @@ namespace BoatAttack.Boat
         public Color PrimaryColor; // Boat primary colour
         public Color TrimColor; // Boat secondary colour
         public Renderer boatRenderer; // The renderer for the boat mesh
-
+        
+        public Engine engine;
+        public CinemachineVirtualCamera cam;
+        
         void OnValidate()
         {
-            Random.InitState(this.gameObject.GetInstanceID() + DateTime.Now.Millisecond + DateTime.UtcNow.Second);
-            Randomize();
             Colourize(); // Update the colour material property block
         }
 
@@ -29,10 +31,14 @@ namespace BoatAttack.Boat
         void Start()
         {
             Colourize();
-            if (Human == true)
-                gameObject.AddComponent<HumanController>(); // Adds a human controller if human
+            if (Human)
+            {
+                gameObject.AddComponent<HumanController>().engine = engine; // Adds a human controller if human
+            }
             else
-                gameObject.AddComponent<AIcontroller>(); // Adds an AI controller if AI
+            {
+                gameObject.AddComponent<AIcontroller>().engine = engine; // Adds an AI controller if AI
+            }
         }
 
         /// <summary>
@@ -40,6 +46,8 @@ namespace BoatAttack.Boat
         /// </summary>
         void Colourize()
         {
+            if (RandomizeColors)
+                Randomize();
             if (boatRenderer)
             {
                 if (Application.isEditor)
@@ -59,30 +67,29 @@ namespace BoatAttack.Boat
 
         void Randomize()
         {
-            if (RandomizeColors)
-            {
-                var H = Random.Range(0f, 1f);
-                var S = 0f;
-                var V = 0.9f;
-                
-                var rand = Random.insideUnitCircle;
+            Random.InitState(this.gameObject.GetInstanceID() + DateTime.Now.Millisecond + DateTime.UtcNow.Second);
 
-                if (rand.x > 0.5f)
-                    S = 0f;
-                else
-                    S = 0.9f;
-                
-                if (rand.y > 0.8f)
-                    V = 0f;
-                else
-                    V = Random.Range(0.5f, 0.9f);
+            var H = Random.Range(0f, 1f);
+            var S = 0f;
+            var V = 0.9f;
+            
+            var rand = Random.insideUnitCircle;
 
-                var h2 = Mathf.Repeat(H + (rand.x + rand.y > 0 ? 0.5f : 0f), 1f);
-                var s2 = S <= 0.1f ? 0.9f : Random.Range(0.5f, 0.9f);
-                
-                PrimaryColor = Color.HSVToRGB(H, S, V);
-                TrimColor = Color.HSVToRGB(h2, s2, 1f - V);
-            }
+            if (rand.x > 0.5f)
+                S = 0f;
+            else
+                S = 0.9f;
+            
+            if (rand.y > 0.8f)
+                V = 0f;
+            else
+                V = Random.Range(0.5f, 0.9f);
+
+            var h2 = Mathf.Repeat(H + (rand.x + rand.y > 0 ? 0.5f : 0f), 1f);
+            var s2 = S <= 0.1f ? 0.9f : Random.Range(0.5f, 0.9f);
+            
+            PrimaryColor = Color.HSVToRGB(H, S, V);
+            TrimColor = Color.HSVToRGB(h2, s2, 1f - V);
         }
     }
 

@@ -12,7 +12,6 @@ namespace BoatAttack.Boat
         public NavMeshPath navPath;//navigation path;
         private Vector3[] pathPoint = null;
         public Vector3 curWPPos;
-        public float curWPsize;
         public int curPoint = 0;
         public int curWP = 0;
         public bool foundPath;
@@ -29,13 +28,9 @@ namespace BoatAttack.Boat
         // Use this for initialization
         void Start ()
         {
-            engine = GetComponent<Engine> ();// find the engine for the boat
-    
-            //CalculatePath (targetPos);//calculate path to target
             float delay = WaypointGroup.Instance.raceDelay;
-    
+
             Invoke("GetNearestWP", delay);
-            
         }
 
         // Update is called once per frame
@@ -95,10 +90,8 @@ namespace BoatAttack.Boat
     
         void AssignWP(WaypointGroup.Waypoint wp)
         {
-            curWPsize = wp.WPwidth;
-            Vector3 offset = Random.insideUnitSphere * curWPsize;
-            offset.y = 0f;
-            curWPPos = wp.point + offset;
+            var offset = (Random.value * 2f - 1f) * wp.WPwidth * Vector3.left;
+            curWPPos = wp.point + wp.rotation * offset;
             curWP++;
             if (curWP >= WaypointGroup.Instance.WPs.Count)
                 curWP = 0;

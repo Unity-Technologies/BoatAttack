@@ -9,6 +9,8 @@
 // Further tweaks by Andre McGrail
 //
 //
+
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
@@ -173,20 +175,13 @@ namespace WaterSystem
 
             if (wp.y - voxelResolution < waterLevel)
             {
-                float k = (waterLevel - (wp.y - voxelResolution)) / (voxelResolution * 2f);
-                if (k > 1)
-                {
-                    k = 1f;
-                }
-                else if (k < 0)
-                {
-                    k = 0f;
-                }
+                float k = Mathf.Clamp01(waterLevel - (wp.y - voxelResolution)) / (voxelResolution * 2f);
+
                 submergedAmount += k / voxels.Length;//(math.clamp(waterLevel - (wp.y - voxelResolution), 0f, voxelResolution * 2f) / (voxelResolution * 2f)) / voxels.Count;
 
                 var velocity = RB.GetPointVelocity(wp);
                 velocity.y *= 2f;
-                var localDampingForce = -velocity * DAMPFER * RB.mass;
+                var localDampingForce = DAMPFER * RB.mass * -velocity;
                 var force = localDampingForce + Mathf.Sqrt(k) * localArchimedesForce;//\
                 RB.AddForceAtPosition(force, wp);
 
@@ -203,10 +198,10 @@ namespace WaterSystem
 
         private void SliceIntoVoxels()
         {
-			UnityEngine.Quaternion rot = transform.rotation;
+			Quaternion rot = transform.rotation;
             Vector3 pos = transform.position;
             Vector3 size = transform.localScale;
-            transform.SetPositionAndRotation(Vector3.zero, UnityEngine.Quaternion.identity);
+            transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
             transform.localScale = Vector3.one;
 
             voxels = null;

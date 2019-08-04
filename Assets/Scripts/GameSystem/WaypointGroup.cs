@@ -18,8 +18,11 @@ namespace BoatAttack
 
 		public float raceDelay = 4f;
 		public bool raceStarted = false;
+		
+		[NonSerialized]
 		public bool reverse = false;
 		
+		[NonSerialized]
 		public Matrix4x4[] startingPositons = new Matrix4x4[4];
 
 		[SerializeField] public List<Waypoint> WPs = new List<Waypoint>();
@@ -29,15 +32,18 @@ namespace BoatAttack
 		void Awake()
 		{
 			Instance = this;
-			if (reverse)
-				WPs.Reverse();
-			Invoke("StartRace", raceDelay);
-			GetStartPositions();
 		}
 
-		public void StartRace()
+		public void Setup()
 		{
-			raceStarted = true;
+			if (reverse)
+			{
+				WPs.Reverse();
+				WPs.Insert(0, WPs[WPs.Count - 1]);
+				WPs.RemoveAt(WPs.Count - 1);
+			}
+
+			GetStartPositions();
 		}
 
 		[Serializable]
@@ -112,11 +118,13 @@ namespace BoatAttack
 		{
 			var position = WPs[0].point;
 			var rotation = WPs[0].rotation;
+			if(reverse)
+				rotation *= Quaternion.AngleAxis(180f, Vector3.up);
+			
 			for (int i = 0; i < startingPositons.Length; i++)
 			{
-				var pos = new Vector3(i % 2 == 0 ? 3f : -3f, 0f, (i * 6f) + 4f);
-
-				pos.z = reverse ? pos.z : -pos.z;
+				var pos = new Vector3(i % 2 == 0 ? 3f : -3f, 0f, i * 6f + 4f);
+				pos.z = -pos.z;
 				
 				startingPositons[i].SetTRS(position, rotation, Vector3.one);
 				startingPositons[i] *= Matrix4x4.Translate(pos);
