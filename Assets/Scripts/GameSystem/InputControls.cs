@@ -1,9 +1,7 @@
 // GENERATED AUTOMATICALLY FROM 'Assets/Data/New Controls.inputactions'
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
@@ -21,25 +19,19 @@ public class InputControls : IInputActionCollection
             ""actions"": [
                 {
                     ""name"": ""Trottle"",
+                    ""type"": ""Value"",
                     ""id"": ""591093b7-743c-42e6-b71e-bab02d178bd1"",
-                    ""expectedControlLayout"": ""Axis"",
-                    ""continuous"": true,
-                    ""passThrough"": false,
-                    ""initialStateCheck"": false,
+                    ""expectedControlType"": ""Axis"",
                     ""processors"": ""AxisDeadzone(min=0.1,max=1)"",
-                    ""interactions"": """",
-                    ""bindings"": []
+                    ""interactions"": """"
                 },
                 {
                     ""name"": ""Steering"",
+                    ""type"": ""Value"",
                     ""id"": ""67e3403a-b3e8-43af-ab52-4575ba23afef"",
-                    ""expectedControlLayout"": ""Axis"",
-                    ""continuous"": true,
-                    ""passThrough"": false,
-                    ""initialStateCheck"": false,
+                    ""expectedControlType"": ""Axis"",
                     ""processors"": ""AxisDeadzone(min=0.1,max=1)"",
-                    ""interactions"": """",
-                    ""bindings"": []
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -52,8 +44,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": """",
                     ""action"": ""Trottle"",
                     ""isComposite"": true,
-                    ""isPartOfComposite"": false,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""negative"",
@@ -64,8 +55,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": ""Gamepad"",
                     ""action"": ""Trottle"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""positive"",
@@ -76,8 +66,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": ""Gamepad"",
                     ""action"": ""Trottle"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""Buttons"",
@@ -88,8 +77,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": """",
                     ""action"": ""Trottle"",
                     ""isComposite"": true,
-                    ""isPartOfComposite"": false,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""negative"",
@@ -100,8 +88,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": "";Gamepad"",
                     ""action"": ""Trottle"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""positive"",
@@ -112,8 +99,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": "";Gamepad"",
                     ""action"": ""Trottle"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""Arrows"",
@@ -124,8 +110,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": """",
                     ""action"": ""Trottle"",
                     ""isComposite"": true,
-                    ""isPartOfComposite"": false,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""negative"",
@@ -136,8 +121,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": ""Keyboard"",
                     ""action"": ""Trottle"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""positive"",
@@ -148,8 +132,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": ""Keyboard"",
                     ""action"": ""Trottle"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""WSAD"",
@@ -160,8 +143,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": """",
                     ""action"": ""Trottle"",
                     ""isComposite"": true,
-                    ""isPartOfComposite"": false,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""negative"",
@@ -172,8 +154,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": ""Keyboard"",
                     ""action"": ""Trottle"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""positive"",
@@ -184,8 +165,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": ""Keyboard"",
                     ""action"": ""Trottle"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""Alt"",
@@ -196,8 +176,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": """",
                     ""action"": ""Trottle"",
                     ""isComposite"": true,
-                    ""isPartOfComposite"": false,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""negative"",
@@ -208,8 +187,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": ""Keyboard"",
                     ""action"": ""Trottle"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""positive"",
@@ -220,8 +198,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": ""Keyboard"",
                     ""action"": ""Trottle"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": """",
@@ -232,8 +209,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": ""TouchScreen"",
                     ""action"": ""Trottle"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": false,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""LeftThumbstick"",
@@ -244,8 +220,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": """",
                     ""action"": ""Steering"",
                     ""isComposite"": true,
-                    ""isPartOfComposite"": false,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""negative"",
@@ -256,8 +231,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": ""Gamepad"",
                     ""action"": ""Steering"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""positive"",
@@ -268,8 +242,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": ""Gamepad"",
                     ""action"": ""Steering"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""DPad"",
@@ -280,8 +253,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": """",
                     ""action"": ""Steering"",
                     ""isComposite"": true,
-                    ""isPartOfComposite"": false,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""negative"",
@@ -292,8 +264,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": "";Gamepad"",
                     ""action"": ""Steering"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""positive"",
@@ -304,8 +275,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": "";Gamepad"",
                     ""action"": ""Steering"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""Arrows"",
@@ -316,8 +286,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": """",
                     ""action"": ""Steering"",
                     ""isComposite"": true,
-                    ""isPartOfComposite"": false,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""negative"",
@@ -328,8 +297,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": ""Keyboard"",
                     ""action"": ""Steering"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""positive"",
@@ -340,8 +308,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": ""Keyboard"",
                     ""action"": ""Steering"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""WSAD"",
@@ -352,8 +319,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": """",
                     ""action"": ""Steering"",
                     ""isComposite"": true,
-                    ""isPartOfComposite"": false,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""negative"",
@@ -364,8 +330,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": ""Keyboard"",
                     ""action"": ""Steering"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""positive"",
@@ -376,8 +341,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": ""Keyboard"",
                     ""action"": ""Steering"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": true,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": """",
@@ -388,8 +352,7 @@ public class InputControls : IInputActionCollection
                     ""groups"": ""TouchScreen"",
                     ""action"": ""Steering"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": false,
-                    ""modifiers"": """"
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -456,10 +419,7 @@ public class InputControls : IInputActionCollection
         set => asset.devices = value;
     }
 
-    public ReadOnlyArray<InputControlScheme> controlSchemes
-    {
-        get => asset.controlSchemes;
-    }
+    public ReadOnlyArray<InputControlScheme> controlSchemes => asset.controlSchemes;
 
     public bool Contains(InputAction action)
     {
@@ -487,21 +447,20 @@ public class InputControls : IInputActionCollection
     }
 
     // BoatControls
-    private InputActionMap m_BoatControls;
+    private readonly InputActionMap m_BoatControls;
     private IBoatControlsActions m_BoatControlsActionsCallbackInterface;
-    private InputAction m_BoatControls_Trottle;
-    private InputAction m_BoatControls_Steering;
+    private readonly InputAction m_BoatControls_Trottle;
+    private readonly InputAction m_BoatControls_Steering;
     public struct BoatControlsActions
     {
         private InputControls m_Wrapper;
         public BoatControlsActions(InputControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Trottle { get { return m_Wrapper.m_BoatControls_Trottle; } }
-        public InputAction @Steering { get { return m_Wrapper.m_BoatControls_Steering; } }
+        public InputAction @Trottle => m_Wrapper.m_BoatControls_Trottle;
+        public InputAction @Steering => m_Wrapper.m_BoatControls_Steering;
         public InputActionMap Get() { return m_Wrapper.m_BoatControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
-        public bool enabled { get { return Get().enabled; } }
-        public InputActionMap Clone() { return Get().Clone(); }
+        public bool enabled => Get().enabled;
         public static implicit operator InputActionMap(BoatControlsActions set) { return set.Get(); }
         public void SetCallbacks(IBoatControlsActions instance)
         {
@@ -526,13 +485,7 @@ public class InputControls : IInputActionCollection
             }
         }
     }
-    public BoatControlsActions @BoatControls
-    {
-        get
-        {
-            return new BoatControlsActions(this);
-        }
-    }
+    public BoatControlsActions @BoatControls => new BoatControlsActions(this);
     private int m_GamepadSchemeIndex = -1;
     public InputControlScheme GamepadScheme
     {
