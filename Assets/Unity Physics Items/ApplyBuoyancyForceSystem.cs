@@ -44,7 +44,8 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 			DynamicBuffer<VoxelHeight> heights = heightBuffer[entity];
 
 			float submergedAmount = 0f;
-
+			Debug.Log("new pass: " + entity.ToString());
+			
 			//Apply buoyant force
 			for (var i = 0; i < offsets.Length; i++)
 			{
@@ -61,14 +62,15 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 					velocity.y *= 2f;
 					var localDampingForce = .005f * math.rcp(mass.InverseMass) * -velocity;
 					var force = localDampingForce + math.sqrt(k) * data.localArchimedesForce;//\
-					ComponentExtensions.ApplyImpulse(ref vel, mass, pos, rot, force * dt, wp);
+					ComponentExtensions.ApplyImpulse(ref vel, mass, pos, rot, force * dt * dt, wp);
 					//entity.ApplyImpulse(force, wp);//RB.AddForceAtPosition(force, wp);
-					Debug.Log("Vel: " + vel.Linear.ToString() + " Force: " + force);
+					//Debug.Log(string.Format("B Position: {0} -- Force: {1}", wp.ToString(), force.ToString()));
+					Debug.Log(string.Format("Position: {0:f1} -- Force: {1:f2} -- Height: {2:f2}\nVelocty: {3:f2} -- Damp: {4:f2} -- Mass: {5:f1} -- K: {6:f2}", wp, force, waterLevel, velocity, localDampingForce, math.rcp(mass.InverseMass), data.localArchimedesForce));
 				}
 			}
 
 			//Update drag
-			data.percentSubmerged = Mathf.Lerp(data.percentSubmerged, submergedAmount, 0.25f);
+			//data.percentSubmerged = Mathf.Lerp(data.percentSubmerged, submergedAmount, 0.25f);
 			//RB.drag = data.baseDrag + (data.baseDrag * (data.percentSubmerged * 10f));
 			//RB.angularDrag = data.baseAngularDrag + (data.percentSubmerged * 0.5f);
 

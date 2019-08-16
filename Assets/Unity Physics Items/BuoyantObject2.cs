@@ -315,6 +315,8 @@ namespace WaterSystem
 
 		public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
 		{
+			Init();
+
 			BuoyantData data = new BuoyantData();
 			data.type = _buoyancyType;
 			data.voxelResolution = voxelResolution;
@@ -333,7 +335,7 @@ namespace WaterSystem
 
 			for (int i = 0; i < voxels.Length; i++)
 			{
-				offsets.Add(new VoxelOffset { Value = transform.position - transform.TransformPoint(voxels[i]) });
+				offsets.Add(new VoxelOffset { Value = transform.TransformPoint(voxels[i]) - transform.position });
 				heights.Add(new VoxelHeight { Value = float3.zero });
 			}
 		}
