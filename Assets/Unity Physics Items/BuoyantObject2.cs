@@ -7,7 +7,7 @@ using Unity.Entities;
 
 namespace WaterSystem
 {
-	public class BuoyantObject2 : MonoBehaviour//, IConvertGameObjectToEntity
+	public class BuoyantObject2 : MonoBehaviour, IConvertGameObjectToEntity
 	{
 		public BuoyancyType _buoyancyType; // type of buoyancy to calculate
 		public float density; // density of the object, this is calculated off it's volume and mass
@@ -317,6 +317,8 @@ namespace WaterSystem
 		public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
 		{
 			Init();
+
+			dstManager.AddComponent(entity, typeof(MoveWithInputTag));
 
 			BuoyantData data = new BuoyantData();
 			data.type = _buoyancyType;

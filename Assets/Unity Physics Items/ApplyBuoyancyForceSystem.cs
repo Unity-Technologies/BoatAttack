@@ -20,8 +20,8 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
-		Debug.Log(string.Format("DeltaTime: {0}, Time.time {1}, Calc Delta: {2}", Time.deltaTime, Time.time, Time.time - lastTime));
-		lastTime = Time.time;
+		//Debug.Log(string.Format("DeltaTime: {0}, Time.time {1}, Calc Delta: {2}", Time.deltaTime, Time.time, Time.time - lastTime));
+		//lastTime = Time.time;
 		var job = new ForceJob()
 		{
 			dt = Time.deltaTime,
@@ -73,10 +73,9 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 					velocity.y *= 2f;
 					var localDampingForce = .005f * math.rcp(mass.InverseMass) * -velocity;
 					var force = localDampingForce + math.sqrt(subFactor) * data.localArchimedesForce;//\
-					ComponentExtensions.ApplyImpulse(ref vel, mass, pos, rot, force * dt, wp);
-					//entity.ApplyImpulse(force, wp);//RB.AddForceAtPosition(force, wp);
-					
-					Debug.Log(string.Format("Position: {0:f1} -- Force: {1:f2} -- Height: {2:f2}\nVelocty: {3:f2} -- Damp: {4:f2} -- Mass: {5:f1} -- K: {6:f2}", wp, force, waterLevel, velocity, localDampingForce, math.rcp(mass.InverseMass), dt));
+					ComponentExtensions.ApplyImpulse(ref vel, mass, pos, rot, force * dt * mass.InverseMass, wp);
+										
+					//Debug.Log(string.Format("Position: {0:f1} -- Force: {1:f2} -- Height: {2:f2}\nVelocty: {3:f2} -- Damp: {4:f2} -- Mass: {5:f1} -- K: {6:f2}", wp, force, waterLevel, velocity, localDampingForce, math.rcp(mass.InverseMass), dt));
 				}
 				
 			}
