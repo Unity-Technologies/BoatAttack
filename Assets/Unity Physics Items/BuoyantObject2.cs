@@ -68,7 +68,7 @@ namespace WaterSystem
 				samplePoints = new float3[1];
 			}
 
-			float archimedesForceMagnitude = WATER_DENSITY * Mathf.Abs(Physics.gravity.y) * volume;
+			float archimedesForceMagnitude = WATER_DENSITY * -Physics.gravity.y * volume;
 			localArchimedesForce = new Vector3(0, archimedesForceMagnitude, 0) / samplePoints.Length;
 		}
 
