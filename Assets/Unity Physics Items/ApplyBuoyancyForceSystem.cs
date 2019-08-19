@@ -69,13 +69,13 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 					//var force2 = data.localArchimedesForce * subFactor;
 					
 					
-					var velocity = ComponentExtensions.GetLinearVelocity(vel2, mass, pos, rot, wp);
+					var velocity = ComponentExtensions.GetLinearVelocity(vel, mass, pos, rot, wp);
 					velocity.y *= 2f;
 					var localDampingForce = .005f * math.rcp(mass.InverseMass) * -velocity;
 					var force = localDampingForce + math.sqrt(subFactor) * data.localArchimedesForce;//\
-					ComponentExtensions.ApplyImpulse(ref vel, mass, pos, rot, force * dt * mass.InverseMass, wp);
-										
-					//Debug.Log(string.Format("Position: {0:f1} -- Force: {1:f2} -- Height: {2:f2}\nVelocty: {3:f2} -- Damp: {4:f2} -- Mass: {5:f1} -- K: {6:f2}", wp, force, waterLevel, velocity, localDampingForce, math.rcp(mass.InverseMass), dt));
+					ComponentExtensions.ApplyImpulse(ref vel, mass, pos, rot, force * dt, wp);
+					Debug.DrawLine(wp, force * dt + wp);
+					Debug.Log(string.Format("Position: {0:f1} -- Force: {1:f2} -- Height: {2:f2}\nVelocty: {3:f2} -- Damp: {4:f2} -- Mass: {5:f1} -- K: {6:f2}", wp, force, waterLevel, velocity, localDampingForce, math.rcp(mass.InverseMass), dt));
 				}
 				
 			}

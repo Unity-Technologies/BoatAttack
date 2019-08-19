@@ -54,13 +54,13 @@ public class DriveSystem : JobComponentSystem
 
 		public void Execute(Entity entity, int index, ref Translation pos, ref Rotation rot, ref PhysicsVelocity vel, ref PhysicsMass mass, ref DrivingData data)
 		{
-			Debug.Log(string.Format("Throttle: {0}, Steering {1}", throttle, steering));
+			
 			float velMag = math.dot(vel.Linear, vel.Linear);
 
 			var wp = pos.Value + data.engineOffset;
 
-			if (wp.y <= -0.1f) // if the engine is deeper than 0.1
-			{
+			//if (wp.y <= -0.1f) // if the engine is deeper than 0.1
+			//{
 				//accel
 				throttle = Mathf.Clamp(throttle, 0f, 1f); // clamp for reasonable values
 				float3 forward = math.forward(rot.Value);
@@ -80,9 +80,9 @@ public class DriveSystem : JobComponentSystem
 				steering = Mathf.Clamp(steering, -1f, 1f); // clamp for reasonable values
 				var sTorque = new float3(0f, data.torque, -data.torque * .5f) * steering / mass.InverseInertia;
 				ComponentExtensions.ApplyAngularImpulse(ref vel, mass, sTorque * dt);
-
+				Debug.Log(string.Format("Force: {0}, Torque: {1} Throttle: {2}", force, sTorque, throttle));
 				//RB.AddRelativeTorque(new Vector3(0f, torque, -torque * 0.5f) * modifier, ForceMode.Acceleration); // add torque based on input and torque amount
-			}
+			//}
 		}
 	}
 }
