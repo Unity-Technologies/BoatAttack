@@ -156,7 +156,7 @@ namespace WaterSystem
                 for(var i = 0; i < voxels.Length; i++) BuoyancyForce(voxels[i], heights[i].y, ref submergedAmount, ref debugInfo[i]);
                 Physics.SyncTransforms();
                 Physics.autoSyncTransforms = true;
-                UpdateDrag(submergedAmount);
+               // UpdateDrag(submergedAmount);
             }
             else if(_buoyancyType == BuoyancyType.Physical)
             {
@@ -174,13 +174,12 @@ namespace WaterSystem
             _debug.waterHeight = waterLevel;
             _debug.force = Vector3.zero;
 			Vector3 force = Vector3.zero;
-			Vector3 totalForce = Vector3.zero;
 
             if (wp.y - voxelResolution < waterLevel)
             {
-                float k = Mathf.Clamp01(waterLevel - (wp.y - voxelResolution)) / (voxelResolution * 2f);
+				float k = Mathf.Clamp01((waterLevel - (wp.y - voxelResolution)) / (voxelResolution * 2f));
 
-                submergedAmount += k / voxels.Length;//(math.clamp(waterLevel - (wp.y - voxelResolution), 0f, voxelResolution * 2f) / (voxelResolution * 2f)) / voxels.Count;
+				submergedAmount += k / voxels.Length;//(math.clamp(waterLevel - (wp.y - voxelResolution), 0f, voxelResolution * 2f) / (voxelResolution * 2f)) / voxels.Count;
 
                 var velocity = RB.GetPointVelocity(wp);
                 velocity.y *= 2f;
@@ -191,7 +190,6 @@ namespace WaterSystem
                 _debug.force = force; // For drawing force gizmos
 				Debug.Log(string.Format("Position: {0:f1} -- Force: {1:f2} -- Height: {2:f2}\nVelocty: {3:f2} -- Damp: {4:f2} -- Mass: {5:f1} -- K: {6:f2}", wp, force, waterLevel, velocity, localDampingForce, RB.mass, localArchimedesForce));
 			}
-			Debug.Log("Total Force: " + totalForce);
 		}
 
         private void UpdateDrag(float submergedAmount)

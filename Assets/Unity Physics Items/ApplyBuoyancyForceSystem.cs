@@ -53,9 +53,6 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 			float submergedAmount = 0f;
 			Debug.Log("new pass: " + entity.ToString());
 
-			float3 totalForce = float3.zero;
-			float3 averagePos = float3.zero;
-			int total = 0;
 			//Apply buoyant force
 			for (var i = 0; i < offsets.Length; i++)
 			{
@@ -65,8 +62,7 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 				if (wp.y - data.voxelResolution < waterLevel)
 				{
 					//float depth = waterLevel - wp.y + (data.voxelResolution * 2f);
-
-					float subFactor = Mathf.Clamp01(waterLevel - (wp.y - data.voxelResolution)) / (data.voxelResolution * 2f);//depth / data.voxelResolution);
+					float subFactor = Mathf.Clamp01((waterLevel - (wp.y - data.voxelResolution)) / (data.voxelResolution * 2f));//depth / data.voxelResolution);
 
 					submergedAmount += subFactor;//(math.clamp(waterLevel - (wp.y - voxelResolution), 0f, voxelResolution * 2f) / (voxelResolution * 2f)) / voxels.Count;
 
@@ -77,9 +73,6 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 					velocity.y *= 2f;
 					var localDampingForce = .005f * math.rcp(mass.InverseMass) * -velocity;
 					var force = localDampingForce + math.sqrt(subFactor) * data.localArchimedesForce;//\
-					totalForce += force;
-					averagePos += wp;
-					total++;
 					ComponentExtensions.ApplyImpulse(ref vel, mass, pos, rot, force * dt, wp);
 					//entity.ApplyImpulse(force, wp);//RB.AddForceAtPosition(force, wp);
 					
@@ -87,10 +80,6 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 				}
 				
 			}
-			//if(total != 0)
-				//ComponentExtensions.ApplyImpulse(ref vel, mass, pos, rot, totalForce / math.rcp(mass.InverseMass) * dt, averagePos / total);
-
-			Debug.Log("Total Force: " + totalForce);
 			//Update drag
 
 			//submergedAmount /= offsets.Length;
