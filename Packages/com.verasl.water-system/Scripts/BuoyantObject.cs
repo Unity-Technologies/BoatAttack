@@ -174,6 +174,7 @@ namespace WaterSystem
             _debug.waterHeight = waterLevel;
             _debug.force = Vector3.zero;
 			Vector3 force = Vector3.zero;
+			Vector3 totalForce = Vector3.zero;
 
             if (wp.y - voxelResolution < waterLevel)
             {
@@ -190,7 +191,7 @@ namespace WaterSystem
                 _debug.force = force; // For drawing force gizmos
 				Debug.Log(string.Format("Position: {0:f1} -- Force: {1:f2} -- Height: {2:f2}\nVelocty: {3:f2} -- Damp: {4:f2} -- Mass: {5:f1} -- K: {6:f2}", wp, force, waterLevel, velocity, localDampingForce, RB.mass, localArchimedesForce));
 			}
-			
+			Debug.Log("Total Force: " + totalForce);
 		}
 
         private void UpdateDrag(float submergedAmount)

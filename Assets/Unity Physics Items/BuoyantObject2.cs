@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
 using Unity.Entities;
+//using Unity.Physics;
 
 namespace WaterSystem
 {
-	public class BuoyantObject2 : MonoBehaviour, IConvertGameObjectToEntity
+	public class BuoyantObject2 : MonoBehaviour//, IConvertGameObjectToEntity
 	{
 		public BuoyancyType _buoyancyType; // type of buoyancy to calculate
 		public float density; // density of the object, this is calculated off it's volume and mass
@@ -329,6 +330,10 @@ namespace WaterSystem
 
 			dstManager.AddBuffer<VoxelOffset>(entity);
 			dstManager.AddBuffer<VoxelHeight>(entity);
+
+			//var mass = dstManager.GetComponentData<Unity.Physics.PhysicsMass>(entity);
+			//mass.Transform.pos = centerOfMass;
+			//dstManager.SetComponentData(entity, mass);
 
 			DynamicBuffer<VoxelOffset> offsets = dstManager.GetBuffer<VoxelOffset>(entity);
 			DynamicBuffer<VoxelHeight> heights = dstManager.GetBuffer<VoxelHeight>(entity);

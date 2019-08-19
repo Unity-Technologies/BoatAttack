@@ -15,8 +15,13 @@ using Unity.Physics;
 [UpdateAfter(typeof(GertsnerSystem)), UpdateAfter(typeof(ExportPhysicsWorld))]
 public class ApplyBuoyancyForceSystem : JobComponentSystem
 {
+
+	float lastTime = 0;
+
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
+		Debug.Log(string.Format("DeltaTime: {0}, Time.time {1}, Calc Delta: {2}", Time.deltaTime, Time.time, Time.time - lastTime));
+		lastTime = Time.time;
 		var job = new ForceJob()
 		{
 			dt = Time.deltaTime,
@@ -43,9 +48,14 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 			DynamicBuffer<VoxelOffset> offsets = offsetBuffer[entity];
 			DynamicBuffer<VoxelHeight> heights = heightBuffer[entity];
 
+			var vel2 = vel;
+
 			float submergedAmount = 0f;
 			Debug.Log("new pass: " + entity.ToString());
-			
+
+			float3 totalForce = float3.zero;
+			float3 averagePos = float3.zero;
+			int total = 0;
 			//Apply buoyant force
 			for (var i = 0; i < offsets.Length; i++)
 			{
@@ -60,24 +70,29 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 
 					submergedAmount += subFactor;//(math.clamp(waterLevel - (wp.y - voxelResolution), 0f, voxelResolution * 2f) / (voxelResolution * 2f)) / voxels.Count;
 
-					var force2 = data.localArchimedesForce * subFactor;
+					//var force2 = data.localArchimedesForce * subFactor;
 					
 					
-					var velocity = ComponentExtensions.GetLinearVelocity(vel, mass, pos, rot, wp);
+					var velocity = ComponentExtensions.GetLinearVelocity(vel2, mass, pos, rot, wp);
 					velocity.y *= 2f;
 					var localDampingForce = .005f * math.rcp(mass.InverseMass) * -velocity;
 					var force = localDampingForce + math.sqrt(subFactor) * data.localArchimedesForce;//\
-
-
+					totalForce += force;
+					averagePos += wp;
+					total++;
 					ComponentExtensions.ApplyImpulse(ref vel, mass, pos, rot, force * dt, wp);
 					//entity.ApplyImpulse(force, wp);//RB.AddForceAtPosition(force, wp);
 					
-					Debug.Log(string.Format("Position: {0:f1} -- Force: {1:f2} -- Height: {2:f2}\nVelocty: {3:f2} -- Damp: {4:f2} -- Mass: {5:f1} -- K: {6:f2}", wp, force, waterLevel, velocity, localDampingForce, math.rcp(mass.InverseMass), data.localArchimedesForce));
+					Debug.Log(string.Format("Position: {0:f1} -- Force: {1:f2} -- Height: {2:f2}\nVelocty: {3:f2} -- Damp: {4:f2} -- Mass: {5:f1} -- K: {6:f2}", wp, force, waterLevel, velocity, localDampingForce, math.rcp(mass.InverseMass), dt));
 				}
+				
 			}
+			//if(total != 0)
+				//ComponentExtensions.ApplyImpulse(ref vel, mass, pos, rot, totalForce / math.rcp(mass.InverseMass) * dt, averagePos / total);
 
+			Debug.Log("Total Force: " + totalForce);
 			//Update drag
-			
+
 			//submergedAmount /= offsets.Length;
 			//damping.Linear = Mathf.Lerp(data.baseDrag, 1f, submergedAmount);
 			//damping.Angular = Mathf.Lerp(data.baseAngularDrag, 1f, submergedAmount);
