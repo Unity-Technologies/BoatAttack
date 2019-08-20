@@ -71,15 +71,18 @@ public class DriveSystem : JobComponentSystem
 				var force = (forward * throttle * data.horsePower) / mass.InverseMass; //divide by iMass to counteract mass in impulse method
 				var torque = (throttle * new float3(-1, 0, 0)) / mass.InverseInertia;
 
+
+				float3 up = math.mul(rot.Value, math.up());
 				ComponentExtensions.ApplyLinearImpulse(ref vel, mass, force * dt);
-				ComponentExtensions.ApplyAngularImpulse(ref vel, mass, torque * dt);
+				ComponentExtensions.ApplyLinearImpulse(ref vel, mass, up * 20000f * dt);
+				//ComponentExtensions.ApplyAngularImpulse(ref vel, mass, torque * dt);
 				//RB.AddForce(forward * modifier * horsePower, ForceMode.Acceleration); // add force forward based on input and horsepower
 				//RB.AddRelativeTorque(-Vector3.right * modifier, ForceMode.Acceleration);
 
 
 
-				//Turning
-				steering = Mathf.Clamp(steering, -1f, 1f); // clamp for reasonable values
+			//Turning
+			steering = Mathf.Clamp(steering, -1f, 1f); // clamp for reasonable values
 				var sTorque = new float3(0f, data.torque, -data.torque * .5f) * steering / mass.InverseInertia;
 				ComponentExtensions.ApplyAngularImpulse(ref vel, mass, sTorque * dt);
 				//Debug.Log(string.Format("Force: {0}, Torque: {1} Throttle: {2}", force, sTorque, throttle));

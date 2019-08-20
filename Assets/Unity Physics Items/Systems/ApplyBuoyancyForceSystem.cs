@@ -7,7 +7,7 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
-using static WaterSystem.BuoyantObject2;
+using static WaterSystem.BuoyantObject_DOTS;
 using Unity.Physics.Extensions;
 using Unity.Physics.Systems;
 using Unity.Physics;
@@ -42,7 +42,7 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 
 		[ReadOnly]
 		public BufferFromEntity<VoxelHeight> heightBuffer;
-
+		
 		public void Execute(Entity entity, int index, ref Translation pos, ref Rotation rot, ref PhysicsVelocity vel, ref PhysicsMass mass, ref PhysicsDamping damping, ref BuoyantData data)
 		{
 			DynamicBuffer<VoxelOffset> offsets = offsetBuffer[entity];
@@ -50,14 +50,15 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 
 			float submergedAmount = 0f;
 			//Debug.Log("new pass: " + entity.ToString());
-
-            var entityTransform = new RigidTransform(rot.Value, pos.Value);
+			float avgHeight = 0;
+			int total = 0;
+			var entityTransform = new RigidTransform(rot.Value, pos.Value);
 			//Apply buoyant force
 			for (var i = 0; i < offsets.Length; i++)
 			{
 				var wp = math.transform(entityTransform, offsets[i].Value);
 				float waterLevel = heights[i].Value.y;
-
+				
 				if (wp.y - data.voxelResolution < waterLevel)
 				{
 					//float depth = waterLevel - wp.y + (data.voxelResolution * 2f);
@@ -74,13 +75,14 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 					var force = localDampingForce + math.sqrt(subFactor) * data.localArchimedesForce;//\
 					ComponentExtensions.ApplyImpulse(ref vel, mass, pos, rot, force * dt, wp);
 					//entity.ApplyImpulse(force, wp);//RB.AddForceAtPosition(force, wp);
-					
+					avgHeight += force.y;
+					total++;
 					//Debug.Log(string.Format("ECS: Position: {0:f1} -- Force: {1:f2} -- Height: {2:f2}\nVelocty: {3:f2} -- Damp: {4:f2} -- Mass: {5:f1} -- K: {6:f2}", wp, force, waterLevel, velocity, localDampingForce, math.rcp(mass.InverseMass), dt));
 				}
 				
 			}
 			//Update drag
-
+			Debug.Log("Average height: " + avgHeight / total);
 			//submergedAmount /= offsets.Length;
 			//damping.Linear = Mathf.Lerp(data.baseDrag, 1f, submergedAmount);
 			//damping.Angular = Mathf.Lerp(data.baseAngularDrag, 1f, submergedAmount);

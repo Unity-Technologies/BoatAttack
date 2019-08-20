@@ -116,6 +116,7 @@ public class GertsnerSystem : JobComponentSystem
 						waveNorm += (norm * waveCountMulti) * amplitude;
 					}
 				}
+
 				heights[vi] = new VoxelHeight{Value = wavePos};
 
 				if (offsets.Length == 1)
