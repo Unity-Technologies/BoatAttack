@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -44,6 +45,7 @@ public class DriveSystem : JobComponentSystem
 		return job.Schedule(this, inputDeps);
 	}
 
+	[BurstCompile]
 	[RequireComponentTag(typeof(MoveWithInputTag))]
 	public struct DriveWithInputJob : IJobForEachWithEntity<Translation, Rotation, PhysicsVelocity, PhysicsMass, DrivingData>
 	{
@@ -80,7 +82,7 @@ public class DriveSystem : JobComponentSystem
 				steering = Mathf.Clamp(steering, -1f, 1f); // clamp for reasonable values
 				var sTorque = new float3(0f, data.torque, -data.torque * .5f) * steering / mass.InverseInertia;
 				ComponentExtensions.ApplyAngularImpulse(ref vel, mass, sTorque * dt);
-				Debug.Log(string.Format("Force: {0}, Torque: {1} Throttle: {2}", force, sTorque, throttle));
+				//Debug.Log(string.Format("Force: {0}, Torque: {1} Throttle: {2}", force, sTorque, throttle));
 				//RB.AddRelativeTorque(new Vector3(0f, torque, -torque * 0.5f) * modifier, ForceMode.Acceleration); // add torque based on input and torque amount
 			//}
 		}

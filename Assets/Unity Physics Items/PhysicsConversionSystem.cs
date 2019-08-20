@@ -15,7 +15,7 @@ namespace Unity.Physics.Authoring
 		// Update is called once per frame
 		protected override void OnUpdate()
 		{
-			//Entities.ForEach((BuoyantObject2 behaviour) => { behaviour.Convert(GetPrimaryEntity(behaviour), DstEntityManager, this); });
+			Entities.ForEach((BuoyantObject2 behaviour) => { behaviour.Convert(GetPrimaryEntity(behaviour), DstEntityManager, this); });
 		}
 	}
 }

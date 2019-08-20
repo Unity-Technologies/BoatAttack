@@ -7,7 +7,7 @@ using Unity.Entities;
 
 namespace WaterSystem
 {
-	public class BuoyantObject2 : MonoBehaviour, IConvertGameObjectToEntity
+	public class BuoyantObject2 : MonoBehaviour//, IConvertGameObjectToEntity
 	{
 		public BuoyancyType _buoyancyType; // type of buoyancy to calculate
 		public float density; // density of the object, this is calculated off it's volume and mass
@@ -333,16 +333,16 @@ namespace WaterSystem
 			dstManager.AddBuffer<VoxelOffset>(entity);
 			dstManager.AddBuffer<VoxelHeight>(entity);
 
-			//var mass = dstManager.GetComponentData<Unity.Physics.PhysicsMass>(entity);
-			//mass.Transform.pos = centerOfMass;
-			//dstManager.SetComponentData(entity, mass);
+			var mass = dstManager.GetComponentData<Unity.Physics.PhysicsMass>(entity);
+			mass.CenterOfMass = centerOfMass;
+			dstManager.SetComponentData(entity, mass);
 
 			DynamicBuffer<VoxelOffset> offsets = dstManager.GetBuffer<VoxelOffset>(entity);
 			DynamicBuffer<VoxelHeight> heights = dstManager.GetBuffer<VoxelHeight>(entity);
 
 			for (int i = 0; i < voxels.Length; i++)
 			{
-				offsets.Add(new VoxelOffset { Value = transform.TransformPoint(voxels[i]) - transform.position });
+                offsets.Add(new VoxelOffset { Value = voxels[i] - centerOfMass });// transform.TransformPoint(voxels[i]) - transform.position }); // << Is this right?
 				heights.Add(new VoxelHeight { Value = float3.zero });
 			}
 		}
