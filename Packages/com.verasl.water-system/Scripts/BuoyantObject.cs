@@ -151,7 +151,7 @@ namespace WaterSystem
 
             if(_buoyancyType == BuoyancyType.PhysicalVoxel)
             {
-				Debug.Log("new pass: " + gameObject.name);
+				//Debug.Log("new pass: " + gameObject.name);
                 Physics.autoSyncTransforms = false;
                 for(var i = 0; i < voxels.Length; i++) BuoyancyForce(voxels[i], heights[i].y, ref submergedAmount, ref debugInfo[i]);
                 Physics.SyncTransforms();
@@ -188,7 +188,7 @@ namespace WaterSystem
                 RB.AddForceAtPosition(force, wp);
 
                 _debug.force = force; // For drawing force gizmos
-				Debug.Log(string.Format("Position: {0:f1} -- Force: {1:f2} -- Height: {2:f2}\nVelocty: {3:f2} -- Damp: {4:f2} -- Mass: {5:f1} -- K: {6:f2}", wp, force, waterLevel, velocity, localDampingForce, RB.mass, localArchimedesForce));
+				//Debug.Log(string.Format("Position: {0:f1} -- Force: {1:f2} -- Height: {2:f2}\nVelocty: {3:f2} -- Damp: {4:f2} -- Mass: {5:f1} -- K: {6:f2}", wp, force, waterLevel, velocity, localDampingForce, RB.mass, localArchimedesForce));
 			}
 		}
 

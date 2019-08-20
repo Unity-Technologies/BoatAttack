@@ -318,6 +318,8 @@ namespace WaterSystem
 		{
 			Init();
 
+			dstManager.AddComponent(entity, typeof(MoveWithInputTag));
+
 			BuoyantData data = new BuoyantData();
 			data.type = _buoyancyType;
 			data.voxelResolution = voxelResolution;
@@ -331,16 +333,16 @@ namespace WaterSystem
 			dstManager.AddBuffer<VoxelOffset>(entity);
 			dstManager.AddBuffer<VoxelHeight>(entity);
 
-			//var mass = dstManager.GetComponentData<Unity.Physics.PhysicsMass>(entity);
-			//mass.Transform.pos = centerOfMass;
-			//dstManager.SetComponentData(entity, mass);
+			var mass = dstManager.GetComponentData<Unity.Physics.PhysicsMass>(entity);
+			mass.CenterOfMass = centerOfMass;
+			dstManager.SetComponentData(entity, mass);
 
 			DynamicBuffer<VoxelOffset> offsets = dstManager.GetBuffer<VoxelOffset>(entity);
 			DynamicBuffer<VoxelHeight> heights = dstManager.GetBuffer<VoxelHeight>(entity);
 
 			for (int i = 0; i < voxels.Length; i++)
 			{
-				offsets.Add(new VoxelOffset { Value = transform.TransformPoint(voxels[i]) - transform.position });
+                offsets.Add(new VoxelOffset { Value = voxels[i] - centerOfMass });// transform.TransformPoint(voxels[i]) - transform.position }); // << Is this right?
 				heights.Add(new VoxelHeight { Value = float3.zero });
 			}
 		}
