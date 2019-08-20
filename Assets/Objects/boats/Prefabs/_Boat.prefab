@@ -220,7 +220,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startColor:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 4
       minColor: {r: 1, g: 1, b: 1, a: 1}
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
@@ -1314,7 +1314,7 @@ ParticleSystem:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
         key1: {r: 1, g: 1, b: 1, a: 0.9013236}
-        key2: {r: 0, g: 0, b: 0, a: 0}
+        key2: {r: 0, g: 0, b: 0, a: 0.2509804}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
@@ -1329,8 +1329,8 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 12214
-        atime2: 65535
+        atime1: 6501
+        atime2: 11269
         atime3: 65535
         atime4: 0
         atime5: 0
@@ -1338,7 +1338,7 @@ ParticleSystem:
         atime7: 0
         m_Mode: 0
         m_NumColorKeys: 2
-        m_NumAlphaKeys: 3
+        m_NumAlphaKeys: 4
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -4983,7 +4983,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startColor:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 4
       minColor: {r: 1, g: 1, b: 1, a: 1}
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
@@ -6077,7 +6077,7 @@ ParticleSystem:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
         key1: {r: 1, g: 1, b: 1, a: 0.9013236}
-        key2: {r: 0, g: 0, b: 0, a: 0}
+        key2: {r: 0, g: 0, b: 0, a: 0.2509804}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
@@ -6092,8 +6092,8 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 12214
-        atime2: 65535
+        atime1: 6501
+        atime2: 11269
         atime3: 65535
         atime4: 0
         atime5: 0
@@ -6101,7 +6101,7 @@ ParticleSystem:
         atime7: 0
         m_Mode: 0
         m_NumColorKeys: 2
-        m_NumAlphaKeys: 3
+        m_NumAlphaKeys: 4
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -9557,6 +9557,7 @@ Transform:
   - {fileID: 4603708908827592}
   - {fileID: 4693301302057358}
   - {fileID: 4416522625512240}
+  - {fileID: 4653116848354930}
   m_Father: {fileID: 4603238648617514}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -14609,13 +14610,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1489463026464572}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.002, z: -0.172}
+  m_LocalRotation: {x: -0, y: 0.86602545, z: 0.5, w: 0}
+  m_LocalPosition: {x: 0, y: 0.020999998, z: -3.8219993}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1857749394586354482}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Father: {fileID: 4226103850215974}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: -60, y: 180, z: 0}
 --- !u!198 &198499198857476844
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -14624,10 +14625,10 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1489463026464572}
   serializedVersion: 6
-  lengthInSec: 1
+  lengthInSec: 5
   simulationSpeed: 1
   stopAction: 0
-  cullingMode: 2
+  cullingMode: 3
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 1
@@ -14689,7 +14690,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0
@@ -14698,9 +14699,9 @@ ParticleSystem:
     enabled: 1
     startLifetime:
       serializedVersion: 2
-      minMaxState: 3
+      minMaxState: 0
       scalar: 0.5
-      minScalar: 0.2
+      minScalar: 5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -14752,7 +14753,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: -2
+      scalar: 4
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -14806,7 +14807,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 0.3647059}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -14867,9 +14868,9 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     startSize:
       serializedVersion: 2
-      minMaxState: 3
-      scalar: 0.35
-      minScalar: 0.25
+      minMaxState: 0
+      scalar: 1
+      minScalar: 1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -14920,7 +14921,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeY:
       serializedVersion: 2
-      minMaxState: 3
+      minMaxState: 0
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -14973,7 +14974,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startSizeZ:
       serializedVersion: 2
-      minMaxState: 3
+      minMaxState: 0
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -15190,7 +15191,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 1
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -15242,8 +15243,8 @@ ParticleSystem:
         m_RotationOrder: 4
   ShapeModule:
     serializedVersion: 6
-    enabled: 0
-    type: 10
+    enabled: 1
+    type: 4
     angle: 25
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
@@ -15330,7 +15331,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.0001
+      value: 0.13
       mode: 0
       spread: 0
       speed:
@@ -15449,7 +15450,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 50
+      scalar: 0
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -15502,7 +15503,7 @@ ParticleSystem:
     rateOverDistance:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 6
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -15555,7 +15556,7 @@ ParticleSystem:
     m_BurstCount: 0
     m_Bursts: []
   SizeModule:
-    enabled: 0
+    enabled: 1
     curve:
       serializedVersion: 2
       minMaxState: 1
@@ -15566,13 +15567,22 @@ ParticleSystem:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 1
-          inSlope: 0
-          outSlope: 0
+          value: 0
+          inSlope: 2.8477862
+          outSlope: 2.8477862
           tangentMode: 0
           weightedMode: 0
-          inWeight: 0
-          outWeight: 0
+          inWeight: 0.33333334
+          outWeight: 0.11484548
+        - serializedVersion: 3
+          time: 0.4738695
+          value: 0.88812613
+          inSlope: -0.32061675
+          outSlope: -0.32061675
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.23693888
         - serializedVersion: 3
           time: 1
           value: 0
@@ -15580,8 +15590,8 @@ ParticleSystem:
           outSlope: -2
           tangentMode: 0
           weightedMode: 0
-          inWeight: 0
-          outWeight: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
@@ -15887,8 +15897,8 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 1, g: 1, b: 1, a: 0.84664536}
+        key0: {r: 1, g: 1, b: 1, a: 0}
+        key1: {r: 1, g: 1, b: 1, a: 1}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 1}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -15904,7 +15914,7 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 39921
+        atime1: 9252
         atime2: 65535
         atime3: 65535
         atime4: 0
@@ -16654,7 +16664,7 @@ ParticleSystem:
         m_RotationOrder: 4
     inWorldSpace: 0
   InheritVelocityModule:
-    enabled: 0
+    enabled: 1
     m_Mode: 0
     m_Curve:
       serializedVersion: 2
@@ -19316,7 +19326,7 @@ ParticleSystemRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_RenderMode: 0
-  m_SortMode: 2
+  m_SortMode: 0
   m_MinParticleSize: 0
   m_MaxParticleSize: 0.5
   m_CameraVelocityScale: 0
@@ -24119,6 +24129,7 @@ GameObject:
   - component: {fileID: 4534809148113994}
   - component: {fileID: 54710712322113256}
   - component: {fileID: 64258884862185400}
+  - component: {fileID: 114559526544640098}
   - component: {fileID: 114129291822198474}
   - component: {fileID: 114571606569623246}
   m_Layer: 11
@@ -24135,8 +24146,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1553288845585282}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0.46607336, z: -0, w: 0.8847461}
+  m_LocalPosition: {x: -53.959473, y: 0.23000002, z: -56.539803}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4566539937980892}
@@ -24145,7 +24156,7 @@ Transform:
   - {fileID: 2901399632790975270}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -55.559002, z: 0}
 --- !u!54 &54710712322113256
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -24156,7 +24167,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 3200
   m_Drag: 0.1
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0.2
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1
@@ -24176,6 +24187,24 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 2899951614431091848, guid: a362db008c5274e03bf6f3d2387cf617, type: 3}
+--- !u!114 &114559526544640098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1553288845585282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01c46922a8ed04b0081de10e51b3762f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vel: {x: 0, y: 0, z: 0}
+  engineSound: {fileID: 82633756123786494}
+  waterSound: {fileID: 82912682702107868}
+  torque: 5
+  horsePower: 18
+  enginePosition: {x: 0, y: 0.05, z: -3.31}
 --- !u!114 &114129291822198474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24190,11 +24219,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Human: 0
   RandomizeColors: 1
-  PrimaryColor: {r: 0.6359154, g: 0.60109407, b: 0.063591555, a: 1}
-  TrimColor: {r: 0.3640846, g: 0.34543964, b: 0.05763617, a: 1}
+  PrimaryColor: {r: 0.6066833, g: 0.080696166, b: 0.8069615, a: 1}
+  TrimColor: {r: 0.15882511, g: 0.06897104, b: 0.19303852, a: 1}
   boatRenderer: {fileID: 23139903168929634}
-  engine: {fileID: 1710334234404381546}
-  cam: {fileID: 2365855355768168390}
 --- !u!114 &114571606569623246
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24208,34 +24235,228 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buoyancyType: 3
-  density: 405.62808
-  volume: 7.889
-  voxelResolution: 0.5
-  centerOfMass: {x: 0, y: -0.35, z: -0.8}
+  density: 546.1682
+  volume: 5.8590007
+  voxelResolution: 0.3
+  centerOfMass: {x: 0, y: -0.25, z: -0.55}
   voxels:
-  - {x: -0.6999999, y: -0.019224256, z: -2.3381913}
-  - {x: -0.6999999, y: -0.019224256, z: -1.6381911}
-  - {x: -0.6999999, y: -0.019224256, z: -0.93819106}
-  - {x: -0.6999999, y: -0.019224256, z: -0.2381911}
-  - {x: -0.6999999, y: -0.019224256, z: 0.46180892}
-  - {x: 0.000000029802322, y: -0.019224256, z: -3.0381913}
-  - {x: 0.000000029802322, y: -0.019224256, z: -2.3381913}
-  - {x: 0.000000029802322, y: -0.019224256, z: -1.6381911}
-  - {x: 0.000000029802322, y: -0.019224256, z: -0.93819106}
-  - {x: 0.000000029802322, y: -0.019224256, z: -0.2381911}
-  - {x: 0.000000029802322, y: -0.019224256, z: 0.46180892}
-  - {x: 0.000000029802322, y: -0.019224256, z: 1.1618088}
-  - {x: 0.000000029802322, y: -0.019224256, z: 1.8618088}
-  - {x: 0.000000029802322, y: 0.68077576, z: -2.3381913}
-  - {x: 0.000000029802322, y: 0.68077576, z: -1.6381911}
-  - {x: 0.000000029802322, y: 0.68077576, z: -0.93819106}
-  - {x: 0.000000029802322, y: 0.68077576, z: -0.2381911}
-  - {x: 0.000000029802322, y: 0.68077576, z: 0.46180892}
-  - {x: 0.70000005, y: -0.019224256, z: -2.3381913}
-  - {x: 0.70000005, y: -0.019224256, z: -1.6381911}
-  - {x: 0.70000005, y: -0.019224256, z: -0.93819106}
-  - {x: 0.70000005, y: -0.019224256, z: -0.2381911}
-  - {x: 0.70000005, y: -0.019224256, z: 0.46180892}
+  - {x: -0.9000001, y: 0.12409994, z: -1.7381939}
+  - {x: -0.9000001, y: 0.12409994, z: -1.4381939}
+  - {x: -0.9000001, y: 0.12409994, z: -1.138194}
+  - {x: -0.9000001, y: 0.12409994, z: -0.8381939}
+  - {x: -0.9000001, y: 0.12409994, z: -0.53819394}
+  - {x: -0.9000001, y: 0.12409994, z: -0.2381939}
+  - {x: -0.6, y: 0.12409994, z: -2.9381936}
+  - {x: -0.6, y: 0.12409994, z: -2.6381936}
+  - {x: -0.6, y: 0.12409994, z: -2.3381937}
+  - {x: -0.6, y: 0.12409994, z: -2.0381937}
+  - {x: -0.6, y: 0.12409994, z: -1.7381939}
+  - {x: -0.6, y: 0.12409994, z: -1.4381939}
+  - {x: -0.6, y: 0.12409994, z: -1.138194}
+  - {x: -0.6, y: 0.12409994, z: -0.8381939}
+  - {x: -0.6, y: 0.12409994, z: -0.53819394}
+  - {x: -0.6, y: 0.12409994, z: -0.2381939}
+  - {x: -0.6, y: 0.12409994, z: 0.061806113}
+  - {x: -0.6, y: 0.12409994, z: 0.36180615}
+  - {x: -0.6, y: 0.12409994, z: 0.6618061}
+  - {x: -0.6, y: 0.12409994, z: 0.9618062}
+  - {x: -0.6, y: 0.12409994, z: 1.2618061}
+  - {x: -0.6, y: 0.42409995, z: -2.6381936}
+  - {x: -0.6, y: 0.42409995, z: -2.3381937}
+  - {x: -0.6, y: 0.42409995, z: -2.0381937}
+  - {x: -0.6, y: 0.42409995, z: -1.7381939}
+  - {x: -0.6, y: 0.42409995, z: -1.4381939}
+  - {x: -0.6, y: 0.42409995, z: -1.138194}
+  - {x: -0.6, y: 0.42409995, z: -0.8381939}
+  - {x: -0.6, y: 0.42409995, z: -0.53819394}
+  - {x: -0.6, y: 0.42409995, z: -0.2381939}
+  - {x: -0.6, y: 0.42409995, z: 0.061806113}
+  - {x: -0.6, y: 0.42409995, z: 0.36180615}
+  - {x: -0.6, y: 0.42409995, z: 0.6618061}
+  - {x: -0.6, y: 0.42409995, z: 0.9618062}
+  - {x: -0.30000004, y: -0.17590007, z: -1.4381939}
+  - {x: -0.30000004, y: -0.17590007, z: -1.138194}
+  - {x: -0.30000004, y: -0.17590007, z: -0.8381939}
+  - {x: -0.30000004, y: -0.17590007, z: -0.53819394}
+  - {x: -0.30000004, y: -0.17590007, z: -0.2381939}
+  - {x: -0.30000004, y: -0.17590007, z: 0.061806113}
+  - {x: -0.30000004, y: -0.17590007, z: 0.36180615}
+  - {x: -0.30000004, y: -0.17590007, z: 0.6618061}
+  - {x: -0.30000004, y: 0.12409994, z: -2.9381936}
+  - {x: -0.30000004, y: 0.12409994, z: -2.6381936}
+  - {x: -0.30000004, y: 0.12409994, z: -2.3381937}
+  - {x: -0.30000004, y: 0.12409994, z: -2.0381937}
+  - {x: -0.30000004, y: 0.12409994, z: -1.7381939}
+  - {x: -0.30000004, y: 0.12409994, z: -1.4381939}
+  - {x: -0.30000004, y: 0.12409994, z: -1.138194}
+  - {x: -0.30000004, y: 0.12409994, z: -0.8381939}
+  - {x: -0.30000004, y: 0.12409994, z: -0.53819394}
+  - {x: -0.30000004, y: 0.12409994, z: -0.2381939}
+  - {x: -0.30000004, y: 0.12409994, z: 0.061806113}
+  - {x: -0.30000004, y: 0.12409994, z: 0.36180615}
+  - {x: -0.30000004, y: 0.12409994, z: 0.6618061}
+  - {x: -0.30000004, y: 0.12409994, z: 0.9618062}
+  - {x: -0.30000004, y: 0.12409994, z: 1.2618061}
+  - {x: -0.30000004, y: 0.12409994, z: 1.5618061}
+  - {x: -0.30000004, y: 0.12409994, z: 1.8618062}
+  - {x: -0.30000004, y: 0.42409995, z: -2.9381936}
+  - {x: -0.30000004, y: 0.42409995, z: -2.6381936}
+  - {x: -0.30000004, y: 0.42409995, z: -2.3381937}
+  - {x: -0.30000004, y: 0.42409995, z: -2.0381937}
+  - {x: -0.30000004, y: 0.42409995, z: -1.7381939}
+  - {x: -0.30000004, y: 0.42409995, z: -1.4381939}
+  - {x: -0.30000004, y: 0.42409995, z: -1.138194}
+  - {x: -0.30000004, y: 0.42409995, z: -0.8381939}
+  - {x: -0.30000004, y: 0.42409995, z: -0.53819394}
+  - {x: -0.30000004, y: 0.42409995, z: -0.2381939}
+  - {x: -0.30000004, y: 0.42409995, z: 0.061806113}
+  - {x: -0.30000004, y: 0.42409995, z: 0.36180615}
+  - {x: -0.30000004, y: 0.42409995, z: 0.6618061}
+  - {x: -0.30000004, y: 0.42409995, z: 0.9618062}
+  - {x: -0.30000004, y: 0.42409995, z: 1.2618061}
+  - {x: -0.30000004, y: 0.42409995, z: 1.5618061}
+  - {x: -0.30000004, y: 0.42409995, z: 1.8618062}
+  - {x: -0.30000004, y: 0.7241, z: -1.138194}
+  - {x: -0.30000004, y: 0.7241, z: -0.8381939}
+  - {x: -0.30000004, y: 0.7241, z: -0.53819394}
+  - {x: -0.30000004, y: 0.7241, z: -0.2381939}
+  - {x: -0.000000029802322, y: -0.17590007, z: -2.6381936}
+  - {x: -0.000000029802322, y: -0.17590007, z: -2.3381937}
+  - {x: -0.000000029802322, y: -0.17590007, z: -2.0381937}
+  - {x: -0.000000029802322, y: -0.17590007, z: -1.7381939}
+  - {x: -0.000000029802322, y: -0.17590007, z: -1.4381939}
+  - {x: -0.000000029802322, y: -0.17590007, z: -1.138194}
+  - {x: -0.000000029802322, y: -0.17590007, z: -0.8381939}
+  - {x: -0.000000029802322, y: -0.17590007, z: -0.53819394}
+  - {x: -0.000000029802322, y: -0.17590007, z: -0.2381939}
+  - {x: -0.000000029802322, y: -0.17590007, z: 0.061806113}
+  - {x: -0.000000029802322, y: -0.17590007, z: 0.36180615}
+  - {x: -0.000000029802322, y: -0.17590007, z: 0.6618061}
+  - {x: -0.000000029802322, y: -0.17590007, z: 0.9618062}
+  - {x: -0.000000029802322, y: 0.12409994, z: -2.9381936}
+  - {x: -0.000000029802322, y: 0.12409994, z: -2.6381936}
+  - {x: -0.000000029802322, y: 0.12409994, z: -2.3381937}
+  - {x: -0.000000029802322, y: 0.12409994, z: -2.0381937}
+  - {x: -0.000000029802322, y: 0.12409994, z: -1.7381939}
+  - {x: -0.000000029802322, y: 0.12409994, z: -1.4381939}
+  - {x: -0.000000029802322, y: 0.12409994, z: -1.138194}
+  - {x: -0.000000029802322, y: 0.12409994, z: -0.8381939}
+  - {x: -0.000000029802322, y: 0.12409994, z: -0.53819394}
+  - {x: -0.000000029802322, y: 0.12409994, z: -0.2381939}
+  - {x: -0.000000029802322, y: 0.12409994, z: 0.061806113}
+  - {x: -0.000000029802322, y: 0.12409994, z: 0.36180615}
+  - {x: -0.000000029802322, y: 0.12409994, z: 0.6618061}
+  - {x: -0.000000029802322, y: 0.12409994, z: 0.9618062}
+  - {x: -0.000000029802322, y: 0.12409994, z: 1.2618061}
+  - {x: -0.000000029802322, y: 0.12409994, z: 1.5618061}
+  - {x: -0.000000029802322, y: 0.12409994, z: 1.8618062}
+  - {x: -0.000000029802322, y: 0.12409994, z: 2.161806}
+  - {x: -0.000000029802322, y: 0.42409995, z: -2.9381936}
+  - {x: -0.000000029802322, y: 0.42409995, z: -2.6381936}
+  - {x: -0.000000029802322, y: 0.42409995, z: -2.3381937}
+  - {x: -0.000000029802322, y: 0.42409995, z: -2.0381937}
+  - {x: -0.000000029802322, y: 0.42409995, z: -1.7381939}
+  - {x: -0.000000029802322, y: 0.42409995, z: -1.4381939}
+  - {x: -0.000000029802322, y: 0.42409995, z: -1.138194}
+  - {x: -0.000000029802322, y: 0.42409995, z: -0.8381939}
+  - {x: -0.000000029802322, y: 0.42409995, z: -0.53819394}
+  - {x: -0.000000029802322, y: 0.42409995, z: -0.2381939}
+  - {x: -0.000000029802322, y: 0.42409995, z: 0.061806113}
+  - {x: -0.000000029802322, y: 0.42409995, z: 0.36180615}
+  - {x: -0.000000029802322, y: 0.42409995, z: 0.6618061}
+  - {x: -0.000000029802322, y: 0.42409995, z: 0.9618062}
+  - {x: -0.000000029802322, y: 0.42409995, z: 1.2618061}
+  - {x: -0.000000029802322, y: 0.42409995, z: 1.5618061}
+  - {x: -0.000000029802322, y: 0.42409995, z: 1.8618062}
+  - {x: -0.000000029802322, y: 0.42409995, z: 2.161806}
+  - {x: -0.000000029802322, y: 0.42409995, z: 2.461806}
+  - {x: -0.000000029802322, y: 0.7241, z: -1.4381939}
+  - {x: -0.000000029802322, y: 0.7241, z: -1.138194}
+  - {x: -0.000000029802322, y: 0.7241, z: -0.8381939}
+  - {x: -0.000000029802322, y: 0.7241, z: -0.53819394}
+  - {x: -0.000000029802322, y: 0.7241, z: -0.2381939}
+  - {x: -0.000000029802322, y: 0.7241, z: 0.061806113}
+  - {x: -0.000000029802322, y: 0.7241, z: 0.36180615}
+  - {x: 0.29999998, y: -0.17590007, z: -1.4381939}
+  - {x: 0.29999998, y: -0.17590007, z: -1.138194}
+  - {x: 0.29999998, y: -0.17590007, z: -0.8381939}
+  - {x: 0.29999998, y: -0.17590007, z: -0.53819394}
+  - {x: 0.29999998, y: -0.17590007, z: -0.2381939}
+  - {x: 0.29999998, y: -0.17590007, z: 0.061806113}
+  - {x: 0.29999998, y: -0.17590007, z: 0.36180615}
+  - {x: 0.29999998, y: -0.17590007, z: 0.6618061}
+  - {x: 0.29999998, y: 0.12409994, z: -2.9381936}
+  - {x: 0.29999998, y: 0.12409994, z: -2.6381936}
+  - {x: 0.29999998, y: 0.12409994, z: -2.3381937}
+  - {x: 0.29999998, y: 0.12409994, z: -2.0381937}
+  - {x: 0.29999998, y: 0.12409994, z: -1.7381939}
+  - {x: 0.29999998, y: 0.12409994, z: -1.4381939}
+  - {x: 0.29999998, y: 0.12409994, z: -1.138194}
+  - {x: 0.29999998, y: 0.12409994, z: -0.8381939}
+  - {x: 0.29999998, y: 0.12409994, z: -0.53819394}
+  - {x: 0.29999998, y: 0.12409994, z: -0.2381939}
+  - {x: 0.29999998, y: 0.12409994, z: 0.061806113}
+  - {x: 0.29999998, y: 0.12409994, z: 0.36180615}
+  - {x: 0.29999998, y: 0.12409994, z: 0.6618061}
+  - {x: 0.29999998, y: 0.12409994, z: 0.9618062}
+  - {x: 0.29999998, y: 0.12409994, z: 1.2618061}
+  - {x: 0.29999998, y: 0.12409994, z: 1.5618061}
+  - {x: 0.29999998, y: 0.12409994, z: 1.8618062}
+  - {x: 0.29999998, y: 0.42409995, z: -2.9381936}
+  - {x: 0.29999998, y: 0.42409995, z: -2.6381936}
+  - {x: 0.29999998, y: 0.42409995, z: -2.3381937}
+  - {x: 0.29999998, y: 0.42409995, z: -2.0381937}
+  - {x: 0.29999998, y: 0.42409995, z: -1.7381939}
+  - {x: 0.29999998, y: 0.42409995, z: -1.4381939}
+  - {x: 0.29999998, y: 0.42409995, z: -1.138194}
+  - {x: 0.29999998, y: 0.42409995, z: -0.8381939}
+  - {x: 0.29999998, y: 0.42409995, z: -0.53819394}
+  - {x: 0.29999998, y: 0.42409995, z: -0.2381939}
+  - {x: 0.29999998, y: 0.42409995, z: 0.061806113}
+  - {x: 0.29999998, y: 0.42409995, z: 0.36180615}
+  - {x: 0.29999998, y: 0.42409995, z: 0.6618061}
+  - {x: 0.29999998, y: 0.42409995, z: 0.9618062}
+  - {x: 0.29999998, y: 0.42409995, z: 1.2618061}
+  - {x: 0.29999998, y: 0.42409995, z: 1.5618061}
+  - {x: 0.29999998, y: 0.42409995, z: 1.8618062}
+  - {x: 0.29999998, y: 0.7241, z: -1.138194}
+  - {x: 0.29999998, y: 0.7241, z: -0.8381939}
+  - {x: 0.29999998, y: 0.7241, z: -0.53819394}
+  - {x: 0.29999998, y: 0.7241, z: -0.2381939}
+  - {x: 0.6, y: 0.12409994, z: -2.9381936}
+  - {x: 0.6, y: 0.12409994, z: -2.6381936}
+  - {x: 0.6, y: 0.12409994, z: -2.3381937}
+  - {x: 0.6, y: 0.12409994, z: -2.0381937}
+  - {x: 0.6, y: 0.12409994, z: -1.7381939}
+  - {x: 0.6, y: 0.12409994, z: -1.4381939}
+  - {x: 0.6, y: 0.12409994, z: -1.138194}
+  - {x: 0.6, y: 0.12409994, z: -0.8381939}
+  - {x: 0.6, y: 0.12409994, z: -0.53819394}
+  - {x: 0.6, y: 0.12409994, z: -0.2381939}
+  - {x: 0.6, y: 0.12409994, z: 0.061806113}
+  - {x: 0.6, y: 0.12409994, z: 0.36180615}
+  - {x: 0.6, y: 0.12409994, z: 0.6618061}
+  - {x: 0.6, y: 0.12409994, z: 0.9618062}
+  - {x: 0.6, y: 0.12409994, z: 1.2618061}
+  - {x: 0.6, y: 0.42409995, z: -2.6381936}
+  - {x: 0.6, y: 0.42409995, z: -2.3381937}
+  - {x: 0.6, y: 0.42409995, z: -2.0381937}
+  - {x: 0.6, y: 0.42409995, z: -1.7381939}
+  - {x: 0.6, y: 0.42409995, z: -1.4381939}
+  - {x: 0.6, y: 0.42409995, z: -1.138194}
+  - {x: 0.6, y: 0.42409995, z: -0.8381939}
+  - {x: 0.6, y: 0.42409995, z: -0.53819394}
+  - {x: 0.6, y: 0.42409995, z: -0.2381939}
+  - {x: 0.6, y: 0.42409995, z: 0.061806113}
+  - {x: 0.6, y: 0.42409995, z: 0.36180615}
+  - {x: 0.6, y: 0.42409995, z: 0.6618061}
+  - {x: 0.6, y: 0.42409995, z: 0.9618062}
+  - {x: 0.9, y: 0.12409994, z: -1.7381939}
+  - {x: 0.9, y: 0.12409994, z: -1.4381939}
+  - {x: 0.9, y: 0.12409994, z: -1.138194}
+  - {x: 0.9, y: 0.12409994, z: -0.8381939}
+  - {x: 0.9, y: 0.12409994, z: -0.53819394}
+  - {x: 0.9, y: 0.12409994, z: -0.2381939}
   colliders:
   - {fileID: 64258884862185400}
   percentSubmerged: 0
@@ -25608,7 +25829,7 @@ ParticleSystem:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
         key1: {r: 1, g: 1, b: 1, a: 0.9013236}
-        key2: {r: 0, g: 0, b: 0, a: 0}
+        key2: {r: 0, g: 0, b: 0, a: 0.2509804}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
@@ -25623,8 +25844,8 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 12214
-        atime2: 65535
+        atime1: 6501
+        atime2: 11269
         atime3: 65535
         atime4: 0
         atime5: 0
@@ -25632,7 +25853,7 @@ ParticleSystem:
         atime7: 0
         m_Mode: 0
         m_NumColorKeys: 2
-        m_NumAlphaKeys: 3
+        m_NumAlphaKeys: 4
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -29277,7 +29498,7 @@ ParticleSystem:
         m_RotationOrder: 4
     startColor:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 4
       minColor: {r: 1, g: 1, b: 1, a: 1}
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
@@ -30371,7 +30592,7 @@ ParticleSystem:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
         key1: {r: 1, g: 1, b: 1, a: 0.9013236}
-        key2: {r: 0, g: 0, b: 0, a: 0}
+        key2: {r: 0, g: 0, b: 0, a: 0.2509804}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
@@ -30386,8 +30607,8 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 12214
-        atime2: 65535
+        atime1: 6501
+        atime2: 11269
         atime3: 65535
         atime4: 0
         atime5: 0
@@ -30395,7 +30616,7 @@ ParticleSystem:
         atime7: 0
         m_Mode: 0
         m_NumColorKeys: 2
-        m_NumAlphaKeys: 3
+        m_NumAlphaKeys: 4
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -33880,8 +34101,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1857749394586354482}
+  m_Children: []
   m_Father: {fileID: 4534809148113994}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -33956,8 +34176,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3138619813684846845}
-  m_LocalRotation: {x: 0.098537624, y: -0.000000021875596, z: 0.00000026372865, w: 0.99513334}
-  m_LocalPosition: {x: 0, y: 2, z: -5}
+  m_LocalRotation: {x: 0.0307072, y: -0.0036797822, z: 0.00011331029, w: 0.9995217}
+  m_LocalPosition: {x: 0.059861183, y: 2, z: -4.6296153}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2704390242086546817}
@@ -33980,7 +34200,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 50
+  m_Priority: 10
   m_StandbyUpdate: 0
   m_LookAt: {fileID: 4534809148113994}
   m_Follow: {fileID: 4534809148113994}
@@ -34001,106 +34221,6 @@ MonoBehaviour:
         Culture=neutral, PublicKeyToken=null
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 2704390242086546817}
---- !u!1 &5982248302829913771
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1857749394586354482}
-  - component: {fileID: 1036935742331195195}
-  - component: {fileID: 3607957023957793550}
-  - component: {fileID: 1710334234404381546}
-  m_Layer: 0
-  m_Name: Engine
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1857749394586354482
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5982248302829913771}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.064, z: -3.3079998}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 4653116848354930}
-  m_Father: {fileID: 4566539937980892}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &1036935742331195195
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5982248302829913771}
-  m_Mesh: {fileID: 6235005220218627844, guid: a362db008c5274e03bf6f3d2387cf617, type: 3}
---- !u!23 &3607957023957793550
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5982248302829913771}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 99e41bed0266b42c2be534cc7d27de5a, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
---- !u!114 &1710334234404381546
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5982248302829913771}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01c46922a8ed04b0081de10e51b3762f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  RB: {fileID: 54710712322113256}
-  vel: 0
-  engineSound: {fileID: 82633756123786494}
-  waterSound: {fileID: 82912682702107868}
-  horsePower: 10
-  turnAngle: 45
-  enginePosition: {x: 0, y: 0, z: -0.12}
 --- !u!1 &8128372730392016786
 GameObject:
   m_ObjectHideFlags: 0
