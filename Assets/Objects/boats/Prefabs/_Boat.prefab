@@ -24129,7 +24129,6 @@ GameObject:
   - component: {fileID: 4534809148113994}
   - component: {fileID: 54710712322113256}
   - component: {fileID: 64258884862185400}
-  - component: {fileID: 114559526544640098}
   - component: {fileID: 114129291822198474}
   - component: {fileID: 114571606569623246}
   m_Layer: 11
@@ -24146,17 +24145,18 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1553288845585282}
-  m_LocalRotation: {x: -0, y: -0.46607336, z: -0, w: 0.8847461}
-  m_LocalPosition: {x: -53.959473, y: 0.23000002, z: -56.539803}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4566539937980892}
   - {fileID: 4603238648617514}
   - {fileID: 4154958958717284}
   - {fileID: 2901399632790975270}
+  - {fileID: 4674073439145674988}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -55.559002, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &54710712322113256
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -24167,7 +24167,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 3200
   m_Drag: 0.1
-  m_AngularDrag: 0.2
+  m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1
@@ -24187,24 +24187,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 14
   m_Mesh: {fileID: 2899951614431091848, guid: a362db008c5274e03bf6f3d2387cf617, type: 3}
---- !u!114 &114559526544640098
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1553288845585282}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01c46922a8ed04b0081de10e51b3762f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  vel: {x: 0, y: 0, z: 0}
-  engineSound: {fileID: 82633756123786494}
-  waterSound: {fileID: 82912682702107868}
-  torque: 5
-  horsePower: 18
-  enginePosition: {x: 0, y: 0.05, z: -3.31}
 --- !u!114 &114129291822198474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24219,9 +24201,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Human: 0
   RandomizeColors: 1
-  PrimaryColor: {r: 0.6066833, g: 0.080696166, b: 0.8069615, a: 1}
-  TrimColor: {r: 0.15882511, g: 0.06897104, b: 0.19303852, a: 1}
+  PrimaryColor: {r: 0.09369812, g: 0.07329006, b: 0.7329004, a: 1}
+  TrimColor: {r: 0.26058555, g: 0.26709962, b: 0.056558255, a: 1}
   boatRenderer: {fileID: 23139903168929634}
+  engine: {fileID: 4530346687122435552}
+  cam: {fileID: 2365855355768168390}
 --- !u!114 &114571606569623246
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34152,6 +34136,105 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!1 &725254494426090869
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4674073439145674988}
+  - component: {fileID: 6302303533833585893}
+  - component: {fileID: 7712310939893674192}
+  - component: {fileID: 4530346687122435552}
+  m_Layer: 0
+  m_Name: Boat_Interceptor_Engine
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4674073439145674988
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725254494426090869}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.064, z: -3.3079998}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4534809148113994}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &6302303533833585893
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725254494426090869}
+  m_Mesh: {fileID: 6235005220218627844, guid: a362db008c5274e03bf6f3d2387cf617, type: 3}
+--- !u!23 &7712310939893674192
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725254494426090869}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 99e41bed0266b42c2be534cc7d27de5a, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!114 &4530346687122435552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725254494426090869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01c46922a8ed04b0081de10e51b3762f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RB: {fileID: 54710712322113256}
+  vel: {x: 0, y: 0, z: 0}
+  engineSound: {fileID: 82633756123786494}
+  waterSound: {fileID: 82912682702107868}
+  torque: 5
+  horsePower: 18
+  enginePosition: {x: 0, y: 0, z: -0.1}
 --- !u!1 &3138619813684846845
 GameObject:
   m_ObjectHideFlags: 0
@@ -34200,7 +34283,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 10
+  m_Priority: 20
   m_StandbyUpdate: 0
   m_LookAt: {fileID: 4534809148113994}
   m_Follow: {fileID: 4534809148113994}
@@ -34217,8 +34300,6 @@ MonoBehaviour:
     m_OnCameraLive:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: Cinemachine.CinemachineBrain+VcamActivatedEvent, Cinemachine, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 2704390242086546817}
 --- !u!1 &8128372730392016786

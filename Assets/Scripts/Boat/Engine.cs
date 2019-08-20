@@ -7,7 +7,7 @@ namespace BoatAttack.Boat
 {
     public class Engine : MonoBehaviour
     {
-        private Rigidbody RB; // The rigid body attatched to the boat
+        public Rigidbody RB; // The rigid body attatched to the boat
         public Vector3 vel; // Boats velocity
 
         public AudioSource engineSound; // Engine sound clip
@@ -26,7 +26,6 @@ namespace BoatAttack.Boat
 
         void Awake()
         {
-            RB = gameObject.GetComponent<Rigidbody>(); // get the RB
             engineSound.time = UnityEngine.Random.Range(0f, engineSound.clip.length); // randomly start the engine sound
             waterSound.time = UnityEngine.Random.Range(0f, waterSound.clip.length); // randomly start the water sound
 

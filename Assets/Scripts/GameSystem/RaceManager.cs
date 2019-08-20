@@ -18,10 +18,10 @@ namespace BoatAttack
 
         public Race raceData;
 
-        private void OnEnable()
+        private void Start()
         {
-            WaypointGroup.Instance.reverse = raceData.reversed;
-            WaypointGroup.Instance.Setup();
+            WaypointGroup.instance.reverse = raceData.reversed;
+            WaypointGroup.instance.Setup();
             CreateBoats();
         }
 
@@ -30,7 +30,7 @@ namespace BoatAttack
             var i = 0;
             foreach (var boat in raceData.boats)
             {
-                var matrix = WaypointGroup.Instance.startingPositons[i];
+                var matrix = WaypointGroup.instance.startingPositons[i];
 
                 GameObject boatObject = Instantiate(boat.boatPrefab, matrix.GetColumn(3), Quaternion.LookRotation(matrix.GetColumn(2))) as GameObject;
                 boatObject.name = boat.boatName;
