@@ -5,10 +5,9 @@ using Unity.Transforms;
 using UnityEngine;
 
 
-
-
-public class BoatBodyComponent : MonoBehaviour, IConvertGameObjectToEntity
+public class BoatBodyComponent : MonoBehaviour//, IConvertGameObjectToEntity
 {
+	//Called by parent BuoyantObject_DOTS
 	public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
 	{
 		dstManager.AddComponent(entity, typeof(CopyTransformToGameObject));

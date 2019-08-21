@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
 using Unity.Entities;
+using BoatAttack.Boat;
+using System.Collections;
 //using Unity.Physics;
 
 namespace WaterSystem
@@ -227,11 +229,13 @@ namespace WaterSystem
 			}
 
 			voxels = points.ToArray();
+
 			transform.SetPositionAndRotation(pos, rot);
 			transform.localScale = size;
 			var voxelVolume = Mathf.Pow(voxelResolution, 3f) * voxels.Length;
 			var rawVolume = rawBounds.size.x * rawBounds.size.y * rawBounds.size.z;
-			volume = Mathf.Min(rawVolume, voxelVolume);
+			volume = Mathf.Min(rawVolume, voxelVolume); //actual close to 34.637f
+
 			density = gameObject.GetComponent<Rigidbody>().mass / volume;
 		}
 
@@ -314,11 +318,10 @@ namespace WaterSystem
 
 		}
 
+		//Will be called by the PhysicsConversionSystem
 		public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
 		{
 			Init();
-
-			dstManager.AddComponent(entity, typeof(MoveWithInputTag));
 
 			BuoyantData data = new BuoyantData();
 			data.type = _buoyancyType;
@@ -345,6 +348,13 @@ namespace WaterSystem
                 offsets.Add(new VoxelOffset { Value = voxels[i] - centerOfMass });// transform.TransformPoint(voxels[i]) - transform.position }); // << Is this right?
 				heights.Add(new VoxelHeight { Value = float3.zero });
 			}
+
+			//Call other Convert methods
+			var body = GetComponentInChildren<BoatBodyComponent>();
+			body.Convert(conversionSystem.GetPrimaryEntity(body), dstManager, conversionSystem);
+
+			var engine = GetComponent<Engine>();
+			engine.Convert(conversionSystem.GetPrimaryEntity(engine), dstManager, conversionSystem);
 		}
 
 		struct DebugDrawing

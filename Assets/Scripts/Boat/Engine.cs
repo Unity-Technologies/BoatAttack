@@ -6,7 +6,7 @@ using Unity.Entities;
 
 namespace BoatAttack.Boat
 {
-    public class Engine : MonoBehaviour, IConvertGameObjectToEntity
+    public class Engine : MonoBehaviour//, IConvertGameObjectToEntity
 	{
 		private Rigidbody RB; // The rigid body attatched to the boat
 		public Vector3 vel; // Boats velocity
@@ -85,9 +85,17 @@ namespace BoatAttack.Boat
             Gizmos.DrawCube(enginePosition, new Vector3(0.1f, 0.2f, 0.3f)); // Draw teh engine position with sphere
         }
 
+		//Called by parent BuoyantObject_DOTS
 		public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
 		{
+			//Set up driving data
+			bool isHuman = GetComponent<BoatController>().Human;
+
+			if(!isHuman)
+				AIController_DOTS.Register(entity);
+
 			var data = new DrivingData {
+				isHuman = isHuman,
 				torque = torque,
 				horsePower = horsePower,
 				engineOffset = transform.TransformPoint(enginePosition) - transform.position

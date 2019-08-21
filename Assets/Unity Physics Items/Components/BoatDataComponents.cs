@@ -24,10 +24,10 @@ public struct VoxelHeight : IBufferElementData
 
 public struct DrivingData : IComponentData
 {
+	public bool isHuman;
 	public float torque;
 	public float horsePower;
 	public float3 engineOffset;
+	public float throttle;
+	public float steering;
 }
-
-public struct MoveWithInputTag : IComponentData
-{ }

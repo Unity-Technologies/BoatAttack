@@ -27,7 +27,7 @@ namespace BoatAttack.Boat
         }
 
         // Use this for initialization
-        void Start()
+        void Awake()
         {
             Colourize();
             if (Human)

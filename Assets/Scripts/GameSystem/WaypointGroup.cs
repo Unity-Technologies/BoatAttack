@@ -11,12 +11,13 @@ namespace BoatAttack
 	public class WaypointGroup : MonoBehaviour
 	{
 		public static WaypointGroup Instance = null;
+		public static float raceDelay = 4f;
+
 		public int WaypointGroupID = 0;
 		public Color WaypointColour = Color.yellow;
 		public bool Loop = false;
 		public float NextWPradius = 5f;
 
-		public float raceDelay = 4f;
 		public bool raceStarted = false;
 		
 		[NonSerialized]

@@ -82,7 +82,7 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 				
 			}
 			//Update drag
-			Debug.Log("Average height: " + avgHeight / total);
+			// Debug.Log("Average height: " + avgHeight / total);
 			//submergedAmount /= offsets.Length;
 			//damping.Linear = Mathf.Lerp(data.baseDrag, 1f, submergedAmount);
 			//damping.Angular = Mathf.Lerp(data.baseAngularDrag, 1f, submergedAmount);

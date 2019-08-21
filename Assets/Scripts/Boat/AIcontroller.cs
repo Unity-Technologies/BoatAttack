@@ -28,9 +28,9 @@ namespace BoatAttack.Boat
         // Use this for initialization
         void Start ()
         {
-            float delay = WaypointGroup.Instance.raceDelay;
-
-            Invoke("GetNearestWP", delay);
+            float delay = WaypointGroup.raceDelay;
+			engine = GetComponent<Engine>();
+			Invoke("GetNearestWP", delay);
         }
 
         // Update is called once per frame
