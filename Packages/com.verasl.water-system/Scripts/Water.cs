@@ -5,9 +5,7 @@ using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.LWRP;
-using UnityEngine.Rendering.Universal;
 using WaterSystem.Data;
-using Lightmapping = UnityEngine.Experimental.GlobalIllumination.Lightmapping;
 
 namespace WaterSystem
 {
@@ -25,10 +23,6 @@ namespace WaterSystem
                 return _Instance;
             }
         }
-
-        // Script references
-        private MainCameraAlign camAlign;
-        private PlanarReflections planarReflections;
 
         private bool useComputeBuffer;
         public bool computeOverride;
@@ -67,6 +61,11 @@ namespace WaterSystem
                 useComputeBuffer = false;
             Init();
             RenderPipelineManager.beginCameraRendering += BeginCameraRendering;
+
+            if(resources == null)
+            {
+                resources = Resources.Load("WaterResources") as WaterResources;
+            }
         }
 
         private void OnDisable() {
@@ -98,10 +97,6 @@ namespace WaterSystem
             float roll = cam.transform.localEulerAngles.z;
             Shader.SetGlobalFloat("_CameraRoll", roll);
             Shader.SetGlobalMatrix("_InvViewProjection", (GL.GetGPUProjectionMatrix(cam.projectionMatrix, false) * cam.worldToCameraMatrix).inverse);
-            foreach (var mesh in resources.defaultWaterMeshes)
-            {
-                Graphics.DrawMesh(mesh, transform.localToWorldMatrix, resources.defaultSeaMaterial, gameObject.layer, cam);
-            }
         }
 
         private void SafeDestroy(Object o)
@@ -120,30 +115,14 @@ namespace WaterSystem
             {
                 Shader.SetGlobalTexture("_WaterDepthMap", _bakedDepthTex);
             }
-
-            if (!gameObject.TryGetComponent(out camAlign))
-            {
-                camAlign = gameObject.AddComponent<MainCameraAlign>();
-                camAlign.hideFlags = HideFlags.HideAndDontSave | HideFlags.HideInInspector;
-            }
-
-            if (!gameObject.TryGetComponent(out planarReflections))
-            {
-                planarReflections = gameObject.AddComponent<PlanarReflections>();
-                planarReflections.hideFlags = HideFlags.HideAndDontSave | HideFlags.HideInInspector;
-            }
-            planarReflections.m_settings = settingsData.planarSettings;
-            planarReflections.enabled = settingsData.refType == ReflectionType.PlanarReflection;
-
-            if(resources == null)
-            {
-                resources = Resources.Load("WaterResources") as WaterResources;
-            }
+            //CaptureDepthMap();
         }
 
-        private void LateUpdate() {
-            if(Application.isPlaying)
-                GerstnerWavesJobs.UpdateHeights();
+        void Update()
+        {
+            waterTime = Time.time;
+            Shader.SetGlobalFloat("_GlobalTime", waterTime);
+			GerstnerWavesJobs.UpdateHeights();
         }
         
         public void FragWaveNormals(bool toggle)

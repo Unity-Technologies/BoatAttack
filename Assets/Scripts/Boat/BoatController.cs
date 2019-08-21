@@ -18,8 +18,7 @@ namespace BoatAttack.Boat
         public Color PrimaryColor; // Boat primary colour
         public Color TrimColor; // Boat secondary colour
         public Renderer boatRenderer; // The renderer for the boat mesh
-        
-        public Engine engine;
+       
         public CinemachineVirtualCamera cam;
         
         void OnValidate()
@@ -28,16 +27,16 @@ namespace BoatAttack.Boat
         }
 
         // Use this for initialization
-        void Start()
+        void Awake()
         {
             Colourize();
             if (Human)
             {
-                gameObject.AddComponent<HumanController>().engine = engine; // Adds a human controller if human
+                gameObject.AddComponent<HumanController>(); // Adds a human controller if human
             }
             else
             {
-                gameObject.AddComponent<AIcontroller>().engine = engine; // Adds an AI controller if AI
+                gameObject.AddComponent<AIcontroller>(); // Adds an AI controller if AI
             }
         }
 

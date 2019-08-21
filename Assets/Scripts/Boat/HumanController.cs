@@ -24,7 +24,9 @@ namespace BoatAttack.Boat
             
             controls.BoatControls.Steering.performed += context => steering = context.ReadValue<float>();
             controls.BoatControls.Steering.canceled += context => steering = 0f;
-        }
+
+			engine = GetComponent<Engine>(); // get the engine script
+		}
 
         private void OnEnable()
         {
