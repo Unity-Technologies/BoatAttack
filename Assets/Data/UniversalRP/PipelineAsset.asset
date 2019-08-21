@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf2edee5c58d82540a51f03df9d42094, type: 3}
   m_Name: PipelineAsset
   m_EditorClassIdentifier: 
-  k_AssetVersion: 4
+  k_AssetVersion: 5
   m_RendererType: 0
   m_RendererData: {fileID: 11400000, guid: fa301df1a78cf4a9ebe2a3139dc8be8f, type: 2}
+  m_RendererDataList:
+  - {fileID: 11400000, guid: fa301df1a78cf4a9ebe2a3139dc8be8f, type: 2}
+  - {fileID: 11400000, guid: da5d03fd77333493b9b9d22f90c457ef, type: 2}
+  m_DefaultRenderer: 0
   m_RequireDepthTexture: 0
   m_RequireOpaqueTexture: 1
   m_OpaqueDownsampling: 0
@@ -29,7 +33,7 @@ MonoBehaviour:
   m_AdditionalLightShadowsSupported: 0
   m_AdditionalLightsShadowmapResolution: 512
   m_ShadowDistance: 250
-  m_ShadowCascades: 2
+  m_ShadowCascades: 0
   m_Cascade2Split: 0.20930393
   m_Cascade4Split: {x: 0.053413056, y: 0.13206536, z: 0.42623913}
   m_ShadowDepthBias: 0.75
@@ -39,7 +43,7 @@ MonoBehaviour:
   m_SupportsDynamicBatching: 0
   m_MixedLightingSupported: 1
   m_ColorGradingMode: 0
-  m_ColorGradingLutSize: 32
+  m_ColorGradingLutSize: 16
   m_ShadowType: 1
   m_LocalShadowsSupported: 0
   m_LocalShadowsAtlasResolution: 256
