@@ -2,7 +2,6 @@
 #define GERSTNER_WAVES_INCLUDED
 
 uniform uint 	_WaveCount; // how many waves, set via the water component
-float 			_GlobalTime; // global scene time
 
 struct Wave
 {
@@ -44,7 +43,7 @@ WaveStruct GerstnerWave(half2 pos, float waveCountMulti, half amplitude, half di
 	half dir = dot(windDir, pos - (omniPos * omni)); // calculate a gradient along the wind direction
 
 	////////////////////////////position output calculations/////////////////////////
-	half calc = dir * w + -_GlobalTime * wSpeed; // the wave calculation
+	half calc = dir * w + -_Time.y * wSpeed; // the wave calculation
 	half cosCalc = cos(calc); // cosine version(used for horizontal undulation)
 	half sinCalc = sin(calc); // sin version(used for vertical undulation)
 

@@ -88,13 +88,18 @@ namespace UnityEngine.Rendering.LWRP
             if (dest == null)
                 return;
             dest.CopyFrom(src);
-            dest.useOcclusionCulling = false;
+            dest.useOcclusionCulling = true;
+            UniversalAdditionalCameraData camData;
+            if (dest.gameObject.TryGetComponent(out camData))
+            {
+                camData.renderShadows = m_settings.m_Shadows; // turn off shadows for the reflection camera
+            }
         }
         
         private void UpdateReflectionCamera(Camera realCamera)
         {
             if (m_ReflectionCamera == null)
-                m_ReflectionCamera = CreateMirrorObjects(realCamera);
+                m_ReflectionCamera = CreateMirrorObjects();
             
             // find out the reflection plane: position and normal in world space
             Vector3 pos = Vector3.zero;
@@ -195,24 +200,17 @@ namespace UnityEngine.Rendering.LWRP
             return new Vector4(cnormal.x, cnormal.y, cnormal.z, -Vector3.Dot(cpos, cnormal));
         }
 
-        private Camera CreateMirrorObjects(Camera currentCamera)
+        private Camera CreateMirrorObjects()
         {
-            GameObject go =
-                new GameObject($"Planar Refl Camera id{GetInstanceID().ToString()} for {currentCamera.GetInstanceID().ToString()}",
-                    typeof(Camera));
-            UniversalAdditionalCameraData lwrpCamData =
-                go.AddComponent(typeof(UniversalAdditionalCameraData)) as UniversalAdditionalCameraData;
-            //UniversalAdditionalCameraData lwrpCamDataCurrent = currentCamera.GetComponent<UniversalAdditionalCameraData>();
-            lwrpCamData.renderShadows = m_settings.m_Shadows; // turn off shadows for the reflection camera
-            lwrpCamData.requiresColorOption = CameraOverrideOption.Off;
-            lwrpCamData.requiresDepthOption = CameraOverrideOption.Off;
+            GameObject go = new GameObject("Planar Reflections",typeof(Camera));
+            var cameraData = go.AddComponent(typeof(UniversalAdditionalCameraData)) as UniversalAdditionalCameraData;
+            cameraData.requiresColorOption = CameraOverrideOption.Off;
+            cameraData.requiresDepthOption = CameraOverrideOption.Off;
+            cameraData.SetRenderer(1);
             var reflectionCamera = go.GetComponent<Camera>();
             reflectionCamera.transform.SetPositionAndRotation(transform.position, transform.rotation);
-            //reflectionCamera.targetTexture = m_ReflectionTexture;
-            reflectionCamera.allowMSAA = currentCamera.allowMSAA;
             reflectionCamera.depth = -10;
             reflectionCamera.enabled = false;
-            reflectionCamera.allowHDR = currentCamera.allowHDR;
             go.hideFlags = HideFlags.HideAndDontSave;
 
             return reflectionCamera;
@@ -229,14 +227,14 @@ namespace UnityEngine.Rendering.LWRP
             ScriptableRenderContext context,
             Camera camera)
         {
-            if (camera.cameraType == CameraType.Reflection)
+            if (camera.cameraType == CameraType.Reflection || camera.cameraType == CameraType.Preview)
                 return;
             
             GL.invertCulling = true;
             RenderSettings.fog = false;
             var max = QualitySettings.maximumLODLevel;
             var bias = QualitySettings.lodBias;
-            QualitySettings.maximumLODLevel = 0;
+            QualitySettings.maximumLODLevel = 1;
             QualitySettings.lodBias = bias * 2f;
 
             UpdateReflectionCamera(camera);
@@ -245,7 +243,7 @@ namespace UnityEngine.Rendering.LWRP
             var res = ReflectionResolution(camera, UniversalRenderPipeline.asset.renderScale);
             if (m_ReflectionTexture == null)
             {
-                bool useHDR10 = true;// SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.RGB111110Float);
+                bool useHDR10 = true;
                 RenderTextureFormat hdrFormat =
                     useHDR10 ? RenderTextureFormat.RGB111110Float : RenderTextureFormat.DefaultHDR;
                 m_ReflectionTexture = RenderTexture.GetTemporary(res.x, res.y, 16,

@@ -14,7 +14,7 @@ namespace WaterSystem
 
         public float quantizeValue = 6.25f;
         public float forwards = 10f;
-        public float yOffset = -1f;
+        public float yOffset = -0.25f;
 
         private void OnEnable()
         {

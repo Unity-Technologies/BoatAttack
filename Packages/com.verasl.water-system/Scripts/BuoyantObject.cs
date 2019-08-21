@@ -175,7 +175,7 @@ namespace WaterSystem
 
             if (wp.y - voxelResolution < waterLevel)
             {
-                float k = Mathf.Clamp01(waterLevel - (wp.y - voxelResolution)) / (voxelResolution * 2f);
+                float k = Mathf.Clamp01((waterLevel - (wp.y - voxelResolution)) / (voxelResolution * 2f));
 
                 submergedAmount += k / voxels.Length;//(math.clamp(waterLevel - (wp.y - voxelResolution), 0f, voxelResolution * 2f) / (voxelResolution * 2f)) / voxels.Count;
 
