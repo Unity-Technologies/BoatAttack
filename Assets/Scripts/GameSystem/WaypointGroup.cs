@@ -10,7 +10,7 @@ namespace BoatAttack
 	[Serializable]
 	public class WaypointGroup : MonoBehaviour
 	{
-		public static WaypointGroup Instance = null;
+		static WaypointGroup Instance = null;
 		public static float raceDelay = 4f;
 
 		public int WaypointGroupID = 0;
@@ -28,6 +28,8 @@ namespace BoatAttack
 
 		[SerializeField] public List<Waypoint> WPs = new List<Waypoint>();
 		private int curWpID;
+		
+		public static WaypointGroup instance => Instance;
 
 		// Use this for initialization
 		void Awake()
@@ -117,7 +119,7 @@ namespace BoatAttack
 
 		public Matrix4x4[] GetStartPositions()
 		{
-			var position = WPs[0].point;
+			var position = WPs[0].point + Vector3.up;
 			var rotation = WPs[0].rotation;
 			if(reverse)
 				rotation *= Quaternion.AngleAxis(180f, Vector3.up);

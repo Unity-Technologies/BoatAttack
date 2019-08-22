@@ -95,7 +95,7 @@ WaterVertexOutput WaveVertexOperations(WaterVertexOutput input)
 {
     input.normal = float3(0, 1, 0);
     input.uv.zw = input.posWS.xz;
-	input.fogFactorNoise.y = ((noise((input.posWS.xz * 0.5) + _GlobalTime) + noise((input.posWS.xz * 1) + _GlobalTime)) * 0.25 - 0.5) + 1;
+	input.fogFactorNoise.y = ((noise((input.posWS.xz * 0.5) + _Time.y) + noise((input.posWS.xz * 1) + _Time.y)) * 0.25 - 0.5) + 1;
 
 	half4 screenUV = ComputeScreenPos(TransformWorldToHClip(input.posWS));
 	screenUV.xyz /= screenUV.w;
@@ -162,11 +162,8 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 
 	half4 waterFX = SAMPLE_TEXTURE2D(_WaterFXMap, sampler_ScreenTextures_linear_clamp, IN.preWaveSP.xy);
 
-	half animT = frac(_GlobalTime) * 16; // amination value for caustics(16 frames)
-	
 	// Detail waves
-	half t = _Time.x;
-	half2 detailBump = SAMPLE_TEXTURE2D(_SurfaceMap, sampler_SurfaceMap, IN.uv.zw * 0.25h + t + (IN.fogFactorNoise.y * 0.1)).xy; // TODO - check perf
+	half2 detailBump = SAMPLE_TEXTURE2D(_SurfaceMap, sampler_SurfaceMap, IN.uv.zw * 0.25h + _Time.y * 0.1h + (IN.fogFactorNoise.y * 0.1)).xy; // TODO - check perf
 	
 	IN.normal += (half3(detailBump.x, 0.5h, detailBump.y) * 2 - 1) * _BumpScale;
 	IN.normal += half3(1-waterFX.y, 0.5h, 1-waterFX.z) - 0.5;
@@ -193,7 +190,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	Light mainLight = GetMainLight();
 
 	// Foam
-	float2 foamMapUV = (IN.uv.zw * 0.1) + (detailBump.xy * 0.0025) + half2(IN.fogFactorNoise.y * 0.1, (1-IN.fogFactorNoise.y) * 0.1) + _GlobalTime * 0.05;
+	float2 foamMapUV = (IN.uv.zw * 0.1) + (detailBump.xy * 0.0025) + half2(IN.fogFactorNoise.y * 0.1, (1-IN.fogFactorNoise.y) * 0.1) + _Time.y * 0.05;
 	half3 foamMap = SAMPLE_TEXTURE2D(_FoamMap, sampler_FoamMap, foamMapUV).rgb; //r=thick, g=medium, b=light
 	half shoreMask = pow(((1-depth.y + 9) * 0.1), 6);
 	half foamMask = (IN.additionalData.z);

@@ -29,7 +29,7 @@ namespace BoatAttack.Boat
         void Start ()
         {
             float delay = WaypointGroup.raceDelay;
-			engine = GetComponent<Engine>();
+			engine = GetComponent<Engine>(); // get the engine script
 			Invoke("GetNearestWP", delay);
         }
 
@@ -76,16 +76,16 @@ namespace BoatAttack.Boat
     
         void GetNearestWP()
         {
-            WaypointGroup.Waypoint wp = WaypointGroup.Instance.GetClosestWaypoint(transform.position);
+            WaypointGroup.Waypoint wp = WaypointGroup.instance.GetClosestWaypoint(transform.position);
             //if (Vector3.Dot(wp.point - transform.position, transform.forward) < 0)
-                AssignWP(WaypointGroup.Instance.GetNextWaypoint(wp));
+                AssignWP(WaypointGroup.instance.GetNextWaypoint(wp));
             //else
                 //AssignWP(WaypointGroup.Instance.GetClosestWaypoint(transform.position));
         }
     
         void GetNextWP()
         {
-            AssignWP(WaypointGroup.Instance.GetWaypoint(curWP));
+            AssignWP(WaypointGroup.instance.GetWaypoint(curWP));
         }
     
         void AssignWP(WaypointGroup.Waypoint wp)
@@ -93,7 +93,7 @@ namespace BoatAttack.Boat
             var offset = (Random.value * 2f - 1f) * wp.WPwidth * Vector3.left;
             curWPPos = wp.point + wp.rotation * offset;
             curWP++;
-            if (curWP >= WaypointGroup.Instance.WPs.Count)
+            if (curWP >= WaypointGroup.instance.WPs.Count)
                 curWP = 0;
             CalculatePath();
         }
@@ -127,7 +127,7 @@ namespace BoatAttack.Boat
             if (foundPath)
             {
                 Gizmos.DrawLine(transform.position + (Vector3.up * 0.1f),
-                    WaypointGroup.Instance.GetWaypoint(curWP).point);
+                    WaypointGroup.instance.GetWaypoint(curWP).point);
                 Gizmos.DrawSphere(curWPPos, 1);
 
                 c = Color.red;

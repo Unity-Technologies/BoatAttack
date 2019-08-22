@@ -20,8 +20,8 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
-		//Debug.Log(string.Format("DeltaTime: {0}, Time.time {1}, Calc Delta: {2}", Time.deltaTime, Time.time, Time.time - lastTime));
-		//lastTime = Time.time;
+		Debug.Log(string.Format("DeltaTime: {0}, Time.time {1}, Calc Delta: {2}", Time.deltaTime, Time.time, Time.time - lastTime));
+		lastTime = Time.time;
 		var job = new ForceJob()
 		{
 			dt = Time.deltaTime,
@@ -50,6 +50,9 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 
 			float submergedAmount = 0f;
 			//Debug.Log("new pass: " + entity.ToString());
+
+			float3 avPos = float3.zero;
+			float3 avForce = float3.zero;
 			float avgHeight = 0;
 			int total = 0;
 			var entityTransform = new RigidTransform(rot.Value, pos.Value);
@@ -77,19 +80,22 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 					//entity.ApplyImpulse(force, wp);//RB.AddForceAtPosition(force, wp);
 					avgHeight += force.y;
 					total++;
+					avPos += offsets[i].Value;
+					avForce += math.rotate(math.inverse(rot.Value), force * dt);
 					//Debug.Log(string.Format("ECS: Position: {0:f1} -- Force: {1:f2} -- Height: {2:f2}\nVelocty: {3:f2} -- Damp: {4:f2} -- Mass: {5:f1} -- K: {6:f2}", wp, force, waterLevel, velocity, localDampingForce, math.rcp(mass.InverseMass), dt));
 				}
 				
 			}
 			//Update drag
-			// Debug.Log("Average height: " + avgHeight / total);
+			//Debug.Log("Avg force: " + avForce / total + " Avg pos: " + avPos / total);
+			//Debug.Log($"Avg force: {avForce / total} Avg pos: {avPos / total}");
 			//submergedAmount /= offsets.Length;
 			//damping.Linear = Mathf.Lerp(data.baseDrag, 1f, submergedAmount);
 			//damping.Angular = Mathf.Lerp(data.baseAngularDrag, 1f, submergedAmount);
 
-			data.percentSubmerged = Mathf.Lerp(data.percentSubmerged, submergedAmount, 0.25f);
-			damping.Linear = data.baseDrag + (data.baseDrag * (data.percentSubmerged * 10f));
-			damping.Angular = data.baseAngularDrag + (data.percentSubmerged * 0.5f);
+			//data.percentSubmerged = Mathf.Lerp(data.percentSubmerged, submergedAmount, 0.25f);
+			//damping.Linear = data.baseDrag + (data.baseDrag * (data.percentSubmerged * 10f));
+			//damping.Angular = data.baseAngularDrag + (data.percentSubmerged * 0.5f);
 
 		}
 	}

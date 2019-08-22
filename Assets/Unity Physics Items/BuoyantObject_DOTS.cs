@@ -321,8 +321,15 @@ namespace WaterSystem
 		//Will be called by the PhysicsConversionSystem
 		public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
 		{
+			//Calculat all initial values
 			Init();
 
+			
+
+			
+			
+
+			//Add data needed for buoyancy
 			BuoyantData data = new BuoyantData();
 			data.type = _buoyancyType;
 			data.voxelResolution = voxelResolution;
@@ -332,29 +339,38 @@ namespace WaterSystem
 			data.baseAngularDrag = baseAngularDrag;
 			dstManager.AddComponentData(entity, data);
 
-
-			dstManager.AddBuffer<VoxelOffset>(entity);
-			dstManager.AddBuffer<VoxelHeight>(entity);
-
+			//Add center of mass. This is why we had to use a custom conversion system since we needed the physics stuff to be converted before this step
 			var mass = dstManager.GetComponentData<Unity.Physics.PhysicsMass>(entity);
 			mass.CenterOfMass = centerOfMass;
 			dstManager.SetComponentData(entity, mass);
 
+
+			dstManager.AddBuffer<VoxelOffset>(entity);
+			dstManager.AddBuffer<VoxelHeight>(entity);
+
+			//Initialize the voxel and height buffers
 			DynamicBuffer<VoxelOffset> offsets = dstManager.GetBuffer<VoxelOffset>(entity);
 			DynamicBuffer<VoxelHeight> heights = dstManager.GetBuffer<VoxelHeight>(entity);
 
+			//Add engine position as first point
+			//offsets.Add(new VoxelOffset { Value = engine.enginePosition - centerOfMass });
+			//heights.Add(new VoxelHeight { Value = float3.zero });
+
+			//Add the rest of the positions
 			for (int i = 0; i < voxels.Length; i++)
 			{
-                offsets.Add(new VoxelOffset { Value = voxels[i] - centerOfMass });// transform.TransformPoint(voxels[i]) - transform.position }); // << Is this right?
+				offsets.Add(new VoxelOffset { Value = voxels[i] - centerOfMass });// transform.TransformPoint(voxels[i]) - transform.position }); // << Is this right?
 				heights.Add(new VoxelHeight { Value = float3.zero });
 			}
 
 			//Call other Convert methods
 			var body = GetComponentInChildren<BoatBodyComponent>();
-			body.Convert(conversionSystem.GetPrimaryEntity(body), dstManager, conversionSystem);
+			//if (body)
+				body.Convert(conversionSystem.GetPrimaryEntity(body), dstManager, conversionSystem);
 
 			var engine = GetComponent<Engine>();
-			engine.Convert(conversionSystem.GetPrimaryEntity(engine), dstManager, conversionSystem);
+			if (engine)
+				engine.Convert(conversionSystem.GetPrimaryEntity(engine), dstManager, conversionSystem);
 		}
 
 		struct DebugDrawing

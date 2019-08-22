@@ -829,34 +829,35 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 208737145}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce2d6128fa5c04c7e84e7978ef8b37a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useDOTS: 1
+  humanBoat: {fileID: 3457973740146875416, guid: 0a308b87c1579fb4c9ea256406209ca5,
+    type: 3}
+  aiBoat: {fileID: 980501028647124811, guid: c48ad8112d3b604478deaa848d47c861, type: 3}
   raceData:
     boats:
     - boatName: Boogie
-      boatPrefab: {fileID: 3457973740146875416, guid: 0a308b87c1579fb4c9ea256406209ca5,
+      boatPrefab: {fileID: 1553288845585282, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
       Human: 1
     - boatName: Frooper
-      boatPrefab: {fileID: 3457973740146875416, guid: 0a308b87c1579fb4c9ea256406209ca5,
+      boatPrefab: {fileID: 1553288845585282, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
       Human: 0
     - boatName: Doogat
-      boatPrefab: {fileID: 3457973740146875416, guid: 0a308b87c1579fb4c9ea256406209ca5,
+      boatPrefab: {fileID: 1553288845585282, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
       Human: 0
     - boatName: Kepoo
-      boatPrefab: {fileID: 3457973740146875416, guid: 0a308b87c1579fb4c9ea256406209ca5,
+      boatPrefab: {fileID: 1553288845585282, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
       Human: 0
     laps: 3
     reversed: 1
-  humanBoat: {fileID: 3457973740146875416, guid: 0a308b87c1579fb4c9ea256406209ca5,
-    type: 3}
-  aiBoat: {fileID: 980501028647124811, guid: c48ad8112d3b604478deaa848d47c861, type: 3}
 --- !u!114 &208737148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3086,6 +3087,99 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!1 &730433109
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 730433113}
+  - component: {fileID: 730433112}
+  - component: {fileID: 730433111}
+  - component: {fileID: 730433110}
+  m_Layer: 11
+  m_Name: Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &730433110
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 730433109}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &730433111
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 730433109}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &730433112
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 730433109}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &730433113
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 730433109}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -101.99, y: -0.389, z: -3.78}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &871694111
 GameObject:
   m_ObjectHideFlags: 3
@@ -3129,6 +3223,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!54 &910003230 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 1531988076, guid: 0a308b87c1579fb4c9ea256406209ca5,
+    type: 3}
+  m_PrefabInstance: {fileID: 4646665472427269332}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &919641767
 GameObject:
   m_ObjectHideFlags: 0
@@ -3319,8 +3419,7 @@ MonoBehaviour:
   m_RenderShadows: 1
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
-  m_RendererOverrideOption: 1
-  m_RendererData: {fileID: 11400000, guid: fa301df1a78cf4a9ebe2a3139dc8be8f, type: 2}
+  m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1
@@ -3356,9 +3455,9 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.2
-  far clip plane: 400
-  field of view: 45
+  near clip plane: 0.25
+  far clip plane: 350
+  field of view: 80
   orthographic: 0
   orthographic size: 10
   m_Depth: -5
@@ -3383,8 +3482,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1017609894}
-  m_LocalRotation: {x: 0.3049827, y: -0.6440706, z: 0.6279532, w: 0.31278342}
-  m_LocalPosition: {x: -100.9, y: 21.59, z: -4.25}
+  m_LocalRotation: {x: 0.09853762, y: 0.0000000055235976, z: -0.000000012976303, w: 0.9951334}
+  m_LocalPosition: {x: -104.12, y: 1.6110001, z: -8.78}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 208737146}
@@ -4576,7 +4675,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1553288845585282, guid: fc3ffb83d6eafb1489a5b23bc82d25b6, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4534809148113994, guid: fc3ffb83d6eafb1489a5b23bc82d25b6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7382,6 +7481,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 11
       objectReference: {fileID: 0}
+    - target: {fileID: 2365855355768168390, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc3ffb83d6eafb1489a5b23bc82d25b6, type: 3}
 --- !u!1 &1591128532
@@ -8480,22 +8584,22 @@ PrefabInstance:
     - target: {fileID: 3457973740146875416, guid: 0a308b87c1579fb4c9ea256406209ca5,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3457973740146875417, guid: 0a308b87c1579fb4c9ea256406209ca5,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -80.9
+      value: -104.12
       objectReference: {fileID: 0}
     - target: {fileID: 3457973740146875417, guid: 0a308b87c1579fb4c9ea256406209ca5,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.389
       objectReference: {fileID: 0}
     - target: {fileID: 3457973740146875417, guid: 0a308b87c1579fb4c9ea256406209ca5,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -28.31
+      value: -3.78
       objectReference: {fileID: 0}
     - target: {fileID: 3457973740146875417, guid: 0a308b87c1579fb4c9ea256406209ca5,
         type: 3}
@@ -8505,7 +8609,7 @@ PrefabInstance:
     - target: {fileID: 3457973740146875417, guid: 0a308b87c1579fb4c9ea256406209ca5,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.95782626
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3457973740146875417, guid: 0a308b87c1579fb4c9ea256406209ca5,
         type: 3}
@@ -8515,7 +8619,7 @@ PrefabInstance:
     - target: {fileID: 3457973740146875417, guid: 0a308b87c1579fb4c9ea256406209ca5,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.28734788
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3457973740146875417, guid: 0a308b87c1579fb4c9ea256406209ca5,
         type: 3}
@@ -8540,37 +8644,1991 @@ PrefabInstance:
     - target: {fileID: 6727757724182940452, guid: 0a308b87c1579fb4c9ea256406209ca5,
         type: 3}
       propertyPath: PrimaryColor.r
-      value: 0
+      value: 0.6841508
       objectReference: {fileID: 0}
     - target: {fileID: 6727757724182940452, guid: 0a308b87c1579fb4c9ea256406209ca5,
         type: 3}
       propertyPath: PrimaryColor.g
-      value: 0
+      value: 0.6841508
       objectReference: {fileID: 0}
     - target: {fileID: 6727757724182940452, guid: 0a308b87c1579fb4c9ea256406209ca5,
         type: 3}
       propertyPath: PrimaryColor.b
-      value: 0
+      value: 0.6841508
       objectReference: {fileID: 0}
     - target: {fileID: 6727757724182940452, guid: 0a308b87c1579fb4c9ea256406209ca5,
         type: 3}
       propertyPath: TrimColor.r
-      value: 1
+      value: 0.31584918
       objectReference: {fileID: 0}
     - target: {fileID: 6727757724182940452, guid: 0a308b87c1579fb4c9ea256406209ca5,
         type: 3}
       propertyPath: TrimColor.g
-      value: 0.16512585
+      value: 0.25048
       objectReference: {fileID: 0}
     - target: {fileID: 6727757724182940452, guid: 0a308b87c1579fb4c9ea256406209ca5,
         type: 3}
       propertyPath: TrimColor.b
-      value: 0.19793597
+      value: 0.031584926
       objectReference: {fileID: 0}
     - target: {fileID: 320792261470743900, guid: 0a308b87c1579fb4c9ea256406209ca5,
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988076, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: m_Mass
+      value: 3200
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[0].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[1].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[1].z
+      value: -1.7381936
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[2].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[2].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[3].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[3].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[4].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[4].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[5].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[5].z
+      value: -0.5381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[6].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[6].z
+      value: -0.23819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[7].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[7].z
+      value: 0.06180635
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[8].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[8].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[9].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[9].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[10].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[10].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[11].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[11].z
+      value: -0.5381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[12].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[12].z
+      value: -0.23819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[13].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[13].z
+      value: 0.06180635
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[14].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[14].z
+      value: -2.9381933
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[15].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[15].z
+      value: -2.6381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[16].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[16].z
+      value: -2.3381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[17].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[18].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[18].z
+      value: -1.7381936
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[19].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[19].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[20].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[20].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[21].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[21].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[22].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[22].z
+      value: -0.5381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[23].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[23].z
+      value: -0.23819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[24].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[24].z
+      value: 0.06180635
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[25].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[25].z
+      value: 0.3618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[26].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[26].z
+      value: 0.66180634
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[27].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[27].z
+      value: 0.9618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[28].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[28].z
+      value: 1.2618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[29].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[29].z
+      value: -2.6381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[30].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[30].z
+      value: -2.3381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[31].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[32].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[32].z
+      value: -1.7381936
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[33].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[33].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[34].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[34].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[35].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[35].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[36].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[36].z
+      value: -0.5381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[37].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[37].z
+      value: -0.23819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[38].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[38].z
+      value: 0.06180635
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[39].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[39].z
+      value: 0.3618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[40].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[40].z
+      value: 0.66180634
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[41].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[41].z
+      value: -2.6381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[42].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[42].z
+      value: -2.3381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[43].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[44].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[44].z
+      value: -1.7381936
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[45].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[45].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[46].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[46].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[47].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[47].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[48].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[48].z
+      value: -0.5381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[49].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[49].z
+      value: -0.23819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[50].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[50].z
+      value: 0.06180635
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[51].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[51].z
+      value: 0.3618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[52].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[52].z
+      value: 0.66180634
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[53].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[53].z
+      value: 0.9618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[54].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[54].z
+      value: -2.9381933
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[55].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[55].z
+      value: -2.6381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[56].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[56].z
+      value: -2.3381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[57].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[58].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[58].z
+      value: -1.7381936
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[59].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[59].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[60].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[60].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[61].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[61].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[62].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[62].z
+      value: -0.5381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[63].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[63].z
+      value: -0.23819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[64].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[64].z
+      value: 0.06180635
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[65].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[65].z
+      value: 0.3618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[66].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[66].z
+      value: 0.66180634
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[67].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[67].z
+      value: 0.9618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[68].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[68].z
+      value: 1.2618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[69].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[69].z
+      value: 1.5618063
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[70].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[70].z
+      value: 1.8618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[71].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[71].z
+      value: -2.9381933
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[72].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[72].z
+      value: -2.6381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[73].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[73].z
+      value: -2.3381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[74].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[75].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[75].z
+      value: -1.7381936
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[76].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[76].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[77].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[77].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[78].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[78].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[79].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[79].z
+      value: -0.5381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[80].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[80].z
+      value: -0.23819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[81].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[81].z
+      value: 0.06180635
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[82].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[82].z
+      value: 0.3618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[83].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[83].z
+      value: 0.66180634
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[84].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[84].z
+      value: 0.9618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[85].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[85].z
+      value: 1.2618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[86].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[86].z
+      value: 1.5618063
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[87].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[87].z
+      value: -2.3381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[88].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[89].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[89].z
+      value: -1.7381936
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[90].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[90].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[91].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[91].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[92].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[92].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[93].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[93].z
+      value: -2.9381933
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[94].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[94].z
+      value: -2.6381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[95].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[95].z
+      value: -2.3381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[96].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[97].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[97].z
+      value: -1.7381936
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[98].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[98].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[99].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[99].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[100].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[100].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[101].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[101].z
+      value: -0.5381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[102].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[102].z
+      value: -0.23819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[103].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[103].z
+      value: 0.06180635
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[104].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[104].z
+      value: 0.3618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[105].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[105].z
+      value: 0.66180634
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[106].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[106].z
+      value: 0.9618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[107].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[107].z
+      value: 1.2618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[108].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[108].z
+      value: -2.9381933
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[109].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[109].z
+      value: -2.6381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[110].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[110].z
+      value: -2.3381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[111].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[112].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[112].z
+      value: -1.7381936
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[113].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[113].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[114].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[114].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[115].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[115].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[116].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[116].z
+      value: -0.5381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[117].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[117].z
+      value: -0.23819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[118].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[118].z
+      value: 0.06180635
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[119].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[119].z
+      value: 0.3618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[120].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[120].z
+      value: 0.66180634
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[121].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[121].z
+      value: 0.9618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[122].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[122].z
+      value: 1.2618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[123].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[123].z
+      value: 1.5618063
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[124].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[124].z
+      value: 1.8618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[125].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[125].z
+      value: 2.1618063
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[126].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[126].z
+      value: -2.9381933
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[127].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[127].z
+      value: -2.6381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[128].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[128].z
+      value: -2.3381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[129].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[130].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[130].z
+      value: -1.7381936
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[131].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[131].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[132].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[132].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[133].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[133].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[134].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[134].z
+      value: -0.5381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[135].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[135].z
+      value: -0.23819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[136].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[136].z
+      value: 0.06180635
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[137].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[137].z
+      value: 0.3618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[138].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[138].z
+      value: 0.66180634
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[139].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[139].z
+      value: 0.9618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[140].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[140].z
+      value: 1.2618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[141].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[141].z
+      value: 1.5618063
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[142].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[142].z
+      value: 1.8618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[143].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[143].z
+      value: 2.1618063
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[144].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[144].z
+      value: -2.3381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[145].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[146].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[146].z
+      value: -1.7381936
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[147].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[147].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[148].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[148].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[149].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[149].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[150].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[150].z
+      value: -0.5381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[151].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[151].z
+      value: -0.23819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[152].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[152].z
+      value: -2.6381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[153].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[153].z
+      value: -2.3381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[154].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[155].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[155].z
+      value: -1.7381936
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[156].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[156].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[157].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[157].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[158].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[158].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[159].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[159].z
+      value: -0.5381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[160].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[160].z
+      value: -0.23819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[161].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[161].z
+      value: 0.06180635
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[162].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[162].z
+      value: 0.3618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[163].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[163].z
+      value: 0.66180634
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[164].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[164].z
+      value: 0.9618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[165].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[165].z
+      value: -2.9381933
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[166].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[166].z
+      value: -2.6381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[167].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[167].z
+      value: -2.3381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[168].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[169].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[169].z
+      value: -1.7381936
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[170].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[170].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[171].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[171].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[172].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[172].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[173].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[173].z
+      value: -0.5381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[174].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[174].z
+      value: -0.23819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[175].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[175].z
+      value: 0.06180635
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[176].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[176].z
+      value: 0.3618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[177].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[177].z
+      value: 0.66180634
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[178].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[178].z
+      value: 0.9618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[179].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[179].z
+      value: 1.2618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[180].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[180].z
+      value: 1.5618063
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[181].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[181].z
+      value: 1.8618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[182].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[182].z
+      value: -2.9381933
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[183].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[183].z
+      value: -2.6381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[184].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[184].z
+      value: -2.3381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[185].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[186].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[186].z
+      value: -1.7381936
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[187].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[187].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[188].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[188].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[189].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[189].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[190].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[190].z
+      value: -0.5381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[191].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[191].z
+      value: -0.23819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[192].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[192].z
+      value: 0.06180635
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[193].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[193].z
+      value: 0.3618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[194].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[194].z
+      value: 0.66180634
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[195].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[195].z
+      value: 0.9618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[196].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[196].z
+      value: 1.2618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[197].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[197].z
+      value: 1.5618063
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[198].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[198].z
+      value: -2.3381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[199].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[200].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[200].z
+      value: -1.7381936
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[201].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[201].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[202].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[202].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[203].y
+      value: 0.7807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[203].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[204].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[204].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[205].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[205].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[206].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[206].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[207].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[207].z
+      value: -0.5381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[208].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[208].z
+      value: -0.23819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[209].y
+      value: -0.11922422
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[209].z
+      value: 0.06180635
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[210].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[210].z
+      value: -2.9381933
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[211].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[211].z
+      value: -2.6381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[212].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[212].z
+      value: -2.3381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[213].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[214].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[214].z
+      value: -1.7381936
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[215].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[215].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[216].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[216].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[217].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[217].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[218].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[218].z
+      value: -0.5381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[219].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[219].z
+      value: -0.23819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[220].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[220].z
+      value: 0.06180635
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[221].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[221].z
+      value: 0.3618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[222].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[222].z
+      value: 0.66180634
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[223].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[223].z
+      value: 0.9618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[224].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[224].z
+      value: 1.2618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[225].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[225].z
+      value: -2.6381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[226].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[226].z
+      value: -2.3381934
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[227].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[228].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[228].z
+      value: -1.7381936
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[229].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[229].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[230].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[230].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[231].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[231].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[232].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[232].z
+      value: -0.5381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[233].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[233].z
+      value: -0.23819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[234].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[234].z
+      value: 0.06180635
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[235].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[235].z
+      value: 0.3618064
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[236].y
+      value: 0.4807758
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[236].z
+      value: 0.66180634
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[237].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[238].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[238].z
+      value: -1.7381936
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[239].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[239].z
+      value: -1.4381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[240].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[240].z
+      value: -1.1381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[241].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[241].z
+      value: -0.83819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[242].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[242].z
+      value: -0.5381937
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[243].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[243].z
+      value: -0.23819366
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[244].y
+      value: 0.18077579
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: voxels.Array.data[244].z
+      value: 0.06180635
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: density
+      value: 483.749
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988077, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: centerOfMass.z
+      value: -0.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 1531988078, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
+      propertyPath: RB
+      value: 
+      objectReference: {fileID: 910003230}
+    - target: {fileID: 558137786967539335, guid: 0a308b87c1579fb4c9ea256406209ca5,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.09853762
+      objectReference: {fileID: 0}
+    - target: {fileID: 558137786967539335, guid: 0a308b87c1579fb4c9ea256406209ca5,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.0000000055235976
+      objectReference: {fileID: 0}
+    - target: {fileID: 558137786967539335, guid: 0a308b87c1579fb4c9ea256406209ca5,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.000000012976303
+      objectReference: {fileID: 0}
+    - target: {fileID: 558137786967539335, guid: 0a308b87c1579fb4c9ea256406209ca5,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 558137786967539335, guid: 0a308b87c1579fb4c9ea256406209ca5,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5
+      objectReference: {fileID: 0}
+    - target: {fileID: 558137786967539335, guid: 0a308b87c1579fb4c9ea256406209ca5,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9951334
+      objectReference: {fileID: 0}
+    - target: {fileID: 558137786967539335, guid: 0a308b87c1579fb4c9ea256406209ca5,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2412347204386954718, guid: 0a308b87c1579fb4c9ea256406209ca5,
+        type: 3}
+      propertyPath: m_FollowOffset.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2412347204386954718, guid: 0a308b87c1579fb4c9ea256406209ca5,
+        type: 3}
+      propertyPath: m_FollowOffset.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2412347204386954718, guid: 0a308b87c1579fb4c9ea256406209ca5,
+        type: 3}
+      propertyPath: m_FollowOffset.z
+      value: -5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0a308b87c1579fb4c9ea256406209ca5, type: 3}
@@ -8640,6 +10698,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6001476266129338508, guid: ebb958ca9e119be438b62f3cce1981fc,
+        type: 3}
+      propertyPath: ConversionMode
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ebb958ca9e119be438b62f3cce1981fc, type: 3}
@@ -8893,6 +10956,26 @@ PrefabInstance:
     - target: {fileID: 1753825905008727153, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: startingPositons.Array.data[3].e33
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6589000188946292777, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6589000189081194493, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6589000189185335907, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6589000189286923512, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6589000188993638444, guid: e70416e3bc35d4004a9981d0ac102ba5,
@@ -9244,26 +11327,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6589000189081194493, guid: e70416e3bc35d4004a9981d0ac102ba5,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6589000189185335907, guid: e70416e3bc35d4004a9981d0ac102ba5,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6589000188946292777, guid: e70416e3bc35d4004a9981d0ac102ba5,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6589000189286923512, guid: e70416e3bc35d4004a9981d0ac102ba5,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e70416e3bc35d4004a9981d0ac102ba5, type: 3}

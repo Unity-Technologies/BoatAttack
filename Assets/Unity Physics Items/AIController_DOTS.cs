@@ -59,8 +59,8 @@ public class AIController_DOTS : MonoBehaviour
 
 		if (data.pathPoint == null)
 		{
-			WaypointGroup.Waypoint wp = WaypointGroup.Instance.GetClosestWaypoint(pos);
-			CalculatePath(WaypointGroup.Instance.GetNextWaypoint(wp), data, pos);
+			WaypointGroup.Waypoint wp = WaypointGroup.instance.GetClosestWaypoint(pos);
+			CalculatePath(WaypointGroup.instance.GetNextWaypoint(wp), data, pos);
 		}
 		else if (data.pathPoint.Length > data.curPoint && data.foundPath)
 		{
@@ -68,7 +68,7 @@ public class AIController_DOTS : MonoBehaviour
 			{
 				data.curPoint++; // Move on to next point
 				if (data.curPoint >= data.pathPoint.Length)
-					CalculatePath(WaypointGroup.Instance.GetWaypoint(data.curWP), data, pos);
+					CalculatePath(WaypointGroup.instance.GetWaypoint(data.curWP), data, pos);
 			}
 		}
 
@@ -95,7 +95,7 @@ public class AIController_DOTS : MonoBehaviour
 		var curWPPos = wp.point + wp.rotation * offset;
 
 		data.curWP++;
-		if (data.curWP >= WaypointGroup.Instance.WPs.Count)
+		if (data.curWP >= WaypointGroup.instance.WPs.Count)
 			data.curWP = 0;
 
 		var navPath = new NavMeshPath(); // New nav path

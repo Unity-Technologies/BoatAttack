@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/Data/New Controls.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Data/InputControls.inputactions'
 
 using System.Collections;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ public class InputControls : IInputActionCollection
     public InputControls()
     {
         asset = InputActionAsset.FromJson(@"{
-    ""name"": ""New Controls"",
+    ""name"": ""InputControls"",
     ""maps"": [
         {
             ""name"": ""BoatControls"",

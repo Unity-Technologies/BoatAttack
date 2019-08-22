@@ -49,7 +49,7 @@ public class DriveSystem : JobComponentSystem
 
 				float3 up = math.mul(rot.Value, math.up());
 				ComponentExtensions.ApplyLinearImpulse(ref vel, mass, force * dt);
-				ComponentExtensions.ApplyLinearImpulse(ref vel, mass, up * 20000f * dt);
+				//ComponentExtensions.ApplyLinearImpulse(ref vel, mass, up * 20000f * dt);
 			//ComponentExtensions.ApplyAngularImpulse(ref vel, mass, torque * dt);
 			//RB.AddForce(forward * modifier * horsePower, ForceMode.Acceleration); // add force forward based on input and horsepower
 			//RB.AddRelativeTorque(-Vector3.right * modifier, ForceMode.Acceleration);

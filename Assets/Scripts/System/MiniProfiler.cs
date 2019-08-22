@@ -12,6 +12,11 @@ namespace UnityEngine.Experimental.Rendering
         private string m_statsLabel;
         private GUIStyle m_style;
 
+        private float[] m_frameTimes = new float[5000];
+        private int m_totalFrames = 0;
+        private float m_minFrameTime = 1000f;
+        private float m_maxFrameTime = 0f;
+
         internal class RecorderEntry
         {
             public string name;
@@ -80,6 +85,23 @@ namespace UnityEngine.Experimental.Rendering
                 m_AccDeltaTime += Time.unscaledDeltaTime;
                 m_frameCount++;
 
+                m_frameTimes[(int) Mathf.Repeat(m_totalFrames, 5000)] = Time.unscaledDeltaTime;
+
+                int frameFactor = Mathf.Clamp(m_totalFrames, 0, 5000);
+
+                float m_averageFrameTime = 0f;
+                
+                for (int i = 0; i < frameFactor; i++)
+                {
+                    m_averageFrameTime += m_frameTimes[i];
+                }
+
+                if (m_frameCount > 10)
+                {
+                    m_minFrameTime = Time.unscaledDeltaTime < m_minFrameTime ? Time.unscaledDeltaTime : m_minFrameTime;
+                    m_maxFrameTime = Time.unscaledDeltaTime > m_maxFrameTime ? Time.unscaledDeltaTime : m_maxFrameTime;
+                }
+
                 // get timing & update average accumulators
                 for (int i = 0; i < recordersList.Length; i++)
                 {
@@ -106,10 +128,17 @@ namespace UnityEngine.Experimental.Rendering
 					m_statsLabel += $"    Draws:{avgDraw:F2}ms\n";
 					m_statsLabel += $"    PostProcessing:{avgPost:F2}ms\n";
 					m_statsLabel += $"Total: {(m_AccDeltaTime * 1000.0f * ooFrameCount):F2}ms ({(int)(((float)m_frameCount) / m_AccDeltaTime)} FPS)\n";
-
+                    
+                    float frameMulti = 1f / frameFactor;
+                    m_statsLabel += $"Average:{(m_averageFrameTime * 1000f * frameMulti):F2}ms\n";
+                    m_statsLabel += $"Minimum:{m_minFrameTime * 1000f:F2}ms\n";
+                    m_statsLabel += $"Maximum:{m_maxFrameTime * 1000f:F2}ms\n";
+                    
 					RazCounters();
 				}
             }
+
+            m_totalFrames++;
         }
 
         void OnGUI()
