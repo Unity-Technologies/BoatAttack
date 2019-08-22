@@ -2,6 +2,7 @@
 using System.Collections;
 using WaterSystem;
 using Unity.Mathematics;
+using Unity.Entities;
 
 namespace BoatAttack.Boat
 {
@@ -26,7 +27,8 @@ namespace BoatAttack.Boat
 
         void Awake()
         {
-            engineSound.time = UnityEngine.Random.Range(0f, engineSound.clip.length); // randomly start the engine sound
+			RB = gameObject.GetComponent<Rigidbody>();
+			engineSound.time = UnityEngine.Random.Range(0f, engineSound.clip.length); // randomly start the engine sound
             waterSound.time = UnityEngine.Random.Range(0f, waterSound.clip.length); // randomly start the water sound
 
             _guid = this.GetInstanceID(); // Get the engines GUID for the buoyancy system
@@ -82,5 +84,25 @@ namespace BoatAttack.Boat
             Gizmos.matrix = transform.localToWorldMatrix;
             Gizmos.DrawCube(enginePosition, new Vector3(0.1f, 0.2f, 0.3f)); // Draw teh engine position with sphere
         }
-    }
+
+		//Called by parent BuoyantObject_DOTS
+		public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
+		{
+			//Set up driving data
+			bool isHuman = GetComponent<BoatController>().Human;
+
+			if (!isHuman)
+				AIController_DOTS.Register(entity);
+
+			var data = new DrivingData
+			{
+				isHuman = isHuman,
+				torque = torque,
+				horsePower = horsePower,
+				engineOffset = transform.TransformPoint(enginePosition) - transform.position
+			};
+
+			dstManager.AddComponentData(entity, data);
+		}
+	}
 }
