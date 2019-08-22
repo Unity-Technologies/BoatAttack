@@ -24,8 +24,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 320792261470743900}
-  m_LocalRotation: {x: 0.09853761, y: -0.00000029802322, z: 0.000000033527613, w: 0.9951334}
-  m_LocalPosition: {x: 0.0000026226044, y: 2, z: -5}
+  m_LocalRotation: {x: 0.09853761, y: 0.0000000038789105, z: 0.0000000036334136, w: 0.9951334}
+  m_LocalPosition: {x: 0, y: 2, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 755158136872083488}
@@ -65,8 +65,6 @@ MonoBehaviour:
     m_OnCameraLive:
       m_PersistentCalls:
         m_Calls: []
-      m_TypeName: Cinemachine.CinemachineBrain+VcamActivatedEvent, Cinemachine, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 755158136872083488}
 --- !u!1 &3456622914693470529
@@ -15155,6 +15153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01c46922a8ed04b0081de10e51b3762f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RB: {fileID: 1531988076}
   vel: {x: 0, y: 0, z: 0}
   engineSound: {fileID: 4709031650991942137}
   waterSound: {fileID: 3376468742497974653}
@@ -15175,9 +15174,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Human: 1
   RandomizeColors: 1
-  PrimaryColor: {r: 0.35128158, g: 0.5332101, b: 0.053321023, a: 1}
-  TrimColor: {r: 0.23528534, g: 0.09393335, b: 0.4667899, a: 1}
   boatRenderer: {fileID: 3435970904891134659}
+  engine: {fileID: 1531988078}
   cam: {fileID: 1092127456239555175}
 --- !u!1 &3458364544873333437
 GameObject:

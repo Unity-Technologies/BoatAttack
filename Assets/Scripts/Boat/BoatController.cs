@@ -15,18 +15,17 @@ namespace BoatAttack.Boat
         //Boat stats
         public bool Human; // Is human
         public bool RandomizeColors = true;
-        public Color PrimaryColor; // Boat primary colour
-        public Color TrimColor; // Boat secondary colour
+        [NonSerialized]public Color PrimaryColor; // Boat primary colour
+        [NonSerialized]public Color TrimColor; // Boat secondary colour
         public Renderer boatRenderer; // The renderer for the boat mesh
-       
+        public Engine engine;
+        
         public CinemachineVirtualCamera cam;
         
         void OnValidate()
         {
             Colourize(); // Update the colour material property block
         }
-
-
 		void Awake()
 		{
 			Colourize();
@@ -34,13 +33,15 @@ namespace BoatAttack.Boat
 		// Use this for initialization
 		void Start()
         {
+            engine.RB = GetComponent<Rigidbody>();
+            
             if (Human)
             {
-                gameObject.AddComponent<HumanController>(); // Adds a human controller if human
+                gameObject.AddComponent<HumanController>().engine = engine; // Adds a human controller if human
             }
             else
             {
-                gameObject.AddComponent<AIcontroller>(); // Adds an AI controller if AI
+                gameObject.AddComponent<AIcontroller>().engine = engine; // Adds an AI controller if AI
             }
         }
 

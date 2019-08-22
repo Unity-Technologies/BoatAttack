@@ -22,7 +22,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Splash
   m_Shader: {fileID: 4800000, guid: 8516d7a69675844a7a0b7095af7c46af, type: 3}
-  m_ShaderKeywords: _ALPHATEST_ON _RECEIVE_SHADOWS_OFF
+  m_ShaderKeywords: _ALPHAPREMULTIPLY_ON _ALPHATEST_ON _COLORADDSUBDIFF_ON _FADING_ON
+    _RECEIVE_SHADOWS_OFF _SOFTPARTICLES_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -81,21 +82,21 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _AlphaClip: 1
-    - _Blend: 2
+    - _Blend: 1
     - _BlendOp: 0
     - _BumpScale: 1
     - _CameraFadingEnabled: 0
     - _CameraFarFadeDistance: 2
     - _CameraNearFadeDistance: 1
-    - _ColorMode: 0
+    - _ColorMode: 1
     - _Cull: 0
-    - _Cutoff: 0.25
+    - _Cutoff: 0.048
     - _DetailNormalMapScale: 1
     - _DistortionBlend: 0.5
     - _DistortionEnabled: 0
     - _DistortionStrength: 1
     - _DistortionStrengthScaled: 0.1
-    - _DstBlend: 1
+    - _DstBlend: 10
     - _EmissionEnabled: 0
     - _FlipbookBlending: 0
     - _FlipbookMode: 0
@@ -112,10 +113,10 @@ Material:
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Shininess: 1
-    - _Smoothness: 1
+    - _Smoothness: 0.183
     - _SmoothnessSource: 1
     - _SmoothnessTextureChannel: 0
-    - _SoftParticlesEnabled: 0
+    - _SoftParticlesEnabled: 1
     - _SoftParticlesFarFadeDistance: 0.1
     - _SoftParticlesNearFadeDistance: 0
     - _SpecSource: 0
@@ -132,6 +133,6 @@ Material:
     - _Color: {r: 3.6368854, g: 3.6368854, b: 3.6368854, a: 1}
     - _ColorAddSubDiff: {r: 1, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
-    - _SpecColor: {r: 0.19999406, g: 0.19999406, b: 0.19999406, a: 1}
+    - _SoftParticleFadeParams: {r: 0, g: 10, b: 0, a: 0}
+    - _SpecColor: {r: 0.19998494, g: 0.19998494, b: 0.19998494, a: 0.2}
     - _TintColor: {r: 1, g: 1, b: 1, a: 1}

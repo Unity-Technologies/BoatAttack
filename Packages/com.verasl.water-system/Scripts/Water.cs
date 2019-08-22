@@ -23,6 +23,9 @@ namespace WaterSystem
                 return _Instance;
             }
         }
+        // Script references
+        private MainCameraAlign camAlign;
+        private PlanarReflections planarReflections;
 
         private bool useComputeBuffer;
         public bool computeOverride;
@@ -97,6 +100,10 @@ namespace WaterSystem
             float roll = cam.transform.localEulerAngles.z;
             Shader.SetGlobalFloat("_CameraRoll", roll);
             Shader.SetGlobalMatrix("_InvViewProjection", (GL.GetGPUProjectionMatrix(cam.projectionMatrix, false) * cam.worldToCameraMatrix).inverse);
+            foreach (var mesh in resources.defaultWaterMeshes)
+            {
+                Graphics.DrawMesh(mesh, transform.localToWorldMatrix, resources.defaultSeaMaterial, gameObject.layer, cam);
+            }
         }
 
         private void SafeDestroy(Object o)
@@ -114,6 +121,25 @@ namespace WaterSystem
             if (_bakedDepthTex)
             {
                 Shader.SetGlobalTexture("_WaterDepthMap", _bakedDepthTex);
+            }
+            
+            if (!gameObject.TryGetComponent(out camAlign))
+            {
+                camAlign = gameObject.AddComponent<MainCameraAlign>();
+                camAlign.hideFlags = HideFlags.HideAndDontSave | HideFlags.HideInInspector;
+            }
+
+            if (!gameObject.TryGetComponent(out planarReflections))
+            {
+                planarReflections = gameObject.AddComponent<PlanarReflections>();
+                planarReflections.hideFlags = HideFlags.HideAndDontSave | HideFlags.HideInInspector;
+            }
+            planarReflections.m_settings = settingsData.planarSettings;
+            planarReflections.enabled = settingsData.refType == ReflectionType.PlanarReflection;
+
+            if(resources == null)
+            {
+                resources = Resources.Load("WaterResources") as WaterResources;
             }
             //CaptureDepthMap();
         }

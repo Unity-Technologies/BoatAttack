@@ -1,7 +1,6 @@
 ﻿#ifndef WATER_COMMON_INCLUDED
 #define WATER_COMMON_INCLUDED
 
-#define _MAIN_LIGHT_SHADOWS_CASCADE 1
 #define SHADOWS_SCREEN 0
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
@@ -182,12 +181,14 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	// Fresnel
 	half fresnelTerm = CalculateFresnelTerm(IN.normal, IN.viewDir.xyz);
 
-	// Shadows
-	half shadow = MainLightRealtimeShadow(TransformWorldToShadowCoord(IN.posWS));
-	
-	// Specular
-	half3 spec = Highlights(IN.posWS, 0.001, IN.normal, IN.viewDir) * shadow;
-	Light mainLight = GetMainLight();
+	// Lighting
+	Light mainLight = GetMainLight(TransformWorldToShadowCoord(IN.posWS));
+    half shadow = mainLight.shadowAttenuation;
+    
+    BRDFData brdfData;
+    InitializeBRDFData(half3(0, 0, 0), 0, half3(1, 1, 1), 0.9, 1, brdfData);
+	half3 spec = DirectBDRF(brdfData, normalize(IN.normal), mainLight.direction, IN.viewDir) * shadow;
+	//half3 spec = Highlights(IN.posWS, 0.001, IN.normal, IN.viewDir) * shadow;
 
 	// Foam
 	float2 foamMapUV = (IN.uv.zw * 0.1) + (detailBump.xy * 0.0025) + half2(IN.fogFactorNoise.y * 0.1, (1-IN.fogFactorNoise.y) * 0.1) + _Time.y * 0.05;
@@ -226,7 +227,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
     float fogFactor = IN.fogFactorNoise.x;
     comp = MixFog(comp, fogFactor);
 	return half4(comp, 1);
-	//return half4(frac(IN.posWS.yyy), 1); // debug line
+	//return half4(spec.xxx, 1); // debug line
 	//return half4(frac(IN.posWS.yyy), 1); // debug line
 }
 
