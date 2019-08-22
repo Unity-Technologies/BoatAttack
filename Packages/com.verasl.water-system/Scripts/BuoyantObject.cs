@@ -156,7 +156,7 @@ namespace WaterSystem
                 for(var i = 0; i < voxels.Length; i++) BuoyancyForce(voxels[i], heights[i].y, ref submergedAmount, ref debugInfo[i]);
                 Physics.SyncTransforms();
                 Physics.autoSyncTransforms = true;
-               // UpdateDrag(submergedAmount);
+				UpdateDrag(submergedAmount);
             }
             else if(_buoyancyType == BuoyancyType.Physical)
             {
