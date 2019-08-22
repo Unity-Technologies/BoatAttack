@@ -834,29 +834,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce2d6128fa5c04c7e84e7978ef8b37a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useDOTS: 1
+  humanBoat: {fileID: 3457973740146875416, guid: 0a308b87c1579fb4c9ea256406209ca5,
+    type: 3}
+  aiBoat: {fileID: 980501028647124811, guid: c48ad8112d3b604478deaa848d47c861, type: 3}
   raceData:
     boats:
     - boatName: Boogie
-      boatPrefab: {fileID: 3457973740146875416, guid: 0a308b87c1579fb4c9ea256406209ca5,
+      boatPrefab: {fileID: 1553288845585282, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
       Human: 1
     - boatName: Frooper
-      boatPrefab: {fileID: 3457973740146875416, guid: 0a308b87c1579fb4c9ea256406209ca5,
+      boatPrefab: {fileID: 1553288845585282, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
       Human: 0
     - boatName: Doogat
-      boatPrefab: {fileID: 3457973740146875416, guid: 0a308b87c1579fb4c9ea256406209ca5,
+      boatPrefab: {fileID: 1553288845585282, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
       Human: 0
     - boatName: Kepoo
-      boatPrefab: {fileID: 3457973740146875416, guid: 0a308b87c1579fb4c9ea256406209ca5,
+      boatPrefab: {fileID: 1553288845585282, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
       Human: 0
     laps: 3
     reversed: 1
-  humanBoat: {fileID: 3457973740146875416, guid: 0a308b87c1579fb4c9ea256406209ca5,
-    type: 3}
-  aiBoat: {fileID: 980501028647124811, guid: c48ad8112d3b604478deaa848d47c861, type: 3}
 --- !u!114 &208737148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3319,8 +3320,7 @@ MonoBehaviour:
   m_RenderShadows: 1
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
-  m_RendererOverrideOption: 1
-  m_RendererData: {fileID: 11400000, guid: fa301df1a78cf4a9ebe2a3139dc8be8f, type: 2}
+  m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
     m_Bits: 1

@@ -16,7 +16,11 @@ namespace BoatAttack
             public bool reversed;
         }
 
-        public Race raceData;
+		public bool useDOTS;
+		public GameObject humanBoat;
+		public GameObject aiBoat;
+
+		public Race raceData;
 
         private void Start()
         {
@@ -32,7 +36,9 @@ namespace BoatAttack
             {
                 var matrix = WaypointGroup.instance.startingPositons[i];
 
-                GameObject boatObject = Instantiate(boat.boatPrefab, matrix.GetColumn(3), Quaternion.LookRotation(matrix.GetColumn(2))) as GameObject;
+				var prefab = useDOTS ? (boat.Human ? humanBoat : aiBoat) : boat.boatPrefab;
+
+                GameObject boatObject = Instantiate(prefab, matrix.GetColumn(3), Quaternion.LookRotation(matrix.GetColumn(2))) as GameObject;
                 boatObject.name = boat.boatName;
                 BoatController boatController = boatObject.GetComponent<BoatController>();
                 boatController.Human = boat.Human;

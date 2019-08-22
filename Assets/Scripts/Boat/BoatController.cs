@@ -26,10 +26,14 @@ namespace BoatAttack.Boat
             Colourize(); // Update the colour material property block
         }
 
-        // Use this for initialization
-        void Awake()
+
+		void Awake()
+		{
+			Colourize();
+		}
+		// Use this for initialization
+		void Start()
         {
-            Colourize();
             if (Human)
             {
                 gameObject.AddComponent<HumanController>(); // Adds a human controller if human
