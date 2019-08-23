@@ -13,6 +13,7 @@ public class BoatRenderer : ScriptableRenderer
     PostProcessPass m_FinalPostProcessPass;
     MainRenderPass m_MainRenderPass;
     FinalBlitPass m_FinalBlitPass;
+    CopyDepthPass m_CopyDepthPass;
 
 #if UNITY_EDITOR
     SceneViewDepthCopyPass m_SceneViewDepthCopyPass;
@@ -24,6 +25,8 @@ public class BoatRenderer : ScriptableRenderer
     RenderTargetHandle m_CameraDepthAttachment;
     RenderTargetHandle m_AfterPostProcessColor;
     RenderTargetHandle m_ColorGradingLut;
+    
+    RenderTargetHandle m_DepthTexture;
 
     ForwardLights m_ForwardLights;
 
@@ -31,14 +34,15 @@ public class BoatRenderer : ScriptableRenderer
     {
         Material blitMaterial = CoreUtils.CreateEngineMaterial(data.shaders.blitPS);
         Material copyDepthMaterial = CoreUtils.CreateEngineMaterial(data.shaders.copyDepthPS);
-
+        
         m_MainLightShadowCasterPass = new MainLightShadowCasterPass(RenderPassEvent.BeforeRenderingShadows);
         m_ColorGradingLutPass = new ColorGradingLutPass(RenderPassEvent.BeforeRenderingOpaques, data.postProcessData);
         m_PostProcessPass = new PostProcessPass(RenderPassEvent.BeforeRenderingPostProcessing, data.postProcessData);
         m_FinalPostProcessPass = new PostProcessPass(RenderPassEvent.AfterRenderingPostProcessing, data.postProcessData);
-        m_MainRenderPass = new MainRenderPass(RenderPassEvent.BeforeRenderingOpaques);
+        m_MainRenderPass = new MainRenderPass(RenderPassEvent.BeforeRenderingOpaques, data.caustics);
         m_FinalBlitPass = new FinalBlitPass(RenderPassEvent.AfterRendering, blitMaterial);
-
+        m_CopyDepthPass = new CopyDepthPass(RenderPassEvent.BeforeRenderingOpaques, copyDepthMaterial);
+        
 #if UNITY_EDITOR
         m_SceneViewDepthCopyPass = new SceneViewDepthCopyPass(RenderPassEvent.AfterRendering + 9, copyDepthMaterial);
 #endif
@@ -49,6 +53,7 @@ public class BoatRenderer : ScriptableRenderer
         m_CameraDepthAttachment.Init("_CameraDepthAttachment");
         m_AfterPostProcessColor.Init("_AfterPostProcessTexture");
         m_ColorGradingLut.Init("_InternalGradingLut");
+        m_DepthTexture.Init("_CameraDepthTexture");
         m_ForwardLights = new ForwardLights();
     }
 
@@ -109,6 +114,13 @@ public class BoatRenderer : ScriptableRenderer
         }
 
         EnqueuePass(m_MainRenderPass);
+        
+        // If a depth texture was created we necessarily need to copy it, otherwise we could have render it to a renderbuffer
+        if (createDepthTexture)
+        {
+            m_CopyDepthPass.Setup(m_ActiveCameraDepthAttachment, m_DepthTexture);
+            EnqueuePass(m_CopyDepthPass);
+        }
 
         if (postProcessEnabled)
         {

@@ -24,6 +24,7 @@ public class BoatRendererData : ScriptableRendererData
     [Reload("Runtime/Data/PostProcessData.asset")]
     public PostProcessData postProcessData = null;
     public ShaderResources shaders = null;
+    public Material caustics = null;
 
     protected override ScriptableRenderer Create()
     {

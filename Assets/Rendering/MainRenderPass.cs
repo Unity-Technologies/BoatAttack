@@ -12,13 +12,16 @@ public class MainRenderPass : ScriptableRenderPass
     AttachmentDescriptor colorAttachmentDescriptor;
     AttachmentDescriptor depthAttachmentDescriptor;
 
-    public MainRenderPass(RenderPassEvent renderPassEvent)
+    Material m_CausticsMaterial;
+
+    public MainRenderPass(RenderPassEvent renderPassEvent, Material causticsMaterial)
     {
         this.renderPassEvent = renderPassEvent;
         m_OpaqueFilteringSettings = new FilteringSettings(RenderQueueRange.opaque);
         m_TransparentFilteringSettings = new FilteringSettings(RenderQueueRange.transparent);
         colorAttachmentDescriptor = new AttachmentDescriptor(RenderTextureFormat.RGB111110Float);
         depthAttachmentDescriptor = new AttachmentDescriptor(RenderTextureFormat.Depth);
+        m_CausticsMaterial = causticsMaterial;
     }
 
     //public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
@@ -57,6 +60,10 @@ public class MainRenderPass : ScriptableRenderPass
 
         context.DrawRenderers(renderingData.cullResults, ref opaqueDrawingSettings, ref m_OpaqueFilteringSettings);
         context.DrawSkybox(renderingData.cameraData.camera);
-        context.DrawRenderers(renderingData.cullResults, ref transparentDrawingSettings, ref m_TransparentFilteringSettings);
+        var cmd = CommandBufferPool.Get("DrawCaustics");
+        cmd.DrawMesh(RenderingUtils.fullscreenMesh, Matrix4x4.identity, m_CausticsMaterial);
+        context.ExecuteCommandBuffer(cmd);
+        CommandBufferPool.Release(cmd);
+        //context.DrawRenderers(renderingData.cullResults, ref transparentDrawingSettings, ref m_TransparentFilteringSettings);
     }
 }
