@@ -88,7 +88,7 @@ namespace UnityEngine.Rendering.LWRP
             if (dest == null)
                 return;
             dest.CopyFrom(src);
-            dest.useOcclusionCulling = true;
+            dest.useOcclusionCulling = false;
             UniversalAdditionalCameraData camData;
             if (dest.gameObject.TryGetComponent(out camData))
             {
@@ -230,13 +230,6 @@ namespace UnityEngine.Rendering.LWRP
             if (camera.cameraType == CameraType.Reflection || camera.cameraType == CameraType.Preview)
                 return;
             
-            GL.invertCulling = true;
-            RenderSettings.fog = false;
-            var max = QualitySettings.maximumLODLevel;
-            var bias = QualitySettings.lodBias;
-            QualitySettings.maximumLODLevel = 1;
-            QualitySettings.lodBias = bias * 2f;
-
             UpdateReflectionCamera(camera);
             m_ReflectionCamera.cameraType = camera.cameraType;
 
@@ -252,6 +245,13 @@ namespace UnityEngine.Rendering.LWRP
 
             m_ReflectionCamera.targetTexture = m_ReflectionTexture;
 
+            GL.invertCulling = true;
+            RenderSettings.fog = false;
+            var max = QualitySettings.maximumLODLevel;
+            var bias = QualitySettings.lodBias;
+            QualitySettings.maximumLODLevel = 1;
+            QualitySettings.lodBias = bias * 0.25f;
+            
             UniversalRenderPipeline.RenderSingleCamera(context, m_ReflectionCamera);
 
             GL.invertCulling = false;
