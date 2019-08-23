@@ -21,8 +21,8 @@ public class BoatRenderer : ScriptableRenderer
 
     RenderTargetHandle m_ActiveCameraColorAttachment;
     RenderTargetHandle m_ActiveCameraDepthAttachment;
-    RenderTargetHandle m_CameraColorAttachment;
-    RenderTargetHandle m_CameraDepthAttachment;
+    public RenderTargetHandle m_CameraColorAttachment;
+    public RenderTargetHandle m_CameraDepthAttachment;
     RenderTargetHandle m_AfterPostProcessColor;
     RenderTargetHandle m_ColorGradingLut;
     
@@ -113,6 +113,7 @@ public class BoatRenderer : ScriptableRenderer
             EnqueuePass(m_ColorGradingLutPass);
         }
 
+        m_MainRenderPass.renderer = this;
         EnqueuePass(m_MainRenderPass);
         
         // If a depth texture was created we necessarily need to copy it, otherwise we could have render it to a renderbuffer

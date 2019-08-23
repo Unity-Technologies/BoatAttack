@@ -13,6 +13,7 @@ public class MainRenderPass : ScriptableRenderPass
     AttachmentDescriptor depthAttachmentDescriptor;
 
     Material m_CausticsMaterial;
+    public BoatRenderer renderer;
 
     public MainRenderPass(RenderPassEvent renderPassEvent, Material causticsMaterial)
     {
@@ -34,36 +35,30 @@ public class MainRenderPass : ScriptableRenderPass
         var opaqueDrawingSettings = CreateDrawingSettings(m_UniversalForwardPass, ref renderingData, SortingCriteria.CommonOpaque);
         var transparentDrawingSettings = CreateDrawingSettings(m_UniversalForwardPass, ref renderingData, SortingCriteria.CommonTransparent);
 
-        //var cameraTargetDescriptor = renderingData.cameraData.cameraTargetDescriptor;
-        //int width = cameraTargetDescriptor.width;
-        //int height = cameraTargetDescriptor.height;
-        //var attachments = new NativeArray<AttachmentDescriptor>(2, Allocator.Temp);
-        //attachments[0] = colorAttachmentDescriptor;
-        //attachments[1] = depthAttachmentDescriptor;
+        var cameraTargetDescriptor = renderingData.cameraData.cameraTargetDescriptor;
+        int width = cameraTargetDescriptor.width;
+        int height = cameraTargetDescriptor.height;
+        colorAttachmentDescriptor.ConfigureTarget(renderer.m_CameraColorAttachment.Identifier(), false, true);
+        depthAttachmentDescriptor.ConfigureTarget(renderer.m_CameraDepthAttachment.Identifier(), false, true);
+        var descriptors = new NativeArray<AttachmentDescriptor>(
+                    new[] { colorAttachmentDescriptor, depthAttachmentDescriptor },
+                    Allocator.Temp);
 
-        //var descriptors = new NativeArray<AttachmentDescriptor>(
-        //            new[] { colorAttachmentDescriptor, depthAttachmentDescriptor },
-        //            Allocator.Temp);
-
-        //using (context.BeginScopedRenderPass(width, height, 1, descriptors, 1))
-        //{
-        //    descriptors.Dispose();
-        //    NativeArray<int> attachmentIndices = new NativeArray<int>(new[] { 0 }, Allocator.Temp);
-        //    using (context.BeginScopedSubPass(attachmentIndices))
-        //    {
-        //        attachmentIndices.Dispose();
-        //        context.DrawRenderers(renderingData.cullResults, ref opaqueDrawingSettings, ref m_OpaqueFilteringSettings);
-        //        context.DrawSkybox(renderingData.cameraData.camera);
-        //        context.DrawRenderers(renderingData.cullResults, ref transparentDrawingSettings, ref m_TransparentFilteringSettings);
-        //    }
-        //}
-
-        context.DrawRenderers(renderingData.cullResults, ref opaqueDrawingSettings, ref m_OpaqueFilteringSettings);
-        context.DrawSkybox(renderingData.cameraData.camera);
-        var cmd = CommandBufferPool.Get("DrawCaustics");
-        cmd.DrawMesh(RenderingUtils.fullscreenMesh, Matrix4x4.identity, m_CausticsMaterial);
-        context.ExecuteCommandBuffer(cmd);
-        CommandBufferPool.Release(cmd);
-        //context.DrawRenderers(renderingData.cullResults, ref transparentDrawingSettings, ref m_TransparentFilteringSettings);
+        using (context.BeginScopedRenderPass(width, height, 1, descriptors, 1))
+        {
+            descriptors.Dispose();
+            NativeArray<int> attachmentIndices = new NativeArray<int>(new[] { 0 }, Allocator.Temp);
+            using (context.BeginScopedSubPass(attachmentIndices))
+            {
+                attachmentIndices.Dispose();
+                context.DrawRenderers(renderingData.cullResults, ref opaqueDrawingSettings, ref m_OpaqueFilteringSettings);
+                context.DrawSkybox(renderingData.cameraData.camera);
+                var cmd = CommandBufferPool.Get("DrawCaustics");
+                cmd.DrawMesh(RenderingUtils.fullscreenMesh, Matrix4x4.identity, m_CausticsMaterial);
+                context.ExecuteCommandBuffer(cmd);
+                CommandBufferPool.Release(cmd);
+                //context.DrawRenderers(renderingData.cullResults, ref transparentDrawingSettings, ref m_TransparentFilteringSettings);
+            }
+        }
     }
 }
