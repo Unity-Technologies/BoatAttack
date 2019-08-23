@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using Unity.Collections;
 
 public class MainRenderPass : ScriptableRenderPass
 {
@@ -8,11 +9,16 @@ public class MainRenderPass : ScriptableRenderPass
     FilteringSettings m_TransparentFilteringSettings;
     ShaderTagId m_UniversalForwardPass = new ShaderTagId("UniversalForward");
 
+    AttachmentDescriptor colorAttachmentDescriptor;
+    AttachmentDescriptor depthAttachmentDescriptor;
+
     public MainRenderPass(RenderPassEvent renderPassEvent)
     {
         this.renderPassEvent = renderPassEvent;
         m_OpaqueFilteringSettings = new FilteringSettings(RenderQueueRange.opaque);
         m_TransparentFilteringSettings = new FilteringSettings(RenderQueueRange.transparent);
+        colorAttachmentDescriptor = new AttachmentDescriptor(RenderTextureFormat.RGB111110Float);
+        depthAttachmentDescriptor = new AttachmentDescriptor(RenderTextureFormat.Depth);
     }
 
     //public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
@@ -24,6 +30,30 @@ public class MainRenderPass : ScriptableRenderPass
     {
         var opaqueDrawingSettings = CreateDrawingSettings(m_UniversalForwardPass, ref renderingData, SortingCriteria.CommonOpaque);
         var transparentDrawingSettings = CreateDrawingSettings(m_UniversalForwardPass, ref renderingData, SortingCriteria.CommonTransparent);
+
+        //var cameraTargetDescriptor = renderingData.cameraData.cameraTargetDescriptor;
+        //int width = cameraTargetDescriptor.width;
+        //int height = cameraTargetDescriptor.height;
+        //var attachments = new NativeArray<AttachmentDescriptor>(2, Allocator.Temp);
+        //attachments[0] = colorAttachmentDescriptor;
+        //attachments[1] = depthAttachmentDescriptor;
+
+        //var descriptors = new NativeArray<AttachmentDescriptor>(
+        //            new[] { colorAttachmentDescriptor, depthAttachmentDescriptor },
+        //            Allocator.Temp);
+
+        //using (context.BeginScopedRenderPass(width, height, 1, descriptors, 1))
+        //{
+        //    descriptors.Dispose();
+        //    NativeArray<int> attachmentIndices = new NativeArray<int>(new[] { 0 }, Allocator.Temp);
+        //    using (context.BeginScopedSubPass(attachmentIndices))
+        //    {
+        //        attachmentIndices.Dispose();
+        //        context.DrawRenderers(renderingData.cullResults, ref opaqueDrawingSettings, ref m_OpaqueFilteringSettings);
+        //        context.DrawSkybox(renderingData.cameraData.camera);
+        //        context.DrawRenderers(renderingData.cullResults, ref transparentDrawingSettings, ref m_TransparentFilteringSettings);
+        //    }
+        //}
 
         context.DrawRenderers(renderingData.cullResults, ref opaqueDrawingSettings, ref m_OpaqueFilteringSettings);
         context.DrawSkybox(renderingData.cameraData.camera);
