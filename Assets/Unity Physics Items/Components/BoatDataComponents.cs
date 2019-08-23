@@ -8,9 +8,9 @@ public struct BuoyantData : IComponentData
 	public float voxelResolution;
 	public float3 normal;
 	public float3 localArchimedesForce;
-	public float percentSubmerged;
 	public float baseDrag;
 	public float baseAngularDrag;
+	public float percentSubmerged;
 }
 
 public struct VoxelOffset : IBufferElementData
@@ -24,10 +24,15 @@ public struct VoxelHeight : IBufferElementData
 
 public struct DrivingData : IComponentData
 {
-	public bool isHuman;
-	public float torque;
+	public float steeringTorque;
+	public float upwardTorque;
 	public float horsePower;
 	public float3 engineOffset;
+}
+
+public struct InputData : IComponentData
+{
+	public bool isHuman;
 	public float throttle;
 	public float steering;
 }

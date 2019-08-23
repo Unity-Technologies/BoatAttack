@@ -41,7 +41,7 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 		[ReadOnly]
 		public BufferFromEntity<VoxelHeight> heightBuffer;
 		
-		public void Execute(Entity entity, int index, ref Translation pos, ref Rotation rot, ref PhysicsVelocity vel, ref PhysicsMass mass, ref PhysicsDamping damping, ref BuoyantData data)
+		public void Execute(Entity entity, int index, [ReadOnly] ref Translation pos, [ReadOnly] ref Rotation rot, ref PhysicsVelocity vel, ref PhysicsMass mass, ref PhysicsDamping damping, [ReadOnly] ref BuoyantData data)
 		{
 			DynamicBuffer<VoxelOffset> offsets = offsetBuffer[entity];
 			DynamicBuffer<VoxelHeight> heights = heightBuffer[entity];
@@ -68,6 +68,11 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 					vel.ApplyImpulse(mass, pos, rot, force * dt, wp);
 				}
 			}
+
+			//Apply drag
+			//data.percentSubmerged = Mathf.Lerp(data.percentSubmerged, submergedAmount, 0.25f);
+			//damping.Linear = data.baseDrag + (data.baseDrag * (data.percentSubmerged * 10f));
+			//damping.Angular = data.baseAngularDrag + (data.percentSubmerged * 0.5f);
 		}
 	}
 }

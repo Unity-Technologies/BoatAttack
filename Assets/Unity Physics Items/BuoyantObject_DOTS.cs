@@ -330,7 +330,6 @@ namespace WaterSystem
 			data.type = _buoyancyType;
 			data.voxelResolution = voxelResolution;
 			data.localArchimedesForce = localArchimedesForce;
-			data.percentSubmerged = 0f;
 			data.baseDrag = baseDrag;
 			data.baseAngularDrag = baseAngularDrag;
 			dstManager.AddComponentData(entity, data);
@@ -351,7 +350,7 @@ namespace WaterSystem
             var engine = GetComponent<Engine>();
             if (engine)
             {
-                offsets.Add(new VoxelOffset { Value = new float3(engine.enginePosition) - mass.CenterOfMass });
+				offsets.Add(new VoxelOffset { Value = new float3(engine.enginePosition - centerOfMass) });
                 heights.Add(new VoxelHeight { Value = float3.zero });
             }
 
