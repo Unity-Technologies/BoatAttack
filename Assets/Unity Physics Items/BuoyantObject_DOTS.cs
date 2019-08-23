@@ -77,7 +77,7 @@ namespace WaterSystem
 
 		private void Start()
 		{
-			//Application.targetFrameRate = (int)(1f / Time.fixedDeltaTime);
+			Application.targetFrameRate = (int)(1f / Time.fixedDeltaTime);
 			_guid = gameObject.GetInstanceID();
 
 			Init();
@@ -170,7 +170,7 @@ namespace WaterSystem
 			{
 				float k = Mathf.Clamp01(waterLevel - (wp.y - voxelResolution)) / (voxelResolution * 2f);
 
-				submergedAmount += k / voxels.Length;//(math.clamp(waterLevel - (wp.y - voxelResolution), 0f, voxelResolution * 2f) / (voxelResolution * 2f)) / voxels.Count;
+				submergedAmount += k / voxels.Length;
 
 				var velocity = RB.GetPointVelocity(wp);
 				velocity.y *= 2f;
@@ -322,16 +322,11 @@ namespace WaterSystem
 		//Will be called by the PhysicsConversionSystem
 		public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
 		{
-			//Calculat all initial values
+			// Calculate all initial values
 			Init();
 
-			
-
-			
-			
-
-			//Add data needed for buoyancy
-			BuoyantData data = new BuoyantData();
+            //Add data needed for buoyancy
+            BuoyantData data = new BuoyantData();
 			data.type = _buoyancyType;
 			data.voxelResolution = voxelResolution;
 			data.localArchimedesForce = localArchimedesForce;
@@ -345,36 +340,39 @@ namespace WaterSystem
 			mass.CenterOfMass = centerOfMass;
 			dstManager.SetComponentData(entity, mass);
 
-
 			dstManager.AddBuffer<VoxelOffset>(entity);
 			dstManager.AddBuffer<VoxelHeight>(entity);
 
-			//Initialize the voxel and height buffers
-			DynamicBuffer<VoxelOffset> offsets = dstManager.GetBuffer<VoxelOffset>(entity);
+            //Initialize the voxel and height buffers
+            DynamicBuffer<VoxelOffset> offsets = dstManager.GetBuffer<VoxelOffset>(entity);
 			DynamicBuffer<VoxelHeight> heights = dstManager.GetBuffer<VoxelHeight>(entity);
 
-			//Add engine position as first point
-			//offsets.Add(new VoxelOffset { Value = engine.enginePosition - centerOfMass });
-			//heights.Add(new VoxelHeight { Value = float3.zero });
+            //Add engine position as first point
+            var engine = GetComponent<Engine>();
+            if (engine)
+            {
+                offsets.Add(new VoxelOffset { Value = new float3(engine.enginePosition) - mass.CenterOfMass });
+                heights.Add(new VoxelHeight { Value = float3.zero });
+            }
 
-			//Add the rest of the positions
-			for (int i = 0; i < voxels.Length; i++)
+            //Add the rest of the positions
+            for (int i = 0; i < voxels.Length; i++)
 			{
-				offsets.Add(new VoxelOffset { Value = voxels[i] - centerOfMass });// transform.TransformPoint(voxels[i]) - transform.position }); // << Is this right?
+                offsets.Add(new VoxelOffset { Value = voxels[i] });
 				heights.Add(new VoxelHeight { Value = float3.zero });
 			}
 
-			//Call other Convert methods
-			var body = GetComponentInChildren<BoatBodyComponent>();
-			//if (body)
-				body.Convert(conversionSystem.GetPrimaryEntity(body), dstManager, conversionSystem);
+            // Call other Convert methods
+            if (engine)
+                engine.Convert(conversionSystem.GetPrimaryEntity(engine), dstManager, conversionSystem);
 
-			var engine = GetComponent<Engine>();
-			if (engine)
-				engine.Convert(conversionSystem.GetPrimaryEntity(engine), dstManager, conversionSystem);
-		}
+            var body = GetComponentInChildren<BoatBodyComponent>();
+            if (body)
+                body.Convert(conversionSystem.GetPrimaryEntity(body), dstManager, conversionSystem);
 
-		struct DebugDrawing
+        }
+
+        struct DebugDrawing
 		{
 			public Vector3 force;
 			public Vector3 position;
