@@ -77,6 +77,7 @@ namespace WaterSystem
 
 		private void Start()
 		{
+			//Application.targetFrameRate = (int)(1f / Time.fixedDeltaTime);
 			_guid = gameObject.GetInstanceID();
 
 			Init();

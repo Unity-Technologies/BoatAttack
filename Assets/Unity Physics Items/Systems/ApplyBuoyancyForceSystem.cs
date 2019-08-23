@@ -24,7 +24,7 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 		lastTime = Time.time;
 		var job = new ForceJob()
 		{
-			dt = Time.deltaTime,
+			dt = Time.fixedDeltaTime,
 			offsetBuffer = GetBufferFromEntity<VoxelOffset>(false),
 			heightBuffer = GetBufferFromEntity<VoxelHeight>(false)
 		};
@@ -50,7 +50,6 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 
 			float submergedAmount = 0f;
 			//Debug.Log("new pass: " + entity.ToString());
-
 			float3 avPos = float3.zero;
 			float3 avForce = float3.zero;
 			float avgHeight = 0;

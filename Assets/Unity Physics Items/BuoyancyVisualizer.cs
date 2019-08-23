@@ -14,20 +14,20 @@ public class BuoyancyVisualizer : MonoBehaviour, IConvertGameObjectToEntity
 			return;
 
 		DynamicBuffer<VoxelHeight> heights = World.Active.EntityManager.GetBuffer<VoxelHeight>(boat);
+		DynamicBuffer<VoxelOffset> offsets = World.Active.EntityManager.GetBuffer<VoxelOffset>(boat);
 
-	
 
 		Gizmos.color = Color.red;
 
 
 
 		for (int i = 0; i < heights.Length; i++)
-			Gizmos.DrawSphere(heights[i].Value, .1f);
+			Gizmos.DrawSphere(new Vector3(transform.position.x + offsets[i].Value.x, heights[i].Value.y, offsets[i].Value.z + transform.position.z), .1f);
 	}
 
 	public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
 	{
-		
+
 		if (boat == Entity.Null)
 		{
 			boat = conversionSystem.GetPrimaryEntity(transform.parent);
