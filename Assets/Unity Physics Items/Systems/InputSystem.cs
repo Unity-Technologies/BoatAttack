@@ -35,8 +35,8 @@ public class InputSystem : ComponentSystem
 	protected override void OnUpdate()
 	{
 		//not time to start
-		//if (Time.time < startTime)
-			//return;
+		if (Time.time < startTime)
+			return;
 
 		Entities.ForEach((Entity entity, ref Translation pos, ref Rotation rot, ref DrivingData data ) =>
 		{
@@ -47,7 +47,9 @@ public class InputSystem : ComponentSystem
 			}
 			else
 			{
-				AIController_DOTS.GetInputs(entity, pos.Value, rot.Value, out data.throttle, out data.steering);
+				AIController_DOTS2.GetInputs(entity, pos.Value, rot.Value, out data.throttle, out data.steering);
+				if (data.throttle < .01f)
+					Debug.Log($"{Time.time} Throttle is zero");
 			}
 		});
 	}

@@ -91,7 +91,8 @@ namespace BoatAttack.Boat
 			bool isHuman = GetComponent<BoatController>().Human;
 
 			if (!isHuman)
-				AIController_DOTS.Register(entity);
+				AIController_DOTS2.Register(entity, transform.position);
+				//AIController_DOTS.Register(entity);
 
 			var data = new DrivingData
 			{
