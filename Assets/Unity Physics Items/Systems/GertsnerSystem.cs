@@ -41,7 +41,7 @@ public class GertsnerSystem : JobComponentSystem
 	}
 
 	[BurstCompile]
-	public struct HeightJob : IJobForEachWithEntity<Translation, Rotation, BuoyantData>
+	public struct HeightJob : IJobForEachWithEntity<Translation, Rotation, BuoyancyNormal>
 	{
 		[ReadOnly]
 		public NativeArray<Wave> waveData; // wave data stroed in vec4's like the shader version but packed into one
@@ -56,7 +56,7 @@ public class GertsnerSystem : JobComponentSystem
 		public BufferFromEntity<VoxelHeight> heightBuffer;
 
 		// The code actually running on the job
-		public void Execute(Entity entity, int i, [ReadOnly] ref Translation translation, ref Rotation rot, ref BuoyantData data)
+		public void Execute(Entity entity, int i, [ReadOnly] ref Translation translation, ref Rotation rot, ref BuoyancyNormal normal)
 		{
 			DynamicBuffer<VoxelOffset> offsets = offsetBuffer[entity];
 			DynamicBuffer<VoxelHeight> heights = heightBuffer[entity];
@@ -120,9 +120,10 @@ public class GertsnerSystem : JobComponentSystem
 				}
 
 				heights[vi] = new VoxelHeight{Value = wavePos};
+				
 
 				if (offsets.Length == 1)
-					data.normal = math.normalize(waveNorm.xzy);
+					normal.Value = math.normalize(waveNorm.xzy);
 			}
 		}
 	}

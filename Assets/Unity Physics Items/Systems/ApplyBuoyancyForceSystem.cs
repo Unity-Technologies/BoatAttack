@@ -20,14 +20,26 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
-		var job = new ForceJob()
+		var offsets = GetBufferFromEntity<VoxelOffset>(false);
+		var heights = GetBufferFromEntity<VoxelHeight>(false);
+
+
+		var forceJob = new ForceJob()
 		{
 			dt = Time.fixedDeltaTime,
-			offsetBuffer = GetBufferFromEntity<VoxelOffset>(false),
-			heightBuffer = GetBufferFromEntity<VoxelHeight>(false)
+			offsetBuffer = offsets,
+			heightBuffer = heights
 		};
 
-		return job.Schedule(this, inputDeps);
+		var forceJobHandle = forceJob.Schedule(this, inputDeps);
+
+		var simpleJob = new SimpleForceJob()
+		{
+			dt = Time.fixedDeltaTime,
+			heightBuffer = heights
+		};
+
+		return simpleJob.Schedule(this, forceJobHandle);
 	}
 
 	//[BurstCompile]
@@ -73,6 +85,33 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 			//data.percentSubmerged = Mathf.Lerp(data.percentSubmerged, submergedAmount, 0.25f);
 			//damping.Linear = data.baseDrag + (data.baseDrag * (data.percentSubmerged * 10f));
 			//damping.Angular = data.baseAngularDrag + (data.percentSubmerged * 0.5f);
+		}
+	}
+
+	[BurstCompile]
+	[RequireComponentTag(typeof(SimpleBuoyantTag))]
+	public struct SimpleForceJob : IJobForEachWithEntity<Translation, Rotation, BuoyancyNormal>
+	{
+		public float dt;
+
+		[ReadOnly]
+		public BufferFromEntity<VoxelHeight> heightBuffer;
+
+		public void Execute(Entity entity, int index, [ReadOnly] ref Translation pos, [ReadOnly] ref Rotation rot, [ReadOnly] ref BuoyancyNormal normal)
+		{
+			DynamicBuffer<VoxelHeight> heights = heightBuffer[entity];
+
+			var entityTransform = new RigidTransform(rot.Value, pos.Value);
+
+			pos.Value.y = heights[0].Value.y;
+			//var position = pos.Value;
+			//position.y = heights[0].Value.y;
+			//pos.Value = position;
+
+			rot.Value = quaternion.LookRotation(math.forward(rot.Value), normal.Value);
+
+			
+			//transform.up = Vector3.Slerp(transform.up, normals[0], Time.deltaTime);
 		}
 	}
 }

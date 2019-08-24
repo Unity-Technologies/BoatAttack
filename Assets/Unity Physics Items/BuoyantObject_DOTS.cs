@@ -77,7 +77,6 @@ namespace WaterSystem
 
 		private void Start()
 		{
-			Application.targetFrameRate = (int)(1f / Time.fixedDeltaTime);
 			_guid = gameObject.GetInstanceID();
 
 			Init();
@@ -325,19 +324,27 @@ namespace WaterSystem
 			// Calculate all initial values
 			Init();
 
-            //Add data needed for buoyancy
-            BuoyantData data = new BuoyantData();
-			data.type = _buoyancyType;
-			data.voxelResolution = voxelResolution;
-			data.localArchimedesForce = localArchimedesForce;
-			data.baseDrag = baseDrag;
-			data.baseAngularDrag = baseAngularDrag;
-			dstManager.AddComponentData(entity, data);
+			dstManager.AddComponentData(entity, new BuoyancyNormal { Value = float3.zero });
 
-			//Add center of mass. This is why we had to use a custom conversion system since we needed the physics stuff to be converted before this step
-			var mass = dstManager.GetComponentData<Unity.Physics.PhysicsMass>(entity);
-			mass.CenterOfMass = centerOfMass;
-			dstManager.SetComponentData(entity, mass);
+			if (_buoyancyType == BuoyancyType.PhysicalVoxel)
+			{
+				//Add data needed for buoyancy
+				BuoyantData data = new BuoyantData();
+				data.voxelResolution = voxelResolution;
+				data.localArchimedesForce = localArchimedesForce;
+				data.baseDrag = baseDrag;
+				data.baseAngularDrag = baseAngularDrag;
+				dstManager.AddComponentData(entity, data);
+
+				//Add center of mass. This is why we had to use a custom conversion system since we needed the physics stuff to be converted before this step
+				var mass = dstManager.GetComponentData<Unity.Physics.PhysicsMass>(entity);
+				mass.CenterOfMass = centerOfMass;
+				dstManager.SetComponentData(entity, mass);
+			}
+			else if (_buoyancyType == BuoyancyType.NonPhysical)
+			{
+				dstManager.AddComponent(entity, typeof(SimpleBuoyantTag));
+			}
 
 			dstManager.AddBuffer<VoxelOffset>(entity);
 			dstManager.AddBuffer<VoxelHeight>(entity);

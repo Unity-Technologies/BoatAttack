@@ -1,10 +1,8 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
-using static WaterSystem.BuoyantObject_DOTS;
 
 public struct BuoyantData : IComponentData
 {
-	public BuoyancyType type;
 	public float voxelResolution;
 	public float3 normal;
 	public float3 localArchimedesForce;
@@ -36,3 +34,10 @@ public struct InputData : IComponentData
 	public float throttle;
 	public float steering;
 }
+
+public struct BuoyancyNormal : IComponentData
+{
+	public float3 Value;
+}
+
+public struct SimpleBuoyantTag : IComponentData { }
