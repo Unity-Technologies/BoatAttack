@@ -15,8 +15,9 @@ namespace BoatAttack.Boat
         public AudioSource waterSound; // Water sound clip
 
         //engine stats
-        public float torque = 5f;
-        public float horsePower = 15f;
+        public float steeringTorque = 5f;
+		public float upwardTorque = 5f;
+        public float horsePower = 18f;
         private float3[] point = new float3[1]; // engine submerged check
         private float3[] heights = new float3[1]; // engine submerged check
         private int _guid;
@@ -27,11 +28,10 @@ namespace BoatAttack.Boat
 
         void Awake()
         {
-			RB = gameObject.GetComponent<Rigidbody>();
-			engineSound.time = UnityEngine.Random.Range(0f, engineSound.clip.length); // randomly start the engine sound
+	        engineSound.time = UnityEngine.Random.Range(0f, engineSound.clip.length); // randomly start the engine sound
             waterSound.time = UnityEngine.Random.Range(0f, waterSound.clip.length); // randomly start the water sound
 
-            _guid = this.GetInstanceID(); // Get the engines GUID for the buoyancy system
+            _guid = GetInstanceID(); // Get the engines GUID for the buoyancy system
         }
 
         void FixedUpdate()
@@ -73,7 +73,7 @@ namespace BoatAttack.Boat
             if (yHeight > -0.1f) // if the engine is deeper than 0.1
             {
                 modifier = Mathf.Clamp(modifier, -1f, 1f); // clamp for reasonable values
-                RB.AddRelativeTorque(new Vector3(0f, torque, -torque * 0.5f) * modifier, ForceMode.Acceleration); // add torque based on input and torque amount
+                RB.AddRelativeTorque(new Vector3(0f, steeringTorque, -steeringTorque * 0.5f) * modifier, ForceMode.Acceleration); // add torque based on input and torque amount
             }
         }
 
@@ -92,17 +92,24 @@ namespace BoatAttack.Boat
 			bool isHuman = GetComponent<BoatController>().Human;
 
 			if (!isHuman)
-				AIController_DOTS.Register(entity);
+				AIController_DOTS.Register(entity, transform.position);
 
-			var data = new DrivingData
+			var driveData = new DrivingData
 			{
-				isHuman = isHuman,
-				torque = torque,
+				steeringTorque = steeringTorque,
+				upwardTorque = upwardTorque,
 				horsePower = horsePower,
-				engineOffset = transform.TransformPoint(enginePosition) - transform.position
+				engineOffset = enginePosition
 			};
 
-			dstManager.AddComponentData(entity, data);
+			dstManager.AddComponentData(entity, driveData);
+
+			var inputData = new InputData
+			{
+				isHuman = isHuman
+			};
+
+			dstManager.AddComponentData(entity, inputData);
 		}
 	}
 }

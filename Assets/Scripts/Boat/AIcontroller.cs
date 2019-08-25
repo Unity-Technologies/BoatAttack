@@ -29,7 +29,6 @@ namespace BoatAttack.Boat
         void Start ()
         {
             float delay = WaypointGroup.raceDelay;
-			engine = GetComponent<Engine>(); // get the engine script
 			Invoke("GetNearestWP", delay);
         }
 
@@ -40,12 +39,6 @@ namespace BoatAttack.Boat
             {
                 if (pathPoint.Length > curPoint && foundPath)
                 {
-/*                    if (Vector3.Distance(transform.position, pathPoint[pathPoint.Length - 1]) <
-                        WaypointGroup.Instance.GetWaypoint(curWP).WPradius * 2) // If we are close to the waypoint get the next one
-                    {
-                        GetNextWP(); // Get next waypoint
-                    }*/
-
                     if ((Vector3.Distance(transform.position, pathPoint[curPoint])) < 8) // If we are close to the current point on the path get the next
                     {
                         curPoint++; // Move on to next point
@@ -77,10 +70,7 @@ namespace BoatAttack.Boat
         void GetNearestWP()
         {
             WaypointGroup.Waypoint wp = WaypointGroup.instance.GetClosestWaypoint(transform.position);
-            //if (Vector3.Dot(wp.point - transform.position, transform.forward) < 0)
-                AssignWP(WaypointGroup.instance.GetNextWaypoint(wp));
-            //else
-                //AssignWP(WaypointGroup.Instance.GetClosestWaypoint(transform.position));
+            AssignWP(WaypointGroup.instance.GetNextWaypoint(wp));
         }
     
         void GetNextWP()

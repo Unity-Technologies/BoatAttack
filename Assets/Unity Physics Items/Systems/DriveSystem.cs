@@ -24,44 +24,39 @@ public class DriveSystem : JobComponentSystem
 	}
 
 	[BurstCompile]
-	public struct DriveWithInputJob : IJobForEachWithEntity<Translation, Rotation, PhysicsVelocity, PhysicsMass, DrivingData>
+	public struct DriveWithInputJob : IJobForEachWithEntity<Translation, Rotation, PhysicsVelocity, PhysicsMass, DrivingData, InputData>
 	{
 		public float dt;
 
 
-		public void Execute(Entity entity, int index, [ReadOnly] ref Translation pos, [ReadOnly] ref Rotation rot, ref PhysicsVelocity vel, [ReadOnly] ref PhysicsMass mass, ref DrivingData data)
+		public void Execute(Entity entity, int index, [ReadOnly] ref Translation pos, [ReadOnly] ref Rotation rot, ref PhysicsVelocity vel, [ReadOnly] ref PhysicsMass mass, ref DrivingData driveData, ref InputData inputData)
 		{
-			
 			float velMag = math.dot(vel.Linear, vel.Linear);
 
-			var wp = pos.Value + data.engineOffset;
-
-			//if (wp.y <= -0.1f) // if the engine is deeper than 0.1
+            var entityTransform = new RigidTransform(rot.Value, pos.Value);
+			var wp = math.transform(entityTransform, driveData.engineOffset);// + mass.CenterOfMass);
+			
+			//if (wp.y <= -0.1f) // if the engine is deeper than 0.1 
 			//{
-				//accel
-				data.throttle = Mathf.Clamp(data.throttle, 0f, 1f); // clamp for reasonable values
-				float3 forward = math.forward(rot.Value);
-				forward.y = 0f;
-				forward = math.normalize(forward);
-				var force = (forward * data.throttle * data.horsePower) / mass.InverseMass; //divide by iMass to counteract mass in impulse method
-				var torque = (data.throttle * new float3(-1, 0, 0)) / mass.InverseInertia;
+				inputData.throttle = Mathf.Clamp(inputData.throttle, 0f, 1f); // clamp for reasonable values
+                float3 forward = math.forward(rot.Value);
+                forward.y = 0f;
+                forward = math.normalize(forward);
 
-
+                //accel
+                var force = (forward * inputData.throttle * driveData.horsePower) / mass.InverseMass; //divide by iMass to counteract mass in impulse method
 				float3 up = math.mul(rot.Value, math.up());
-				ComponentExtensions.ApplyLinearImpulse(ref vel, mass, force * dt);
-				//ComponentExtensions.ApplyLinearImpulse(ref vel, mass, up * 20000f * dt);
-			//ComponentExtensions.ApplyAngularImpulse(ref vel, mass, torque * dt);
-			//RB.AddForce(forward * modifier * horsePower, ForceMode.Acceleration); // add force forward based on input and horsepower
-			//RB.AddRelativeTorque(-Vector3.right * modifier, ForceMode.Acceleration);
+				vel.ApplyLinearImpulse(mass, force * dt);
 
+				//Lift the nose up
+				var upTorque = (inputData.throttle * new float3(-1, 0, 0) * driveData.upwardTorque) / mass.InverseInertia;
+				vel.ApplyAngularImpulse(mass, upTorque * dt);
 
-
-			//Turning
-			data.steering = Mathf.Clamp(data.steering, -1f, 1f); // clamp for reasonable values
-				var sTorque = new float3(0f, data.torque, -data.torque * .5f) * data.steering / mass.InverseInertia;
-				ComponentExtensions.ApplyAngularImpulse(ref vel, mass, sTorque * dt);
-				//Debug.Log(string.Format("Force: {0}, Torque: {1} Throttle: {2}", force, sTorque, throttle));
-				//RB.AddRelativeTorque(new Vector3(0f, torque, -torque * 0.5f) * modifier, ForceMode.Acceleration); // add torque based on input and torque amount
+				//Turning
+				// var torque = (data.throttle * new float3(-1, 0, 0)) / mass.InverseInertia;
+				inputData.steering = Mathf.Clamp(inputData.steering, -1f, 1f); // clamp for reasonable values
+			    var sTorque = new float3(0f, driveData.steeringTorque, -driveData.steeringTorque * .5f) * inputData.steering / mass.InverseInertia;
+				vel.ApplyAngularImpulse(mass, sTorque * dt);
 			//}
 		}
 	}
