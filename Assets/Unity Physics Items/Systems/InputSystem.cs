@@ -38,7 +38,7 @@ public class InputSystem : ComponentSystem
 		if (Time.time < startTime)
 			return;
 
-		Entities.ForEach((Entity entity, ref Translation pos, ref Rotation rot, ref DrivingData data ) =>
+		Entities.ForEach((Entity entity, ref Translation pos, ref Rotation rot, ref InputData data ) =>
 		{
 			if (data.isHuman)
 			{
