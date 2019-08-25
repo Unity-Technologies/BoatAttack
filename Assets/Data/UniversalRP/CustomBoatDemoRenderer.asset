@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 580815c7b01f60e429065cd2e33f7e1d, type: 3}
+  m_Name: CustomBoatDemoRenderer
+  m_EditorClassIdentifier: 
+  m_RendererFeatures:
+  - {fileID: 6778594283966551180}
+  - {fileID: 0}
+  postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
+  caustics: {fileID: 2100000, guid: f09f40ad472134250a9e0ad60dd212f0, type: 2}
+--- !u!114 &6778594283966551180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc3f76324391a408d9c0770ca6fcb666, type: 3}
+  m_Name: WaterFX
+  m_EditorClassIdentifier: 
