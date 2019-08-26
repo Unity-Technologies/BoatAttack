@@ -5,7 +5,8 @@ using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
 
-[UpdateBefore(typeof(DriveSystem))]
+//[UpdateBefore(typeof(DriveSystem))]
+[UpdateInGroup(typeof(InitializationSystemGroup))]
 public class InputSystem : ComponentSystem
 {
 	InputControls controls;
@@ -34,11 +35,11 @@ public class InputSystem : ComponentSystem
 
 	protected override void OnUpdate()
 	{
-		//not time to start
+		////not time to start
 		if (Time.time < startTime)
 			return;
 
-		Entities.ForEach((Entity entity, ref Translation pos, ref Rotation rot, ref InputData data ) =>
+		Entities.ForEach((Entity entity, ref Translation pos, ref Rotation rot, ref InputData data) =>
 		{
 			if (data.isHuman)
 			{

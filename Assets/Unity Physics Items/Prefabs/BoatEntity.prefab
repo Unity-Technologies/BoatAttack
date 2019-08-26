@@ -9657,7 +9657,6 @@ GameObject:
   - component: {fileID: 3453465595108755947}
   - component: {fileID: 2092507921}
   - component: {fileID: 2092507922}
-  - component: {fileID: 1507960575}
   m_Layer: 11
   m_Name: _Boat
   m_TagString: boat
@@ -9708,18 +9707,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 1
---- !u!114 &1507960575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3456711171255019043}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d7931266a1a8224ea5dfc21625ffde1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3456818236728735511
 GameObject:
   m_ObjectHideFlags: 0
@@ -15154,6 +15141,7 @@ MonoBehaviour:
   colliders:
   - {fileID: 1031304347490252193}
   percentSubmerged: 0
+  childObject: {fileID: 0}
 --- !u!114 &1531988078
 MonoBehaviour:
   m_ObjectHideFlags: 0

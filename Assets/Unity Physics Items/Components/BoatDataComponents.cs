@@ -41,3 +41,5 @@ public struct BuoyancyNormal : IComponentData
 }
 
 public struct SimpleBuoyantTag : IComponentData { }
+
+public struct SyncTransformTag : IComponentData { }
