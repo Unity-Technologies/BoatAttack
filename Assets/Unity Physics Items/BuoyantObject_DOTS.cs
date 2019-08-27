@@ -388,6 +388,9 @@ namespace WaterSystem
 				if(go.GetComponent<BuoyantObject>()) Destroy(go.GetComponent<BuoyantObject>());
 				if(go.GetComponent<Engine>()) Destroy(go.GetComponent<Engine>());
 				if(go.GetComponent<BoatController>()) Destroy(go.GetComponent<BoatController>());
+				if (go.GetComponent<Rigidbody>()) Destroy(go.GetComponent<Rigidbody>());
+				if (go.GetComponent<Collider>()) Destroy(go.GetComponent<Collider>());
+
 
 				go.transform.parent = transform.parent;
 

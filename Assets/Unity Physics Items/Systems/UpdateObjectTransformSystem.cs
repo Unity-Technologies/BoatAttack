@@ -12,7 +12,7 @@ using Unity.Physics.Extensions;
 using Unity.Physics.Systems;
 using Unity.Physics;
 
-//[UpdateBefore(typeof(BuildPhysicsWorld))]
+[UpdateAfter(typeof(InputSystem))]
 public class UpdateObjectTransformSystem : JobComponentSystem
 {
 	NativeArray<Entity> entities;
@@ -25,9 +25,9 @@ public class UpdateObjectTransformSystem : JobComponentSystem
 	{
 		totalCount = 0;
 
-		entities = new NativeArray<Entity>(256, Allocator.Persistent);
-		positions = new NativeArray<float3>(256, Allocator.Persistent);
-		rotations = new NativeArray<quaternion>(256, Allocator.Persistent);
+		entities = new NativeArray<Entity>(512, Allocator.Persistent);
+		positions = new NativeArray<float3>(512, Allocator.Persistent);
+		rotations = new NativeArray<quaternion>(512, Allocator.Persistent);
 
 		base.OnCreate();
 	}
@@ -43,7 +43,7 @@ public class UpdateObjectTransformSystem : JobComponentSystem
 
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
-		for (int i = 0; i < SyncJob.count; i++)
+		for (int i = 0; i < entities.Length; i++)
 		{
 			var t = DOTSTransformManager.GetTransform(entities[i]);
 			if(t != null)
