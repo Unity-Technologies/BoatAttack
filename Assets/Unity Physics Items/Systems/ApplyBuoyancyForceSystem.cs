@@ -59,13 +59,15 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 	}
 
 	[BurstCompile]
-	public struct ForceJob : IJobParallelFor//<Translation, Rotation, PhysicsVelocity, PhysicsMass, PhysicsDamping, BuoyantData>
+	public struct ForceJob : IJobParallelFor
 	{
 		[ReadOnly] public float dt;
 
         [DeallocateOnJobCompletion]
 		[ReadOnly] public NativeArray<Entity> entities;
+		[NativeDisableParallelForRestriction]
 		[ReadOnly] public ComponentDataFromEntity<Translation> translations;
+		[NativeDisableParallelForRestriction]
 		[ReadOnly] public ComponentDataFromEntity<Rotation> rotations;
 		[ReadOnly] public ComponentDataFromEntity<PhysicsMass> masses;
 		[ReadOnly] public ComponentDataFromEntity<PhysicsDamping> dampings;
