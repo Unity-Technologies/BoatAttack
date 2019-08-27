@@ -16,9 +16,6 @@ using Unity.Collections.LowLevel.Unsafe;
 [UpdateAfter(typeof(GertsnerSystem)), UpdateAfter(typeof(ExportPhysicsWorld))]
 public class ApplyBuoyancyForceSystem : JobComponentSystem
 {
-
-	float lastTime = 0;
-
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
 		var offsets = GetBufferFromEntity<VoxelOffset>(false);
@@ -36,7 +33,6 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 			normals = GetComponentDataFromEntity<BuoyancyNormal>(true),
 			heightBuffer = heights
 		};
-
 		var simpleHandle = simpleJob.Schedule(simpleEntities.Length, 32, inputDeps);
 
 
@@ -67,6 +63,7 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 	{
 		[ReadOnly] public float dt;
 
+        [DeallocateOnJobCompletion]
 		[ReadOnly] public NativeArray<Entity> entities;
 		[ReadOnly] public ComponentDataFromEntity<Translation> translations;
 		[ReadOnly] public ComponentDataFromEntity<Rotation> rotations;
@@ -131,7 +128,8 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 	{
 		public float dt;
 
-		[ReadOnly] public NativeArray<Entity> entities;
+        [DeallocateOnJobCompletion]
+        [ReadOnly] public NativeArray<Entity> entities;
 		[ReadOnly] public ComponentDataFromEntity<BuoyancyNormal> normals;
 		[ReadOnly] public BufferFromEntity<VoxelHeight> heightBuffer;
 

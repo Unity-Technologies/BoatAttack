@@ -18,17 +18,24 @@ public class GertsnerSystem : JobComponentSystem
 
 	protected override void OnCreate()
 	{
-		_waveCount = Water.Instance._waves.Length;
+        base.OnCreate();
+
+        _waveCount = Water.Instance._waves.Length;
 		waveData = new NativeArray<Wave>(_waveCount, Allocator.Persistent);
 		for (var i = 0; i < waveData.Length; i++)
 		{
 			waveData[i] = Water.Instance._waves[i];
 		}
-
-		base.OnCreate();
 	}
 
-	protected override JobHandle OnUpdate(JobHandle inputDeps)
+    protected override void OnDestroy()
+    {
+        if(waveData != null)
+            waveData.Dispose();
+
+        base.OnDestroy();
+    }
+    protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
 		var query = GetEntityQuery(typeof(Translation), typeof(Rotation), typeof(BuoyancyNormal));
 		var entities = query.ToEntityArray(Allocator.TempJob);
@@ -55,7 +62,8 @@ public class GertsnerSystem : JobComponentSystem
 
 		[ReadOnly] public float time;
 
-		[ReadOnly] public NativeArray<Entity> entities;
+        [DeallocateOnJobCompletion]
+        [ReadOnly] public NativeArray<Entity> entities;
 		[ReadOnly] public ComponentDataFromEntity<Translation> translations;
 		[ReadOnly] public ComponentDataFromEntity<Rotation> rotations;
 		[ReadOnly] public BufferFromEntity<VoxelOffset> offsetBuffer;
