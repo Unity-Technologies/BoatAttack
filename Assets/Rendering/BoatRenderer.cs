@@ -8,13 +8,15 @@ public class BoatRenderer : ScriptableRenderer
     const string k_CreateCameraTextures = "Create Camera Texture";
 
     ColorGradingLutPass m_ColorGradingLutPass;
+    DepthOnlyPass m_DepthPrepass;
     MainLightShadowCasterPass m_MainLightShadowCasterPass;
     PostProcessPass m_PostProcessPass;
     PostProcessPass m_FinalPostProcessPass;
     MainRenderPass m_MainRenderPass;
     FinalBlitPass m_FinalBlitPass;
-    CopyDepthPass m_CopyDepthPass;
-
+    CopyColorPass m_CopyColorPass;
+    DrawObjectsPass m_RenderTransparentForwardPass;
+    
 #if UNITY_EDITOR
     SceneViewDepthCopyPass m_SceneViewDepthCopyPass;
 #endif
@@ -25,6 +27,7 @@ public class BoatRenderer : ScriptableRenderer
     public RenderTargetHandle m_CameraDepthAttachment;
     RenderTargetHandle m_AfterPostProcessColor;
     RenderTargetHandle m_ColorGradingLut;
+    RenderTargetHandle m_OpaqueColor;
     
     RenderTargetHandle m_DepthTexture;
 
@@ -34,15 +37,18 @@ public class BoatRenderer : ScriptableRenderer
     {
         Material blitMaterial = CoreUtils.CreateEngineMaterial(data.shaders.blitPS);
         Material copyDepthMaterial = CoreUtils.CreateEngineMaterial(data.shaders.copyDepthPS);
+        Material samplingMaterial = CoreUtils.CreateEngineMaterial(data.shaders.samplingPS);
         
         m_MainLightShadowCasterPass = new MainLightShadowCasterPass(RenderPassEvent.BeforeRenderingShadows);
+        m_DepthPrepass = new DepthOnlyPass(RenderPassEvent.BeforeRenderingPrepasses, RenderQueueRange.opaque, -1);
         m_ColorGradingLutPass = new ColorGradingLutPass(RenderPassEvent.BeforeRenderingOpaques, data.postProcessData);
         m_PostProcessPass = new PostProcessPass(RenderPassEvent.BeforeRenderingPostProcessing, data.postProcessData);
         m_FinalPostProcessPass = new PostProcessPass(RenderPassEvent.AfterRenderingPostProcessing, data.postProcessData);
         m_MainRenderPass = new MainRenderPass(RenderPassEvent.BeforeRenderingOpaques, data.caustics);
-        m_FinalBlitPass = new FinalBlitPass(RenderPassEvent.AfterRendering, blitMaterial);
-        m_CopyDepthPass = new CopyDepthPass(RenderPassEvent.BeforeRenderingOpaques, copyDepthMaterial);
-        
+        m_FinalBlitPass = new FinalBlitPass(RenderPassEvent.AfterRendering, blitMaterial);   
+        m_CopyColorPass = new CopyColorPass(RenderPassEvent.BeforeRenderingTransparents, samplingMaterial);
+        m_RenderTransparentForwardPass = new DrawObjectsPass("Render Transparents", false, RenderPassEvent.BeforeRenderingTransparents, RenderQueueRange.transparent, -1, StencilState.defaultValue, 0);
+
 #if UNITY_EDITOR
         m_SceneViewDepthCopyPass = new SceneViewDepthCopyPass(RenderPassEvent.AfterRendering + 9, copyDepthMaterial);
 #endif
@@ -52,6 +58,7 @@ public class BoatRenderer : ScriptableRenderer
         m_CameraColorAttachment.Init("_CameraColorTexture");
         m_CameraDepthAttachment.Init("_CameraDepthAttachment");
         m_AfterPostProcessColor.Init("_AfterPostProcessTexture");
+        m_OpaqueColor.Init("_CameraOpaqueTexture");
         m_ColorGradingLut.Init("_InternalGradingLut");
         m_DepthTexture.Init("_CameraDepthTexture");
         m_ForwardLights = new ForwardLights();
@@ -116,13 +123,17 @@ public class BoatRenderer : ScriptableRenderer
         m_MainRenderPass.renderer = this;
         EnqueuePass(m_MainRenderPass);
         
-        // If a depth texture was created we necessarily need to copy it, otherwise we could have render it to a renderbuffer
-        if (createDepthTexture)
+        if (renderingData.cameraData.requiresOpaqueTexture)
         {
-            m_CopyDepthPass.Setup(m_ActiveCameraDepthAttachment, m_DepthTexture);
-            EnqueuePass(m_CopyDepthPass);
+            // TODO: Downsampling method should be store in the renderer isntead of in the asset.
+            // We need to migrate this data to renderer. For now, we query the method in the active asset.
+            Downsampling downsamplingMethod = UniversalRenderPipeline.asset.opaqueDownsampling;
+            m_CopyColorPass.Setup(m_ActiveCameraColorAttachment.Identifier(), m_OpaqueColor, downsamplingMethod);
+            EnqueuePass(m_CopyColorPass);
         }
-
+        
+        EnqueuePass(m_RenderTransparentForwardPass);
+        
         if (postProcessEnabled)
         {
             if (requiresFinalPostProcessPass)

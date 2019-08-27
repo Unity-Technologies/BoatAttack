@@ -37,7 +37,7 @@
                 float4 positionOS : SV_POSITION;
             };
             
-            TEXTURE2D(_CameraDepthTexture); SAMPLER(sampler_CameraDepthTexture);
+            UNITY_DECLARE_FRAMEBUFFER_INPUT_FLOAT(Depth);
             TEXTURE2D(_CausticMap); SAMPLER(sampler_CausticMap);
             
             half _Size;
@@ -72,7 +72,8 @@
 
             real4 frag (Varyings input) : SV_Target
             {
-                real depth = SAMPLE_DEPTH_TEXTURE( _CameraDepthTexture, sampler_CameraDepthTexture, input.uv);
+                float depth = UNITY_READ_FRAMEBUFFER_INPUT(Depth, input.uv);
+                //real depth = SAMPLE_DEPTH_TEXTURE( _CameraDepthTexture, sampler_CameraDepthTexture, input.uv);
                 
                 float3 worldPos = ReconstructWorldPos(input.uv, depth);
                 float waveOffset = SAMPLE_TEXTURE2D(_CausticMap, sampler_CausticMap, worldPos.xz * 0.025 + _Time.x * 0.25).w - 0.5;

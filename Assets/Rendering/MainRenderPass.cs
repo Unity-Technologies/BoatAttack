@@ -39,7 +39,7 @@ public class MainRenderPass : ScriptableRenderPass
         int width = cameraTargetDescriptor.width;
         int height = cameraTargetDescriptor.height;
         colorAttachmentDescriptor.ConfigureTarget(renderer.m_CameraColorAttachment.Identifier(), false, true);
-        depthAttachmentDescriptor.ConfigureTarget(renderer.m_CameraDepthAttachment.Identifier(), false, true);
+        colorAttachmentDescriptor.ConfigureClear(renderingData.cameraData.camera.backgroundColor);
         var descriptors = new NativeArray<AttachmentDescriptor>(
                     new[] { colorAttachmentDescriptor, depthAttachmentDescriptor },
                     Allocator.Temp);
@@ -48,17 +48,28 @@ public class MainRenderPass : ScriptableRenderPass
         {
             descriptors.Dispose();
             NativeArray<int> attachmentIndices = new NativeArray<int>(new[] { 0 }, Allocator.Temp);
+            
+            // Opaques + Skybox Subpass
             using (context.BeginScopedSubPass(attachmentIndices))
             {
                 attachmentIndices.Dispose();
                 context.DrawRenderers(renderingData.cullResults, ref opaqueDrawingSettings, ref m_OpaqueFilteringSettings);
                 context.DrawSkybox(renderingData.cameraData.camera);
+            }
+
+            // Caustics Subpass
+            attachmentIndices = new NativeArray<int>(new[]{0}, Allocator.Temp);
+            var inputIndices = new NativeArray<int>(new[]{1}, Allocator.Temp);
+            using (context.BeginScopedSubPass(attachmentIndices, inputIndices, false))
+            {
+                attachmentIndices.Dispose();
+                inputIndices.Dispose();
                 var cmd = CommandBufferPool.Get("DrawCaustics");
                 cmd.DrawMesh(RenderingUtils.fullscreenMesh, Matrix4x4.identity, m_CausticsMaterial);
                 context.ExecuteCommandBuffer(cmd);
                 CommandBufferPool.Release(cmd);
-                //context.DrawRenderers(renderingData.cullResults, ref transparentDrawingSettings, ref m_TransparentFilteringSettings);
             }
+
         }
     }
 }
