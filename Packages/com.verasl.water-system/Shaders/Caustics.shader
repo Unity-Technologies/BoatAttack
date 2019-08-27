@@ -52,9 +52,9 @@
                 return worldPos;
             }
             
+            // Can be done per-vertex
             float2 CausticUVs(float2 rawUV, float2 offset)
-            {
-            
+            {            
                 //anim
                 float2 uv = rawUV * _Size + float2(_Time.y, _Time.x) * 0.1;
                 return uv + offset * 0.25;
@@ -62,16 +62,9 @@
 
             Varyings vert (Attributes input)
             {
-                Varyings output = (Varyings)0;
-
-                UNITY_SETUP_INSTANCE_ID(input);
-                UNITY_TRANSFER_INSTANCE_ID(input, output);
-                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
-            
-                VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
-                output.positionOS = vertexInput.positionCS;
-
-                output.uv = input.uv;
+                Varyings output;
+                output.positionOS = float4(input.positionOS.xyz, 1.0);
+                output.uv = float2(input.uv.x, 1.0 - input.uv.y);
                 return output;
             }
 
