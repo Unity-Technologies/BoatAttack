@@ -24,6 +24,22 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 		var offsets = GetBufferFromEntity<VoxelOffset>(false);
 		var heights = GetBufferFromEntity<VoxelHeight>(false);
 
+		var simpleQuery = GetEntityQuery(typeof(Translation), typeof(Rotation), typeof(BuoyancyNormal), typeof(SimpleBuoyantTag));
+		var simpleEntities = simpleQuery.ToEntityArray(Allocator.TempJob);
+
+		var simpleJob = new SimpleForceJob()
+		{
+			dt = Time.fixedDeltaTime,
+			entities = simpleEntities,
+			translations = GetComponentDataFromEntity<Translation>(false),
+			rotations = GetComponentDataFromEntity<Rotation>(false),
+			normals = GetComponentDataFromEntity<BuoyancyNormal>(true),
+			heightBuffer = heights
+		};
+
+		var simpleHandle = simpleJob.Schedule(simpleEntities.Length, 32, inputDeps);
+
+
 		var physicsQuery = GetEntityQuery(typeof(Translation), typeof(Rotation), typeof(PhysicsVelocity), typeof(PhysicsMass), typeof(PhysicsDamping), typeof(BuoyantData));
 		var physicalEntities = physicsQuery.ToEntityArray(Allocator.TempJob);
 
@@ -40,25 +56,9 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 			offsetBuffer = offsets,
 			heightBuffer = heights
 		};
-		var forceJobHandle = forceJob.Schedule(physicalEntities.Length, 1, inputDeps);
+		var forceJobHandle = forceJob.Schedule(physicalEntities.Length, 1, simpleHandle);
 
-
-		var simpleQuery = GetEntityQuery(typeof(Translation), typeof(Rotation), typeof(BuoyancyNormal), typeof(SimpleBuoyantTag));
-		var simpleEntities = simpleQuery.ToEntityArray(Allocator.TempJob);
-
-		var simpleJob = new SimpleForceJob()
-		{
-			dt = Time.fixedDeltaTime,
-			entities = physicalEntities,
-			translations = GetComponentDataFromEntity<Translation>(false),
-			rotations = GetComponentDataFromEntity<Rotation>(false),
-			normals = GetComponentDataFromEntity<BuoyancyNormal>(true),
-			heightBuffer = heights
-		};
-
-		var simpleHandle = simpleJob.Schedule(simpleEntities.Length, 32, forceJobHandle);
-
-		return simpleHandle;
+		return forceJobHandle;
 		//return JobHandle.CombineDependencies(forceJobHandle, simpleHandle);
 	}
 
