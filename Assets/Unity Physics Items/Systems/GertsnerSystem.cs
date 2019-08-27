@@ -18,50 +18,71 @@ public class GertsnerSystem : JobComponentSystem
 
 	protected override void OnCreate()
 	{
-		_waveCount = Water.Instance._waves.Length;
+        base.OnCreate();
+
+        _waveCount = Water.Instance._waves.Length;
 		waveData = new NativeArray<Wave>(_waveCount, Allocator.Persistent);
 		for (var i = 0; i < waveData.Length; i++)
 		{
 			waveData[i] = Water.Instance._waves[i];
 		}
-
-		base.OnCreate();
 	}
 
-	protected override JobHandle OnUpdate(JobHandle inputDeps)
+    protected override void OnDestroy()
+    {
+        if(waveData != null)
+            waveData.Dispose();
+
+        base.OnDestroy();
+    }
+    protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
-		var job = new HeightJob {
+		var query = GetEntityQuery(typeof(Translation), typeof(Rotation), typeof(BuoyancyNormal));
+		var entities = query.ToEntityArray(Allocator.TempJob);
+
+		var job = new HeightQueryJob
+		{
 			waveData = waveData,
 			time = Time.time,
+			entities = entities,
+			translations = GetComponentDataFromEntity<Translation>(true),
+			rotations = GetComponentDataFromEntity<Rotation>(true),
+			normals = GetComponentDataFromEntity<BuoyancyNormal>(false),
 			offsetBuffer = GetBufferFromEntity<VoxelOffset>(false),
 			heightBuffer = GetBufferFromEntity<VoxelHeight>(false)
 		};
 
-		return job.Schedule(this, inputDeps);
+		return job.Schedule(entities.Length, 1);
 	}
 
 	[BurstCompile]
-	public struct HeightJob : IJobForEachWithEntity<Translation, Rotation, BuoyancyNormal>
+	public struct HeightQueryJob : IJobParallelFor
 	{
-		[ReadOnly]
-		public NativeArray<Wave> waveData; // wave data stroed in vec4's like the shader version but packed into one
+		[ReadOnly] public NativeArray<Wave> waveData; // wave data stroed in vec4's like the shader version but packed into one
 
-		[ReadOnly]
-		public float time;
+		[ReadOnly] public float time;
 
-		[ReadOnly]
-		public BufferFromEntity<VoxelOffset> offsetBuffer;
+        [DeallocateOnJobCompletion]
+        [ReadOnly] public NativeArray<Entity> entities;
+		[ReadOnly] public ComponentDataFromEntity<Translation> translations;
+		[ReadOnly] public ComponentDataFromEntity<Rotation> rotations;
+		[ReadOnly] public BufferFromEntity<VoxelOffset> offsetBuffer;
+
+		[NativeDisableParallelForRestriction]
+		public ComponentDataFromEntity<BuoyancyNormal> normals;
 
 		[NativeDisableParallelForRestriction]
 		public BufferFromEntity<VoxelHeight> heightBuffer;
 
-		// The code actually running on the job
-		public void Execute(Entity entity, int i, [ReadOnly] ref Translation translation, ref Rotation rot, ref BuoyancyNormal normal)
+		
+		public void Execute(int index)
 		{
+			var entity = entities[index];
+
 			DynamicBuffer<VoxelOffset> offsets = offsetBuffer[entity];
 			DynamicBuffer<VoxelHeight> heights = heightBuffer[entity];
 
-			var entityTransform = new RigidTransform(rot.Value, translation.Value);
+			var entityTransform = new RigidTransform(rotations[entity].Value, translations[entity].Value);
 
 			for (int vi = 0; vi < offsets.Length; vi++)
 			{
@@ -73,13 +94,15 @@ public class GertsnerSystem : JobComponentSystem
 
 				for (var wave = 0; wave < waveData.Length; wave++) // for each wave
 				{
+					var thisWave = waveData[wave];
+
 					// Wave data vars
 					var pos = new float2(voxelPos.x, voxelPos.z);
 
-					var amplitude = waveData[wave].amplitude;
-					var direction = waveData[wave].direction;
-					var wavelength = waveData[wave].wavelength;
-					var omniPos = waveData[wave].origin;
+					var amplitude = thisWave.amplitude;
+					var direction = thisWave.direction;
+					var wavelength = thisWave.wavelength;
+					var omniPos = thisWave.origin;
 					////////////////////////////////wave value calculations//////////////////////////
 					var w = 6.28318f / wavelength; // 2pi over wavelength(hardcoded)
 					var wSpeed = math.sqrt(9.8f * w); // frequency of the wave based off wavelength
@@ -90,13 +113,13 @@ public class GertsnerSystem : JobComponentSystem
 					var dir = 0f;
 
 					direction = math.radians(direction); // convert the incoming degrees to radians
-					var windDirInput = new float2(math.sin(direction), math.cos(direction)) * (1 - waveData[wave].onmiDir); // calculate wind direction - TODO - currently radians
-					var windOmniInput = (pos - omniPos) * waveData[wave].onmiDir;
+					var windDirInput = new float2(math.sin(direction), math.cos(direction)) * (1 - thisWave.onmiDir); // calculate wind direction - TODO - currently radians
+					var windOmniInput = (pos - omniPos) * thisWave.onmiDir;
 
 					windDir += windDirInput;
 					windDir += windOmniInput;
 					windDir = math.normalize(windDir);
-					dir = math.dot(windDir, pos - (omniPos * waveData[wave].onmiDir)); // calculate a gradient along the wind direction
+					dir = math.dot(windDir, pos - (omniPos * thisWave.onmiDir)); // calculate a gradient along the wind direction
 
 					////////////////////////////position output calculations/////////////////////////
 					var calc = dir * w + -time * wSpeed; // the wave calculation
@@ -119,11 +142,11 @@ public class GertsnerSystem : JobComponentSystem
 					}
 				}
 
-				heights[vi] = new VoxelHeight{Value = wavePos};
-				
+				heights[vi] = new VoxelHeight { Value = wavePos };
+
 
 				if (offsets.Length == 1)
-					normal.Value = math.normalize(waveNorm.xzy);
+					normals[entity] = new BuoyancyNormal { Value = math.normalize(waveNorm.xzy) };
 			}
 		}
 	}

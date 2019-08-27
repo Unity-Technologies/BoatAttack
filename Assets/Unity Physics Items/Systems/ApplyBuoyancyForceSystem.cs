@@ -11,50 +11,85 @@ using static WaterSystem.BuoyantObject_DOTS;
 using Unity.Physics.Extensions;
 using Unity.Physics.Systems;
 using Unity.Physics;
+using Unity.Collections.LowLevel.Unsafe;
 
 [UpdateAfter(typeof(GertsnerSystem)), UpdateAfter(typeof(ExportPhysicsWorld))]
 public class ApplyBuoyancyForceSystem : JobComponentSystem
 {
-
-	float lastTime = 0;
-
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
 		var offsets = GetBufferFromEntity<VoxelOffset>(false);
 		var heights = GetBufferFromEntity<VoxelHeight>(false);
 
-
-		var forceJob = new ForceJob()
-		{
-			dt = Time.fixedDeltaTime,
-			offsetBuffer = offsets,
-			heightBuffer = heights
-		};
-
-		var forceJobHandle = forceJob.Schedule(this, inputDeps);
+		var simpleQuery = GetEntityQuery(typeof(Translation), typeof(Rotation), typeof(BuoyancyNormal), typeof(SimpleBuoyantTag));
+		var simpleEntities = simpleQuery.ToEntityArray(Allocator.TempJob);
 
 		var simpleJob = new SimpleForceJob()
 		{
 			dt = Time.fixedDeltaTime,
+			entities = simpleEntities,
+			translations = GetComponentDataFromEntity<Translation>(false),
+			rotations = GetComponentDataFromEntity<Rotation>(false),
+			normals = GetComponentDataFromEntity<BuoyancyNormal>(true),
 			heightBuffer = heights
 		};
+		var simpleHandle = simpleJob.Schedule(simpleEntities.Length, 32, inputDeps);
 
-		return simpleJob.Schedule(this, forceJobHandle);
+
+		var physicsQuery = GetEntityQuery(typeof(Translation), typeof(Rotation), typeof(PhysicsVelocity), typeof(PhysicsMass), typeof(PhysicsDamping), typeof(BuoyantData));
+		var physicalEntities = physicsQuery.ToEntityArray(Allocator.TempJob);
+
+		var forceJob = new ForceJob()
+		{
+			dt = Time.fixedDeltaTime,
+			entities = physicalEntities,
+			translations = GetComponentDataFromEntity<Translation>(true),
+			rotations = GetComponentDataFromEntity<Rotation>(true),
+			velocities = GetComponentDataFromEntity<PhysicsVelocity>(false),
+			masses = GetComponentDataFromEntity<PhysicsMass>(true),
+			dampings = GetComponentDataFromEntity<PhysicsDamping>(true),
+			datas = GetComponentDataFromEntity<BuoyantData>(true),
+			offsetBuffer = offsets,
+			heightBuffer = heights
+		};
+		var forceJobHandle = forceJob.Schedule(physicalEntities.Length, 1, simpleHandle);
+
+		return forceJobHandle;
+		//return JobHandle.CombineDependencies(forceJobHandle, simpleHandle);
 	}
 
-	//[BurstCompile]
-	public struct ForceJob : IJobForEachWithEntity<Translation, Rotation, PhysicsVelocity, PhysicsMass, PhysicsDamping, BuoyantData>
+	[BurstCompile]
+	public struct ForceJob : IJobParallelFor
 	{
-		public float dt;
+		[ReadOnly] public float dt;
 
-		[ReadOnly]
-		public BufferFromEntity<VoxelOffset> offsetBuffer;
+        [DeallocateOnJobCompletion]
+		[ReadOnly] public NativeArray<Entity> entities;
+		[NativeDisableParallelForRestriction]
+		[ReadOnly] public ComponentDataFromEntity<Translation> translations;
+		[NativeDisableParallelForRestriction]
+		[ReadOnly] public ComponentDataFromEntity<Rotation> rotations;
+		[ReadOnly] public ComponentDataFromEntity<PhysicsMass> masses;
+		[ReadOnly] public ComponentDataFromEntity<PhysicsDamping> dampings;
+		[ReadOnly] public ComponentDataFromEntity<BuoyantData> datas;
 
-		[ReadOnly]
-		public BufferFromEntity<VoxelHeight> heightBuffer;
-		
-		public void Execute(Entity entity, int index, [ReadOnly] ref Translation pos, [ReadOnly] ref Rotation rot, ref PhysicsVelocity vel, ref PhysicsMass mass, ref PhysicsDamping damping, [ReadOnly] ref BuoyantData data)
+		[ReadOnly] public BufferFromEntity<VoxelOffset> offsetBuffer;
+		[ReadOnly] public BufferFromEntity<VoxelHeight> heightBuffer;
+
+		[NativeDisableParallelForRestriction]
+		public ComponentDataFromEntity<PhysicsVelocity> velocities;
+
+		public void Execute(int index)
 		{
+			var entity = entities[index];
+			var pos = translations[entity];
+			var rot = rotations[entity];
+			var vel = velocities[entity];
+			var mass = masses[entity];
+			var damping = dampings[entity];
+			var data = datas[entity];
+
+
 			DynamicBuffer<VoxelOffset> offsets = offsetBuffer[entity];
 			DynamicBuffer<VoxelHeight> heights = heightBuffer[entity];
 
@@ -81,6 +116,8 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 				}
 			}
 
+			velocities[entity] = vel;
+
 			//Apply drag
 			//data.percentSubmerged = Mathf.Lerp(data.percentSubmerged, submergedAmount, 0.25f);
 			//damping.Linear = data.baseDrag + (data.baseDrag * (data.percentSubmerged * 10f));
@@ -89,29 +126,37 @@ public class ApplyBuoyancyForceSystem : JobComponentSystem
 	}
 
 	[BurstCompile]
-	[RequireComponentTag(typeof(SimpleBuoyantTag))]
-	public struct SimpleForceJob : IJobForEachWithEntity<Translation, Rotation, BuoyancyNormal>
+	public struct SimpleForceJob : IJobParallelFor
 	{
 		public float dt;
 
-		[ReadOnly]
-		public BufferFromEntity<VoxelHeight> heightBuffer;
+        [DeallocateOnJobCompletion]
+        [ReadOnly] public NativeArray<Entity> entities;
+		[ReadOnly] public ComponentDataFromEntity<BuoyancyNormal> normals;
+		[ReadOnly] public BufferFromEntity<VoxelHeight> heightBuffer;
 
-		public void Execute(Entity entity, int index, [ReadOnly] ref Translation pos, [ReadOnly] ref Rotation rot, [ReadOnly] ref BuoyancyNormal normal)
+		[NativeDisableParallelForRestriction]
+		public ComponentDataFromEntity<Translation> translations;
+
+		[NativeDisableParallelForRestriction]
+		public ComponentDataFromEntity<Rotation> rotations;
+
+		public void Execute(int index)
 		{
+			var entity = entities[index];
+			var pos = translations[entity];
+			var rot = rotations[entity];
+			var normal = normals[entity];
+
 			DynamicBuffer<VoxelHeight> heights = heightBuffer[entity];
 
 			var entityTransform = new RigidTransform(rot.Value, pos.Value);
 
 			pos.Value.y = heights[0].Value.y;
-			//var position = pos.Value;
-			//position.y = heights[0].Value.y;
-			//pos.Value = position;
-
 			rot.Value = quaternion.LookRotation(math.forward(rot.Value), normal.Value);
 
-			
-			//transform.up = Vector3.Slerp(transform.up, normals[0], Time.deltaTime);
+			translations[entity] = pos;
+			rotations[entity] = rot;
 		}
 	}
 }

@@ -37,6 +37,8 @@ namespace WaterSystem
 		private DebugDrawing[] debugInfo; // For drawing force gizmos
 		public float percentSubmerged = 0f;
 
+		public GameObject childObject;
+
 		[ContextMenu("Initialize")]
 		void Init()
 		{
@@ -376,7 +378,25 @@ namespace WaterSystem
             if (body)
                 body.Convert(conversionSystem.GetPrimaryEntity(body), dstManager, conversionSystem);
 
-        }
+
+			if (childObject != null)
+			{
+				dstManager.AddComponent(entity, typeof(SyncTransformTag));
+
+				GameObject go = Instantiate(childObject, transform.position, transform.rotation) as GameObject;
+
+				if(go.GetComponent<BuoyantObject>()) Destroy(go.GetComponent<BuoyantObject>());
+				if(go.GetComponent<Engine>()) Destroy(go.GetComponent<Engine>());
+				if(go.GetComponent<BoatController>()) Destroy(go.GetComponent<BoatController>());
+				if (go.GetComponent<Rigidbody>()) Destroy(go.GetComponent<Rigidbody>());
+				if (go.GetComponent<Collider>()) Destroy(go.GetComponent<Collider>());
+
+
+				go.transform.parent = transform.parent;
+
+				DOTSTransformManager.Register(entity, go.transform);
+			}
+		}
 
         struct DebugDrawing
 		{

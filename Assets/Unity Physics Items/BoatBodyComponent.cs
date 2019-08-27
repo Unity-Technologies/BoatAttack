@@ -11,5 +11,7 @@ public class BoatBodyComponent : MonoBehaviour//, IConvertGameObjectToEntity
 	public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
 	{
 		dstManager.AddComponent(entity, typeof(CopyTransformToGameObject));
+		//dstManager.AddComponent(entity, typeof(SyncTransformTag));
+		//DOTSTransformManager.Register(entity, transform);
 	}
 }

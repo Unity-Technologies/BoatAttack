@@ -15,9 +15,12 @@ public class DriveSystem : JobComponentSystem
 {
 	protected override JobHandle OnUpdate(JobHandle inputDeps)
 	{
-		var job = new DriveWithInputJob()
-		{
-			dt = Time.deltaTime,
+        var heights = GetBufferFromEntity<VoxelHeight>(false);
+
+        var job = new DriveWithInputJob()
+        {
+            dt = Time.deltaTime,
+            HeightBuffers = heights,
 		};
 
 		return job.Schedule(this, inputDeps);
@@ -28,17 +31,23 @@ public class DriveSystem : JobComponentSystem
 	{
 		public float dt;
 
+        [ReadOnly]
+        public BufferFromEntity<VoxelHeight> HeightBuffers;
 
-		public void Execute(Entity entity, int index, [ReadOnly] ref Translation pos, [ReadOnly] ref Rotation rot, ref PhysicsVelocity vel, [ReadOnly] ref PhysicsMass mass, ref DrivingData driveData, ref InputData inputData)
+        public void Execute(Entity entity, int index, [ReadOnly] ref Translation pos, [ReadOnly] ref Rotation rot, ref PhysicsVelocity vel, [ReadOnly] ref PhysicsMass mass, ref DrivingData driveData, ref InputData inputData)
 		{
-			float velMag = math.dot(vel.Linear, vel.Linear);
+            DynamicBuffer<VoxelHeight> heights = HeightBuffers[entity];
+
+            float velMag = math.dot(vel.Linear, vel.Linear);
 
             var entityTransform = new RigidTransform(rot.Value, pos.Value);
-			var wp = math.transform(entityTransform, driveData.engineOffset);// + mass.CenterOfMass);
-			
-			//if (wp.y <= -0.1f) // if the engine is deeper than 0.1 
-			//{
-				inputData.throttle = Mathf.Clamp(inputData.throttle, 0f, 1f); // clamp for reasonable values
+            var engineWP = math.transform(entityTransform, driveData.engineOffset);
+            var waterWP = math.rotate(rot.Value, heights[0].Value) + engineWP;
+            var yHeight = heights[0].Value.y - engineWP.y;
+            //Debug.Log($"yHeight:{yHeight}");
+            //if (yHeight < -0.1f) // if the engine is deeper than 0.1 
+            {
+                inputData.throttle = Mathf.Clamp(inputData.throttle, 0f, 1f); // clamp for reasonable values
                 float3 forward = math.forward(rot.Value);
                 forward.y = 0f;
                 forward = math.normalize(forward);
@@ -57,7 +66,7 @@ public class DriveSystem : JobComponentSystem
 				inputData.steering = Mathf.Clamp(inputData.steering, -1f, 1f); // clamp for reasonable values
 			    var sTorque = new float3(0f, driveData.steeringTorque, -driveData.steeringTorque * .5f) * inputData.steering / mass.InverseInertia;
 				vel.ApplyAngularImpulse(mass, sTorque * dt);
-			//}
+			}
 		}
 	}
 }
