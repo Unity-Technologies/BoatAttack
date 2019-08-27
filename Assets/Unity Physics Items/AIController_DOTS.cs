@@ -6,22 +6,17 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
 
-
 class PathData
 {
-	public Vector3[] pathPoints;
-	public int currentPathPoint;
-	public WaypointGroup.Waypoint currentWaypoint;
+	public Vector3[] pathPoint;
+	public int curPoint;
+	public int curWP;
 	public bool foundPath;
-	public bool nearEnd;
-	public Vector3 storedPosition;
 };
 
 public class AIController_DOTS : MonoBehaviour
 {
 	static AIController_DOTS main;
-
-	public float nearDistanceSquared = 8f;
 
 	Dictionary<Entity, PathData> paths;
 
@@ -38,24 +33,12 @@ public class AIController_DOTS : MonoBehaviour
 		paths = new Dictionary<Entity, PathData>();
 	}
 
-	private void Update()
-	{
-		foreach (var path in paths)
-		{
-			if (path.Value.nearEnd || !path.Value.foundPath)
-				CalculatePath(path.Value);
-		}
-	}
-
-	public static void Register(Entity entity, Vector3 pos)
+	public static void Register(Entity entity)
 	{
 		if (main.paths.ContainsKey(entity))
 			return;
 
 		PathData data = new PathData();
-		data.currentWaypoint = WaypointGroup.instance.GetClosestWaypoint(pos);
-		data.storedPosition = pos;
-		data.nearEnd = true;
 
 		main.paths.Add(entity, data);
 	}
@@ -71,15 +54,28 @@ public class AIController_DOTS : MonoBehaviour
 
 		//Do we have data?
 		PathData data;
-		if (!paths.TryGetValue(entity, out data) || data.pathPoints == null)
+		if (!paths.TryGetValue(entity, out data))
 			return;
 
-		data.storedPosition = pos; //Store position for navmesh calculations
+		if (data.pathPoint == null)
+		{
+			WaypointGroup.Waypoint wp = WaypointGroup.instance.GetClosestWaypoint(pos);
+			CalculatePath(WaypointGroup.instance.GetNextWaypoint(wp), data, pos);
+		}
+		else if (data.pathPoint.Length > data.curPoint && data.foundPath)
+		{
+			if ((Vector3.Distance(pos, data.pathPoint[data.curPoint])) < 8) // If we are close to the current point on the path get the next
+			{
+				data.curPoint++; // Move on to next point
+				if (data.curPoint >= data.pathPoint.Length)
+					CalculatePath(WaypointGroup.instance.GetWaypoint(data.curWP), data, pos);
+			}
+		}
 
-		if (data.currentPathPoint < data.pathPoints.Length && data.foundPath)
+		if (data.pathPoint != null && data.pathPoint.Length > data.curPoint)
 		{
 			//Get angle to the destination and the side
-			Vector3 normDir = data.pathPoints[data.currentPathPoint] - (Vector3)pos;
+			Vector3 normDir = data.pathPoint[data.curPoint] - (Vector3)pos;
 			normDir = normDir.normalized;
 
 			var forward = math.forward(rot);
@@ -90,35 +86,26 @@ public class AIController_DOTS : MonoBehaviour
 
 			steering = Mathf.Clamp(targetSide, -1.0f, 1.0f);
 			throttle = dot > 0 ? 1f : 0.25f;
-
-
-			if (Vector3.Distance(pos, data.pathPoints[data.currentPathPoint]) < nearDistanceSquared) // If we are close to the current point on the path get the next
-			{
-				//Debug.Log($"Distance: {Vector3.Distance(pos, data.pathPoints[data.currentPathPoint])} SqrMag: {(data.storedPosition - data.pathPoints[data.currentPathPoint]).sqrMagnitude}");
-
-				data.currentPathPoint++; // Move on to next point
-				if (data.currentPathPoint >= data.pathPoints.Length)
-					data.nearEnd = true;
-			}
 		}
 	}
 
-	void CalculatePath(PathData data)
+	void CalculatePath(WaypointGroup.Waypoint wp, PathData data, float3 pos)
 	{
-		var wp = WaypointGroup.instance.GetNextWaypoint(data.currentWaypoint);
 		var offset = (UnityEngine.Random.value * 2f - 1f) * wp.WPwidth * Vector3.left;
 		var curWPPos = wp.point + wp.rotation * offset;
 
+		data.curWP++;
+		if (data.curWP >= WaypointGroup.instance.WPs.Count)
+			data.curWP = 0;
+
 		var navPath = new NavMeshPath(); // New nav path
-		NavMesh.CalculatePath(data.storedPosition, curWPPos, 255, navPath);
+		NavMesh.CalculatePath(pos, curWPPos, 255, navPath);
 
 		if (navPath.status == NavMeshPathStatus.PathComplete) // if the path is good(complete) use it
 		{
-			data.currentWaypoint = wp;
-			data.pathPoints = navPath.corners;
-			data.currentPathPoint = 1;
+			data.pathPoint = navPath.corners;
+			data.curPoint = 1;
 			data.foundPath = true;
-			data.nearEnd = false;
 		}
 		else if (navPath == null || navPath.status == NavMeshPathStatus.PathInvalid) // if the path is bad, we havent found a path
 		{

@@ -15,9 +15,8 @@ namespace BoatAttack.Boat
         public AudioSource waterSound; // Water sound clip
 
         //engine stats
-        public float steeringTorque = 5f;
-		public float upwardTorque = 5f;
-        public float horsePower = 18f;
+        public float torque = 5f;
+        public float horsePower = 15f;
         private float3[] point = new float3[1]; // engine submerged check
         private float3[] heights = new float3[1]; // engine submerged check
         private int _guid;
@@ -73,7 +72,7 @@ namespace BoatAttack.Boat
             if (yHeight > -0.1f) // if the engine is deeper than 0.1
             {
                 modifier = Mathf.Clamp(modifier, -1f, 1f); // clamp for reasonable values
-                RB.AddRelativeTorque(new Vector3(0f, steeringTorque, -steeringTorque * 0.5f) * modifier, ForceMode.Acceleration); // add torque based on input and torque amount
+                RB.AddRelativeTorque(new Vector3(0f, torque, -torque * 0.5f) * modifier, ForceMode.Acceleration); // add torque based on input and torque amount
             }
         }
 
@@ -92,24 +91,17 @@ namespace BoatAttack.Boat
 			bool isHuman = GetComponent<BoatController>().Human;
 
 			if (!isHuman)
-				AIController_DOTS.Register(entity, transform.position);
+				AIController_DOTS.Register(entity);
 
-			var driveData = new DrivingData
+			var data = new DrivingData
 			{
-				steeringTorque = steeringTorque,
-				upwardTorque = upwardTorque,
+				isHuman = isHuman,
+				torque = torque,
 				horsePower = horsePower,
-				engineOffset = enginePosition
+				engineOffset = transform.TransformPoint(enginePosition) - transform.position
 			};
 
-			dstManager.AddComponentData(entity, driveData);
-
-			var inputData = new InputData
-			{
-				isHuman = isHuman
-			};
-
-			dstManager.AddComponentData(entity, inputData);
+			dstManager.AddComponentData(entity, data);
 		}
 	}
 }
