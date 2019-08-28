@@ -4,25 +4,28 @@ using UnityEngine;
 
 public class PlatformFramerateLock : MonoBehaviour
 {
-	public int highEndRate = 60;
-	public int highEndPhysRate = 60;
-	public int lowEndRate = 30;
-	public int lowEndPhysRate = 30;
+	public bool allowUmlimitedFPS = false;
+	public int highEndFPS = 60;
+	public float highEndFixedTimeStep = .02f;
+	public int lowEndFPS = 30;
+	public float lowEndFixedTimeStep = .033f;
 
 
     void Start()
     {
 		int rate = 60;
-		int physRate = 50;
+		float physRate = .02f;
 #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_XBOXONE || UNITY_PS4
-		rate = highEndRate;
-		physRate = highEndPhysRate;
+		rate = highEndFPS;
+		physRate = highEndFixedTimeStep;
 #else
-		rate = lowEndRate;
-		physRate = lowEndPhysRate;
+		rate = lowEndFPS;
+		physRate = lowEndFixedTimeStep;
 #endif
 
-		Time.fixedDeltaTime = 1 / physRate;
-		Application.targetFrameRate = 1 / rate;
+		Time.fixedDeltaTime = physRate;
+
+		if(!allowUmlimitedFPS)
+			Application.targetFrameRate = rate;
 	}
 }
