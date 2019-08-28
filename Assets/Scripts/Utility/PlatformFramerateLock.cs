@@ -4,10 +4,25 @@ using UnityEngine;
 
 public class PlatformFramerateLock : MonoBehaviour
 {
-    // Start is called before the first frame update
+	public int highEndRate = 60;
+	public int highEndPhysRate = 60;
+	public int lowEndRate = 30;
+	public int lowEndPhysRate = 30;
+
+
     void Start()
     {
-		//Basic for now. Replace with the platform logic
-		Application.targetFrameRate = (int)(1f / Time.fixedDeltaTime);
+		int rate = 60;
+		int physRate = 50;
+#if UNITY_STANDALONE || UNITY_EDITOR || UNITY_XBOXONE || UNITY_PS4
+		rate = highEndRate;
+		physRate = highEndPhysRate;
+#else
+		rate = lowEndRate;
+		physRate = lowEndPhysRate;
+#endif
+
+		Time.fixedDeltaTime = 1 / physRate;
+		Application.targetFrameRate = 1 / rate;
 	}
 }
