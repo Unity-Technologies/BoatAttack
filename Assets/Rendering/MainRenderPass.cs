@@ -40,11 +40,13 @@ public class MainRenderPass : ScriptableRenderPass
         int height = cameraTargetDescriptor.height;
         colorAttachmentDescriptor.ConfigureTarget(renderer.m_CameraColorAttachment.Identifier(), false, true);
         colorAttachmentDescriptor.ConfigureClear(renderingData.cameraData.camera.backgroundColor);
+        depthAttachmentDescriptor.ConfigureClear(Color.black);
         var descriptors = new NativeArray<AttachmentDescriptor>(
                     new[] { colorAttachmentDescriptor, depthAttachmentDescriptor },
                     Allocator.Temp);
 
-        using (context.BeginScopedRenderPass(width, height, 1, descriptors, 1))
+        int depthAttachmentIndex = 1;
+        using (context.BeginScopedRenderPass(width, height, 1, descriptors, depthAttachmentIndex))
         {
             descriptors.Dispose();
             NativeArray<int> attachmentIndices = new NativeArray<int>(new[] { 0 }, Allocator.Temp);
@@ -57,10 +59,10 @@ public class MainRenderPass : ScriptableRenderPass
                 context.DrawSkybox(renderingData.cameraData.camera);
             }
 
-            // Caustics Subpass
+            // Caustics Subpass - Reads Depth as Input
             attachmentIndices = new NativeArray<int>(new[]{0}, Allocator.Temp);
             var inputIndices = new NativeArray<int>(new[]{1}, Allocator.Temp);
-            using (context.BeginScopedSubPass(attachmentIndices, inputIndices, false))
+            using (context.BeginScopedSubPass(attachmentIndices, inputIndices, true))
             {
                 attachmentIndices.Dispose();
                 inputIndices.Dispose();
