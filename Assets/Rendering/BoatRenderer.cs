@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Rendering.Universal.Internal;
 
 public class BoatRenderer : ScriptableRenderer
 {
@@ -16,10 +17,6 @@ public class BoatRenderer : ScriptableRenderer
     FinalBlitPass m_FinalBlitPass;
     CopyColorPass m_CopyColorPass;
     DrawObjectsPass m_RenderTransparentForwardPass;
-    
-#if UNITY_EDITOR
-    SceneViewDepthCopyPass m_SceneViewDepthCopyPass;
-#endif
 
     RenderTargetHandle m_ActiveCameraColorAttachment;
     RenderTargetHandle m_ActiveCameraDepthAttachment;
@@ -48,10 +45,6 @@ public class BoatRenderer : ScriptableRenderer
         m_FinalBlitPass = new FinalBlitPass(RenderPassEvent.AfterRendering, blitMaterial);   
         m_CopyColorPass = new CopyColorPass(RenderPassEvent.BeforeRenderingTransparents, samplingMaterial);
         m_RenderTransparentForwardPass = new DrawObjectsPass("Render Transparents", false, RenderPassEvent.BeforeRenderingTransparents, RenderQueueRange.transparent, -1, StencilState.defaultValue, 0);
-
-#if UNITY_EDITOR
-        m_SceneViewDepthCopyPass = new SceneViewDepthCopyPass(RenderPassEvent.AfterRendering + 9, copyDepthMaterial);
-#endif
 
         // RenderTexture format depends on camera and pipeline (HDR, non HDR, etc)
         // Samples (MSAA) depend on camera and pipeline
@@ -138,14 +131,14 @@ public class BoatRenderer : ScriptableRenderer
         {
             if (requiresFinalPostProcessPass)
             {
-                m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, m_AfterPostProcessColor, m_ActiveCameraDepthAttachment, m_ColorGradingLut);
+                m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, m_AfterPostProcessColor, m_ActiveCameraDepthAttachment, m_ColorGradingLut, true);
                 EnqueuePass(m_PostProcessPass);
                 m_FinalPostProcessPass.SetupFinalPass(m_AfterPostProcessColor);
                 EnqueuePass(m_FinalPostProcessPass);
             }
             else
             {
-                m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, RenderTargetHandle.CameraTarget, m_ActiveCameraDepthAttachment, m_ColorGradingLut);
+                m_PostProcessPass.Setup(cameraTargetDescriptor, m_ActiveCameraColorAttachment, RenderTargetHandle.CameraTarget, m_ActiveCameraDepthAttachment, m_ColorGradingLut, false);
                 EnqueuePass(m_PostProcessPass);
             }
         }
