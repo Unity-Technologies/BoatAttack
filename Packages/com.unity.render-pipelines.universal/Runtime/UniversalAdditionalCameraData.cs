@@ -105,8 +105,7 @@ namespace UnityEngine.Rendering.Universal
             {
                 if (m_RequiresDepthTextureOption == CameraOverrideOption.UsePipelineSettings)
                 {
-                    UniversalRenderPipelineAsset asset = GraphicsSettings.renderPipelineAsset as UniversalRenderPipelineAsset;
-                    return asset.supportsCameraDepthTexture;
+                    return UniversalRenderPipeline.asset.supportsCameraDepthTexture;
                 }
                 else
                 {
@@ -122,8 +121,7 @@ namespace UnityEngine.Rendering.Universal
             {
                 if (m_RequiresOpaqueTextureOption == CameraOverrideOption.UsePipelineSettings)
                 {
-                    UniversalRenderPipelineAsset asset = GraphicsSettings.renderPipelineAsset as UniversalRenderPipelineAsset;
-                    return asset.supportsCameraOpaqueTexture;
+                    return UniversalRenderPipeline.asset.supportsCameraOpaqueTexture;
                 }
                 else
                 {
@@ -138,6 +136,10 @@ namespace UnityEngine.Rendering.Universal
             get => UniversalRenderPipeline.asset.GetRenderer(m_RendererIndex);
         }
 
+        /// <summary>
+        /// Use this to set this Camera's current ScriptableRenderer to one listed on the Render Pipeline Asset. Takes an index that maps to the list on the Render Pipeline Asset.
+        /// </summary>
+        /// <param name="index">The index that maps to the RendererData list on the currently assigned Render Pipeline Asset</param>
         public void SetRenderer(int index)
         {
             m_RendererIndex = index;
