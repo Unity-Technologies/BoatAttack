@@ -11,6 +11,15 @@ public class FogOverride : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        RenderSettings.fogColor = m_FogColor;
+#if UNITY_EDITOR
+        if(SceneView.currentDrawingSceneView.sceneViewState.showFog)
+#endif
+            RenderSettings.fogColor = m_FogColor;
+#if UNITY_EDITOR
+        else
+        {
+            RenderSettings.fog = false;
+        }
+#endif
     }
 }

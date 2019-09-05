@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.LWRP;
+using UnityEngine.Rendering.Universal;
 
 namespace BoatAttack
 {
+    [ExecuteAlways]
     public class AppSettings : MonoBehaviour
     {
         public enum RenderRes
@@ -23,6 +22,7 @@ namespace BoatAttack
             _120
         }
 
+        [Header("Resolution Settings")]
         public RenderRes maxRenderSize = RenderRes._720p;
         public bool variableResolution = false;
         [Range(0f, 1f)]
@@ -32,16 +32,29 @@ namespace BoatAttack
         private float currentDynamicScale = 1.0f;
         private float maxScale = 1.0f;
 
-        public Material seaMat;
+        [Header("Quality Level Settings")] 
+        public Volume qualityVolume;
 
-        private Shader seaShader;
+        public VolumeProfile[] qualityVolumeProfiles = new VolumeProfile[3];
+        private int qualityLevel;
+        
         // Use this for initialization
         void Start()
         {
-            Application.targetFrameRate = 300;
+            Initialize();
+            SetRenderScale();
+        }
 
+        void Initialize()
+        {
+            Application.targetFrameRate = 300;
+            qualityLevel = QualitySettings.GetQualityLevel();
+            qualityVolume.profile = qualityVolumeProfiles[qualityLevel];
+        }
+
+        void SetRenderScale()
+        {
             float res;
-            
             switch (maxRenderSize)
             {
                 case RenderRes._720p:
@@ -59,11 +72,21 @@ namespace BoatAttack
             }
             var renderScale = Mathf.Clamp(res / Camera.main.pixelHeight, 0.1f, 1.0f);
             maxScale = renderScale;
-            UnityEngine.Rendering.Universal.UniversalRenderPipeline.asset.renderScale = renderScale;
+            UniversalRenderPipeline.asset.renderScale = renderScale;
+        }
+
+        void UpdateQualitySettings(int level)
+        {
+            qualityLevel = level;
+            qualityVolume.profile = qualityVolumeProfiles[level];
         }
 
         private void Update()
         {
+            var level = QualitySettings.GetQualityLevel();
+            if(level != qualityLevel)
+                UpdateQualitySettings(level);
+            
             if (variableResolution)
             {
                 Camera.main.allowDynamicResolution = true;
@@ -98,22 +121,9 @@ namespace BoatAttack
             }
         }
 
-        public void ToggleWaterShader(bool detailed)
-        {
-            if (detailed == false)
-            {
-                seaShader = seaMat.shader;
-                seaMat.shader = Shader.Find("Unlit/Color");
-            }
-            else
-            {
-                seaMat.shader = seaShader;
-            }
-        }
-        
         public void ToggleSRPBatcher(bool enabled)
         {
-            UnityEngine.Rendering.Universal.UniversalRenderPipeline.asset.useSRPBatcher = enabled;
+            UniversalRenderPipeline.asset.useSRPBatcher = enabled;
         }
     }
 }
