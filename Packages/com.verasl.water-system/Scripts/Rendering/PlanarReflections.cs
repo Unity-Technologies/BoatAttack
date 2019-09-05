@@ -245,7 +245,7 @@ namespace UnityEngine.Rendering.LWRP
             var res = ReflectionResolution(camera, UniversalRenderPipeline.asset.renderScale);
             if (m_ReflectionTexture == null)
             {
-                bool useHDR10 = true;// SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.RGB111110Float);
+                bool useHDR10 = SystemInfo.SupportsRenderTextureFormat(RenderTextureFormat.RGB111110Float);
                 RenderTextureFormat hdrFormat =
                     useHDR10 ? RenderTextureFormat.RGB111110Float : RenderTextureFormat.DefaultHDR;
                 m_ReflectionTexture = RenderTexture.GetTemporary(res.x, res.y, 16,
