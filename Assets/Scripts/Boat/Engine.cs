@@ -2,7 +2,6 @@
 using System.Collections;
 using WaterSystem;
 using Unity.Mathematics;
-using Unity.Entities;
 
 namespace BoatAttack.Boat
 {
@@ -87,32 +86,5 @@ namespace BoatAttack.Boat
             Gizmos.matrix = transform.localToWorldMatrix;
             Gizmos.DrawCube(enginePosition, new Vector3(0.1f, 0.2f, 0.3f)); // Draw teh engine position with sphere
         }
-
-		//Called by parent BuoyantObject_DOTS
-		public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
-		{
-			//Set up driving data
-			bool isHuman = GetComponent<BoatController>().Human;
-
-			if (!isHuman)
-				AIController_DOTS.Register(entity, transform.position);
-
-			var driveData = new DrivingData
-			{
-				steeringTorque = steeringTorque,
-				upwardTorque = upwardTorque,
-				horsePower = horsePower,
-				engineOffset = enginePosition
-			};
-
-			dstManager.AddComponentData(entity, driveData);
-
-			var inputData = new InputData
-			{
-				isHuman = isHuman
-			};
-
-			dstManager.AddComponentData(entity, inputData);
-		}
 	}
 }
