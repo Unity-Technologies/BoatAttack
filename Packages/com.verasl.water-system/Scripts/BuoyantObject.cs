@@ -35,7 +35,7 @@ namespace WaterSystem
         private Vector3 localArchimedesForce;
 
 		[SerializeField]
-        private Vector3[] voxels; // voxel position
+        private Vector4[] voxels; // voxel position
         private float3[] samplePoints; // sample points for height calc
         private float3[] heights; // water height array(only size of 1 when simple or non-physical)
         private float3[] normals; // water normal array(only used when non-physical and size of 1 also when simple)
@@ -74,8 +74,9 @@ namespace WaterSystem
 
             if (_buoyancyType == BuoyancyType.NonPhysical || _buoyancyType == BuoyancyType.Physical)
             {
-                voxels = new Vector3[1];
+                voxels = new Vector4[1];
                 voxels[0] = centerOfMass;
+                voxels[0].w = 1f;
                 samplePoints = new float3[1];
             }
 
@@ -153,7 +154,8 @@ namespace WaterSystem
             {
 				//Debug.Log("new pass: " + gameObject.name);
                 Physics.autoSyncTransforms = false;
-                for(var i = 0; i < voxels.Length; i++) BuoyancyForce(voxels[i], heights[i].y, ref submergedAmount, ref debugInfo[i]);
+                Matrix4x4 transformMatrix = transform.localToWorldMatrix;
+                for(var i = 0; i < voxels.Length; i++) BuoyancyForce(transformMatrix * voxels[i], heights[i].y, ref submergedAmount, ref debugInfo[i]);
                 Physics.SyncTransforms();
                 Physics.autoSyncTransforms = true;
 				UpdateDrag(submergedAmount);
@@ -167,27 +169,23 @@ namespace WaterSystem
 
         private void BuoyancyForce(Vector3 position, float waterHeight, ref float submergedAmount, ref DebugDrawing _debug)
         {
-            var wp = transform.TransformPoint(position);
-			float waterLevel = waterHeight;
+            //_debug.position = position;
+            //_debug.waterHeight = waterHeight;
+            //_debug.force = Vector3.zero;
 
-            _debug.position = wp;
-            _debug.waterHeight = waterLevel;
-            _debug.force = Vector3.zero;
-			Vector3 force = Vector3.zero;
-
-            if (wp.y - voxelResolution < waterLevel)
+            if (position.y - voxelResolution < waterHeight)
             {
-				float k = Mathf.Clamp01((waterLevel - (wp.y - voxelResolution)) / (voxelResolution * 2f));
+				float k = math.clamp((waterHeight - (position.y - voxelResolution)) / (voxelResolution * 2f), 0f, 1f);
 
-				submergedAmount += k / voxels.Length;//(math.clamp(waterLevel - (wp.y - voxelResolution), 0f, voxelResolution * 2f) / (voxelResolution * 2f)) / voxels.Count;
+				submergedAmount += k / voxels.Length;
 
-                var velocity = RB.GetPointVelocity(wp);
+                var velocity = RB.GetPointVelocity(position);
                 velocity.y *= 2f;
                 var localDampingForce = DAMPFER * RB.mass * -velocity;
-                force = localDampingForce + Mathf.Sqrt(k) * localArchimedesForce;//\
-                RB.AddForceAtPosition(force, wp);
+                var force = localDampingForce + math.sqrt(k) * localArchimedesForce;
+                RB.AddForceAtPosition(force, position);
 
-                _debug.force = force; // For drawing force gizmos
+                //_debug.force = force; // For drawing force gizmos
 				//Debug.Log(string.Format("Position: {0:f1} -- Force: {1:f2} -- Height: {2:f2}\nVelocty: {3:f2} -- Damp: {4:f2} -- Mass: {5:f1} -- K: {6:f2}", wp, force, waterLevel, velocity, localDampingForce, RB.mass, localArchimedesForce));
 			}
 		}
@@ -208,7 +206,7 @@ namespace WaterSystem
             transform.localScale = Vector3.one;
 
             voxels = null;
-            var points = new List<Vector3>();
+            var points = new List<Vector4>();
 
             var rawBounds = VoxelBounds();
             voxelBounds = rawBounds;
@@ -234,7 +232,7 @@ namespace WaterSystem
                             }
                         }
                         if(inside)
-                            points.Add(p);
+                            points.Add(new Vector4(p.x, p.y, p.z, 1f));
 					}
 				}
             }

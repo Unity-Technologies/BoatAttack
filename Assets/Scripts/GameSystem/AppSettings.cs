@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using Object = System.Object;
 
 namespace BoatAttack
 {
@@ -10,7 +12,7 @@ namespace BoatAttack
         public enum RenderRes
         {
             _Native,
-            _2440p,
+            _1440p,
             _1080p,
             _720p
         }
@@ -39,7 +41,7 @@ namespace BoatAttack
         private int qualityLevel;
         
         // Use this for initialization
-        void Start()
+        void Awake()
         {
             Initialize();
             SetRenderScale();
@@ -52,25 +54,32 @@ namespace BoatAttack
             qualityVolume.profile = qualityVolumeProfiles[qualityLevel];
         }
 
+        private void Start()
+        {
+            var obj = GameObject.Find("[Debug Updater]");
+            if(obj != null)
+                Destroy(obj);
+        }
+
         void SetRenderScale()
         {
             float res;
             switch (maxRenderSize)
             {
                 case RenderRes._720p:
-                    res = 720f;
+                    res = 1280f;
                     break;
                 case RenderRes._1080p:
-                    res = 1080f;
+                    res = 1920f;
                     break;
-                case RenderRes._2440p:
-                    res = 2440f;
+                case RenderRes._1440p:
+                    res = 2560f;
                     break;
                 default:
-                    res = Camera.main.pixelHeight;
+                    res = Camera.main.pixelWidth;
                     break;
             }
-            var renderScale = Mathf.Clamp(res / Camera.main.pixelHeight, 0.1f, 1.0f);
+            var renderScale = Mathf.Clamp(res / Camera.main.pixelWidth, 0.1f, 1.0f);
             maxScale = renderScale;
             UniversalRenderPipeline.asset.renderScale = renderScale;
         }
