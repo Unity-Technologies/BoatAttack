@@ -1,15 +1,15 @@
-﻿using System;
+using System;
 using UnityEngine;
 
-namespace UnityEditor.ShaderGraph.Internal
+namespace UnityEditor.ShaderGraph
 {
-    public abstract class ShaderInput
+    abstract class ShaderInput
     {
         [SerializeField]
         SerializableGuid m_Guid = new SerializableGuid();
 
-        internal Guid guid => m_Guid.guid;
-        
+        public Guid guid => m_Guid.guid;
+
         [SerializeField]
         string m_Name;
 
@@ -52,7 +52,7 @@ namespace UnityEditor.ShaderGraph.Internal
         [SerializeField]
         string m_OverrideReferenceName;
 
-        internal string overrideReferenceName
+        public string overrideReferenceName
         {
             get => m_OverrideReferenceName;
             set => m_OverrideReferenceName = value;
@@ -61,16 +61,16 @@ namespace UnityEditor.ShaderGraph.Internal
         [SerializeField]
         bool m_GeneratePropertyBlock = true;
 
-        internal bool generatePropertyBlock
+        public bool generatePropertyBlock
         {
             get => m_GeneratePropertyBlock;
             set => m_GeneratePropertyBlock = value;
         }
 
-        internal abstract ConcreteSlotValueType concreteShaderValueType { get; }
-        internal abstract bool isExposable { get; }
-        internal abstract bool isRenamable { get; }
+        public abstract ConcreteSlotValueType concreteShaderValueType { get; }
+        public abstract bool isExposable { get; }
+        public abstract bool isRenamable { get; }
 
-        internal abstract ShaderInput Copy();
+        public abstract ShaderInput Copy();
     }
 }

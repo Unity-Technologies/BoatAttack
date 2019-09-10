@@ -408,7 +408,7 @@ namespace UnityEditor.ShaderGraph.Drawing
                     }
 
                     if (!isCompiled)
-                {
+                    {
                         continue;
                     }
 
@@ -432,13 +432,13 @@ namespace UnityEditor.ShaderGraph.Drawing
 
             foreach (var node in m_NodesToUpdate)
             {
-                if (node is IMasterNode && node == masterRenderData.shaderData.node && !(node is VfxMasterNode))
+                if (node is IMasterNode && node == masterRenderData.shaderData.node)
                 {
                     UpdateMasterNodeShader();
                     continue;
                 }
 
-                if (!node.hasPreview && !(node is SubGraphOutputNode || node is VfxMasterNode))
+                if (!node.hasPreview && !(node is SubGraphOutputNode))
                     continue;
 
                 var results = m_Graph.GetPreviewShader(node);

@@ -9,8 +9,16 @@ using UnityEngine.UIElements;
 
 namespace UnityEditor.ShaderGraph
 {
-    abstract class MasterNode : AbstractMaterialNode, IMasterNode, IHasSettings
+    [Serializable]
+    abstract class MasterNode<T> : AbstractMaterialNode, IMasterNode, IHasSettings
+        where T : class, ISubShader
     {
+        [NonSerialized]
+        List<T> m_SubShaders = new List<T>();
+
+        [SerializeField]
+        List<SerializationHelper.JSONSerializedElement> m_SerializableSubShaders = new List<SerializationHelper.JSONSerializedElement>();
+
         public override bool hasPreview
         {
             get { return false; }
@@ -26,39 +34,15 @@ namespace UnityEditor.ShaderGraph
             get { return PreviewMode.Preview3D; }
         }
 
-        public abstract string GetShader(GenerationMode mode, string outputName, out List<PropertyCollector.TextureInfo> configuredTextures, List<string> sourceAssetDependencyPaths = null);
-        public abstract bool IsPipelineCompatible(RenderPipelineAsset renderPipelineAsset);
-        public abstract int GetPreviewPassIndex();
-
-        public VisualElement CreateSettingsElement()
+        public Type supportedSubshaderType
         {
-            var container = new VisualElement();
-            var commonSettingsElement = CreateCommonSettingsElement();
-            if (commonSettingsElement != null)
-                container.Add(commonSettingsElement);
-
-            return container;
+            get { return typeof(T); }
         }
 
-        protected virtual VisualElement CreateCommonSettingsElement()
+        public IEnumerable<T> subShaders
         {
-            return null;
+            get { return m_SubShaders; }
         }
-
-        public virtual void ProcessPreviewMaterial(Material Material) {}
-    }
-    
-    [Serializable]
-    abstract class MasterNode<T> : MasterNode
-        where T : class, ISubShader
-    {
-        [NonSerialized]
-        List<T> m_SubShaders = new List<T>();
-
-        [SerializeField]
-        List<SerializationHelper.JSONSerializedElement> m_SerializableSubShaders = new List<SerializationHelper.JSONSerializedElement>();
-
-        public IEnumerable<T> subShaders => m_SubShaders;
 
         public void AddSubShader(T subshader)
         {
@@ -85,7 +69,7 @@ namespace UnityEditor.ShaderGraph
             return null;
         }
 
-        public sealed override string GetShader(GenerationMode mode, string outputName, out List<PropertyCollector.TextureInfo> configuredTextures, List<string> sourceAssetDependencyPaths = null)
+        public string GetShader(GenerationMode mode, string outputName, out List<PropertyCollector.TextureInfo> configuredTextures, List<string> sourceAssetDependencyPaths = null)
         {
             var activeNodeList = ListPool<AbstractMaterialNode>.Get();
             NodeUtils.DepthFirstCollectNodesFromNode(activeNodeList, this);
@@ -113,7 +97,7 @@ namespace UnityEditor.ShaderGraph
             finalShader.AppendLine(@"Shader ""{0}""", outputName);
             using (finalShader.BlockScope())
             {
-                SubShaderGenerator.GeneratePropertiesBlock(finalShader, shaderProperties, shaderKeywords, mode);
+                GraphUtil.GeneratePropertiesBlock(finalShader, shaderProperties, shaderKeywords, mode);
 
                 foreach (var subShader in m_SubShaders)
                 {
@@ -127,7 +111,7 @@ namespace UnityEditor.ShaderGraph
             return finalShader.ToString();
         }
 
-        public sealed override bool IsPipelineCompatible(RenderPipelineAsset renderPipelineAsset)
+        public bool IsPipelineCompatible(RenderPipelineAsset renderPipelineAsset)
         {
             foreach (var subShader in m_SubShaders)
             {
@@ -135,11 +119,6 @@ namespace UnityEditor.ShaderGraph
                     return true;
             }
             return false;
-        }
-
-        public sealed override int GetPreviewPassIndex()
-        {
-            return GetActiveSubShader()?.GetPreviewPassIndex() ?? 0;
         }
 
         public override void OnBeforeSerialize()
@@ -179,5 +158,22 @@ namespace UnityEditor.ShaderGraph
                 }
             }
         }
+
+        public VisualElement CreateSettingsElement()
+        {
+            var container = new VisualElement();
+            var commonSettingsElement = CreateCommonSettingsElement();
+            if (commonSettingsElement != null)
+                container.Add(commonSettingsElement);
+
+            return container;
+        }
+
+        protected virtual VisualElement CreateCommonSettingsElement()
+        {
+            return null;
+        }
+
+        public virtual void ProcessPreviewMaterial(Material Material) {}
     }
 }

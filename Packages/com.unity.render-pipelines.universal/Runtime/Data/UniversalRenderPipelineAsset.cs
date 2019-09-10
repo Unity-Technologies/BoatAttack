@@ -105,6 +105,7 @@ namespace UnityEngine.Rendering.Universal
         // Default values set when a new UniversalRenderPipeline asset is created
         [SerializeField] int k_AssetVersion = 5;
         [SerializeField] int k_AssetPreviousVersion = 5;
+        bool m_NeedsUpgrade;
 
         // Deprecated settings for upgrading sakes
         [SerializeField] RendererType m_RendererType = RendererType.ForwardRenderer;
@@ -306,14 +307,18 @@ namespace UnityEngine.Rendering.Universal
             // If no data we can't create pipeline instance
             if (m_RendererDataList[0] == null)
             {
-                // If previous version and current version are miss-matched then we are waiting for the upgrader to kick in
-                if(k_AssetPreviousVersion != k_AssetVersion)
+                // Could be upgrading for the first time
+                if (m_NeedsUpgrade)
+                {
+                    UpgradeAsset(this);
+                }
+                else
+                {
+                    Debug.LogError(
+                        $"Default Renderer is missing, make sure there is a Renderer assigned as the default on the current Universal RP asset:{UniversalRenderPipeline.asset.name}",
+                        this);
                     return null;
-
-                Debug.LogError(
-                    $"Default Renderer is missing, make sure there is a Renderer assigned as the default on the current Universal RP asset:{UniversalRenderPipeline.asset.name}",
-                    this);
-                return null;
+                }
             }
 
             if(m_Renderers == null || m_Renderers.Length < m_RendererDataList.Length)
@@ -706,11 +711,13 @@ namespace UnityEngine.Rendering.Universal
 
         public void OnAfterDeserialize()
         {
+            k_AssetPreviousVersion = k_AssetVersion;
+
             if (k_AssetVersion < 3)
             {
                 m_SoftShadowsSupported = (m_ShadowType == ShadowQuality.SoftShadows);
-                k_AssetPreviousVersion = k_AssetVersion;
                 k_AssetVersion = 3;
+                m_NeedsUpgrade = true;
             }
 
             if (k_AssetVersion < 4)
@@ -719,8 +726,8 @@ namespace UnityEngine.Rendering.Universal
                 m_AdditionalLightsShadowmapResolution = m_LocalShadowsAtlasResolution;
                 m_AdditionalLightsPerObjectLimit = m_MaxPixelLights;
                 m_MainLightShadowmapResolution = m_ShadowAtlasResolution;
-                k_AssetPreviousVersion = k_AssetVersion;
                 k_AssetVersion = 4;
+                m_NeedsUpgrade = true;
             }
 
             if (k_AssetVersion < 5)
@@ -729,20 +736,21 @@ namespace UnityEngine.Rendering.Universal
                 {
                     m_RendererDataList[0] = m_RendererData;
                 }
-                k_AssetPreviousVersion = k_AssetVersion;
+
                 k_AssetVersion = 5;
+                m_NeedsUpgrade = true;
             }
 #if UNITY_EDITOR
-            if (k_AssetPreviousVersion != k_AssetVersion)
-            {
-                EditorApplication.delayCall += () => UpgradeAsset(this);
-            }
+            if(m_NeedsUpgrade)
+                EditorApplication.delayCall = () => UpgradeAsset(this);
 #endif
         }
 
-#if UNITY_EDITOR
+
         static void UpgradeAsset(UniversalRenderPipelineAsset asset)
         {
+#if UNITY_EDITOR
+
             if(asset.k_AssetPreviousVersion < 5)
             {
                 if (asset.m_RendererType == RendererType.ForwardRenderer)
@@ -761,8 +769,11 @@ namespace UnityEngine.Rendering.Universal
 
                 asset.k_AssetPreviousVersion = 5;
             }
-        }
+
+            asset.m_NeedsUpgrade = false;
 #endif
+        }
+
 
         float ValidateShadowBias(float value)
         {

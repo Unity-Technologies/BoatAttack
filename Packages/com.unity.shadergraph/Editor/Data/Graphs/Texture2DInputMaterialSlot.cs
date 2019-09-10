@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEditor.Graphing;
 using UnityEditor.ShaderGraph.Drawing.Slots;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -15,7 +14,7 @@ namespace UnityEditor.ShaderGraph
         private SerializableTexture m_Texture = new SerializableTexture();
 
         [SerializeField]
-        private Texture2DShaderProperty.DefaultType m_DefaultType = Texture2DShaderProperty.DefaultType.White;
+        private TextureShaderProperty.DefaultType m_DefaultType = TextureShaderProperty.DefaultType.White;
 
         public Texture texture
         {
@@ -23,7 +22,7 @@ namespace UnityEditor.ShaderGraph
             set { m_Texture.texture = value; }
         }
 
-        public Texture2DShaderProperty.DefaultType defaultType
+        public TextureShaderProperty.DefaultType defaultType
         {
             get { return m_DefaultType; }
             set { m_DefaultType = value; }
@@ -61,7 +60,7 @@ namespace UnityEditor.ShaderGraph
             if (matOwner == null)
                 throw new Exception(string.Format("Slot {0} either has no owner, or the owner is not a {1}", this, typeof(AbstractMaterialNode)));
 
-            var prop = new Texture2DShaderProperty();
+            var prop = new TextureShaderProperty();
             prop.overrideReferenceName = matOwner.GetVariableNameForSlot(id);
             prop.modifiable = false;
             prop.generatePropertyBlock = true;

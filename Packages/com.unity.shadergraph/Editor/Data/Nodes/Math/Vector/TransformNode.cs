@@ -1,7 +1,6 @@
 using System;
 using UnityEditor.Graphing;
 using UnityEditor.ShaderGraph.Drawing.Controls;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 namespace UnityEditor.ShaderGraph
@@ -96,7 +95,7 @@ namespace UnityEditor.ShaderGraph
             RemoveSlotsNameNotMatching(new[] { InputSlotId, OutputSlotId });
         }
 
-        public void GenerateNodeCode(ShaderStringBuilder sb, GenerationMode generationMode)
+        public void GenerateNodeCode(ShaderStringBuilder sb, GraphContext graphContext, GenerationMode generationMode)
         {
             NodeUtils.SlotConfigurationExceptionIfBadConfiguration(this, new[] { InputSlotId }, new[] { OutputSlotId });
             string inputValue = string.Format("{0}.xyz", GetSlotValue(InputSlotId, generationMode));
@@ -220,8 +219,7 @@ namespace UnityEditor.ShaderGraph
                 else if (conversion.to == CoordinateSpace.Tangent)
                 {
                     requiresTangentTransform = true;
-                    tangentTransformSpace = CoordinateSpace.World.ToString();
-                    transformString = string.Format("TransformWorldToTangent(GetCameraRelativePositionWS({0}), {1})", inputValue, targetTransformString);
+                    transformString = string.Format("TransformWorldToTangent({0}, {1})", inputValue, targetTransformString);
                 }
                 else if (conversion.to == CoordinateSpace.View)
                 {
@@ -244,7 +242,6 @@ namespace UnityEditor.ShaderGraph
         bool RequiresWorldSpaceTangentTransform()
         {
             if (conversion.from == CoordinateSpace.View && conversion.to == CoordinateSpace.Tangent
-                || conversion.from == CoordinateSpace.AbsoluteWorld && conversion.to == CoordinateSpace.Tangent
                 || conversion.from == CoordinateSpace.Tangent)
                 return true;
             else

@@ -1,10 +1,9 @@
 using System;
-using System.Linq;
 
-namespace UnityEditor.ShaderGraph.Internal
+namespace UnityEditor.ShaderGraph
 {
     [Flags]
-    public enum NeededCoordinateSpace
+    enum NeededCoordinateSpace
     {
         None = 0,
         Object = 1 << 0,
@@ -14,7 +13,7 @@ namespace UnityEditor.ShaderGraph.Internal
         AbsoluteWorld = 1 << 4
     }
 
-    public enum CoordinateSpace
+    enum CoordinateSpace
     {
         Object,
         View,
@@ -23,7 +22,7 @@ namespace UnityEditor.ShaderGraph.Internal
         AbsoluteWorld
     }
 
-    public enum InterpolatorType
+    enum InterpolatorType
     {
         Normal,
         BiTangent,
@@ -32,7 +31,7 @@ namespace UnityEditor.ShaderGraph.Internal
         Position
     }
 
-    public static class CoordinateSpaceExtensions
+    static class CoordinateSpaceNameExtensions
     {
         static int s_SpaceCount = Enum.GetValues(typeof(CoordinateSpace)).Length;
         static int s_InterpolatorCount = Enum.GetValues(typeof(InterpolatorType)).Length;
@@ -61,26 +60,7 @@ namespace UnityEditor.ShaderGraph.Internal
                 case CoordinateSpace.AbsoluteWorld:
                     return NeededCoordinateSpace.AbsoluteWorld;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(space), space, null);
-            }
-        }
-
-        public static CoordinateSpace ToCoordinateSpace(this NeededCoordinateSpace space)
-        {
-            switch (space)
-            {
-                case NeededCoordinateSpace.Object:
-                    return CoordinateSpace.Object;
-                case NeededCoordinateSpace.View:
-                    return CoordinateSpace.View;
-                case NeededCoordinateSpace.World:
-                    return CoordinateSpace.World;
-                case NeededCoordinateSpace.Tangent:
-                    return CoordinateSpace.Tangent;
-                case NeededCoordinateSpace.AbsoluteWorld:
-                    return CoordinateSpace.AbsoluteWorld;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(space), space, null);
+                    throw new ArgumentOutOfRangeException("space", space, null);
             }
         }
     }

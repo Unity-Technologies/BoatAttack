@@ -3,16 +3,16 @@ using System.Text;
 using UnityEditor.Graphing;
 using UnityEngine;
 
-namespace UnityEditor.ShaderGraph.Internal
+namespace UnityEditor.ShaderGraph
 {
     [Serializable]
-    public abstract class VectorShaderProperty : AbstractShaderProperty<Vector4>
+    abstract class VectorShaderProperty : AbstractShaderProperty<Vector4>
     {
-        internal override bool isBatchable => true;
-        internal override bool isExposable => true;
-        internal override bool isRenamable => true;
-
-        internal override string GetPropertyBlockString()
+        public override bool isBatchable => true;
+        public override bool isExposable => true;
+        public override bool isRenamable => true;
+        
+        public override string GetPropertyBlockString()
         {
             return $"{hideTagString}{referenceName}(\"{displayName}\", Vector) = ({NodeUtils.FloatToShaderValue(value.x)}, {NodeUtils.FloatToShaderValue(value.y)}, {NodeUtils.FloatToShaderValue(value.z)}, {NodeUtils.FloatToShaderValue(value.w)})";
         }

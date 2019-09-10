@@ -1,6 +1,5 @@
 using System;
 using UnityEditor.Graphing;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 namespace UnityEditor.ShaderGraph
@@ -14,10 +13,10 @@ namespace UnityEditor.ShaderGraph
         }
 
         public override PropertyType propertyType => PropertyType.SamplerState;
-
-        internal override bool isBatchable => false;
-        internal override bool isExposable => false;
-        internal override bool isRenamable => false;
+        
+        public override bool isBatchable => false;
+        public override bool isExposable => false;
+        public override bool isRenamable => false;
 
         public override TextureSamplerState value
         {
@@ -28,32 +27,32 @@ namespace UnityEditor.ShaderGraph
                 base.value = value;
             }
         }
-
-        internal override string GetPropertyDeclarationString(string delimiter = ";")
+        
+        public override string GetPropertyDeclarationString(string delimiter = ";")
         {
             return $"SAMPLER({referenceName}){delimiter}";
         }
 
-        internal override string GetPropertyAsArgumentString()
+        public override string GetPropertyAsArgumentString()
         {
             return $"SamplerState {referenceName}";
         }
-
-        internal override AbstractMaterialNode ToConcreteNode()
+        
+        public override AbstractMaterialNode ToConcreteNode()
         {
-            return new SamplerStateNode()
+            return new SamplerStateNode() 
             {
                 filter = value.filter,
                 wrap = value.wrap
             };
         }
 
-        internal override PreviewProperty GetPreviewMaterialProperty()
+        public override PreviewProperty GetPreviewMaterialProperty()
         {
             return default(PreviewProperty);
         }
 
-        internal override ShaderInput Copy()
+        public override ShaderInput Copy()
         {
             return new SamplerStateShaderProperty()
             {

@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using UnityEngine.UIElements;

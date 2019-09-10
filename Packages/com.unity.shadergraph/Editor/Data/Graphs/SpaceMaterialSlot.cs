@@ -1,6 +1,5 @@
 using System;
 using UnityEditor.Graphing;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 namespace UnityEditor.ShaderGraph

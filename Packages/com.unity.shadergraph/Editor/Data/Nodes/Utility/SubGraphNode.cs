@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEditor.Graphing;
-using UnityEditor.ShaderGraph.Internal;
 
 namespace UnityEditor.ShaderGraph
 {
@@ -169,7 +168,7 @@ namespace UnityEditor.ShaderGraph
             get { return false; }
         }
 
-        public void GenerateNodeCode(ShaderStringBuilder sb, GenerationMode generationMode)
+        public void GenerateNodeCode(ShaderStringBuilder sb, GraphContext graphContext, GenerationMode generationMode)
         {
             if (asset == null || hasError)
             {
@@ -186,7 +185,7 @@ namespace UnityEditor.ShaderGraph
 
             var inputVariableName = $"_{GetVariableNameForNode()}";
             
-            SubShaderGenerator.GenerateSurfaceInputTransferCode(sb, asset.requirements, asset.inputStructName, inputVariableName);
+            GraphUtil.GenerateSurfaceInputTransferCode(sb, asset.requirements, asset.inputStructName, inputVariableName);
 
             foreach (var outSlot in asset.outputs)
                 sb.AppendLine("{0} {1};", outSlot.concreteValueType.ToShaderString(asset.outputPrecision), GetVariableNameForSlot(outSlot.id));
@@ -199,8 +198,8 @@ namespace UnityEditor.ShaderGraph
 
                 switch(prop)
                 {
-                    case Texture2DShaderProperty texture2DProp:
-                        arguments.Add(string.Format("TEXTURE2D_ARGS({0}, sampler{0}), {0}_TexelSize", GetSlotValue(inSlotId, generationMode, prop.concretePrecision)));
+                    case TextureShaderProperty texture2DProp:
+                        arguments.Add(string.Format("TEXTURE2D_ARGS({0}, sampler{0})", GetSlotValue(inSlotId, generationMode, prop.concretePrecision)));
                         break;
                     case Texture2DArrayShaderProperty texture2DArrayProp:
                         arguments.Add(string.Format("TEXTURE2D_ARRAY_ARGS({0}, sampler{0})", GetSlotValue(inSlotId, generationMode, prop.concretePrecision)));
@@ -296,7 +295,7 @@ namespace UnityEditor.ShaderGraph
                     case ConcreteSlotValueType.Texture2D:
                         {
                             var tSlot = slot as Texture2DInputMaterialSlot;
-                            var tProp = prop as Texture2DShaderProperty;
+                            var tProp = prop as TextureShaderProperty;
                             if (tSlot != null && tProp != null)
                                 tSlot.texture = tProp.value.texture;
                         }
@@ -480,7 +479,7 @@ namespace UnityEditor.ShaderGraph
         }
         }
 
-        public virtual void GenerateNodeFunction(FunctionRegistry registry, GenerationMode generationMode)
+        public virtual void GenerateNodeFunction(FunctionRegistry registry, GraphContext graphContext, GenerationMode generationMode)
         {
             if (asset == null || hasError)
                 return;

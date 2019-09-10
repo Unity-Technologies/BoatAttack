@@ -3,27 +3,25 @@ using System.Text;
 using UnityEditor.Graphing;
 using UnityEngine;
 
-namespace UnityEditor.ShaderGraph.Internal
+namespace UnityEditor.ShaderGraph
 {
     [Serializable]
-    [FormerName("UnityEditor.ShaderGraph.ColorShaderProperty")]
-    public sealed class ColorShaderProperty : AbstractShaderProperty<Color>
+    class ColorShaderProperty : AbstractShaderProperty<Color>
     {
-        internal ColorShaderProperty()
+        public ColorShaderProperty()
         {
             displayName = "Color";
         }
         
         public override PropertyType propertyType => PropertyType.Color;
         
-        internal override bool isBatchable => true;
-        internal override bool isExposable => true;
-        internal override bool isRenamable => true;
-        internal override bool isGpuInstanceable => true;
-        
-        internal string hdrTagString => colorMode == ColorMode.HDR ? "[HDR]" : "";
+        public override bool isBatchable => true;
+        public override bool isExposable => true;
+        public override bool isRenamable => true;
+        public override bool isGpuInstanceable => true;
+        public string hdrTagString => colorMode == ColorMode.HDR ? "[HDR]" : "";
 
-        internal override string GetPropertyBlockString()
+        public override string GetPropertyBlockString()
         {
             return $"{hideTagString}{hdrTagString}{referenceName}(\"{displayName}\", Color) = ({NodeUtils.FloatToShaderValue(value.r)}, {NodeUtils.FloatToShaderValue(value.g)}, {NodeUtils.FloatToShaderValue(value.b)}, {NodeUtils.FloatToShaderValue(value.a)})";
         }
@@ -42,12 +40,12 @@ namespace UnityEditor.ShaderGraph.Internal
             set => m_ColorMode = value;
         }
         
-        internal override AbstractMaterialNode ToConcreteNode()
+        public override AbstractMaterialNode ToConcreteNode()
         {
             return new ColorNode { color = new ColorNode.Color(value, colorMode) };
         }
 
-        internal override PreviewProperty GetPreviewMaterialProperty()
+        public override PreviewProperty GetPreviewMaterialProperty()
         {
             return new PreviewProperty(propertyType)
             {
@@ -56,7 +54,7 @@ namespace UnityEditor.ShaderGraph.Internal
             };
         }        
 
-        internal override ShaderInput Copy()
+        public override ShaderInput Copy()
         {
             return new ColorShaderProperty()
             {

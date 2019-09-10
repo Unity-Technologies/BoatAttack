@@ -1,6 +1,5 @@
 using System;
 using UnityEditor.Graphing;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 namespace UnityEditor.ShaderGraph
@@ -13,15 +12,15 @@ namespace UnityEditor.ShaderGraph
             displayName = "Matrix2x2";
             value = Matrix4x4.identity;
         }
-
+        
         public override PropertyType propertyType => PropertyType.Matrix2;
 
-        internal override string GetPropertyAsArgumentString()
+        public override string GetPropertyAsArgumentString()
         {
             return $"{concretePrecision.ToShaderString()}2x2 {referenceName}";
         }
-
-        internal override AbstractMaterialNode ToConcreteNode()
+        
+        public override AbstractMaterialNode ToConcreteNode()
         {
             return new Matrix2Node
             {
@@ -30,7 +29,7 @@ namespace UnityEditor.ShaderGraph
             };
         }
 
-        internal override PreviewProperty GetPreviewMaterialProperty()
+        public override PreviewProperty GetPreviewMaterialProperty()
         {
             return new PreviewProperty(propertyType)
             {
@@ -39,7 +38,7 @@ namespace UnityEditor.ShaderGraph
             };
         }
 
-        internal override ShaderInput Copy()
+        public override ShaderInput Copy()
         {
             return new Matrix2ShaderProperty()
             {

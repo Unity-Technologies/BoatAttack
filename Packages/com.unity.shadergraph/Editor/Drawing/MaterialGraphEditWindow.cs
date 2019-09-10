@@ -13,7 +13,6 @@ using UnityEngine.Rendering;
 using UnityEditor.UIElements;
 using Edge = UnityEditor.Experimental.GraphView.Edge;
 using UnityEditor.Experimental.GraphView;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine.UIElements;
 using UnityEditor.VersionControl;
 
@@ -476,7 +475,7 @@ namespace UnityEditor.ShaderGraph.Drawing
                 switch (fromSlot.concreteValueType)
                 {
                     case ConcreteSlotValueType.Texture2D:
-                        prop = new Texture2DShaderProperty();
+                        prop = new TextureShaderProperty();
                         break;
                     case ConcreteSlotValueType.Texture2DArray:
                         prop = new Texture2DArrayShaderProperty();

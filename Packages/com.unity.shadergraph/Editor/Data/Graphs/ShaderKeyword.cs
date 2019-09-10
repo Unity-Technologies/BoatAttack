@@ -1,8 +1,7 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor.ShaderGraph.Internal;
 
 namespace UnityEditor.ShaderGraph
 {
@@ -32,15 +31,6 @@ namespace UnityEditor.ShaderGraph
 
         public static ShaderKeyword Create(KeywordDescriptor descriptor)
         {
-            if(descriptor.entries != null)
-            {
-                for(int i = 0; i < descriptor.entries.Length; i++)
-                {
-                    if(descriptor.entries[i].id == -1)
-                        descriptor.entries[i].id = i + 1;
-                }
-            }
-
             return new ShaderKeyword()
             {
                 m_IsExposable = false,
@@ -51,7 +41,7 @@ namespace UnityEditor.ShaderGraph
                 keywordDefinition = descriptor.definition,
                 keywordScope = descriptor.scope,
                 value = descriptor.value,
-                entries = descriptor.entries.ToList(),
+                entries = descriptor.entries
             };
         }
 
@@ -112,12 +102,12 @@ namespace UnityEditor.ShaderGraph
         [SerializeField]
         private bool m_IsExposable = true;
 
-        internal override bool isExposable => m_IsExposable 
+        public override bool isExposable => m_IsExposable 
             && (keywordType == KeywordType.Enum || referenceName.EndsWith("_ON"));
 
-        internal override bool isRenamable => isEditable;
+        public override bool isRenamable => isEditable;
 
-        internal override ConcreteSlotValueType concreteShaderValueType => keywordType.ToConcreteSlotValueType();
+        public override ConcreteSlotValueType concreteShaderValueType => keywordType.ToConcreteSlotValueType();
 
         public override string GetDefaultReferenceName()
         {
@@ -185,7 +175,7 @@ namespace UnityEditor.ShaderGraph
             }
         }
 
-        internal override ShaderInput Copy()
+        public override ShaderInput Copy()
         {
             // Keywords copy reference name
             // This is because keywords are copied between graphs

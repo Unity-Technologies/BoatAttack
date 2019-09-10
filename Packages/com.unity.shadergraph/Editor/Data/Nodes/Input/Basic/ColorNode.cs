@@ -3,19 +3,15 @@ using System.Collections.Generic;
 using UnityEditor.ShaderGraph.Drawing.Controls;
 using UnityEngine;
 using UnityEditor.Graphing;
-using UnityEditor.ShaderGraph.Internal;
 
-namespace UnityEditor.ShaderGraph.Internal
+namespace UnityEditor.ShaderGraph
 {
-    public enum ColorMode
+    enum ColorMode
     {
         Default,
         HDR
     }
-}
 
-namespace UnityEditor.ShaderGraph
-{
     [Title("Input", "Basic", "Color")]
     class ColorNode : AbstractMaterialNode, IGeneratesBodyCode, IPropertyFromNode
     {
@@ -93,7 +89,7 @@ namespace UnityEditor.ShaderGraph
             });
         }
 
-        public void GenerateNodeCode(ShaderStringBuilder sb, GenerationMode generationMode)
+        public void GenerateNodeCode(ShaderStringBuilder sb, GraphContext graphContext, GenerationMode generationMode)
         {
             if (generationMode.IsPreview())
                 return;

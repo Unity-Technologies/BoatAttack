@@ -5,7 +5,6 @@ using System.Linq;
 using UnityEditor.ShaderGraph.Drawing.Controls;
 using UnityEngine;
 using UnityEditor.Graphing;
-using UnityEditor.ShaderGraph.Internal;
 
 namespace UnityEditor.ShaderGraph
 {
@@ -17,14 +16,14 @@ namespace UnityEditor.ShaderGraph
             displayName = "Gradient";
             value = new Gradient();
         }
-
+        
         public override PropertyType propertyType => PropertyType.Gradient;
-
-        internal override bool isBatchable => false;
-        internal override bool isExposable => false;
-        internal override bool isRenamable => true;
-
-        internal override string GetPropertyDeclarationString(string delimiter = ";")
+        
+        public override bool isBatchable => false;
+        public override bool isExposable => false;
+        public override bool isRenamable => true;
+        
+        public override string GetPropertyDeclarationString(string delimiter = ";")
         {
             ShaderStringBuilder s = new ShaderStringBuilder();
             s.AppendLine("Gradient {0}_Definition()", referenceName);
@@ -67,22 +66,21 @@ namespace UnityEditor.ShaderGraph
                     s.AppendLine(alphas[i]);
                 s.AppendLine("return g;", true);
             }
-            s.AppendIndentation();
-            s.Append("#define {0} {0}_Definition()", referenceName);
+            s.AppendLine("#define {0} {0}_Definition()", referenceName);
             return s.ToString();
         }
 
-        internal override string GetPropertyAsArgumentString()
+        public override string GetPropertyAsArgumentString()
         {
             return "Gradient " + referenceName;
         }
-
-        internal override AbstractMaterialNode ToConcreteNode()
+        
+        public override AbstractMaterialNode ToConcreteNode()
         {
             return new GradientNode { gradient = value };
         }
 
-        internal override PreviewProperty GetPreviewMaterialProperty()
+        public override PreviewProperty GetPreviewMaterialProperty()
         {
             return new PreviewProperty(propertyType)
             {
@@ -91,7 +89,7 @@ namespace UnityEditor.ShaderGraph
             };
         }
 
-        internal override ShaderInput Copy()
+        public override ShaderInput Copy()
         {
             return new GradientShaderProperty
             {

@@ -11,7 +11,6 @@ using UnityEngine.Rendering;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.Rendering;
 using UnityEditor.ShaderGraph.Drawing.Colors;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using Node = UnityEditor.Experimental.GraphView.Node;
@@ -184,7 +183,7 @@ namespace UnityEditor.ShaderGraph.Drawing
             var nodeTypeSettings = node as IHasSettings;
             if (nodeTypeSettings != null)
                 m_Settings.Add(nodeTypeSettings.CreateSettingsElement());
-
+            
             // Add manipulators
             m_SettingsButton.AddManipulator(new Clickable(() =>
                 {
@@ -242,7 +241,7 @@ namespace UnityEditor.ShaderGraph.Drawing
         {
             m_TitleContainer.style.borderBottomColor = color;
         }
-
+        
         public void ResetColor()
         {
             m_TitleContainer.style.borderBottomColor = noColor;
@@ -381,7 +380,7 @@ namespace UnityEditor.ShaderGraph.Drawing
                         {
                             if (evt.newValue.Equals(node.precision))
                                 return;
-
+                            
                             var editorView = GetFirstAncestorOfType<GraphEditorView>();
                             var nodeList = m_GraphView.Query<MaterialNodeView>().ToList();
 
@@ -633,7 +632,7 @@ namespace UnityEditor.ShaderGraph.Drawing
                     m_PortInputContainer.Add(portInputView);
                     SetPortInputPosition(port, portInputView);
                 }
-
+                
                 port.RegisterCallback<GeometryChangedEvent>(UpdatePortInput);
             }
         }

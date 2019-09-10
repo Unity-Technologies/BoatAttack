@@ -11,7 +11,6 @@ using UnityEngine.UIElements;
 using Toggle = UnityEngine.UIElements.Toggle;
 using UnityEditor.Experimental.GraphView;
 using UnityEditorInternal;
-using UnityEditor.ShaderGraph.Internal;
 
 namespace UnityEditor.ShaderGraph.Drawing
 {

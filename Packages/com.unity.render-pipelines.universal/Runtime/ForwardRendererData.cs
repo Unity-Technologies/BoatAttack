@@ -55,13 +55,18 @@ namespace UnityEngine.Rendering.Universal
         [SerializeField] LayerMask m_OpaqueLayerMask = -1;
         [SerializeField] LayerMask m_TransparentLayerMask = -1;
 
-        [SerializeField] StencilStateData m_DefaultStencilState = new StencilStateData();
+        [SerializeField] StencilStateData m_DefaultStencilState = null;
 
         protected override ScriptableRenderer Create()
         {
+            m_DefaultStencilState = new StencilStateData();
+
 #if UNITY_EDITOR
-            ResourceReloader.ReloadAllNullIn(this, UniversalRenderPipelineAsset.packagePath);
-            ResourceReloader.ReloadAllNullIn(postProcessData, UniversalRenderPipelineAsset.packagePath);
+            if (!Application.isPlaying)
+            {
+                ResourceReloader.ReloadAllNullIn(this, UniversalRenderPipelineAsset.packagePath);
+                ResourceReloader.ReloadAllNullIn(postProcessData, UniversalRenderPipelineAsset.packagePath);
+            }
 #endif
             return new ForwardRenderer(this);
         }

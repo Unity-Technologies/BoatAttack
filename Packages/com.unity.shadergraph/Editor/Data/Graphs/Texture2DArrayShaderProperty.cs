@@ -1,56 +1,58 @@
 using System;
+using System.Text;
+using UnityEditor.Graphing;
 using UnityEngine;
 
-namespace UnityEditor.ShaderGraph.Internal
+namespace UnityEditor.ShaderGraph
 {
     [Serializable]
-    [FormerName("UnityEditor.ShaderGraph.Texture2DArrayShaderProperty")]
-    public sealed class Texture2DArrayShaderProperty : AbstractShaderProperty<SerializableTextureArray>
+    class Texture2DArrayShaderProperty : AbstractShaderProperty<SerializableTextureArray>
     {
-        internal Texture2DArrayShaderProperty()
+        public Texture2DArrayShaderProperty()
         {
             displayName = "Texture2D Array";
             value = new SerializableTextureArray();
         }
-
+        
         public override PropertyType propertyType => PropertyType.Texture2DArray;
+        
+        public override bool isBatchable => false;
+        public override bool isExposable => true;
+        public override bool isRenamable => true;
+        
+        public string modifiableTagString => modifiable ? "" : "[NonModifiableTextureData]";
 
-        internal override bool isBatchable => false;
-        internal override bool isExposable => true;
-        internal override bool isRenamable => true;
-
-        internal string modifiableTagString => modifiable ? "" : "[NonModifiableTextureData]";
-
-        internal override string GetPropertyBlockString()
+        public override string GetPropertyBlockString()
         {
             return $"{hideTagString}{modifiableTagString}[NoScaleOffset]{referenceName}(\"{displayName}\", 2DArray) = \"white\" {{}}";
         }
-
-        internal override string GetPropertyDeclarationString(string delimiter = ";")
+        
+        public override string GetPropertyDeclarationString(string delimiter = ";")
         {
             return $"TEXTURE2D_ARRAY({referenceName}){delimiter} SAMPLER(sampler{referenceName}){delimiter}";
         }
 
-        internal override string GetPropertyAsArgumentString()
+        public override string GetPropertyAsArgumentString()
         {
             return $"TEXTURE2D_ARRAY_PARAM({referenceName}, sampler{referenceName})";
         }
-
+        
         [SerializeField]
         bool m_Modifiable = true;
 
-        internal bool modifiable
+        public bool modifiable
         {
             get => m_Modifiable;
             set => m_Modifiable = value;
         }
-
-        internal override AbstractMaterialNode ToConcreteNode()
+        
+        public override AbstractMaterialNode ToConcreteNode()
         {
             return new Texture2DArrayAssetNode { texture = value.textureArray };
         }
 
-        internal override PreviewProperty GetPreviewMaterialProperty()
+        
+        public override PreviewProperty GetPreviewMaterialProperty()
         {
             return new PreviewProperty(propertyType)
             {
@@ -59,7 +61,7 @@ namespace UnityEditor.ShaderGraph.Internal
             };
         }
 
-        internal override ShaderInput Copy()
+        public override ShaderInput Copy()
         {
             return new Texture2DArrayShaderProperty()
             {

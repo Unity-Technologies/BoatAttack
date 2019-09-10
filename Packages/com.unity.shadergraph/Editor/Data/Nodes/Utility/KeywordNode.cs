@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEditor.Graphing;
 using UnityEngine.Serialization;
-using UnityEditor.ShaderGraph.Internal;
 
 namespace UnityEditor.ShaderGraph
 {
@@ -124,7 +123,7 @@ namespace UnityEditor.ShaderGraph
             ValidateNode();
         }
 
-        public void GenerateNodeCode(ShaderStringBuilder sb, GenerationMode generationMode)
+        public void GenerateNodeCode(ShaderStringBuilder sb, GraphContext context, GenerationMode generationMode)
         {
             var keyword = owner.keywords.FirstOrDefault(x => x.guid == keywordGuid);
             if (keyword == null)

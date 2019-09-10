@@ -1,6 +1,6 @@
-﻿namespace UnityEditor.ShaderGraph.Internal
+﻿namespace UnityEditor.ShaderGraph
 {
-    enum Precision
+    public enum Precision
     {
         Inherit,
         Float,
@@ -8,7 +8,7 @@
     }
 
     public enum ConcretePrecision
-    {
+    {  
         Float,
         Half,
     }

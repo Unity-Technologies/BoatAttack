@@ -2,20 +2,19 @@ using System;
 using UnityEditor.Graphing;
 using UnityEngine;
 
-namespace UnityEditor.ShaderGraph.Internal
+namespace UnityEditor.ShaderGraph
 {
     [Serializable]
-    [FormerName("UnityEditor.ShaderGraph.Vector2ShaderProperty")]
-    public sealed class Vector2ShaderProperty : VectorShaderProperty
+    class Vector2ShaderProperty : VectorShaderProperty
     {
-        internal Vector2ShaderProperty()
+        public Vector2ShaderProperty()
         {
             displayName = "Vector2";
         }
-
+        
         public override PropertyType propertyType => PropertyType.Vector2;
-
-        internal override AbstractMaterialNode ToConcreteNode()
+        
+        public override AbstractMaterialNode ToConcreteNode()
         {
             var node = new Vector2Node();
             node.FindInputSlot<Vector1MaterialSlot>(Vector2Node.InputSlotXId).value = value.x;
@@ -23,7 +22,7 @@ namespace UnityEditor.ShaderGraph.Internal
             return node;
         }
 
-        internal override PreviewProperty GetPreviewMaterialProperty()
+        public override PreviewProperty GetPreviewMaterialProperty()
         {
             return new PreviewProperty(propertyType)
             {
@@ -32,7 +31,7 @@ namespace UnityEditor.ShaderGraph.Internal
             };
         }
 
-        internal override ShaderInput Copy()
+        public override ShaderInput Copy()
         {
             return new Vector2ShaderProperty()
             {

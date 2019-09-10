@@ -8,7 +8,6 @@ using UnityEditor.Experimental.AssetImporters;
 using UnityEngine;
 using UnityEditor.Graphing;
 using UnityEditor.Graphing.Util;
-using UnityEditor.ShaderGraph.Internal;
 
 namespace UnityEditor.ShaderGraph
 {
@@ -149,14 +148,16 @@ namespace UnityEditor.ShaderGraph
                 if (node is IGeneratesFunction generatesFunction)
                 {
                     registry.builder.currentNode = node;
-                    generatesFunction.GenerateNodeFunction(registry, GenerationMode.ForReals);
+                    generatesFunction.GenerateNodeFunction(registry, new GraphContext(asset.inputStructName), GenerationMode.ForReals);
                     registry.builder.ReplaceInCurrentMapping(PrecisionUtil.Token, node.concretePrecision.ToShaderString());
                 }
             }
 
             registry.ProvideFunction(asset.functionName, sb =>
             {
-                SubShaderGenerator.GenerateSurfaceInputStruct(sb, asset.requirements, asset.inputStructName);
+                var graphContext = new GraphContext(asset.inputStructName);
+
+                GraphUtil.GenerateSurfaceInputStruct(sb, asset.requirements, asset.inputStructName);
                 sb.AppendNewLine();
 
                 // Generate arguments... first INPUTS
@@ -188,7 +189,7 @@ namespace UnityEditor.ShaderGraph
                         if (node is IGeneratesBodyCode generatesBodyCode)
                         {
                             sb.currentNode = node;
-                            generatesBodyCode.GenerateNodeCode(sb, GenerationMode.ForReals);
+                            generatesBodyCode.GenerateNodeCode(sb, graphContext, GenerationMode.ForReals);
                             sb.ReplaceInCurrentMapping(PrecisionUtil.Token, node.concretePrecision.ToShaderString());
                         }
                     }
@@ -200,7 +201,7 @@ namespace UnityEditor.ShaderGraph
                 }
             });
 
-            asset.functions.AddRange(registry.names.Select(x => new FunctionPair(x, registry.sources[x].code)));
+            asset.functions.AddRange(registry.names.Select(x => new FunctionPair(x, registry.sources[x])));
 
             var collector = new PropertyCollector();
             asset.nodeProperties = collector.properties;
