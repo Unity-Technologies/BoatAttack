@@ -19,6 +19,7 @@ namespace BoatAttack.Boat
         public float horsePower = 18f;
         private float3[] point = new float3[1]; // engine submerged check
         private float3[] heights = new float3[1]; // engine submerged check
+        private float3[] normals = new float3[1]; // engine submerged check
         private int _guid;
         private float yHeight;
 
@@ -44,8 +45,8 @@ namespace BoatAttack.Boat
 
             // Get the water level from the engines position and store it
             point[0] = transform.TransformPoint(enginePosition);
-            GerstnerWavesJobs.UpdateSamplePoints(point, _guid, false);
-            GerstnerWavesJobs.GetData(_guid, ref heights);
+            GerstnerWavesJobs.UpdateSamplePoints(point, _guid);
+            GerstnerWavesJobs.GetData(_guid, ref heights, ref normals);
             yHeight = heights[0].y - point[0].y;
         }
 

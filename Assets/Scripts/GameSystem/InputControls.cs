@@ -360,7 +360,6 @@ public class InputControls : IInputActionCollection
     ""controlSchemes"": [
         {
             ""name"": ""Gamepad"",
-            ""basedOn"": """",
             ""bindingGroup"": ""Gamepad"",
             ""devices"": [
                 {
@@ -372,7 +371,6 @@ public class InputControls : IInputActionCollection
         },
         {
             ""name"": ""Keyboard"",
-            ""basedOn"": """",
             ""bindingGroup"": ""Keyboard"",
             ""devices"": [
                 {
@@ -384,7 +382,6 @@ public class InputControls : IInputActionCollection
         },
         {
             ""name"": ""TouchScreen"",
-            ""basedOn"": """",
             ""bindingGroup"": ""TouchScreen"",
             ""devices"": [
                 {

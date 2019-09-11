@@ -24,18 +24,9 @@ namespace WaterSystem
         static NativeArray<float3> positions;
         static int positionCount = 0;
         static NativeArray<float3> wavePos;
-        static NativeArray<float3> tempNullNormal;
+        static NativeArray<float3> waveNormal;
         static JobHandle waterHeightHandle;
         static Dictionary<int, int2> registry = new Dictionary<int, int2>();
-
-        //Details for Simple Buoyant Objects
-        static NativeArray<float3> simplePositions;
-        static int simplePositionCount = 0;
-        static NativeArray<float3> waveSimplePos;
-        static NativeArray<float3> waveSimpleNormal;
-        static JobHandle waterSimpleHeightHandle;
-        static Dictionary<int, int2> simpleRegistry = new Dictionary<int, int2>();
-
 
         public static void Init()
         {
@@ -49,10 +40,7 @@ namespace WaterSystem
 
             positions = new NativeArray<float3>(4096, Allocator.Persistent);
             wavePos = new NativeArray<float3>(4096, Allocator.Persistent);
-            simplePositions = new NativeArray<float3>(1024, Allocator.Persistent);
-            waveSimplePos = new NativeArray<float3>(1024, Allocator.Persistent);
-            waveSimpleNormal = new NativeArray<float3>(1024, Allocator.Persistent);
-            tempNullNormal = new NativeArray<float3>(1, Allocator.Persistent);
+            waveNormal = new NativeArray<float3>(4096, Allocator.Persistent);
 
             init = true;
         }
@@ -61,75 +49,44 @@ namespace WaterSystem
         {
             Debug.LogWarning("Cleaning up GerstnerWaves");
             waterHeightHandle.Complete();
-            waterSimpleHeightHandle.Complete();
 
             //Cleanup native arrays
             waveData.Dispose();
-            tempNullNormal.Dispose();
 
             positions.Dispose();
             wavePos.Dispose();
-            simplePositions.Dispose();
-            waveSimplePos.Dispose();
-            waveSimpleNormal.Dispose();
+            waveNormal.Dispose();
         }
 
-        public static void UpdateSamplePoints(float3[] samplePoints, int guid, bool simple)
+        public static void UpdateSamplePoints(float3[] samplePoints, int guid)
         {
             CompleteJobs();
             int2 offsets;
-            if (simple)
+
+            if (registry.TryGetValue(guid, out offsets))
             {
-                if (simpleRegistry.TryGetValue(guid, out offsets))
-                {
-                    for (var i = offsets.x; i < offsets.y; i++) simplePositions[i] = samplePoints[i - offsets.x];
-                }
-                else
-                {
-                    if (simplePositionCount + samplePoints.Length < simplePositions.Length)
-                    {
-                        offsets = new int2(simplePositionCount, simplePositionCount + samplePoints.Length);
-                        //Debug.Log("<color=yellow>Adding Object:" + guid + " to the simple registry at offset:" + offsets + "</color>");
-                        simpleRegistry.Add(guid, offsets);
-                        simplePositionCount += samplePoints.Length;
-                    }
-                }
+                for (var i = offsets.x; i < offsets.y; i++) positions[i] = samplePoints[i - offsets.x];
             }
             else
             {
-                if (registry.TryGetValue(guid, out offsets))
+                if (positionCount + samplePoints.Length < positions.Length)
                 {
-                    for (var i = offsets.x; i < offsets.y; i++) positions[i] = samplePoints[i - offsets.x];
-                }
-                else
-                {
-                    if (positionCount + samplePoints.Length < positions.Length)
-                    {
-                        offsets = new int2(positionCount, positionCount + samplePoints.Length);
-                        //Debug.Log("<color=yellow>Adding Object:" + guid + " to the registry at offset:" + offsets + "</color>");
-                        registry.Add(guid, offsets);
-                        positionCount += samplePoints.Length;
-                    }
+                    offsets = new int2(positionCount, positionCount + samplePoints.Length);
+                    //Debug.Log("<color=yellow>Adding Object:" + guid + " to the registry at offset:" + offsets + "</color>");
+                    registry.Add(guid, offsets);
+                    positionCount += samplePoints.Length;
                 }
             }
         }
 
-        public static void GetSimpleData(int guid, ref float3[] outPos, ref float3[] outNorm)
-        {
-            var offsets = new int2(0, 0);
-            if (simpleRegistry.TryGetValue(guid, out offsets))
-            {
-                waveSimplePos.Slice(offsets.x, offsets.y - offsets.x).CopyTo(outPos);
-                waveSimpleNormal.Slice(offsets.x, offsets.y - offsets.x).CopyTo(outNorm);
-            }
-        }
-
-        public static void GetData(int guid, ref float3[] outPos)
+        public static void GetData(int guid, ref float3[] outPos, ref float3[] outNorm)
         {
             var offsets = new int2(0, 0);
             if (registry.TryGetValue(guid, out offsets))
             {
                 wavePos.Slice(offsets.x, offsets.y - offsets.x).CopyTo(outPos);
+                if(outNorm != null)
+                    waveNormal.Slice(offsets.x, offsets.y - offsets.x).CopyTo(outNorm);
             }
         }
 
@@ -148,26 +105,11 @@ namespace WaterSystem
                     offsetLength = new int2(0, positions.Length),
                     time = Time.time,
                     outPosition = wavePos,
-                    outNormal = tempNullNormal,
-                    normal = 0
+                    outNormal = waveNormal
                 };
-                // dependant on job4
+                
                 waterHeightHandle = waterHeight.Schedule(positionCount, 32);
-
-                // Simple Buoyant Object Job
-                var waterSimpleHeight = new GerstnerWavesJobs.HeightJob()
-                {
-                    waveData = waveData,
-                    position = simplePositions,
-                    offsetLength = new int2(0, simplePositions.Length),
-                    time = Time.time,
-                    outPosition = waveSimplePos,
-                    outNormal = waveSimpleNormal,
-                    normal = 1
-                };
-                // dependant on job4
-                waterSimpleHeightHandle = waterSimpleHeight.Schedule(simplePositionCount, 32);
-
+                
                 JobHandle.ScheduleBatchedJobs();
 
                 firstFrame = false;
@@ -179,7 +121,6 @@ namespace WaterSystem
             if (!firstFrame && processing)
             {
                 waterHeightHandle.Complete();
-                waterSimpleHeightHandle.Complete();
                 processing = false;
             }
         }
@@ -202,8 +143,6 @@ namespace WaterSystem
             public float time;
             [ReadOnly]
             public int2 offsetLength;
-            [ReadOnly]
-            public int normal;
 
             // The code actually running on the job
             public void Execute(int i)
@@ -251,18 +190,15 @@ namespace WaterSystem
                         wavePos.z += qi * amplitude * windDir.y * cosCalc;
                         wavePos.y += ((sinCalc * amplitude)) * waveCountMulti; // the height is divided by the number of waves 
 
-                        if (normal == 1)
-                        {
-                            ////////////////////////////normal output calculations/////////////////////////
-                            float wa = w * amplitude;
-                            // normal vector
-                            float3 norm = new float3(-(windDir.xy * wa * cosCalc),
-                                            1 - (qi * wa * sinCalc));
-                            waveNorm += (norm * waveCountMulti) * amplitude;
-                        }
+                        ////////////////////////////normal output calculations/////////////////////////
+                        float wa = w * amplitude;
+                        // normal vector
+                        float3 norm = new float3(-(windDir.xy * wa * cosCalc),
+                                        1 - (qi * wa * sinCalc));
+                        waveNorm += (norm * waveCountMulti) * amplitude;
                     }
                     outPosition[i] = wavePos;
-                    if (normal == 1) outNormal[i] = math.normalize(waveNorm.xzy);
+                    outNormal[i] = math.normalize(waveNorm.xzy);
                 }
             }
         }

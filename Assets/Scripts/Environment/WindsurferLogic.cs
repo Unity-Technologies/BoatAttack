@@ -13,6 +13,7 @@ namespace BoatAttack
     {
         private float3[] point = new float3[1]; // point to sample wave height
         private float3[] heights = new float3[1]; // height sameple from water system
+        private float3[] normals = new float3[1]; // height sameple from water system
         private Vector3 smoothPosition; // the smoothed position
         private int _guid; // the objects GUID for wave height lookup
 
@@ -29,8 +30,8 @@ namespace BoatAttack
             smoothPosition = transform.position;
             // Sample the water height at the current position
             point[0] = transform.position;
-            GerstnerWavesJobs.UpdateSamplePoints(point, _guid, false);
-            GerstnerWavesJobs.GetData(_guid, ref heights);
+            GerstnerWavesJobs.UpdateSamplePoints(point, _guid);
+            GerstnerWavesJobs.GetData(_guid, ref heights, ref normals);
             if (heights[0].y > smoothPosition.y)
                 smoothPosition.y += Time.deltaTime;
             else

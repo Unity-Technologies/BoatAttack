@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -6,6 +7,8 @@ using UnityEngine.Profiling;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.LWRP;
 using WaterSystem.Data;
+using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 namespace WaterSystem
 {
@@ -47,7 +50,6 @@ namespace WaterSystem
         public WaterSurfaceData surfaceData;
         [SerializeField]
         private WaterResources resources;
-        private float waterTime = 0;
 
         private void OnValidate()
         {
@@ -95,14 +97,19 @@ namespace WaterSystem
 
         private void BeginCameraRendering(ScriptableRenderContext src, Camera cam)
         {
-            Vector3 fwd = cam.transform.forward;
-            fwd.y = 0;
-            float roll = cam.transform.localEulerAngles.z;
-            Shader.SetGlobalFloat("_CameraRoll", roll);
-            Shader.SetGlobalMatrix("_InvViewProjection", (GL.GetGPUProjectionMatrix(cam.projectionMatrix, false) * cam.worldToCameraMatrix).inverse);
-            foreach (var mesh in resources.defaultWaterMeshes)
+            if (cam.cameraType == CameraType.Game || cam.cameraType == CameraType.SceneView)
             {
-                Graphics.DrawMesh(mesh, transform.localToWorldMatrix, resources.defaultSeaMaterial, gameObject.layer, cam);
+                Vector3 fwd = cam.transform.forward;
+                fwd.y = 0;
+                float roll = cam.transform.localEulerAngles.z;
+                Shader.SetGlobalFloat("_CameraRoll", roll);
+                Shader.SetGlobalMatrix("_InvViewProjection",
+                    (GL.GetGPUProjectionMatrix(cam.projectionMatrix, false) * cam.worldToCameraMatrix).inverse);
+                foreach (var mesh in resources.defaultWaterMeshes)
+                {
+                    Graphics.DrawMesh(mesh, transform.localToWorldMatrix, resources.defaultSeaMaterial,
+                        gameObject.layer, cam);
+                }
             }
         }
 
@@ -144,13 +151,11 @@ namespace WaterSystem
             //CaptureDepthMap();
         }
 
-        void Update()
+        private void LateUpdate()
         {
-            waterTime = Time.time;
-            Shader.SetGlobalFloat("_GlobalTime", waterTime);
-			GerstnerWavesJobs.UpdateHeights();
+            GerstnerWavesJobs.UpdateHeights();
         }
-        
+
         public void FragWaveNormals(bool toggle)
         {
             Material mat = GetComponent<Renderer>().sharedMaterial;
@@ -368,16 +373,6 @@ namespace WaterSystem
             
             _depthCam.enabled = false;
             _depthCam.targetTexture = null;
-        }
-
-        private void OnDrawGizmos() {
-            if(!Application.isPlaying)
-            {
-                #if UNITY_EDITOR
-                waterTime = (float)UnityEditor.EditorApplication.timeSinceStartup;
-                #endif
-                Shader.SetGlobalFloat("_GlobalTime", waterTime);
-            }
         }
 
         [System.Serializable]

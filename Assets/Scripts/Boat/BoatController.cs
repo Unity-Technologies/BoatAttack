@@ -54,7 +54,7 @@ namespace BoatAttack.Boat
                 Randomize();
             if (boatRenderer)
             {
-                if (Application.isEditor)
+                if (!Application.isPlaying)
                 {
                     MaterialPropertyBlock mpb = new MaterialPropertyBlock();
                     mpb.SetColor("_Color1", PrimaryColor);
