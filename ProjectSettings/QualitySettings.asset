@@ -26,7 +26,7 @@ QualitySettings:
     softVegetation: 1
     realtimeReflectionProbes: 0
     billboardsFaceCameraPosition: 0
-    vSyncCount: 0
+    vSyncCount: 2
     lodBias: 3
     maximumLODLevel: 1
     streamingMipmapsActive: 1
@@ -42,7 +42,9 @@ QualitySettings:
     resolutionScalingFixedDPIFactor: 1
     customRenderPipeline: {fileID: 11400000, guid: ce78242d6aae64de6a072ef584b7cb9c,
       type: 2}
-    excludedTargetPlatforms: []
+    excludedTargetPlatforms:
+    - PS4
+    - XboxOne
   - serializedVersion: 2
     name: Medium
     pixelLightCount: 4
@@ -81,6 +83,9 @@ QualitySettings:
       type: 2}
     excludedTargetPlatforms:
     - WebGL
+    - Nintendo Switch
+    - PS4
+    - XboxOne
   - serializedVersion: 2
     name: High
     pixelLightCount: 4
@@ -101,7 +106,7 @@ QualitySettings:
     softVegetation: 1
     realtimeReflectionProbes: 0
     billboardsFaceCameraPosition: 0
-    vSyncCount: 0
+    vSyncCount: 1
     lodBias: 6
     maximumLODLevel: 0
     streamingMipmapsActive: 1
@@ -121,17 +126,18 @@ QualitySettings:
     - iPhone
     - Android
     - WebGL
+    - Nintendo Switch
   m_PerPlatformDefaultQuality:
     Android: 1
     Nintendo 3DS: 0
     Nintendo Switch: 0
-    PS4: 0
+    PS4: 2
     PSP2: 0
     Standalone: 0
     Tizen: 0
     WebGL: 2
     WiiU: 0
     Windows Store Apps: 0
-    XboxOne: 0
+    XboxOne: 2
     iPhone: 1
     tvOS: 0

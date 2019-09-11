@@ -492,7 +492,7 @@ PlayerSettings:
   - m_BuildTarget: MacStandaloneSupport
     m_GraphicsJobs: 0
   - m_BuildTarget: Switch
-    m_GraphicsJobs: 0
+    m_GraphicsJobs: 1
   - m_BuildTarget: MetroSupport
     m_GraphicsJobs: 0
   - m_BuildTarget: AppleTVSupport
@@ -502,13 +502,13 @@ PlayerSettings:
   - m_BuildTarget: LinuxStandaloneSupport
     m_GraphicsJobs: 0
   - m_BuildTarget: PS4Player
-    m_GraphicsJobs: 0
+    m_GraphicsJobs: 1
   - m_BuildTarget: iOSSupport
     m_GraphicsJobs: 0
   - m_BuildTarget: WindowsStandaloneSupport
     m_GraphicsJobs: 0
   - m_BuildTarget: XboxOnePlayer
-    m_GraphicsJobs: 0
+    m_GraphicsJobs: 1
   - m_BuildTarget: LuminSupport
     m_GraphicsJobs: 0
   - m_BuildTarget: AndroidPlayer
@@ -519,7 +519,7 @@ PlayerSettings:
   - m_BuildTarget: PS4Player
     m_GraphicsJobMode: 0
   - m_BuildTarget: XboxOnePlayer
-    m_GraphicsJobMode: 0
+    m_GraphicsJobMode: 1
   m_BuildTargetGraphicsAPIs:
   - m_BuildTarget: iOSSupport
     m_APIs: 10000000
@@ -713,7 +713,7 @@ PlayerSettings:
   ps4AppType: 0
   ps4ParamSfxPath: 
   ps4VideoOutPixelFormat: 0
-  ps4VideoOutInitialWidth: 1920
+  ps4VideoOutInitialWidth: 3840
   ps4VideoOutBaseModeInitialWidth: 1920
   ps4VideoOutReprojectionRate: 60
   ps4PronunciationXMLPath: 
@@ -751,10 +751,10 @@ PlayerSettings:
   resetTempFolder: 1
   restrictedAudioUsageRights: 0
   ps4UseResolutionFallback: 0
-  ps4ReprojectionSupport: 0
+  ps4ReprojectionSupport: 1
   ps4UseAudio3dBackend: 0
   ps4SocialScreenEnabled: 0
-  ps4ScriptOptimizationLevel: 0
+  ps4ScriptOptimizationLevel: 2
   ps4Audio3dVirtualSpeakerCount: 14
   ps4attribCpuUsage: 0
   ps4PatchPkgPath: 
@@ -822,7 +822,10 @@ PlayerSettings:
   gcWBarrierValidation: 0
   apiCompatibilityLevelPerPlatform:
     Android: 3
+    Nintendo Switch: 3
+    PS4: 3
     Standalone: 3
+    XboxOne: 3
     iPhone: 3
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
