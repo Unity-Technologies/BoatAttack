@@ -41,10 +41,10 @@ namespace BoatAttack
         private int qualityLevel;
         
         // Use this for initialization
-        void Awake()
+        void OnEnable()
         {
             Initialize();
-            SetRenderScale();
+            RenderPipelineManager.beginCameraRendering += SetRenderScale;
         }
 
         void Initialize()
@@ -61,7 +61,12 @@ namespace BoatAttack
                 Destroy(obj);
         }
 
-        void SetRenderScale()
+        private void OnDisable()
+        {
+            RenderPipelineManager.beginCameraRendering -= SetRenderScale;
+        }
+
+        void SetRenderScale(ScriptableRenderContext context, Camera camera)
         {
             float res;
             switch (maxRenderSize)
@@ -76,10 +81,11 @@ namespace BoatAttack
                     res = 2560f;
                     break;
                 default:
-                    res = Camera.main.pixelWidth;
+                    res = camera.pixelWidth;
                     break;
             }
-            var renderScale = Mathf.Clamp(res / Camera.main.pixelWidth, 0.1f, 1.0f);
+
+            var renderScale = Mathf.Clamp(res / camera.pixelWidth, 0.1f, 1.0f);
             maxScale = renderScale;
             UniversalRenderPipeline.asset.renderScale = renderScale;
         }

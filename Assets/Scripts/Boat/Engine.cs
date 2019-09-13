@@ -15,7 +15,6 @@ namespace BoatAttack.Boat
 
         //engine stats
         public float steeringTorque = 5f;
-		public float upwardTorque = 5f;
         public float horsePower = 18f;
         private float3[] point = new float3[1]; // engine submerged check
         private float3[] heights = new float3[1]; // engine submerged check

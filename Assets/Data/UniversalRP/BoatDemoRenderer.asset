@@ -23,7 +23,7 @@ MonoBehaviour:
       PassNames: []
     overrideMaterial: {fileID: 0}
     overrideMaterialPassIndex: 0
-    overrideDepthState: 1
+    overrideDepthState: 0
     depthCompareFunction: 0
     enableWrite: 0
     stencilSettings:
@@ -80,10 +80,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2147548727
   m_DefaultStencilState:
-    overrideStencilState: 0
-    stencilReference: 0
+    overrideStencilState: 1
+    stencilReference: 1
     stencilCompareFunction: 8
-    passOperation: 0
+    passOperation: 2
     failOperation: 0
     zFailOperation: 0
 --- !u!114 &7749027049794126836
@@ -100,3 +100,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings:
     material: {fileID: 2100000, guid: 7e6ea000873112847bd146ddb78ac67d, type: 2}
+    mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
