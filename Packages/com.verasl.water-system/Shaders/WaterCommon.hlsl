@@ -213,7 +213,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	half depthMulti = 1 / _MaxDepth;
     half3 color = refraction;
 	color *= Absorption((depth.x) * depthMulti);
-	color += Scattering(depth.x * depthMulti) * (shadow * 0.5 + 0.5);// * saturate(1-length(reflection));// TODO - scattering from main light(maybe additional lights too depending on cost)
+	color += Scattering(depth.x * depthMulti) * (shadow * 0.75 + 0.15);// * saturate(1-length(reflection));// TODO - scattering from main light(maybe additional lights too depending on cost)
 	color *= 1 - saturate(foam);
 	//color *= 1-saturate(length(reflection));
 
@@ -227,7 +227,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
     float fogFactor = IN.fogFactorNoise.x;
     comp = MixFog(comp, fogFactor);
 	return half4(comp, 1);
-	//return half4(spec.xxx, 1); // debug line
+	//return half4(color, 1); // debug line
 	//return half4(frac(IN.posWS.yyy), 1); // debug line
 }
 

@@ -14,7 +14,7 @@
         // No culling or depth
         Cull Off
         ZWrite Off
-        ZTest Always
+        //ZTest Always
 
         Pass
         {
@@ -34,6 +34,7 @@
             struct Varyings
             {
                 float2 uv : TEXCOORD0;
+                float4 screenpos : TEXCOORD1;
                 float4 positionOS : SV_POSITION;
             };
             
@@ -63,7 +64,9 @@
             Varyings vert (Attributes input)
             {
                 Varyings output;
-                output.positionOS = float4(input.positionOS.xyz, 1.0);
+                VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
+                output.positionOS = vertexInput.positionCS;
+                output.screenpos = ComputeScreenPos(output.positionOS);
                 output.uv = float2(input.uv.x, 1.0 - input.uv.y);
                 return output;
             }
@@ -72,9 +75,11 @@
 
             real4 frag (Varyings input) : SV_Target
             {
-                real depth = SAMPLE_DEPTH_TEXTURE( _CameraDepthTexture, sampler_CameraDepthTexture, input.uv);
+                float4 screenPos = input.screenpos / input.screenpos.w;
+            
+                real depth = SAMPLE_DEPTH_TEXTURE( _CameraDepthTexture, sampler_CameraDepthTexture, screenPos.xy);
                 
-                float3 worldPos = ReconstructWorldPos(input.uv, depth);
+                float3 worldPos = ReconstructWorldPos(screenPos.xy, depth);
                 float waveOffset = SAMPLE_TEXTURE2D(_CausticMap, sampler_CausticMap, worldPos.xz * 0.025 + _Time.x * 0.25).w - 0.5;
                 
                 float2 causticUV = CausticUVs(worldPos.xz, waveOffset);
@@ -86,7 +91,7 @@
                 
                 caustics *= min(upperMask, lowerMask) * 1.5;
                 
-                //return half4(waveOffset.xx, 0, 1);
+                //return half4(1, 0, 0, 1);
                 return half4(caustics + 1, 1);
             }
             ENDHLSL

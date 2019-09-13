@@ -1,4 +1,5 @@
-﻿using Unity.Mathematics;
+﻿using System;
+using Unity.Mathematics;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Serialization;
@@ -25,7 +26,6 @@ namespace UnityEngine.Rendering.LWRP
             public LayerMask m_ReflectLayers = -1;
             public bool m_Shadows;
         }
-
         
         [SerializeField]
         public PlanarReflectionSettings m_settings = new PlanarReflectionSettings();
@@ -39,6 +39,8 @@ namespace UnityEngine.Rendering.LWRP
         private int planarReflectionTextureID = Shader.PropertyToID("_PlanarReflectionTexture");
         
         private int2 m_OldReflectionTextureSize;
+
+        public static event Action<ScriptableRenderContext, Camera> beginPlanarReflections;
 
         private void OnEnable()
         {
@@ -229,7 +231,8 @@ namespace UnityEngine.Rendering.LWRP
         {
             if (camera.cameraType == CameraType.Reflection || camera.cameraType == CameraType.Preview)
                 return;
-            
+
+
             UpdateReflectionCamera(camera);
             m_ReflectionCamera.cameraType = camera.cameraType;
 
@@ -251,7 +254,8 @@ namespace UnityEngine.Rendering.LWRP
             var bias = QualitySettings.lodBias;
             QualitySettings.maximumLODLevel = 1;
             QualitySettings.lodBias = bias * 0.25f;
-            
+
+            if (beginPlanarReflections != null) beginPlanarReflections(context, m_ReflectionCamera);
             UniversalRenderPipeline.RenderSingleCamera(context, m_ReflectionCamera);
 
             GL.invertCulling = false;

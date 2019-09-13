@@ -97,7 +97,7 @@ namespace WaterSystem
 
         private void BeginCameraRendering(ScriptableRenderContext src, Camera cam)
         {
-            if (cam.cameraType == CameraType.Game || cam.cameraType == CameraType.SceneView)
+            if (cam.cameraType != CameraType.Preview)
             {
                 Vector3 fwd = cam.transform.forward;
                 fwd.y = 0;
@@ -255,7 +255,7 @@ namespace WaterSystem
                 {
                     float p = Mathf.Lerp(0.5f, 1.5f, (float)i * r);
                     float amp = a * p * Random.Range(0.8f, 1.2f);
-                    float dir = d + Random.Range(-45f, 45f);
+                    float dir = d + Random.Range(-90f, 90f);
                     float len = l * p * Random.Range(0.6f, 1.4f);
                     _waves[i] = new Wave(amp, dir, len, Vector2.zero, false);
                     Random.InitState(surfaceData.randomSeed + i + 1);
