@@ -9557,7 +9557,6 @@ Transform:
   - {fileID: 4603708908827592}
   - {fileID: 4693301302057358}
   - {fileID: 4416522625512240}
-  - {fileID: 4653116848354930}
   m_Father: {fileID: 4603238648617514}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -14610,12 +14609,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1489463026464572}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.066, z: -3.9549997}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.0019999966, z: -0.17199993}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4226103850215974}
-  m_RootOrder: 4
+  m_Father: {fileID: 1857749394586354482}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &198499198857476844
 ParticleSystem:
@@ -15243,8 +15242,8 @@ ParticleSystem:
         m_RotationOrder: 4
   ShapeModule:
     serializedVersion: 6
-    enabled: 0
-    type: 10
+    enabled: 1
+    type: 4
     angle: 25
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
@@ -15331,7 +15330,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.0001
+      value: 0.09
       mode: 0
       spread: 0
       speed:
@@ -24123,7 +24122,7 @@ GameObject:
   - component: {fileID: 114129291822198474}
   - component: {fileID: 114571606569623246}
   m_Layer: 11
-  m_Name: _Boat
+  m_Name: _BoatBase
   m_TagString: boat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24192,6 +24191,7 @@ MonoBehaviour:
   Human: 0
   RandomizeColors: 1
   boatRenderer: {fileID: 23139903168929634}
+  engineRenderer: {fileID: 3607957023957793550}
   engine: {fileID: 4301521246144889673}
   cam: {fileID: 2365855355768168390}
 --- !u!114 &114571606569623246
@@ -24210,7 +24210,8 @@ MonoBehaviour:
   density: 513.98334
   volume: 6.6150007
   voxelResolution: 0.3
-  centerOfMass: {x: 0, y: -0.15, z: -0.7}
+  centerOfMass: {x: 0, y: -0.15, z: -0.9}
+  waterLevelOffset: 0.25
   voxels:
   - {x: -0.9000001, y: 0.18077567, z: -2.0381942}
   - {x: -0.9000001, y: 0.18077567, z: -1.7381943}
@@ -34209,7 +34210,7 @@ MonoBehaviour:
     FieldOfView: 80
     OrthographicSize: 10
     NearClipPlane: 0.25
-    FarClipPlane: 1500
+    FarClipPlane: 1600
     Dutch: 0
     LensShift: {x: 0, y: 0}
   m_Transitions:
@@ -34249,7 +34250,8 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.064, z: -3.3079998}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 4653116848354930}
   m_Father: {fileID: 4566539937980892}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

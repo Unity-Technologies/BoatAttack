@@ -71,7 +71,7 @@ inline void SampleWaves(float3 position, half opacity, out WaveStruct waveOut)
 	waveOut.position = 0;
 	waveOut.normal = 0;
 	half waveCountMulti = 1.0 / _WaveCount;
-	half3 opacityMask = saturate(half3(3, 1, 3) * opacity);
+	half3 opacityMask = saturate(half3(3, 3, 1) * opacity);
 	
 	UNITY_LOOP
 	for(uint i = 0; i < _WaveCount; i++)
@@ -94,9 +94,10 @@ inline void SampleWaves(float3 position, half opacity, out WaveStruct waveOut)
         								waveData[i + 10].xy); // calculate the wave
 
 		#endif
-		waveOut.position += waves[i].position * opacityMask; // add the position
-		waveOut.normal += waves[i].normal * opacityMask; // add the normal
+		waveOut.position += waves[i].position; // add the position
+		waveOut.normal += waves[i].normal; // add the normal
 	}
+	waveOut.position *= opacityMask;
 }
 
 #endif // GERSTNER_WAVES_INCLUDED

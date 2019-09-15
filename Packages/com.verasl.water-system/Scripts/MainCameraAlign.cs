@@ -28,11 +28,14 @@ namespace WaterSystem
 
         void UpdatePosition(ScriptableRenderContext src, Camera cam)
         {
-            Vector3 newPos = cam.transform.TransformPoint(Vector3.forward * forwards);
-            newPos.y = yOffset;
-            newPos.x = quantizeValue * (int)(newPos.x / quantizeValue);
-            newPos.z = quantizeValue * (int)(newPos.z / quantizeValue);
-            transform.position = newPos;
+            if (cam.cameraType != CameraType.Preview)
+            {
+                Vector3 newPos = cam.transform.TransformPoint(Vector3.forward * forwards);
+                newPos.y = yOffset;
+                newPos.x = quantizeValue * (int) (newPos.x / quantizeValue);
+                newPos.z = quantizeValue * (int) (newPos.z / quantizeValue);
+                transform.position = newPos;
+            }
         }
     }
 }

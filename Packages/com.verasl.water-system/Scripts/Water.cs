@@ -107,8 +107,18 @@ namespace WaterSystem
                     (GL.GetGPUProjectionMatrix(cam.projectionMatrix, false) * cam.worldToCameraMatrix).inverse);
                 foreach (var mesh in resources.defaultWaterMeshes)
                 {
-                    Graphics.DrawMesh(mesh, transform.localToWorldMatrix, resources.defaultSeaMaterial,
-                        gameObject.layer, cam);
+                    Graphics.DrawMesh(mesh,
+                        transform.localToWorldMatrix,
+                        resources.defaultSeaMaterial,
+                        gameObject.layer, 
+                        cam, 
+                        0, 
+                        null, 
+                        ShadowCastingMode.Off, 
+                        true, 
+                        null,
+                        LightProbeUsage.Off,
+                        null);
                 }
             }
         }
