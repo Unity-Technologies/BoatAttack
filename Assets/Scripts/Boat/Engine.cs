@@ -83,7 +83,7 @@ namespace BoatAttack.Boat
             currentAngle = Mathf.SmoothDampAngle(currentAngle, 
                 60f * -modifier, 
                 ref turnVel, 
-                0.1f, 
+                0.5f, 
                 10f,
                 Time.fixedTime);
             transform.localEulerAngles = new Vector3(0f, currentAngle, 0f);

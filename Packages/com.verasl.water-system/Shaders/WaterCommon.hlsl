@@ -175,12 +175,19 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	half depthMulti = 1 / _MaxDepth;
 
 	// Lighting
-	float3 jitterTexture = SAMPLE_TEXTURE2D(_DitherPattern, sampler_DitherPattern, screenUV.xy * _ScreenParams.xy * _DitherPattern_TexelSize.xy).xyz * 2 - 1;
+	half2 jitterUV = screenUV.xy * _ScreenParams.xy * _DitherPattern_TexelSize.xy;
+#ifndef _STATIC_WATER
+    jitterUV += frac(_Time.zw);
+#endif
+	float3 jitterTexture = SAMPLE_TEXTURE2D(_DitherPattern, sampler_DitherPattern, jitterUV).xyz * 2 - 1;
 	float3 lightJitter = IN.posWS + jitterTexture.xzy * 2.5;
 	Light mainLightJittered = GetMainLight(TransformWorldToShadowCoord(lightJitter));
 	Light mainLight = GetMainLight(TransformWorldToShadowCoord(IN.posWS));
     half shadow = mainLightJittered.shadowAttenuation;
     half3 GI = SampleSH(IN.normal);
+
+    // SSS
+    half3 sss = 1 * (shadow * mainLight.color + GI);
 
 	// Foam
 	half3 foamMap = SAMPLE_TEXTURE2D(_FoamMap, sampler_FoamMap,  IN.uv.zw).rgb; //r=thick, g=medium, b=light
@@ -213,8 +220,19 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	half fresnelTerm = CalculateFresnelTerm(IN.normal, IN.viewDir.xyz);
     
     BRDFData brdfData;
-    InitializeBRDFData(half3(0, 0, 0), 0, half3(1, 1, 1), 0.95, 1, brdfData);
+    InitializeBRDFData(half3(0, 0, 0), 0, half3(1, 1, 1), 0.9, 1, brdfData);
 	half3 spec = DirectBDRF(brdfData, IN.normal, mainLight.direction, IN.viewDir) * shadow * mainLight.color;
+#ifdef _ADDITIONAL_LIGHTS
+    uint pixelLightCount = GetAdditionalLightsCount();
+    for (uint lightIndex = 0u; lightIndex < pixelLightCount; ++lightIndex)
+    {
+        Light light = GetAdditionalLight(lightIndex, IN.posWS);
+        spec += LightingPhysicallyBased(brdfData, light, IN.normal, IN.viewDir);
+        sss += light.distanceAttenuation * light.color;
+    }
+#endif
+
+    sss *= Scattering(depth.x * depthMulti);
 
 	// Reflections
 	half3 reflection = SampleReflections(IN.normal, IN.viewDir.xyz, screenUV.xy, fresnelTerm, 0.0);
@@ -222,9 +240,6 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 
 	// Refraction
 	half3 refraction = Refraction(distortion, depth.x, depthMulti);
-
-    // SSS
-    half3 sss = Scattering(depth.x * depthMulti) * (shadow * mainLight.color + GI);
 
 	// Final Colouring
     half3 diffuse = refraction + sss;

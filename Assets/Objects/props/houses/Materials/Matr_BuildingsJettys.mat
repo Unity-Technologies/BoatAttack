@@ -21,18 +21,34 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Matr_BuildingsJettys
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 41c9ba5b3695aca429b87a5073066fc7,
+    type: 3}
   m_ShaderKeywords: _METALLICSPECGLOSSMAP _NORMALMAP
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 1
+  m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
-  m_CustomRenderQueue: 2000
-  stringTagMap:
-    RenderType: Opaque
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_52571568:
+        m_Texture: {fileID: 2800000, guid: ffd1a7ac61c98ae40826c9c0d82f75eb, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_8BA53EED:
+        m_Texture: {fileID: 2800000, guid: 73dff5944d1304e4694f9a41f27e9442, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_AB84E4D0:
+        m_Texture: {fileID: 2800000, guid: 82536554e55650347be8ca5861da209e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_F0A81025:
+        m_Texture: {fileID: 2800000, guid: 5bd9f0f271484fa4d9d62b3d6965a2e6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 2800000, guid: ffd1a7ac61c98ae40826c9c0d82f75eb, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -78,6 +94,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Vector1_81866058: 1
     - _AlphaClip: 0
     - _Blend: 1
     - _BumpScale: 0.5
@@ -92,6 +109,7 @@ Material:
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
+    - _NightFade: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _QueueOffset: 50
