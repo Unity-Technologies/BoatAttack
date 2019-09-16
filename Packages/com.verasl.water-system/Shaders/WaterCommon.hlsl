@@ -93,12 +93,18 @@ half4 AdditionalData(float3 postionWS, WaveStruct wave)
 
 WaterVertexOutput WaveVertexOperations(WaterVertexOutput input)
 {
+#if defined(_STATIC_WATER)
+	float time = 0;
+#else
+	float time = _Time.y;
+#endif
+
     input.normal = float3(0, 1, 0);
-	input.fogFactorNoise.y = ((noise((input.posWS.xz * 0.5) + _Time.y) + noise((input.posWS.xz * 1) + _Time.y)) * 0.25 - 0.5) + 1;
+	input.fogFactorNoise.y = ((noise((input.posWS.xz * 0.5) + time) + noise((input.posWS.xz * 1) + time)) * 0.25 - 0.5) + 1;
 	
 	// Detail UVs
-    input.uv.zw = input.posWS.xz * 0.1h + _Time.y * 0.05h + (input.fogFactorNoise.y * 0.1);
-    input.uv.xy = input.posWS.xz * 0.4h - _Time.yy * 0.1h + (input.fogFactorNoise.y * 0.2);
+    input.uv.zw = input.posWS.xz * 0.1h + time * 0.05h + (input.fogFactorNoise.y * 0.1);
+    input.uv.xy = input.posWS.xz * 0.4h - time.xx * 0.1h + (input.fogFactorNoise.y * 0.2);
 
 	half4 screenUV = ComputeScreenPos(TransformWorldToHClip(input.posWS));
 	screenUV.xyz /= screenUV.w;
@@ -212,7 +218,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 
 	// Reflections
 	half3 reflection = SampleReflections(IN.normal, IN.viewDir.xyz, screenUV.xy, fresnelTerm, 0.0);
-	reflection = reflection + spec;
+	reflection = clamp(reflection + spec, 0, 1024);
 
 	// Refraction
 	half3 refraction = Refraction(distortion, depth.x, depthMulti);

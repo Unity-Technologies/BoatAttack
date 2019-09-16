@@ -20,7 +20,8 @@
 			/////////////////SHADER FEATURES//////////////////
 			#pragma multi_compile _REFLECTION_CUBEMAP _REFLECTION_PROBES _REFLECTION_PLANARREFLECTION
 			#pragma multi_compile _ USE_STRUCTURED_BUFFER
-			
+			#pragma shader_feature _ _STATIC_WATER
+						
 			// -------------------------------------
             // Lightweight Pipeline keywords
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS

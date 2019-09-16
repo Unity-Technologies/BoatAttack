@@ -27,6 +27,11 @@ struct WaveStruct
 WaveStruct GerstnerWave(half2 pos, float waveCountMulti, half amplitude, half direction, half wavelength, half omni, half2 omniPos)
 {
 	WaveStruct waveOut;
+#if defined(_STATIC_WATER)
+	float time = 0;
+#else
+	float time = _Time.y;
+#endif
 
 	////////////////////////////////wave value calculations//////////////////////////
 	half3 wave = 0; // wave vector
@@ -43,7 +48,7 @@ WaveStruct GerstnerWave(half2 pos, float waveCountMulti, half amplitude, half di
 	half dir = dot(windDir, pos - (omniPos * omni)); // calculate a gradient along the wind direction
 
 	////////////////////////////position output calculations/////////////////////////
-	half calc = dir * w + -_Time.y * wSpeed; // the wave calculation
+	half calc = dir * w + -time * wSpeed; // the wave calculation
 	half cosCalc = cos(calc); // cosine version(used for horizontal undulation)
 	half sinCalc = sin(calc); // sin version(used for vertical undulation)
 
