@@ -3,6 +3,7 @@
 	Properties
 	{
 		_BumpScale("Detail Wave Amount", Range(0, 2)) = 0.2//fine detail multiplier
+		_DitherPattern ("Dithering Pattern", 2D) = "bump" {}
 	}
 	SubShader
 	{

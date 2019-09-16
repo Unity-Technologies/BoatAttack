@@ -25,6 +25,7 @@ namespace WaterSystem
         public float voxelResolution = 0.51f; // voxel resolution, represents the half size of a voxel when creating the voxel representation
         private Bounds voxelBounds; // bounds of the voxels
         public Vector3 centerOfMass = Vector3.zero; // Center Of Mass offset
+        public float waterLevelOffset = 0f;
 
         private const float DAMPFER = 0.005f;
         private const float WATER_DENSITY = 1000;
@@ -119,7 +120,7 @@ namespace WaterSystem
                 if(_buoyancyType == BuoyancyType.NonPhysical)
                 {
                     Vector3 vec  = transform.position;
-                    vec.y = heights[0].y;
+                    vec.y = heights[0].y + waterLevelOffset;
                     transform.position = vec;
                     transform.up = Vector3.Slerp(transform.up, normals[0], Time.deltaTime);
                 }
@@ -150,14 +151,14 @@ namespace WaterSystem
                     Physics.autoSyncTransforms = false;
 
                     for (var i = 0; i < voxels.Length; i++)
-                        BuoyancyForce(samplePoints[i], velocity[i], heights[i].y, ref submergedAmount, ref debugInfo[i]);
+                        BuoyancyForce(samplePoints[i], velocity[i], heights[i].y + waterLevelOffset, ref submergedAmount, ref debugInfo[i]);
                     Physics.SyncTransforms();
                     Physics.autoSyncTransforms = true;
                     UpdateDrag(submergedAmount);
                 }
                 else if (_buoyancyType == BuoyancyType.Physical)
                 {
-                    BuoyancyForce(Vector3.zero, velocity[0], heights[0].y, ref submergedAmount, ref debugInfo[0]);
+                    BuoyancyForce(Vector3.zero, velocity[0], heights[0].y + waterLevelOffset, ref submergedAmount, ref debugInfo[0]);
                     //UpdateDrag(submergedAmount);
                 }
             }

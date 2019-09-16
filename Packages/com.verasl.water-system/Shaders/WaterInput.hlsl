@@ -11,6 +11,7 @@ half _MaxWaveHeight;
 int _DebugPass;
 half4 _depthCamZParams;
 float4x4 _InvViewProjection;
+half4 _DitherPattern_TexelSize;
 
 // Screen Effects textures
 SAMPLER(sampler_ScreenTextures_linear_clamp);
@@ -30,6 +31,7 @@ TEXTURE2D(_WaterDepthMap); SAMPLER(sampler_WaterDepthMap_linear_clamp);
 TEXTURE2D(_AbsorptionScatteringRamp); SAMPLER(sampler_AbsorptionScatteringRamp);
 TEXTURE2D(_SurfaceMap); SAMPLER(sampler_SurfaceMap);
 TEXTURE2D(_FoamMap); SAMPLER(sampler_FoamMap);
+TEXTURE2D(_DitherPattern); SAMPLER(sampler_DitherPattern);
 
 // Must match Lightweigth ShaderGraph master node
 struct SurfaceData

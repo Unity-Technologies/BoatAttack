@@ -61,15 +61,16 @@ float3 WaterDepth(float3 posWS, half2 texcoords, half4 additionalData, half2 scr
 {
 	float3 outDepth = 0;
 	outDepth.xz = AdjustedDepth(screenUVs, additionalData);
-	float wd = (1 - SAMPLE_TEXTURE2D(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, texcoords).r) * 19.1;
+	float wd = (1 - SAMPLE_TEXTURE2D_LOD(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, texcoords, 3).r) * 19.1;
 	outDepth.y = (wd - 3.5) + posWS.y;
 	return outDepth;
 }
 
-half3 Refraction(half2 distortion, half mip)
+half3 Refraction(half2 distortion, half depth, real depthMulti)
 {
-	half3 refrac = SAMPLE_TEXTURE2D_LOD(_CameraOpaqueTexture, sampler_CameraOpaqueTexture_linear_clamp, distortion, mip).rgb;
-	return refrac;
+	half3 output = SAMPLE_TEXTURE2D_LOD(_CameraOpaqueTexture, sampler_CameraOpaqueTexture_linear_clamp, distortion, depth * 0.25).rgb;
+	output *= Absorption((depth) * depthMulti);
+	return output;
 }
 
 half2 DistortionUVs(half depth, float3 normalWS)
@@ -93,8 +94,11 @@ half4 AdditionalData(float3 postionWS, WaveStruct wave)
 WaterVertexOutput WaveVertexOperations(WaterVertexOutput input)
 {
     input.normal = float3(0, 1, 0);
-    input.uv.zw = input.posWS.xz;
 	input.fogFactorNoise.y = ((noise((input.posWS.xz * 0.5) + _Time.y) + noise((input.posWS.xz * 1) + _Time.y)) * 0.25 - 0.5) + 1;
+	
+	// Detail UVs
+    input.uv.zw = input.posWS.xz * 0.1h + _Time.y * 0.05h + (input.fogFactorNoise.y * 0.1);
+    input.uv.xy = input.posWS.xz * 0.4h - _Time.yy * 0.1h + (input.fogFactorNoise.y * 0.2);
 
 	half4 screenUV = ComputeScreenPos(TransformWorldToHClip(input.posWS));
 	screenUV.xyz /= screenUV.w;
@@ -106,8 +110,8 @@ WaterVertexOutput WaveVertexOperations(WaterVertexOutput input)
 
 	//Gerstner here
 	WaveStruct wave;
-	SampleWaves(input.posWS, saturate((waterDepth * 0.25)) + 0.1, wave);
-	input.normal = normalize(wave.normal.xzy);
+	SampleWaves(input.posWS, saturate((waterDepth * 0.25)) + 0.05, wave);
+	input.normal = wave.normal.xzy;
     input.posWS += wave.position;
 
     // Dynamic displacement
@@ -127,8 +131,7 @@ WaterVertexOutput WaveVertexOperations(WaterVertexOutput input)
 	input.additionalData = AdditionalData(input.posWS, wave);
 
 	// distance blend
-	half distanceBlend = saturate(input.additionalData.y * 0.005);
-
+	half distanceBlend = saturate(abs(length((_WorldSpaceCameraPos.xz - input.posWS.xz) * 0.005)) - 0.25);
 	input.normal = lerp(input.normal, half3(0, 1, 0), distanceBlend);
 	
 	return input;
@@ -161,14 +164,36 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 
 	half4 waterFX = SAMPLE_TEXTURE2D(_WaterFXMap, sampler_ScreenTextures_linear_clamp, IN.preWaveSP.xy);
 
-	// Detail waves
-	half2 detailBump = SAMPLE_TEXTURE2D(_SurfaceMap, sampler_SurfaceMap, IN.uv.zw * 0.25h + _Time.y * 0.1h + (IN.fogFactorNoise.y * 0.1)).xy; // TODO - check perf
-	
-	IN.normal += (half3(detailBump.x, 0.5h, detailBump.y) * 2 - 1) * _BumpScale;
-	IN.normal += half3(1-waterFX.y, 0.5h, 1-waterFX.z) - 0.5;
-
 	// Depth
 	float3 depth = WaterDepth(IN.posWS, (IN.posWS.xz * half2(0.002, -0.002)) + 0.5, IN.additionalData, screenUV.xy);// TODO - hardcoded shore depth UVs
+	half depthMulti = 1 / _MaxDepth;
+
+	// Lighting
+	float3 jitterTexture = SAMPLE_TEXTURE2D(_DitherPattern, sampler_DitherPattern, screenUV.xy * _ScreenParams.xy * _DitherPattern_TexelSize.xy).xyz * 2 - 1;
+	float3 lightJitter = IN.posWS + jitterTexture.xzy * 2.5;
+	Light mainLightJittered = GetMainLight(TransformWorldToShadowCoord(lightJitter));
+	Light mainLight = GetMainLight(TransformWorldToShadowCoord(IN.posWS));
+    half shadow = mainLightJittered.shadowAttenuation;
+    half3 GI = SampleSH(IN.normal);
+
+	// Foam
+	half3 foamMap = SAMPLE_TEXTURE2D(_FoamMap, sampler_FoamMap,  IN.uv.zw).rgb; //r=thick, g=medium, b=light
+	half waveFoam = saturate(IN.posWS.y + 0.5);
+	half edgeFoam = saturate(1 - depth.x * 0.5 - 0.25);
+	half foamBlendMask = max(max(waveFoam, edgeFoam), waterFX.r * 2);// + IN.fogFactorNoise.y * 0.1; //max(max((foamMask + shoreMask) - IN.fogFactorNoise.y * 0.25, waterFX.r * 2), shoreWave);
+	half3 foamBlend = SAMPLE_TEXTURE2D(_AbsorptionScatteringRamp, sampler_AbsorptionScatteringRamp, half2(foamBlendMask, 0.66)).rgb;
+	half foamMask = saturate(length(foamMap * foamBlend) * 1.5 - 0.1);
+	// Foam lighting
+	half3 foam = foamMask.xxx * (mainLight.shadowAttenuation * mainLight.color + GI);
+
+	// Detail waves
+	half2 detailBump1 = SAMPLE_TEXTURE2D(_SurfaceMap, sampler_SurfaceMap, IN.uv.zw).xy * 2 - 1;
+	half2 detailBump2 = SAMPLE_TEXTURE2D(_SurfaceMap, sampler_SurfaceMap, IN.uv.xy).xy * 2 - 1;
+	half2 detailBump = (detailBump1 + detailBump2 * 0.5) * saturate(depth.x * 0.25);
+	
+	IN.normal += half3(detailBump.x, 0, detailBump.y) * _BumpScale;
+	IN.normal += half3(1-waterFX.y, 0.5h, 1-waterFX.z) - 0.5;
+	IN.normal = normalize(IN.normal);
 
 	// Distortion
 	half2 distortion = DistortionUVs(depth.x, IN.normal);
@@ -180,55 +205,35 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 
 	// Fresnel
 	half fresnelTerm = CalculateFresnelTerm(IN.normal, IN.viewDir.xyz);
-
-	// Lighting
-	Light mainLight = GetMainLight(TransformWorldToShadowCoord(IN.posWS));
-    half shadow = mainLight.shadowAttenuation;
     
     BRDFData brdfData;
-    InitializeBRDFData(half3(0, 0, 0), 0, half3(1, 1, 1), 0.9, 1, brdfData);
-	half3 spec = DirectBDRF(brdfData, normalize(IN.normal), mainLight.direction, IN.viewDir) * shadow;
-	//half3 spec = Highlights(IN.posWS, 0.001, IN.normal, IN.viewDir) * shadow;
-
-	// Foam
-	float2 foamMapUV = (IN.uv.zw * 0.1) + (detailBump.xy * 0.0025) + half2(IN.fogFactorNoise.y * 0.1, (1-IN.fogFactorNoise.y) * 0.1) + _Time.y * 0.05;
-	half3 foamMap = SAMPLE_TEXTURE2D(_FoamMap, sampler_FoamMap, foamMapUV).rgb; //r=thick, g=medium, b=light
-	half shoreMask = pow(((1-depth.y + 9) * 0.1), 6);
-	half foamMask = (IN.additionalData.z);
-	half shoreWave = (sin(_Time.z + (depth.y * 10) + IN.fogFactorNoise.y) * 0.5 + 0.5) * saturate((1-depth.x) + 1);
-	foamMask = max(max((foamMask + shoreMask) - IN.fogFactorNoise.y * 0.25, waterFX.r * 2), shoreWave);
-	half3 foamBlend = SAMPLE_TEXTURE2D(_AbsorptionScatteringRamp, sampler_AbsorptionScatteringRamp, half2(foamMask, 0.66)).rgb;
-
-	half3 foam = length(foamMap * foamBlend).rrr;
+    InitializeBRDFData(half3(0, 0, 0), 0, half3(1, 1, 1), 0.95, 1, brdfData);
+	half3 spec = DirectBDRF(brdfData, IN.normal, mainLight.direction, IN.viewDir) * shadow * mainLight.color;
 
 	// Reflections
 	half3 reflection = SampleReflections(IN.normal, IN.viewDir.xyz, screenUV.xy, fresnelTerm, 0.0);
 	reflection = reflection + spec;
-	reflection *= 1 - saturate(foam * 2);
 
 	// Refraction
-	half3 refraction = Refraction(distortion, depth.x * 0.25);
+	half3 refraction = Refraction(distortion, depth.x, depthMulti);
+
+    // SSS
+    half3 sss = Scattering(depth.x * depthMulti) * (shadow * mainLight.color + GI);
 
 	// Final Colouring
-	half depthMulti = 1 / _MaxDepth;
-    half3 color = refraction;
-	color *= Absorption((depth.x) * depthMulti);
-	color += Scattering(depth.x * depthMulti) * (shadow * 0.75 + 0.15);// * saturate(1-length(reflection));// TODO - scattering from main light(maybe additional lights too depending on cost)
-	color *= 1 - saturate(foam);
-	//color *= 1-saturate(length(reflection));
-
-	// Foam lighting
-	foam *= (shadow * 0.9 + 0.1) * mainLight.color;
+    half3 diffuse = refraction + sss;
 
 	// Do compositing
-	half3 comp = lerp(refraction, color + reflection + foam, 1-saturate(1-depth.x * 25));
+	half3 comp = lerp(reflection + diffuse, foam, foamMask); //lerp(refraction, color + reflection + foam, 1-saturate(1-depth.x * 25));
 	
 	// Fog
     float fogFactor = IN.fogFactorNoise.x;
     comp = MixFog(comp, fogFactor);
 	return half4(comp, 1);
-	//return half4(color, 1); // debug line
-	//return half4(frac(IN.posWS.yyy), 1); // debug line
+	//return half4(reflection, 1); // debug line
+	//return half4(diffuse, 1); // debug line
+	//return half4( (1 - foamMask).xxx, 1); // debug line
+	//return half4(IN.normal, 1); // debug line
 }
 
 #endif // WATER_COMMON_INCLUDED

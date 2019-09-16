@@ -18,6 +18,7 @@ namespace BoatAttack.Boat
         [NonSerialized]public Color PrimaryColor; // Boat primary colour
         [NonSerialized]public Color TrimColor; // Boat secondary colour
         public Renderer boatRenderer; // The renderer for the boat mesh
+        public Renderer engineRenderer; // The renderer for the boat mesh
         public Engine engine;
         
         public CinemachineVirtualCamera cam;
@@ -57,7 +58,9 @@ namespace BoatAttack.Boat
                 if (Application.isPlaying)
                 {
                     boatRenderer.material.SetColor("_Color1", PrimaryColor);
+                    engineRenderer.material.SetColor("_Color1", PrimaryColor);
                     boatRenderer.material.SetColor("_Color2", TrimColor);
+                    engineRenderer.material.SetColor("_Color2", TrimColor);
                 }
             }
         }

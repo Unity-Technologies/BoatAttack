@@ -24,6 +24,8 @@ namespace BoatAttack.Boat
 
         public Vector3 enginePosition;
         private Vector3 engineDir;
+        private float turnVel;
+        private float currentAngle;
 
         void Awake()
         {
@@ -58,7 +60,7 @@ namespace BoatAttack.Boat
             if (yHeight > -0.1f) // if the engine is deeper than 0.1
             {
                 modifier = Mathf.Clamp(modifier, 0f, 1f); // clamp for reasonable values
-                Vector3 forward = transform.forward;
+                Vector3 forward = RB.transform.forward;
                 forward.y = 0f;
                 forward.Normalize();
                 RB.AddForce(forward * modifier * horsePower, ForceMode.Acceleration); // add force forward based on input and horsepower
@@ -77,6 +79,14 @@ namespace BoatAttack.Boat
                 modifier = Mathf.Clamp(modifier, -1f, 1f); // clamp for reasonable values
                 RB.AddRelativeTorque(new Vector3(0f, steeringTorque, -steeringTorque * 0.5f) * modifier, ForceMode.Acceleration); // add torque based on input and torque amount
             }
+
+            currentAngle = Mathf.SmoothDampAngle(currentAngle, 
+                60f * -modifier, 
+                ref turnVel, 
+                0.1f, 
+                10f,
+                Time.fixedTime);
+            transform.localEulerAngles = new Vector3(0f, currentAngle, 0f);
         }
 
         // Draw some helper gizmos
