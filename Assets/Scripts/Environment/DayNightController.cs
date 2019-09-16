@@ -23,6 +23,8 @@ namespace BoatAttack
         [Range(0, 360)]
         public float _northHeading = 136; // north
 
+        public Transform clouds;
+        
         //Ambient light
         [Header("Ambient Lighting")]
         public Gradient _ambientColour; // ambient light colour (not used in LWRP correctly) over time
@@ -59,6 +61,11 @@ namespace BoatAttack
                     // update skybox
                     _skybox.SetFloat("_Rotation", 85 + ((_time - 0.5f) * 20f)); // rotate slightly for cheap moving cloud eefect
                     _skybox.SetColor("_Tint", _skyboxColour.Evaluate(_time));
+                }
+
+                if (clouds)
+                {
+                    clouds.eulerAngles = new Vector3(0f, _time * 45f, 0f);
                 }
                 RenderSettings.fogColor = _fogColour.Evaluate(_time); // update fog colour
                 RenderSettings.ambientSkyColor = _ambientColour.Evaluate(_time); // update ambient light colour
