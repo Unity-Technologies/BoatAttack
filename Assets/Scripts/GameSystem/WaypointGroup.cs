@@ -117,6 +117,46 @@ namespace BoatAttack
 			return closest;
 		}
 
+		public Matrix4x4 GetClosestPointOnWaypoint(Vector3 point)
+		{
+			Vector3 respawnPoint = Vector3.zero;
+			Waypoint wpA;
+			Waypoint wpB;
+			Waypoint[] sortedWPs = WPs.OrderBy(wp => Vector3.Distance(point, wp.point)).ToArray();
+
+			wpA = sortedWPs[0];
+			wpB = sortedWPs[1];
+
+			if (Mathf.Abs(wpA.WPnumber - wpB.WPnumber) > 1)
+				wpB = WPs[(int)Mathf.Repeat(wpA.WPnumber + 2, WPs.Count)];
+			
+			var closetToLine = FindNearestPointOnLine(new Vector2(wpA.point.x, wpA.point.z),
+				new Vector2(wpB.point.x, wpB.point.z),
+				new Vector2(point.x, point.z));
+			
+			var lookVec = Vector3.forward;
+			if (wpA.WPnumber > wpB.WPnumber)
+			{
+				lookVec = wpA.point - wpB.point;
+			}
+			else
+			{
+				lookVec = wpB.point - wpA.point;
+			}
+
+			if ((wpA.WPnumber == 0 && wpB.WPnumber == WPs.Count - 1) || (wpB.WPnumber == 0 && wpA.WPnumber == WPs.Count - 1)) // if at the loop point we need to revese the lookVec
+				lookVec = -lookVec;
+			
+			Quaternion facing = Quaternion.LookRotation(Vector3.Normalize(lookVec * (reverse ? -1f : 1f)), Vector3.up);
+			
+			respawnPoint.x = closetToLine.x;
+			respawnPoint.z = closetToLine.y;
+
+			Matrix4x4 matrix = Matrix4x4.TRS(respawnPoint, facing, Vector3.one);
+			
+			return matrix;
+		}
+
 		public Matrix4x4[] GetStartPositions()
 		{
 			var position = WPs[0].point + Vector3.up;
@@ -146,6 +186,20 @@ namespace BoatAttack
 		{
 			WPs.Clear();
 			curWpID = 0;
+		}
+		
+		public Vector2 FindNearestPointOnLine(Vector2 origin, Vector2 end, Vector2 point)
+		{
+			//Get heading
+			Vector2 heading = (end - origin);
+			float magnitudeMax = heading.magnitude;
+			heading.Normalize();
+
+			//Do projection from the point but clamp it
+			Vector2 lhs = point - origin;
+			float dotP = Vector2.Dot(lhs, heading);
+			dotP = Mathf.Clamp(dotP, 0f, magnitudeMax);
+			return origin + heading * dotP;
 		}
 
 		void OnDrawGizmos()

@@ -14,14 +14,28 @@ namespace WaterSystem
         {
             public Material material;
             public Mesh mesh;
+            public bool debug;
         }
         
         public override void Create()
         {
             m_WaterCausticsPass = new WaterCausticsPass();
+            if (settings.debug)
+            {
+                settings.material.SetFloat("_SrcBlend", 1f);
+                settings.material.SetFloat("_DstBlend", 0f);
+                settings.material.EnableKeyword("_DEBUG");
+                m_WaterCausticsPass.renderPassEvent = RenderPassEvent.AfterRenderingPostProcessing;
+            }
+            else
+            {
+                settings.material.SetFloat("_SrcBlend", 2f);
+                settings.material.SetFloat("_DstBlend", 0f);
+                settings.material.DisableKeyword("_DEBUG");
+                m_WaterCausticsPass.renderPassEvent = RenderPassEvent.AfterRenderingSkybox + 1;
+            }
             m_WaterCausticsPass.m_WaterCausticMaterial = settings.material;
             m_WaterCausticsPass.m_mesh = settings.mesh;
-            m_WaterCausticsPass.renderPassEvent = RenderPassEvent.AfterRenderingSkybox + 1;
         }
 
         public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)

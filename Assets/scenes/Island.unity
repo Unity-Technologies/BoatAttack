@@ -16,12 +16,12 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
   m_Fog: 1
-  m_FogColor: {r: 1.2201045, g: 1.5598984, b: 1.5180036, a: 1}
+  m_FogColor: {r: 1.076271, g: 1.0390205, b: 0.7361599, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.0025
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.9257443, g: 0.9165691, b: 0.89853483, a: 1}
+  m_AmbientSkyColor: {r: 0.7215085, g: 0.68709767, b: 0.6194611, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
@@ -329,7 +329,7 @@ PrefabInstance:
     - target: {fileID: 7357475664972103680, guid: 860f73418635b430596220c04821a36c,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.21354194
+      value: 0.26387304
       objectReference: {fileID: 0}
     - target: {fileID: 7357475664972103680, guid: 860f73418635b430596220c04821a36c,
         type: 3}
@@ -339,7 +339,7 @@ PrefabInstance:
     - target: {fileID: 7357475664972103680, guid: 860f73418635b430596220c04821a36c,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9769339
+      value: 0.9645574
       objectReference: {fileID: 0}
     - target: {fileID: 642770860795607900, guid: 860f73418635b430596220c04821a36c,
         type: 3}
@@ -874,7 +874,7 @@ MonoBehaviour:
     - boatName: Boogie
       boatPrefab: {fileID: 1553288845585282, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
-      Human: 1
+      Human: 0
     - boatName: Frooper
       boatPrefab: {fileID: 8572136798535523618, guid: 70d78230a0527e74dabc4f14906eef98,
         type: 3}
@@ -901,7 +901,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30b50fc06dfa846f189e6a884ed7088f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _time: 0.548
+  _time: 0.68
   _autoIcrement: 1
   _speed: 0.0025
   _skybox: {fileID: 0}
@@ -966,7 +966,7 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 7
     m_NumAlphaKeys: 2
-  _northHeading: 258
+  _northHeading: 255
   _tilt: 33.8
   _ambientColour:
     serializedVersion: 2
@@ -3027,7 +3027,7 @@ PrefabInstance:
     - target: {fileID: 7312333174115242941, guid: 7ad8269e6bbda4db3a76a6e41c11a5db,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3829577903138488074, guid: 7ad8269e6bbda4db3a76a6e41c11a5db,
         type: 3}
@@ -3061,17 +3061,17 @@ PrefabInstance:
     - target: {fileID: 7096263784801332180, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: m_Color.g
-      value: 0.9254922
+      value: 0.8058285
       objectReference: {fileID: 0}
     - target: {fileID: 7096263784801332180, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: m_Color.b
-      value: 0.7893066
+      value: 0.54865235
       objectReference: {fileID: 0}
     - target: {fileID: 7096263784801332180, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: m_Color.r
-      value: 0.99767536
+      value: 0.9926642
       objectReference: {fileID: 0}
     - target: {fileID: 7096263784801332180, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
@@ -3191,22 +3191,22 @@ PrefabInstance:
     - target: {fileID: 8115735017685696522, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.61884695
+      value: -0.6187537
       objectReference: {fileID: 0}
     - target: {fileID: 8115735017685696522, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.58816576
+      value: -0.3382969
       objectReference: {fileID: 0}
     - target: {fileID: 8115735017685696522, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.49035385
+      value: 0.7022055
       objectReference: {fileID: 0}
     - target: {fileID: 8115735017685696522, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.17505059
+      value: 0.09801313
       objectReference: {fileID: 0}
     - target: {fileID: 6589000190219289651, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}

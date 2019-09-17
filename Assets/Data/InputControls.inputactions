@@ -1,5 +1,5 @@
 {
-    "name": "New Controls",
+    "name": "InputControls",
     "maps": [
         {
             "name": "BoatControls",
@@ -7,25 +7,27 @@
             "actions": [
                 {
                     "name": "Trottle",
+                    "type": "Value",
                     "id": "591093b7-743c-42e6-b71e-bab02d178bd1",
-                    "expectedControlLayout": "Axis",
-                    "continuous": true,
-                    "passThrough": false,
-                    "initialStateCheck": false,
+                    "expectedControlType": "Axis",
                     "processors": "AxisDeadzone(min=0.1,max=1)",
-                    "interactions": "",
-                    "bindings": []
+                    "interactions": ""
                 },
                 {
                     "name": "Steering",
+                    "type": "Value",
                     "id": "67e3403a-b3e8-43af-ab52-4575ba23afef",
-                    "expectedControlLayout": "Axis",
-                    "continuous": true,
-                    "passThrough": false,
-                    "initialStateCheck": false,
+                    "expectedControlType": "Axis",
                     "processors": "AxisDeadzone(min=0.1,max=1)",
-                    "interactions": "",
-                    "bindings": []
+                    "interactions": ""
+                },
+                {
+                    "name": "Reset",
+                    "type": "Button",
+                    "id": "218640d2-e6dc-4136-842e-4621c0883e15",
+                    "expectedControlType": "",
+                    "processors": "AxisDeadzone(min=0.1,max=1)",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -38,8 +40,7 @@
                     "groups": "",
                     "action": "Trottle",
                     "isComposite": true,
-                    "isPartOfComposite": false,
-                    "modifiers": ""
+                    "isPartOfComposite": false
                 },
                 {
                     "name": "negative",
@@ -50,8 +51,7 @@
                     "groups": "Gamepad",
                     "action": "Trottle",
                     "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "positive",
@@ -62,8 +62,7 @@
                     "groups": "Gamepad",
                     "action": "Trottle",
                     "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "Buttons",
@@ -74,8 +73,7 @@
                     "groups": "",
                     "action": "Trottle",
                     "isComposite": true,
-                    "isPartOfComposite": false,
-                    "modifiers": ""
+                    "isPartOfComposite": false
                 },
                 {
                     "name": "negative",
@@ -86,8 +84,7 @@
                     "groups": ";Gamepad",
                     "action": "Trottle",
                     "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "positive",
@@ -98,8 +95,7 @@
                     "groups": ";Gamepad",
                     "action": "Trottle",
                     "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "Arrows",
@@ -110,8 +106,7 @@
                     "groups": "",
                     "action": "Trottle",
                     "isComposite": true,
-                    "isPartOfComposite": false,
-                    "modifiers": ""
+                    "isPartOfComposite": false
                 },
                 {
                     "name": "negative",
@@ -122,8 +117,7 @@
                     "groups": "Keyboard",
                     "action": "Trottle",
                     "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "positive",
@@ -134,8 +128,7 @@
                     "groups": "Keyboard",
                     "action": "Trottle",
                     "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "WSAD",
@@ -146,8 +139,7 @@
                     "groups": "",
                     "action": "Trottle",
                     "isComposite": true,
-                    "isPartOfComposite": false,
-                    "modifiers": ""
+                    "isPartOfComposite": false
                 },
                 {
                     "name": "negative",
@@ -158,8 +150,7 @@
                     "groups": "Keyboard",
                     "action": "Trottle",
                     "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "positive",
@@ -170,8 +161,7 @@
                     "groups": "Keyboard",
                     "action": "Trottle",
                     "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "Alt",
@@ -182,8 +172,7 @@
                     "groups": "",
                     "action": "Trottle",
                     "isComposite": true,
-                    "isPartOfComposite": false,
-                    "modifiers": ""
+                    "isPartOfComposite": false
                 },
                 {
                     "name": "negative",
@@ -194,8 +183,7 @@
                     "groups": "Keyboard",
                     "action": "Trottle",
                     "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "positive",
@@ -206,8 +194,7 @@
                     "groups": "Keyboard",
                     "action": "Trottle",
                     "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "",
@@ -218,8 +205,7 @@
                     "groups": "TouchScreen",
                     "action": "Trottle",
                     "isComposite": false,
-                    "isPartOfComposite": false,
-                    "modifiers": ""
+                    "isPartOfComposite": false
                 },
                 {
                     "name": "LeftThumbstick",
@@ -230,8 +216,7 @@
                     "groups": "",
                     "action": "Steering",
                     "isComposite": true,
-                    "isPartOfComposite": false,
-                    "modifiers": ""
+                    "isPartOfComposite": false
                 },
                 {
                     "name": "negative",
@@ -242,8 +227,7 @@
                     "groups": "Gamepad",
                     "action": "Steering",
                     "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "positive",
@@ -254,8 +238,7 @@
                     "groups": "Gamepad",
                     "action": "Steering",
                     "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "DPad",
@@ -266,8 +249,7 @@
                     "groups": "",
                     "action": "Steering",
                     "isComposite": true,
-                    "isPartOfComposite": false,
-                    "modifiers": ""
+                    "isPartOfComposite": false
                 },
                 {
                     "name": "negative",
@@ -278,8 +260,7 @@
                     "groups": ";Gamepad",
                     "action": "Steering",
                     "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "positive",
@@ -290,8 +271,7 @@
                     "groups": ";Gamepad",
                     "action": "Steering",
                     "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "Arrows",
@@ -302,8 +282,7 @@
                     "groups": "",
                     "action": "Steering",
                     "isComposite": true,
-                    "isPartOfComposite": false,
-                    "modifiers": ""
+                    "isPartOfComposite": false
                 },
                 {
                     "name": "negative",
@@ -314,8 +293,7 @@
                     "groups": "Keyboard",
                     "action": "Steering",
                     "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "positive",
@@ -326,8 +304,7 @@
                     "groups": "Keyboard",
                     "action": "Steering",
                     "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "WSAD",
@@ -338,8 +315,7 @@
                     "groups": "",
                     "action": "Steering",
                     "isComposite": true,
-                    "isPartOfComposite": false,
-                    "modifiers": ""
+                    "isPartOfComposite": false
                 },
                 {
                     "name": "negative",
@@ -350,8 +326,7 @@
                     "groups": "Keyboard",
                     "action": "Steering",
                     "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "positive",
@@ -362,8 +337,7 @@
                     "groups": "Keyboard",
                     "action": "Steering",
                     "isComposite": false,
-                    "isPartOfComposite": true,
-                    "modifiers": ""
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "",
@@ -374,8 +348,40 @@
                     "groups": "TouchScreen",
                     "action": "Steering",
                     "isComposite": false,
-                    "isPartOfComposite": false,
-                    "modifiers": ""
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7a7ffffc-09c1-403a-b879-7a91dfb5b29d",
+                    "path": "<Gamepad>/select",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Reset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b449cb97-f7cf-448b-9aa9-900c8085c53d",
+                    "path": "<Keyboard>/#(r)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Reset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f8b1e58a-fd18-487f-ae58-dc92e5273625",
+                    "path": "<Touchscreen>/primaryTouch/tapCount",
+                    "interactions": "MultiTap(tapCount=3)",
+                    "processors": "",
+                    "groups": "TouchScreen",
+                    "action": "Reset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
@@ -383,19 +389,22 @@
     "controlSchemes": [
         {
             "name": "Gamepad",
-            "basedOn": "",
             "bindingGroup": "Gamepad",
             "devices": [
                 {
                     "devicePath": "<Gamepad>",
                     "isOptional": false,
                     "isOR": false
+                },
+                {
+                    "devicePath": "<SwitchProControllerHID>",
+                    "isOptional": true,
+                    "isOR": false
                 }
             ]
         },
         {
             "name": "Keyboard",
-            "basedOn": "",
             "bindingGroup": "Keyboard",
             "devices": [
                 {
@@ -407,7 +416,6 @@
         },
         {
             "name": "TouchScreen",
-            "basedOn": "",
             "bindingGroup": "TouchScreen",
             "devices": [
                 {

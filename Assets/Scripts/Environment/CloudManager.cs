@@ -27,7 +27,7 @@ public class CloudManager : MonoBehaviour
     {
         transform.localScale = Vector3.one * scale;
         
-/*        clouds = new Cloud[transform.childCount];
+        clouds = new Cloud[transform.childCount];
 
         for (int i = 0; i < clouds.Length; i++)
         {
@@ -37,7 +37,7 @@ public class CloudManager : MonoBehaviour
             cloud.mesh = cloud.t.GetComponent<MeshFilter>().sharedMesh;
             cloud.t.GetComponent<Renderer>().enabled = false;
             clouds[i] = cloud;
-        }*/
+        }
     }
 
     private void OnDisable()

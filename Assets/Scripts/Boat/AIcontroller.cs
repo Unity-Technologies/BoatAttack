@@ -17,7 +17,9 @@ namespace BoatAttack.Boat
         public bool foundPath;
         private int pathPointNum;
         public Engine engine;//cache for AIs engine
-    
+        public BoatController controller;
+
+        private float idleTime;
         private Vector3 tempFrom;//nav from position
         private Vector3 tempTo;//nav to position
         private float targetSide;//side of destination, positive on right side, negative on left side
@@ -47,6 +49,21 @@ namespace BoatAttack.Boat
                     }
                     
                 }
+            }
+
+            if (idleTime > 4f)
+            {
+                Debug.Log($"AI boat {gameObject.name} was stuck, respawing.");
+                controller.ResetPosition();
+            }
+
+            if (engine.velocityMag < 0.1f)
+            {
+                idleTime += Time.deltaTime;
+            }
+            else
+            {
+                idleTime = 0f;
             }
         }
         

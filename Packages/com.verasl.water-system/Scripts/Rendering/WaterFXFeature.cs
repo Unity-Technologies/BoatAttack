@@ -8,11 +8,26 @@ namespace WaterSystem
     public class WaterFXFeature : UnityEngine.Rendering.Universal.ScriptableRendererFeature
     {
         WaterFXPass m_WaterFXPass;
+        public WaterFXSettings settings = new WaterFXSettings();
+
+        [System.Serializable]
+        public class WaterFXSettings
+        {
+            public bool debug;
+        }
         
         public override void Create()
         {
             m_WaterFXPass = new WaterFXPass();
-            m_WaterFXPass.renderPassEvent = UnityEngine.Rendering.Universal.RenderPassEvent.BeforeRenderingOpaques;
+            m_WaterFXPass.debug = settings.debug;
+            if (settings.debug)
+            {
+                m_WaterFXPass.renderPassEvent = UnityEngine.Rendering.Universal.RenderPassEvent.AfterRendering;
+            }
+            else
+            {
+                m_WaterFXPass.renderPassEvent = UnityEngine.Rendering.Universal.RenderPassEvent.BeforeRenderingOpaques;
+            }
         }
         
         public override void AddRenderPasses(UnityEngine.Rendering.Universal.ScriptableRenderer renderer, ref UnityEngine.Rendering.Universal.RenderingData renderingData)
@@ -24,6 +39,7 @@ namespace WaterSystem
     public class WaterFXPass : UnityEngine.Rendering.Universal.ScriptableRenderPass
     {
         const string k_RenderWaterFXTag = "Render Water FX";
+        public bool debug;
         ShaderTagId m_WaterFXShaderTag = new ShaderTagId("WaterFX");
         Color m_ClearColor = new Color(0.0f, 0.5f, 0.5f, 0.5f);
         UnityEngine.Rendering.Universal.RenderTargetHandle m_WaterFX = UnityEngine.Rendering.Universal.RenderTargetHandle.CameraTarget;
@@ -68,7 +84,8 @@ namespace WaterSystem
 
         public override void FrameCleanup(CommandBuffer cmd)
         {
-            cmd.ReleaseTemporaryRT(m_WaterFX.id);
+            if(!debug)
+                cmd.ReleaseTemporaryRT(m_WaterFX.id);
         }
     }
 }

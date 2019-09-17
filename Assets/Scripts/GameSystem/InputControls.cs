@@ -32,6 +32,14 @@ public class InputControls : IInputActionCollection
                     ""expectedControlType"": ""Axis"",
                     ""processors"": ""AxisDeadzone(min=0.1,max=1)"",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Reset"",
+                    ""type"": ""Button"",
+                    ""id"": ""218640d2-e6dc-4136-842e-4621c0883e15"",
+                    ""expectedControlType"": """",
+                    ""processors"": ""AxisDeadzone(min=0.1,max=1)"",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -353,6 +361,39 @@ public class InputControls : IInputActionCollection
                     ""action"": ""Steering"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7a7ffffc-09c1-403a-b879-7a91dfb5b29d"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": ""Press"",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Reset"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b449cb97-f7cf-448b-9aa9-900c8085c53d"",
+                    ""path"": ""<Keyboard>/#(r)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Reset"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f8b1e58a-fd18-487f-ae58-dc92e5273625"",
+                    ""path"": ""<Touchscreen>/primaryTouch/tapCount"",
+                    ""interactions"": ""MultiTap(tapCount=3)"",
+                    ""processors"": """",
+                    ""groups"": ""TouchScreen"",
+                    ""action"": ""Reset"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -365,6 +406,11 @@ public class InputControls : IInputActionCollection
                 {
                     ""devicePath"": ""<Gamepad>"",
                     ""isOptional"": false,
+                    ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<SwitchProControllerHID>"",
+                    ""isOptional"": true,
                     ""isOR"": false
                 }
             ]
@@ -397,6 +443,7 @@ public class InputControls : IInputActionCollection
         m_BoatControls = asset.GetActionMap("BoatControls");
         m_BoatControls_Trottle = m_BoatControls.GetAction("Trottle");
         m_BoatControls_Steering = m_BoatControls.GetAction("Steering");
+        m_BoatControls_Reset = m_BoatControls.GetAction("Reset");
     }
 
     ~InputControls()
@@ -448,12 +495,14 @@ public class InputControls : IInputActionCollection
     private IBoatControlsActions m_BoatControlsActionsCallbackInterface;
     private readonly InputAction m_BoatControls_Trottle;
     private readonly InputAction m_BoatControls_Steering;
+    private readonly InputAction m_BoatControls_Reset;
     public struct BoatControlsActions
     {
         private InputControls m_Wrapper;
         public BoatControlsActions(InputControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Trottle => m_Wrapper.m_BoatControls_Trottle;
         public InputAction @Steering => m_Wrapper.m_BoatControls_Steering;
+        public InputAction @Reset => m_Wrapper.m_BoatControls_Reset;
         public InputActionMap Get() { return m_Wrapper.m_BoatControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -469,6 +518,9 @@ public class InputControls : IInputActionCollection
                 Steering.started -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnSteering;
                 Steering.performed -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnSteering;
                 Steering.canceled -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnSteering;
+                Reset.started -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnReset;
+                Reset.performed -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnReset;
+                Reset.canceled -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnReset;
             }
             m_Wrapper.m_BoatControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -479,6 +531,9 @@ public class InputControls : IInputActionCollection
                 Steering.started += instance.OnSteering;
                 Steering.performed += instance.OnSteering;
                 Steering.canceled += instance.OnSteering;
+                Reset.started += instance.OnReset;
+                Reset.performed += instance.OnReset;
+                Reset.canceled += instance.OnReset;
             }
         }
     }
@@ -514,5 +569,6 @@ public class InputControls : IInputActionCollection
     {
         void OnTrottle(InputAction.CallbackContext context);
         void OnSteering(InputAction.CallbackContext context);
+        void OnReset(InputAction.CallbackContext context);
     }
 }

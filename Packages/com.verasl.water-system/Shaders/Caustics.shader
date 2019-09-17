@@ -8,19 +8,24 @@
         _WaterLevel("WaterLevel", Float) = -0.25
         _BlendDistance("BlendDistance", Float) = 0.1
         //Vector1_CD857B77("CausticsRGB Split", Float) = 2
+        
+        //Color blends
+        [HideInInspector] _SrcBlend("__src", Float) = 4.0
+        [HideInInspector] _DstBlend("__dst", Float) = 1.0
     }
     SubShader
     {
         // No culling or depth
         Cull Off
         ZWrite Off
-        //ZTest Always
 
         Pass
         {
-            Blend DstColor Zero, One Zero
+            Blend [_SrcBlend] [_DstBlend], One Zero
             HLSLPROGRAM
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            
+            #pragma shader_feature _DEBUG
             
             #pragma vertex vert
             #pragma fragment frag
@@ -80,18 +85,21 @@
                 real depth = SAMPLE_DEPTH_TEXTURE( _CameraDepthTexture, sampler_CameraDepthTexture, screenPos.xy);
                 
                 float3 worldPos = ReconstructWorldPos(screenPos.xy, depth);
-                float waveOffset = SAMPLE_TEXTURE2D(_CausticMap, sampler_CausticMap, worldPos.xz * 0.025 + _Time.x * 0.25).w - 0.5;
+                float2 uv = worldPos.xz * 0.025 + _Time.x * 0.25;
+                float waveOffset = SAMPLE_TEXTURE2D(_CausticMap, sampler_CausticMap, uv).w - 0.5;
                 
                 float2 causticUV = CausticUVs(worldPos.xz, waveOffset);
-                
-                float3 caustics = SAMPLE_TEXTURE2D(_CausticMap, sampler_CausticMap, causticUV).bbb;
                 
                 half upperMask = saturate(-worldPos.y + _WaterLevel);
                 half lowerMask = saturate((worldPos.y - _WaterLevel) / _BlendDistance + _BlendDistance);
                 
+                float3 caustics = SAMPLE_TEXTURE2D_LOD(_CausticMap, sampler_CausticMap, causticUV, abs(worldPos.y - _WaterLevel) * 5 / _BlendDistance).bbb;
+
+#ifdef _DEBUG
+                return half4(caustics * min(upperMask, lowerMask), 1);
+#endif
                 caustics *= min(upperMask, lowerMask) * 1.5;
                 
-                //return half4(1, 0, 0, 1);
                 return half4(caustics + 1, 1);
             }
             ENDHLSL

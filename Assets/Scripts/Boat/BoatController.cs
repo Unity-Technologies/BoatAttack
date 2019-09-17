@@ -20,6 +20,7 @@ namespace BoatAttack.Boat
         public Renderer boatRenderer; // The renderer for the boat mesh
         public Renderer engineRenderer; // The renderer for the boat mesh
         public Engine engine;
+        private Matrix4x4 spawnPosition;
         
         public CinemachineVirtualCamera cam;
         
@@ -30,7 +31,8 @@ namespace BoatAttack.Boat
 		void Awake()
 		{
 			Colourize();
-		}
+            spawnPosition = transform.localToWorldMatrix;
+        }
 		// Use this for initialization
 		void Start()
         {
@@ -38,11 +40,15 @@ namespace BoatAttack.Boat
             
             if (Human)
             {
-                gameObject.AddComponent<HumanController>().engine = engine; // Adds a human controller if human
+                var humanController = gameObject.AddComponent<HumanController>();
+                humanController.engine = engine;
+                humanController.controller = this;
             }
             else
             {
-                gameObject.AddComponent<AIcontroller>().engine = engine; // Adds an AI controller if AI
+                var aiController = gameObject.AddComponent<AIcontroller>();
+                aiController.engine = engine; // Adds an AI controller if AI
+                aiController.controller = this; // Adds an AI controller if AI
             }
         }
 
@@ -62,6 +68,19 @@ namespace BoatAttack.Boat
                     boatRenderer.material.SetColor("_Color2", TrimColor);
                     engineRenderer.material.SetColor("_Color2", TrimColor);
                 }
+            }
+        }
+
+        public void ResetPosition()
+        {
+            if (WaypointGroup.instance)
+            {
+                var resetMatrix = WaypointGroup.instance.GetClosestPointOnWaypoint(transform.position);
+                var resetPoint = resetMatrix.GetColumn(3);
+                resetPoint.y = spawnPosition.GetColumn(3).y;
+                transform.SetPositionAndRotation(resetPoint, resetMatrix.rotation);
+                engine.RB.velocity = Vector3.zero;
+                engine.RB.angularVelocity = Vector3.zero;
             }
         }
 

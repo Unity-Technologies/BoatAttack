@@ -8,7 +8,7 @@ namespace BoatAttack.Boat
     public class Engine : MonoBehaviour
     {
         public Rigidbody RB; // The rigid body attatched to the boat
-        public Vector3 vel; // Boats velocity
+        public float velocityMag; // Boats velocity
 
         public AudioSource engineSound; // Engine sound clip
         public AudioSource waterSound; // Water sound clip
@@ -40,9 +40,8 @@ namespace BoatAttack.Boat
 
         void FixedUpdate()
         {
-            vel = RB.velocity; // store the velocity
-            float velMag = vel.sqrMagnitude; // get the sqr mag
-            engineSound.pitch = Mathf.Max(velMag * 0.01f, 0.3f); // use some magice numbers to control the pitch of the engine sound
+            velocityMag = RB.velocity.sqrMagnitude; // get the sqr mag
+            engineSound.pitch = Mathf.Max(velocityMag * 0.01f, 0.3f); // use some magice numbers to control the pitch of the engine sound
 
             // Get the water level from the engines position and store it
             point[0] = transform.TransformPoint(enginePosition);

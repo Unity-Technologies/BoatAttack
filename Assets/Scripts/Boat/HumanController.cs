@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Threading;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace BoatAttack.Boat
 {
@@ -7,7 +9,7 @@ namespace BoatAttack.Boat
     /// </summary>
     public class HumanController : MonoBehaviour
     {
-
+        public BoatController controller; // the boat controller
         public Engine engine; // the engine script
 
         public InputControls controls;
@@ -25,6 +27,8 @@ namespace BoatAttack.Boat
             controls.BoatControls.Steering.performed += context => steering = context.ReadValue<float>();
             controls.BoatControls.Steering.canceled += context => steering = 0f;
 
+            controls.BoatControls.Reset.performed += ResetBoat;
+
 			engine = GetComponent<Engine>(); // get the engine script
 		}
 
@@ -36,6 +40,11 @@ namespace BoatAttack.Boat
         private void OnDisable()
         {
             controls.BoatControls.Disable();
+        }
+
+        private void ResetBoat(InputAction.CallbackContext context)
+        {
+            controller.ResetPosition();
         }
 
         void FixedUpdate()
