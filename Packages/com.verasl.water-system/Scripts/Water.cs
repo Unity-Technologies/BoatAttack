@@ -36,7 +36,6 @@ namespace WaterSystem
         RenderTexture _depthTex;
         public Texture _bakedDepthTex;
         private Camera _depthCam;
-        [SerializeField]
         private Texture2D _rampTexture;
         [SerializeField]
         public Wave[] _waves;
