@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 using UnityEngine.Profiling;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.LWRP;
@@ -280,7 +281,7 @@ namespace WaterSystem
         public void GenerateColorRamp()
         {
             if(_rampTexture == null)
-                _rampTexture = new Texture2D(128, 4, TextureFormat.ARGB32, false, false);
+                _rampTexture = new Texture2D(128, 4, DefaultFormat.LDR, TextureCreationFlags.None);
             _rampTexture.wrapMode = TextureWrapMode.Clamp;
 
             Texture2D _defaultFoamRamp = resources.defaultFoamRamp;
