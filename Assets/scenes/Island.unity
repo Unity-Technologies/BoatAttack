@@ -16,12 +16,12 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
   m_Fog: 1
-  m_FogColor: {r: 1.076271, g: 1.0390205, b: 0.7361599, a: 1}
+  m_FogColor: {r: 1.07954, g: 1.0508586, b: 0.75392914, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.0025
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.7215085, g: 0.68709767, b: 0.6194611, a: 1}
+  m_AmbientSkyColor: {r: 0.7261502, g: 0.69231296, b: 0.6258037, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
@@ -329,7 +329,7 @@ PrefabInstance:
     - target: {fileID: 7357475664972103680, guid: 860f73418635b430596220c04821a36c,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.26387304
+      value: 0.26273656
       objectReference: {fileID: 0}
     - target: {fileID: 7357475664972103680, guid: 860f73418635b430596220c04821a36c,
         type: 3}
@@ -339,7 +339,7 @@ PrefabInstance:
     - target: {fileID: 7357475664972103680, guid: 860f73418635b430596220c04821a36c,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9645574
+      value: 0.96486765
       objectReference: {fileID: 0}
     - target: {fileID: 642770860795607900, guid: 860f73418635b430596220c04821a36c,
         type: 3}
@@ -1111,46 +1111,6 @@ Light:
     type: 3}
   m_PrefabInstance: {fileID: 6589000189408555943}
   m_PrefabAsset: {fileID: 0}
---- !u!28 &370486874
-Texture2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  serializedVersion: 2
-  m_Width: 128
-  m_Height: 4
-  m_CompleteImageSize: 2048
-  m_TextureFormat: 5
-  m_MipCount: 1
-  m_IsReadable: 1
-  m_StreamingMipmaps: 0
-  m_StreamingMipmapsPriority: 0
-  m_AlphaIsTransparency: 0
-  m_ImageCount: 1
-  m_TextureDimension: 2
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_LightmapFormat: 0
-  m_ColorSpace: 1
-  image data: 2048
-  _typelessdata: ffcfffffffa9f8f8ff83f0f0ff5ee9e9ff38e1e1ff22dcdcff21d8d9ff20d5d6ff1fd2d2ff1ececfff1dcbccff1cc8c9ff1bc4c5ff1ac1c2ff19bdbfff18babcff17b7b9ff16b3b5ff15b0b2ff14adafff13a9acff12a6a9ff11a2a5ff109fa2ff0f9c9fff0e989cff0d9599ff0c9295ff0b8e92ff0a8b8fff09878cff088489ff078185ff067d82ff057c81ff057a81ff057880ff057780ff05757fff05747fff04727eff04707eff046f7dff046d7dff046c7cff046a7cff03687bff03677bff03657aff03647aff036279ff036079ff025f78ff025d78ff025c77ff025a77ff025876ff025776ff025575ff015475ff015274ff015074ff014f73ff014d73ff014c72ff004a71ff004871ff004770ff00466fff00446dff00436cff00426aff004168ff004066ff003f64ff003d62ff003c60ff003b5fff003a5dff00395bff003859ff003657ff003555ff003453ff003352ff003250ff00314eff00304cff002e4aff002d48ff002c46ff002b45ff002a43ff002941ff00273fff00263dff00253bff002439ff002338ff002236ff002034ff001f32ff001e30ff001d2eff001c2cff001b2bff001929ff001827ff001725ff001623ff001521ff001420ff00131eff00111cff00101aff000f18ff000e16ff000d14ff000c13ff000a11ff00090fff00080dff00070bff000609ff000507ff000306ff000204ff000102ff2f3c38ff2f3e39ff2f3f3bff30413cff30423eff304440ff314541ff314743ff314844ff324a46ff324b47ff324c49ff324e4bff334f4cff33514eff33524fff345451ff345552ff345754ff355856ff355a57ff355b59ff355d5aff365e5cff36605eff36615fff376361ff376462ff376664ff386765ff386967ff386a69ff396c6aff396d6cff396f6dff39706fff3a7270ff3a7372ff3a7574ff3b7675ff3b7877ff3b7978ff3c7b7aff3b7b7aff3b7a7aff3b7a7aff3a7a7aff3a7a7aff3a7a7aff39797aff39797aff38797aff38797aff38797aff37787aff37787aff37787aff36787aff36787aff36787aff35777aff35777aff35777aff34777aff34777aff34767aff33767aff33767aff33767aff32767aff32757aff31757aff31757aff31757aff30757aff30747aff30747aff2f747aff2f747aff2f747aff2e747aff2e737aff2e737aff2d737aff2d737aff2d737aff2c727aff2c727aff2c727aff2b727aff2b727aff2a717aff2a717aff2a717aff29717aff29717aff29717aff28707aff28707aff28707aff27707aff27707aff276f7aff266f7bff266f7bff266f7bff256f7bff256e7bff256e7bff246e7bff246e7bff236e7bff236e7bff236d7bff226d7bff226d7bff226d7bff216d7bff216c7bff216c7bff206c7bff206c7bff206c7bff1f6b7bff1f6b7bff1f6b7bff1e6b7bff1e6b7bff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000002ff000004ff000007ff00000aff00000eff000011ff000014ff000019ff00001dff000020ff000025ff000029ff00002eff000033ff000038ff00003dff000042ff000048ff00004dff000052ff000059ff00005eff000065ff00006bff000071ff000078ff00007eff000085ff00008cff000093ff00009aff0000a0ff0000a8ff0000aeff0003b6ff0006bcff000ac4ff000fcaff0013d1ff0018d8ff001ddeff0021e5ff0026ebff002bf1ff0030f7ff0036fcff003bffff0041fbff0047f8ff004cf4ff0053f0ff0059ecff005fe7ff0065e2ff006cddff0073d9ff0079d4ff007fcfff0086caff008dc4ff0093bfff009ab9ff00a0b4ff00a7aeff00ada8ff00b4a2ff00ba9cff00c196ff00c790ff03cd8aff08d484ff0eda7eff13e078ff19e671ff1eeb6cff24f165ff2bf65fff31fc59ff37ff53ff3ffc4cff45f947ff4cf541ff53f13aff5aed35ff61e92fff69e52aff70e024ff77dc1fff7ed71aff86d214ff8ecd0fff96c80aff9dc305ffa4bf01ffabba00ffb2b500ffb9b000ffc1ab00ffc7a700ffcea200ffd49e00ffdb9900ffe19500ffe89000ffee8c00fff38900fff88500fffc8200fffc8200fffc8200fffc8200fffc8200fffc8200fffc8200fffc8200fffc8200fffc8200fffc8200fffc8200fffc8200fffc82000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  m_StreamData:
-    offset: 0
-    size: 0
-    path: 
 --- !u!1 &471032674
 GameObject:
   m_ObjectHideFlags: 0
@@ -1176,7 +1136,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 471032674}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -68.75, y: -0.25, z: 81.25}
+  m_LocalPosition: {x: -93.75, y: -0.25, z: 81.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1400,7 +1360,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   computeOverride: 1
   _bakedDepthTex: {fileID: 2800000, guid: 93bf4e51726633144823e135b668c836, type: 3}
-  _rampTexture: {fileID: 370486874}
   _waves:
   - amplitude: 0.22704089
     direction: -88.46054
@@ -2007,8 +1966,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1017609894}
-  m_LocalRotation: {x: -0.009748473, y: 0.95066756, z: 0.029859738, w: 0.30861723}
-  m_LocalPosition: {x: -79.8, y: 9.9, z: 91.8}
+  m_LocalRotation: {x: 0.008164481, y: 0.9336439, z: -0.02129777, w: 0.35747582}
+  m_LocalPosition: {x: -104.53597, y: 10.854617, z: 90.81176}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2897,8 +2856,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2061336191}
-  m_LocalRotation: {x: -0.009748473, y: 0.95066756, z: 0.029859738, w: 0.30861723}
-  m_LocalPosition: {x: -79.8, y: 9.9, z: 91.8}
+  m_LocalRotation: {x: 0.008164481, y: 0.9336439, z: -0.02129777, w: 0.35747582}
+  m_LocalPosition: {x: -104.53597, y: 10.854617, z: 90.81176}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1873663219}
@@ -3061,17 +3020,17 @@ PrefabInstance:
     - target: {fileID: 7096263784801332180, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: m_Color.g
-      value: 0.8058285
+      value: 0.80854815
       objectReference: {fileID: 0}
     - target: {fileID: 7096263784801332180, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: m_Color.b
-      value: 0.54865235
+      value: 0.55412185
       objectReference: {fileID: 0}
     - target: {fileID: 7096263784801332180, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: m_Color.r
-      value: 0.9926642
+      value: 0.9927781
       objectReference: {fileID: 0}
     - target: {fileID: 7096263784801332180, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
@@ -3191,22 +3150,22 @@ PrefabInstance:
     - target: {fileID: 8115735017685696522, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.6187537
+      value: -0.61964995
       objectReference: {fileID: 0}
     - target: {fileID: 8115735017685696522, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.3382969
+      value: -0.34489998
       objectReference: {fileID: 0}
     - target: {fileID: 8115735017685696522, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.7022055
+      value: 0.69898593
       objectReference: {fileID: 0}
     - target: {fileID: 8115735017685696522, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.09801313
+      value: 0.092177205
       objectReference: {fileID: 0}
     - target: {fileID: 6589000190219289651, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}

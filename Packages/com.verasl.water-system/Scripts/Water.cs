@@ -281,7 +281,7 @@ namespace WaterSystem
         public void GenerateColorRamp()
         {
             if(_rampTexture == null)
-                _rampTexture = new Texture2D(128, 4, DefaultFormat.LDR, TextureCreationFlags.None);
+                _rampTexture = new Texture2D(128, 4, GraphicsFormat.R8G8B8A8_SRGB, TextureCreationFlags.None);
             _rampTexture.wrapMode = TextureWrapMode.Clamp;
 
             Texture2D _defaultFoamRamp = resources.defaultFoamRamp;

@@ -253,7 +253,7 @@ namespace UnityEngine.Rendering.LWRP
             var max = QualitySettings.maximumLODLevel;
             var bias = QualitySettings.lodBias;
             QualitySettings.maximumLODLevel = 1;
-            QualitySettings.lodBias = bias * 0.25f;
+            QualitySettings.lodBias = bias * 0.5f;
 
             if (beginPlanarReflections != null) beginPlanarReflections(context, m_ReflectionCamera);
             UniversalRenderPipeline.RenderSingleCamera(context, m_ReflectionCamera);
