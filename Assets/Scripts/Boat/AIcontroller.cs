@@ -54,6 +54,7 @@ namespace BoatAttack.Boat
             if (idleTime > 4f)
             {
                 Debug.Log($"AI boat {gameObject.name} was stuck, respawing.");
+                idleTime = 0f;
                 controller.ResetPosition();
             }
 
