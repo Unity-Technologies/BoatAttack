@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
+using Unity.Collections;
 using WaterSystem;
 using Unity.Mathematics;
 
@@ -16,7 +18,7 @@ namespace BoatAttack.Boat
         //engine stats
         public float steeringTorque = 5f;
         public float horsePower = 18f;
-        private float3[] point = new float3[1]; // engine submerged check
+        private NativeArray<float3> point; // engine submerged check
         private float3[] heights = new float3[1]; // engine submerged check
         private float3[] normals = new float3[1]; // engine submerged check
         private int _guid;
@@ -36,6 +38,7 @@ namespace BoatAttack.Boat
 				waterSound.time = UnityEngine.Random.Range(0f, waterSound.clip.length); // randomly start the water sound
 
             _guid = GetInstanceID(); // Get the engines GUID for the buoyancy system
+            point = new NativeArray<float3>(1, Allocator.Persistent);
         }
 
         void FixedUpdate()
@@ -45,11 +48,16 @@ namespace BoatAttack.Boat
 
             // Get the water level from the engines position and store it
             point[0] = transform.TransformPoint(enginePosition);
-            GerstnerWavesJobs.UpdateSamplePoints(point, _guid);
+            GerstnerWavesJobs.UpdateSamplePoints(ref point, _guid);
             GerstnerWavesJobs.GetData(_guid, ref heights, ref normals);
             yHeight = heights[0].y - point[0].y;
         }
 
+        private void OnDisable()
+        {
+            point.Dispose();
+        }
+        
         /// <summary>
         /// Controls the acceleration of the boat
         /// </summary>

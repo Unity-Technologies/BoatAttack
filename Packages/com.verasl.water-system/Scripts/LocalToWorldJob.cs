@@ -5,6 +5,7 @@ using UnityEngine;
 using Unity.Jobs;
 using Unity.Burst;
 using Unity.Mathematics;
+using UnityEngine.Assertions;
 
 public static class LocalToWorldJob
 {
@@ -31,18 +32,19 @@ public static class LocalToWorldJob
         }
     }
 
-    public static void ScheduleJob(int guid, Vector3[] positions, Matrix4x4 localToWorld)
+    public static void SetupJob(int guid, Vector3[] positions, ref NativeArray<float3> output)
     {
-        if (!_data.ContainsKey(guid))
-        {
-            TransformLocalToWorld jobData = new TransformLocalToWorld();
-            jobData.positionsWorld = new NativeArray<float3>(positions.Length, Allocator.Persistent);
-            jobData.positionsLocal = new NativeArray<float3>(positions.Length, Allocator.Persistent);
-            for (var i = 0; i < positions.Length; i++)
-                jobData.positionsLocal[i] = positions[i];
-            _data.Add(guid, jobData);
-        }
+        TransformLocalToWorld jobData = new TransformLocalToWorld();
+        jobData.positionsWorld = new NativeArray<float3>(positions.Length, Allocator.Persistent);
+        jobData.positionsLocal = new NativeArray<float3>(positions.Length, Allocator.Persistent);
+        for (var i = 0; i < positions.Length; i++)
+            jobData.positionsLocal[i] = positions[i];
+        _data.Add(guid, jobData);
+        output = jobData.positionsWorld;
+    }
 
+    public static void ScheduleJob(int guid, Matrix4x4 localToWorld)
+    {
         if (_data[guid].processing)
             return;
         
@@ -58,15 +60,11 @@ public static class LocalToWorldJob
         JobHandle.ScheduleBatchedJobs();
     }
 
-    public static float3[] CompleteJob(int guid)
+    public static void CompleteJob(int guid)
     {
-        if (_data.ContainsKey(guid))
-        {
-            _data[guid].handle.Complete();
-            _data[guid].processing = false;
-            return _data[guid].job.positionsWorld.ToArray();
-        }
-        return null;
+        _data[guid].handle.Complete();
+        _data[guid].processing = false;
+        //return _data[guid].job.positionsWorld;
     }
 
     public static void Cleanup(int guid)

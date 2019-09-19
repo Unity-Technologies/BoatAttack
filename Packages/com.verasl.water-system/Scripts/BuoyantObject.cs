@@ -11,7 +11,9 @@
 //
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 using Unity.Mathematics;
 
@@ -37,7 +39,7 @@ namespace WaterSystem
 
 		[SerializeField]
         private Vector3[] voxels; // voxel position
-        private float3[] samplePoints; // sample points for height calc
+        private NativeArray<float3> samplePoints; // sample points for height calc
         private float3[] heights; // water height array(only size of 1 when simple or non-physical)
         private float3[] normals; // water normal array(only used when non-physical and size of 1 also when simple)
         private float3[] velocity; // voxel velocity for buoyancy
@@ -70,6 +72,10 @@ namespace WaterSystem
                 RB.centerOfMass = centerOfMass + voxelBounds.center;
                 baseDrag = RB.drag;
                 baseAngularDrag = RB.angularDrag;
+                
+                velocity = new float3[voxels.Length];
+                float archimedesForceMagnitude = WATER_DENSITY * Mathf.Abs(Physics.gravity.y) * volume;
+                localArchimedesForce = new float3(0, archimedesForceMagnitude, 0) / voxels.Length;
             }
 
             if (_buoyancyType == BuoyancyType.NonPhysical || _buoyancyType == BuoyancyType.Physical)
@@ -77,12 +83,6 @@ namespace WaterSystem
                 voxels = new Vector3[1];
                 voxels[0] = centerOfMass;
             }
-            
-            velocity = new float3[voxels.Length];
-            samplePoints = new float3[voxels.Length];
-
-            float archimedesForceMagnitude = WATER_DENSITY * Mathf.Abs(Physics.gravity.y) * volume;
-            localArchimedesForce = new float3(0, archimedesForceMagnitude, 0) / samplePoints.Length;
         }
 
         private void Start()
@@ -94,8 +94,12 @@ namespace WaterSystem
             debugInfo = new DebugDrawing[voxels.Length];
             heights = new float3[voxels.Length];
             normals = new float3[voxels.Length];
-            
-            LocalToWorldConversion();
+
+            if (_buoyancyType == BuoyancyType.Physical || _buoyancyType == BuoyancyType.PhysicalVoxel)
+            {
+                LocalToWorldJob.SetupJob(_guid, voxels, ref samplePoints);
+                LocalToWorldConversion();
+            }
         }
 
         void SetupColliders()
@@ -112,7 +116,6 @@ namespace WaterSystem
 
         void Update()
         {
-            GerstnerWavesJobs.UpdateSamplePoints(samplePoints, _guid);
             GerstnerWavesJobs.GetData(_guid, ref heights, ref normals);
             
             if(_buoyancyType == BuoyancyType.NonPhysical || _buoyancyType == BuoyancyType.NonPhysicalVoxel) // if acurate the are more points so only heights are needed
@@ -131,6 +134,9 @@ namespace WaterSystem
             }
             else
             {
+                LocalToWorldJob.CompleteJob(_guid);
+                GerstnerWavesJobs.UpdateSamplePoints(ref samplePoints, _guid);
+                
                 for (int i = 0; i < voxels.Length; i++)
                 {
                     velocity[i] = RB.GetPointVelocity(samplePoints[i]);
@@ -143,7 +149,7 @@ namespace WaterSystem
             if (_buoyancyType == BuoyancyType.Physical || _buoyancyType == BuoyancyType.PhysicalVoxel)
             {
                 float submergedAmount = 0f;
-                samplePoints = LocalToWorldJob.CompleteJob(_guid);
+                LocalToWorldJob.CompleteJob(_guid);
 
                 if (_buoyancyType == BuoyancyType.PhysicalVoxel)
                 {
@@ -184,7 +190,7 @@ namespace WaterSystem
             if (_buoyancyType == BuoyancyType.Physical || _buoyancyType == BuoyancyType.PhysicalVoxel)
             {
                 Matrix4x4 transformMatrix = transform.localToWorldMatrix;
-                LocalToWorldJob.ScheduleJob(_guid, voxels, transformMatrix);
+                LocalToWorldJob.ScheduleJob(_guid, transformMatrix);
             }
         }
 

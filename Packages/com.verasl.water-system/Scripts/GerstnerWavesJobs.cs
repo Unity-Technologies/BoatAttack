@@ -58,7 +58,7 @@ namespace WaterSystem
             waveNormal.Dispose();
         }
 
-        public static void UpdateSamplePoints(float3[] samplePoints, int guid)
+        public static void UpdateSamplePoints(ref NativeArray<float3> samplePoints, int guid)
         {
             CompleteJobs();
             int2 offsets;
