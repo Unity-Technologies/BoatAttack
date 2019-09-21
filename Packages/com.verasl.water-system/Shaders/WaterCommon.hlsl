@@ -120,6 +120,10 @@ WaterVertexOutput WaveVertexOperations(WaterVertexOutput input)
 	input.normal = wave.normal.xzy;
     input.posWS += wave.position;
 
+#ifdef SHADER_API_PS4
+	input.posWS.y -= 0.5;
+#endif
+
     // Dynamic displacement
 	half4 waterFX = SAMPLE_TEXTURE2D_LOD(_WaterFXMap, sampler_ScreenTextures_linear_clamp, screenUV.xy, 0);
 	input.posWS.y += waterFX.w * 2 - 1;
@@ -195,7 +199,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	half edgeFoam = saturate(1 - depth.x * 0.5 - 0.25);
 	half foamBlendMask = max(max(waveFoam, edgeFoam), waterFX.r * 2);// + IN.fogFactorNoise.y * 0.1; //max(max((foamMask + shoreMask) - IN.fogFactorNoise.y * 0.25, waterFX.r * 2), shoreWave);
 	half3 foamBlend = SAMPLE_TEXTURE2D(_AbsorptionScatteringRamp, sampler_AbsorptionScatteringRamp, half2(foamBlendMask, 0.66)).rgb;
-	half foamMask = saturate(length(foamMap * foamBlend) * 1.5 - 0.1);
+	half foamMask = saturate(length(foamMap * foamBlend) * 1.5 - 0.1 + saturate(1 - depth.x * 4) * 0.5);
 	// Foam lighting
 	half3 foam = foamMask.xxx * (mainLight.shadowAttenuation * mainLight.color + GI);
 

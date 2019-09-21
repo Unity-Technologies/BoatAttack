@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace BoatAttack.Boat
@@ -16,6 +15,8 @@ namespace BoatAttack.Boat
 
         public float throttle;
         public float steering;
+
+        public bool paused;
         
         void Awake()
         {
@@ -28,8 +29,11 @@ namespace BoatAttack.Boat
             controls.BoatControls.Steering.canceled += context => steering = 0f;
 
             controls.BoatControls.Reset.performed += ResetBoat;
+            controls.BoatControls.Freeze.performed += FreezeBoat;
 
-			engine = GetComponent<Engine>(); // get the engine script
+            controls.BoatControls.Time.performed += SelectTime;
+
+            engine = GetComponent<Engine>(); // get the engine script
 		}
 
         private void OnEnable()
@@ -45,6 +49,27 @@ namespace BoatAttack.Boat
         private void ResetBoat(InputAction.CallbackContext context)
         {
             controller.ResetPosition();
+        }
+
+        private void FreezeBoat(InputAction.CallbackContext context)
+        {
+            paused = !paused;
+            if(paused)
+            {
+                Time.timeScale = 0f;
+            }
+            else
+            {
+                Time.timeScale = 1f;
+            }
+            //engine.RB.isKinematic = !engine.RB.isKinematic;
+        }
+
+        private void SelectTime(InputAction.CallbackContext context)
+        {
+            var value = context.ReadValue<float>();
+            Debug.Log($"changing day time, input:{value}");
+            DayNightController.SelectPreset(value);
         }
 
         void FixedUpdate()

@@ -98,7 +98,7 @@
 #ifdef _DEBUG
                 return half4(caustics * min(upperMask, lowerMask), 1);
 #endif
-                caustics *= min(upperMask, lowerMask) * 1.5;
+                caustics *= min(upperMask, lowerMask) * 2;
                 
                 return half4(caustics + 1, 1);
             }
