@@ -14,6 +14,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "Time",
+                    "type": "Value",
+                    "id": "637a3778-b50e-41a0-8669-f7b1698fc4ca",
+                    "expectedControlType": "",
+                    "processors": "AxisDeadzone(min=0.1,max=1)",
+                    "interactions": ""
+                },
+                {
                     "name": "Steering",
                     "type": "Value",
                     "id": "67e3403a-b3e8-43af-ab52-4575ba23afef",
@@ -25,6 +33,14 @@
                     "name": "Reset",
                     "type": "Button",
                     "id": "218640d2-e6dc-4136-842e-4621c0883e15",
+                    "expectedControlType": "",
+                    "processors": "AxisDeadzone(min=0.1,max=1)",
+                    "interactions": ""
+                },
+                {
+                    "name": "Freeze",
+                    "type": "Button",
+                    "id": "097a2ec8-8df3-4d48-96e5-fbf096270878",
                     "expectedControlType": "",
                     "processors": "AxisDeadzone(min=0.1,max=1)",
                     "interactions": ""
@@ -241,39 +257,6 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "DPad",
-                    "id": "8aeee6b0-abef-4b03-a8b3-e592682ef6ac",
-                    "path": "1DAxis",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Steering",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "52a3b81b-20a0-4d9a-a700-4b0941383170",
-                    "path": "<Gamepad>/dpad/left",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "Steering",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "3406ab27-525e-47ca-84d5-25e0a5a83c29",
-                    "path": "<Gamepad>/dpad/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "Steering",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "Arrows",
                     "id": "b5b408fa-df11-4ebc-b589-5ff03be94ba1",
                     "path": "1DAxis",
@@ -382,6 +365,105 @@
                     "action": "Reset",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bbe374df-c0a2-4067-8743-605cc47e112b",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Freeze",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6c9efbd8-b12e-4a6d-9787-042b4abda799",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Freeze",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b7d3341c-7abe-48e6-a68e-b27eb3927b79",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Time",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Dpad horizontal",
+                    "id": "3c94f068-2cc6-4d07-a76a-3835151e0b0e",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Time",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "aa687506-3f38-4cdc-8f14-f77ce23789d9",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Time",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "59cadf6b-f60d-4a7e-9b9c-a21ecfdfb51e",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Time",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Keyboard",
+                    "id": "e8db53d1-5ded-40fe-965b-727f321a403a",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Time",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "d5357c68-6b8a-4c12-996c-801c5a015beb",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Time",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "9a495693-8098-4d83-b2d6-711526e83c37",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Time",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }
