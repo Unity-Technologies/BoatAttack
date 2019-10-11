@@ -143,14 +143,14 @@ namespace WaterSystem
             if (!gameObject.TryGetComponent(out camAlign))
             {
                 camAlign = gameObject.AddComponent<MainCameraAlign>();
-                camAlign.hideFlags = HideFlags.HideAndDontSave | HideFlags.HideInInspector;
             }
+            camAlign.hideFlags = HideFlags.HideAndDontSave | HideFlags.HideInInspector;
 
             if (!gameObject.TryGetComponent(out planarReflections))
             {
                 planarReflections = gameObject.AddComponent<PlanarReflections>();
-                planarReflections.hideFlags = HideFlags.HideAndDontSave | HideFlags.HideInInspector;
             }
+            planarReflections.hideFlags = HideFlags.HideAndDontSave | HideFlags.HideInInspector;
             planarReflections.m_settings = settingsData.planarSettings;
             planarReflections.enabled = settingsData.refType == ReflectionType.PlanarReflection;
 

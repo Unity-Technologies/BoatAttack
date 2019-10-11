@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Sea
   m_Shader: {fileID: 4800000, guid: a94edd303261140cf9e6ce8c90d7a99a, type: 3}
-  m_ShaderKeywords: _GLOSSINESS_FROM_BASE_ALPHA _SPECULAR_COLOR
+  m_ShaderKeywords: _GLOSSINESS_FROM_BASE_ALPHA _REFLECTION_PLANARREFLECTION _SPECULAR_COLOR
   m_LightmapFlags: 6
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
@@ -58,7 +58,7 @@ Material:
     m_Floats:
     - _AlphaClip: 0
     - _Blend: 0
-    - _BumpScale: 0.2
+    - _BumpScale: 0.35
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1

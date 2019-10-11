@@ -5,13 +5,13 @@
 
 CBUFFER_START(UnityPerMaterial)
 half _BumpScale;
+half4 _DitherPattern_TexelSize;
 CBUFFER_END
 half _MaxDepth;
 half _MaxWaveHeight;
 int _DebugPass;
 half4 _depthCamZParams;
 float4x4 _InvViewProjection;
-half4 _DitherPattern_TexelSize;
 
 // Screen Effects textures
 SAMPLER(sampler_ScreenTextures_linear_clamp);

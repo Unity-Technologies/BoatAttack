@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using BoatAttack.Boat;
+using Cinemachine;
 using UnityEngine;
-using WaterSystem;
 
 namespace BoatAttack
 {
@@ -18,16 +17,21 @@ namespace BoatAttack
         }
 
 		public Race raceData;
+        private GameObject[] boats;
 
+        public CinemachineVirtualCamera DroneCamera;
+        
         private void Start()
         {
             WaypointGroup.instance.reverse = raceData.reversed;
             WaypointGroup.instance.Setup();
             CreateBoats();
+            DroneCameraTrack(0);
         }
 
         private void CreateBoats()
         {
+            boats = new GameObject[raceData.boats.Count];
             var i = 0;
             foreach (var boat in raceData.boats)
             {
@@ -38,8 +42,15 @@ namespace BoatAttack
                 BoatController boatController = boatObject.GetComponent<BoatController>();
                 boatController.Human = boat.Human;
                 boatController.cam.gameObject.layer = LayerMask.NameToLayer("Player" + (i + 1));
+                boats[i] = boatObject;
                 i++;
             }
+        }
+
+        void DroneCameraTrack(int player)
+        {
+            DroneCamera.Follow = boats[player].transform;
+            DroneCamera.LookAt = boats[player].transform;
         }
 	}
 }

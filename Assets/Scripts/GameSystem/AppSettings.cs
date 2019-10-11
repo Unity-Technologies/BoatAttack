@@ -1,13 +1,13 @@
 ﻿using System;
+using GameplayIngredients;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using Object = System.Object;
 
 namespace BoatAttack
 {
     [ExecuteAlways]
-    public class AppSettings : MonoBehaviour
+    public class AppSettings : Manager
     {
         public enum RenderRes
         {
@@ -101,38 +101,45 @@ namespace BoatAttack
             var level = QualitySettings.GetQualityLevel();
             if(level != qualityLevel)
                 UpdateQualitySettings(level);
-            
-            if (variableResolution)
+
+            if (Camera.main)
             {
-                Camera.main.allowDynamicResolution = true;
-
-                var offset = 0f;
-                var currentFrametime = Time.deltaTime;
-                var rate = 0.1f;
-
-                switch (targetFramerate)
+                if (variableResolution)
                 {
-                    case Framerate._30:
-                        offset = currentFrametime > (1000f / 30f) ? -rate : rate;
-                        break;
-                    case Framerate._60:
-                        offset = currentFrametime > (1000f / 30f) ? -rate : rate;
-                        break;
-                    case Framerate._120:
-                        offset = currentFrametime > (1000f / 120f) ? -rate : rate;
-                        break;
+                    Camera.main.allowDynamicResolution = true;
+
+                    var offset = 0f;
+                    var currentFrametime = Time.deltaTime;
+                    var rate = 0.1f;
+
+                    switch (targetFramerate)
+                    {
+                        case Framerate._30:
+                            offset = currentFrametime > (1000f / 30f) ? -rate : rate;
+                            break;
+                        case Framerate._60:
+                            offset = currentFrametime > (1000f / 30f) ? -rate : rate;
+                            break;
+                        case Framerate._120:
+                            offset = currentFrametime > (1000f / 120f) ? -rate : rate;
+                            break;
+                    }
+
+                    currentDynamicScale = Mathf.Clamp(currentDynamicScale + offset, minScale, 1f);
+
+                    var offsetVec = new Vector2(Mathf.Lerp(1, currentDynamicScale, Mathf.Clamp01((1 - axisBias) * 2f)),
+                        Mathf.Lerp(1, currentDynamicScale, Mathf.Clamp01(axisBias * 2f)));
+
+                    ScalableBufferManager.ResizeBuffers(offsetVec.x, offsetVec.y);
                 }
-
-                currentDynamicScale = Mathf.Clamp(currentFrametime + offset, minScale, 1f);
-                
-                var offsetVec = new Vector2(Mathf.Lerp(1, currentDynamicScale, Mathf.Clamp01((1 - axisBias) * 2f)),
-                    Mathf.Lerp(1, currentDynamicScale, Mathf.Clamp01(axisBias * 2f)));
-
-                ScalableBufferManager.ResizeBuffers(offsetVec.x, offsetVec.y);
+                else
+                {
+                    Camera.main.allowDynamicResolution = false;
+                }
             }
             else
             {
-                Camera.main.allowDynamicResolution = false;
+                Debug.LogWarning("No Main Camera found, for Variabel Resolution to work you must have a 'Main Camera'.");
             }
         }
 

@@ -476,6 +476,17 @@ public class InputControls : IInputActionCollection
                     ""action"": ""Time"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""38dc845f-f219-4b56-947c-542a4cf33da6"",
+                    ""path"": ""<Touchscreen>/primaryTouch/tapCount"",
+                    ""interactions"": ""MultiTap"",
+                    ""processors"": """",
+                    ""groups"": ""TouchScreen"",
+                    ""action"": ""Time"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }

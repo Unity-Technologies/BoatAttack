@@ -225,9 +225,7 @@ namespace UnityEngine.Rendering.LWRP
             return new int2(x, y);
         }
 
-        public void ExecutePlanarReflections(
-            ScriptableRenderContext context,
-            Camera camera)
+        public void ExecutePlanarReflections(ScriptableRenderContext context, Camera camera)
         {
             if (camera.cameraType == CameraType.Reflection || camera.cameraType == CameraType.Preview)
                 return;
