@@ -6,7 +6,7 @@ using UnityEngine.Rendering.Universal;
 
 namespace BoatAttack
 {
-    [ExecuteAlways]
+    [ManagerDefaultPrefab("AppManager")]
     public class AppSettings : Manager
     {
         public enum RenderRes

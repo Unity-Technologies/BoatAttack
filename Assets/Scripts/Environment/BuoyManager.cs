@@ -1,11 +1,12 @@
 ﻿using Unity.Collections;
 using UnityEngine;
 using Unity.Mathematics;
+using UnityEngine.Serialization;
 using WaterSystem;
 
 public class BuoyManager : MonoBehaviour
 {
-    public ParticleSystem particleSystem;
+    [FormerlySerializedAs("particleSystem")] public ParticleSystem ps;
     public ParticleSystem.ShapeModule particleShape;
     private Mesh _mesh;
     private Vector3[] verts;
@@ -41,9 +42,9 @@ public class BuoyManager : MonoBehaviour
         _mesh.vertices = verts;
         _mesh.triangles = triangles;
 
-        if (particleSystem)
+        if (ps)
         {
-            particleShape = particleSystem.shape;
+            particleShape = ps.shape;
             particleShape.mesh = _mesh;
         }
     }
