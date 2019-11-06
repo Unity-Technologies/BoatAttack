@@ -53,7 +53,13 @@ static class UniversalSettings
                 
                 EditorGUILayout.BeginVertical(Styles.frameBox);
                 GUILayout.Label($"Quality Level: {names[displayAssetIndex]}", Styles.header);
+                EditorGUI.BeginChangeCheck();
                 displayAssetIndex = GUILayout.Toolbar(displayAssetIndex, names);
+                if (EditorGUI.EndChangeCheck() && displayAssetIndex != 0)
+                {
+                    QualitySettings.SetQualityLevel(displayAssetIndex-1);
+                    DefaultVolume.instance.UpdateVolume();
+                }
 
                 if (displayAssetIndex != 0)
                 {
@@ -124,38 +130,49 @@ static class UniversalSettings
         }
         EditorGUILayout.EndHorizontal();
 
-        var volHolder = Resources.Load<DefaultVolumeSwitcher.VolumeHolder>("VolumeHolder");
+        var volHolder = Resources.Load<VolumeHolder>("VolumeHolder");
 
         if (volHolder != null)
         {
-            string[] names = new string[volHolder.volumes.Length];
-            for (int i = 0; i < names.Length; i++)
+            string[] names = new string[volHolder._Volumes.Length + 1];
+            names[0] = "None";
+            for (int i = 1; i < names.Length; i++)
             {
-                names[i] = volHolder.volumes[i].name;
+                names[i] = $"{volHolder._Volumes[i - 1].name} ({typeof(VolumeProfile)})";
             }
             
-            if (volHolder.VolumeQualityIndicies.ContainsKey(displayAssetIndex))
+            if (volHolder.ContainsKey(displayAssetIndex))
             {
-                volumeIndex[displayAssetIndex] = volHolder.VolumeQualityIndicies[displayAssetIndex];
+                volumeIndex[displayAssetIndex] = volHolder.GetValue(displayAssetIndex) + 1;
             }
 
             EditorGUI.BeginChangeCheck();
             volumeIndex[displayAssetIndex] = EditorGUILayout.Popup("Volume", volumeIndex[displayAssetIndex], names);
             if (EditorGUI.EndChangeCheck())
             {
-                if (volHolder.VolumeQualityIndicies.ContainsKey(displayAssetIndex))
+                if (volHolder.ContainsKey(displayAssetIndex))
                 {
-                    volHolder.VolumeQualityIndicies[displayAssetIndex] = volumeIndex[displayAssetIndex];
+                    volHolder.SetKey(displayAssetIndex, volumeIndex[displayAssetIndex] - 1);
                 }
                 else
                 {
-                    volHolder.VolumeQualityIndicies.Add(displayAssetIndex, volumeIndex[displayAssetIndex]);
+                    volHolder.Add(displayAssetIndex, volumeIndex[displayAssetIndex] - 1);
                 }
+                DefaultVolume.instance.UpdateVolume();
                 EditorUtility.SetDirty(volHolder);
             }
 
-            Editor volumeSettings = Editor.CreateEditor(volHolder.volumes[volumeIndex[displayAssetIndex]]);
-            volumeSettings.OnInspectorGUI();
+            var volIndex = volumeIndex[displayAssetIndex] - 1;
+
+            if (volIndex >= 0)
+            {
+                Editor volumeSettings = Editor.CreateEditor(volHolder._Volumes[volIndex]);
+                volumeSettings.OnInspectorGUI();
+            }
+            else
+            {
+                EditorGUILayout.HelpBox("No Volume Selected for this Quality Level.", MessageType.Info);
+            }
         }
 
         EditorGUILayout.EndVertical();

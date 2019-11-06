@@ -10,8 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3829577903138488073}
   - component: {fileID: 3829577903138488074}
-  - component: {fileID: 3829577903138488075}
-  - component: {fileID: 3829577903138488068}
   - component: {fileID: 7312333174115242941}
   m_Layer: 0
   m_Name: AppManager
@@ -51,45 +49,6 @@ MonoBehaviour:
   axisBias: 0.5
   minScale: 0.5
   targetFramerate: 0
-  qualityVolume: {fileID: 3829577903138488068}
-  qualityVolumeProfiles:
-  - {fileID: 11400000, guid: 200e02ce26d6c422db35ba0777d71a09, type: 2}
-  - {fileID: 11400000, guid: 4fe8789f8ee054ac49d9f7fe042e0918, type: 2}
-  - {fileID: 11400000, guid: dbf7710ff9a33440f8390ed8e04dbb77, type: 2}
---- !u!114 &3829577903138488075
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3829577903138488069}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isGlobal: 1
-  priority: 0
-  blendDistance: 0
-  weight: 1
-  sharedProfile: {fileID: 11400000, guid: ad80f6934bc444a93bb29c1f6db70cf3, type: 2}
---- !u!114 &3829577903138488068
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3829577903138488069}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isGlobal: 1
-  priority: 1
-  blendDistance: 0
-  weight: 1
-  sharedProfile: {fileID: 11400000, guid: 200e02ce26d6c422db35ba0777d71a09, type: 2}
 --- !u!114 &7312333174115242941
 MonoBehaviour:
   m_ObjectHideFlags: 0

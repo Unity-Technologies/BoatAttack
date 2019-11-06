@@ -33,12 +33,6 @@ namespace BoatAttack
         public Framerate targetFramerate = Framerate._30;
         private float currentDynamicScale = 1.0f;
         private float maxScale = 1.0f;
-
-        [Header("Quality Level Settings")] 
-        public Volume qualityVolume;
-
-        public VolumeProfile[] qualityVolumeProfiles = new VolumeProfile[3];
-        private int qualityLevel;
         
         // Use this for initialization
         void OnEnable()
@@ -50,8 +44,6 @@ namespace BoatAttack
         void Initialize()
         {
             Application.targetFrameRate = 300;
-            qualityLevel = QualitySettings.GetQualityLevel();
-            qualityVolume.profile = qualityVolumeProfiles[qualityLevel];
         }
 
         private void Start()
@@ -87,21 +79,16 @@ namespace BoatAttack
 
             var renderScale = Mathf.Clamp(res / camera.pixelWidth, 0.1f, 1.0f);
             maxScale = renderScale;
+#if !UNITY_EDITOR
             UniversalRenderPipeline.asset.renderScale = renderScale;
-        }
-
-        void UpdateQualitySettings(int level)
-        {
-            qualityLevel = level;
-            qualityVolume.profile = qualityVolumeProfiles[level];
+#else
+            Debug.LogWarning(
+                $"{this} Render Scale {maxScale} not enabled in Editor, using {UniversalRenderPipeline.asset.renderScale}.");
+#endif
         }
 
         private void Update()
         {
-            var level = QualitySettings.GetQualityLevel();
-            if(level != qualityLevel)
-                UpdateQualitySettings(level);
-
             if (Camera.main)
             {
                 if (variableResolution)

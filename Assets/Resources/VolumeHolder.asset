@@ -9,10 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: bea894b80a78a4f9a9d5210e78f59e3b, type: 3}
   m_Name: VolumeHolder
-  m_EditorClassIdentifier: Assembly-CSharp::DefaultVolumeSwitcher/VolumeHolder
-  volumes:
+  m_EditorClassIdentifier: Assembly-CSharp::VolumeHolder
+  _Volumes:
+  - {fileID: 11400000, guid: ad80f6934bc444a93bb29c1f6db70cf3, type: 2}
   - {fileID: 11400000, guid: 200e02ce26d6c422db35ba0777d71a09, type: 2}
   - {fileID: 11400000, guid: 4fe8789f8ee054ac49d9f7fe042e0918, type: 2}
   - {fileID: 11400000, guid: dbf7710ff9a33440f8390ed8e04dbb77, type: 2}
+  qualityIndicies: 00000000010000000200000003000000
+  qualityVolumeIndicies: 00000000010000000200000003000000
