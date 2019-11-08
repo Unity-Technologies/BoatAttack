@@ -80,6 +80,10 @@ public class WaterSystemFeature : ScriptableRendererFeature
                 return;
             }
 
+            var camType = renderingData.cameraData.camera.cameraType;
+            if(camType != CameraType.Game && camType != CameraType.SceneView)
+                return;
+
             Vector3 position = renderingData.cameraData.camera.transform.position;
             position.y = 0;
             Matrix4x4 matrix = Matrix4x4.TRS(position, Quaternion.identity, Vector3.one * 100f);

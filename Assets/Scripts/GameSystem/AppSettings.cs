@@ -81,9 +81,6 @@ namespace BoatAttack
             maxScale = renderScale;
 #if !UNITY_EDITOR
             UniversalRenderPipeline.asset.renderScale = renderScale;
-#else
-            Debug.LogWarning(
-                $"{this} Render Scale {maxScale} not enabled in Editor, using {UniversalRenderPipeline.asset.renderScale}.");
 #endif
         }
 
