@@ -32,7 +32,7 @@ public class MainMenuLayout : MonoBehaviour
             if (cat == catergory)
             {
                 cat.state = !cat.state;
-                cat.panel.sizeDelta = new Vector2(0f, cat.state ? 600f : 0f);
+                cat.panel.sizeDelta = cat.state ? new Vector2(1080f, 600f) : Vector2.zero;
                 layoutGroup.padding = new RectOffset(50, 50, cat.state ? 0 : 150, 0);
             }
         }
