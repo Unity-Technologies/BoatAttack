@@ -1,49 +1,67 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using System;
-using Random = UnityEngine.Random;
+﻿using System;
 using System.Linq;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 namespace BoatAttack
 {
-	[Serializable]
 	public class WaypointGroup : MonoBehaviour
 	{
-		static WaypointGroup Instance = null;
-		public static float raceDelay = 4f;
+		public static float RaceDelay = 4f;
 
-		public int WaypointGroupID = 0;
-		public Color WaypointColour = Color.yellow;
-		public bool Loop = false;
-		public float NextWPradius = 5f;
+		public int waypointGroupId = 0;
+		public Color waypointColour = Color.yellow;
+		public bool loop = true;
+		public float nextWpRadius = 5f;
 
 		public bool raceStarted = false;
 		
 		[NonSerialized]
-		public bool reverse = false;
+		public bool Reverse = false;
 		
 		[NonSerialized]
-		public Matrix4x4[] startingPositons = new Matrix4x4[4];
+		public Matrix4x4[] StartingPositions = new Matrix4x4[4];
 
 		[SerializeField] public List<Waypoint> WPs = new List<Waypoint>();
-		private int curWpID;
+		private readonly Dictionary<BoxCollider, Waypoint> _triggerPairs = new Dictionary<BoxCollider, Waypoint>();
+		private int _curWpId;
 		
-		public static WaypointGroup instance => Instance;
+		public static WaypointGroup Instance { get; private set; }
+
+		private BoxCollider[] _triggers;
 
 		// Use this for initialization
-		void Awake()
+		private void Awake()
 		{
 			Instance = this;
 		}
 
 		public void Setup()
 		{
-			if (reverse)
+			if (Reverse)
 			{
 				WPs.Reverse();
 				WPs.Insert(0, WPs[WPs.Count - 1]);
 				WPs.RemoveAt(WPs.Count - 1);
+			}
+
+			var i = 0;
+			_triggers = new BoxCollider[WPs.Count];
+			foreach (var wp in WPs)
+			{
+				var obj = new GameObject($"wp{i}_trigger", typeof(BoxCollider))
+				{
+					hideFlags = HideFlags.HideInHierarchy, tag = gameObject.tag
+				};
+				obj.transform.SetPositionAndRotation(wp.point, wp.rotation);
+				obj.TryGetComponent(out _triggers[i]);
+				_triggers[i].isTrigger = true;
+				_triggers[i].size = new Vector3(wp.width * 2f, 50f, 0.5f);
+				_triggerPairs.Add(_triggers[i], wp);
+				wp.Trigger = _triggers[i];
+				i++;
 			}
 
 			GetStartPositions();
@@ -53,89 +71,95 @@ namespace BoatAttack
 		public class Waypoint
 		{
 			public Vector3 point;
-			[FormerlySerializedAs("WPradius")] public float WPwidth;
+			[FormerlySerializedAs("WPwidth")] public float width;
 			public Quaternion rotation = Quaternion.identity;
-			public int WPnumber;
-			public int WPgroup;
+			public int index;
+			public bool isCheckpoint;
+			[NonSerialized] public BoxCollider Trigger;
 
-			public Waypoint(Vector3 position, float radius, int ID, int group)
+			public Waypoint(Vector3 position, float radius)
 			{
-
 				point = position;
-				WPwidth = radius;
-				WPnumber = ID;
-				WPgroup = group;
+				width = radius;
 			}
-		}
-
-
-		public void CreateWaypoint()
-		{
-			Vector3 Pos = gameObject.transform.position;
-			float Rad = NextWPradius;
-			int ID = curWpID;
-
-			Waypoint WP = new Waypoint(Pos, Rad, ID, WaypointGroupID);
-
-			WPs.Add(WP);
-
-			curWpID++;
 		}
 
 		public Vector3 GetWaypointDestination(int index)
 		{
-			Waypoint wp;
-			if (index > 0 && index < WPs.Count - 1)
-				wp = WPs[index];
-			else
-				wp = null;
-			return wp.point + (Random.insideUnitSphere * wp.WPwidth);
+			var wp = GetWaypoint(index);
+			return wp.point + (Random.insideUnitSphere * wp.width);
 		}
 
-		public Waypoint GetWaypoint(int index)
+		public Waypoint GetWaypoint(int index) { return WPs[(int)Mathf.Repeat(index, WPs.Count)]; }
+
+		public int GetWaypointIndex(Waypoint wp) { return WPs.IndexOf(wp); }
+
+		public Waypoint GetTriggersWaypoint(BoxCollider trigger)
 		{
-			return WPs[index];
+			return _triggerPairs.TryGetValue(trigger, out var wp) ? wp : null;
 		}
-		
+
 		public Waypoint GetNextWaypoint(Waypoint wp)
 		{
-			var index = WPs.IndexOf(wp);
-			index = (int)Mathf.Repeat(index + 1, WPs.Count);
-			return GetWaypoint(index);
+			return GetWaypoint(WPs.IndexOf(wp) + 1);
+		}
+
+		public Waypoint GetPreviousWaypoint(Waypoint wp)
+		{
+			return GetWaypoint(WPs.IndexOf(wp) - 1);
 		}
 
 		public Waypoint GetClosestWaypoint(Vector3 point)
 		{
-			Waypoint closest = null;
-			Waypoint[] sortedWPs = WPs.OrderBy(wp => Vector3.Distance(point, wp.point)).ToArray();
-
-			if (sortedWPs[0].WPnumber < sortedWPs[1].WPnumber && !reverse)
-				closest = sortedWPs[1];
-			else
-				closest = sortedWPs[0];
-
-			return closest;
+			return WPs.OrderBy(wp => Vector3.Distance(point, wp.point)).ToArray()[0];
 		}
 
+		public float GetCurrentSegmentPercentage(Waypoint wp, Vector3 point)
+		{
+			return GetCurrentSegmentPercentage(WPs.IndexOf(wp), point);
+		}
+		
+		public float GetCurrentSegmentPercentage(int index, Vector3 point)
+		{
+			index = (int)Mathf.Repeat(index, WPs.Count);
+			var a = WPs[index].point;
+			var b = GetNextWaypoint(WPs[index]).point;
+			
+			var pointOnLine = FindNearestPointOnLine(a, b, point);
+			var distToCurrent = Vector3.Distance(pointOnLine, a);
+			var distToNext = Vector3.Distance(a, b);
+
+			return distToCurrent / distToNext;
+		}
+
+		public Vector3 GetClosestPointOnPath(Vector3 point)
+		{
+			var closest = GetClosestWaypoint(point);
+			var next = GetNextWaypoint(closest);
+			var previous = GetPreviousWaypoint(closest);
+
+			var nextLine = FindNearestPointOnLine(closest.point, next.point, point);
+			var prevLine = FindNearestPointOnLine(closest.point, previous.point, point);
+
+			return Vector3.Distance(point, nextLine) < Vector3.Distance(point, prevLine) ? nextLine : prevLine;
+		}
+		
 		public Matrix4x4 GetClosestPointOnWaypoint(Vector3 point)
 		{
-			Vector3 respawnPoint = Vector3.zero;
-			Waypoint wpA;
-			Waypoint wpB;
-			Waypoint[] sortedWPs = WPs.OrderBy(wp => Vector3.Distance(point, wp.point)).ToArray();
+			var sortedWPs = WPs.OrderBy(wp => Vector3.Distance(point, wp.point)).ToArray();
 
-			wpA = sortedWPs[0];
-			wpB = sortedWPs[1];
+			var wpA = sortedWPs[0];
+			var wpB = sortedWPs[1];
 
-			if (Mathf.Abs(wpA.WPnumber - wpB.WPnumber) > 1)
-				wpB = WPs[(int)Mathf.Repeat(wpA.WPnumber + 2, WPs.Count)];
 			
-			var closetToLine = FindNearestPointOnLine(new Vector2(wpA.point.x, wpA.point.z),
-				new Vector2(wpB.point.x, wpB.point.z),
-				new Vector2(point.x, point.z));
+			if (Mathf.Abs(wpA.index - wpB.index) > 1)
+				wpB = WPs[(int)Mathf.Repeat(wpA.index + 2, WPs.Count)];
+
+			var respawnPoint = FindNearestPointOnLine(wpA.point, wpB.point, point);
+			respawnPoint.y = 0f;
 			
-			var lookVec = Vector3.forward;
-			if (wpA.WPnumber > wpB.WPnumber)
+			Vector3 lookVec;
+			if (wpA.index > wpB.index)
 			{
 				lookVec = wpA.point - wpB.point;
 			}
@@ -144,87 +168,54 @@ namespace BoatAttack
 				lookVec = wpB.point - wpA.point;
 			}
 
-			if ((wpA.WPnumber == 0 && wpB.WPnumber == WPs.Count - 1) || (wpB.WPnumber == 0 && wpA.WPnumber == WPs.Count - 1)) // if at the loop point we need to revese the lookVec
+			if ((wpA.index == 0 && wpB.index == WPs.Count - 1) || (wpB.index == 0 && wpA.index == WPs.Count - 1)) // if at the loop point we need to reverse the lookVec
 				lookVec = -lookVec;
 			
-			Quaternion facing = Quaternion.LookRotation(Vector3.Normalize(lookVec * (reverse ? -1f : 1f)), Vector3.up);
-			
-			respawnPoint.x = closetToLine.x;
-			respawnPoint.z = closetToLine.y;
+			Quaternion facing = Quaternion.LookRotation(Vector3.Normalize(lookVec * (Reverse ? -1f : 1f)), Vector3.up);
 
 			Matrix4x4 matrix = Matrix4x4.TRS(respawnPoint, facing, Vector3.one);
 			
 			return matrix;
 		}
 
-		public Matrix4x4[] GetStartPositions()
+		private Matrix4x4[] GetStartPositions()
 		{
 			var position = WPs[0].point + Vector3.up;
 			var rotation = WPs[0].rotation;
-			if(reverse)
+			if(Reverse)
 				rotation *= Quaternion.AngleAxis(180f, Vector3.up);
 			
-			for (int i = 0; i < startingPositons.Length; i++)
+			for (int i = 0; i < StartingPositions.Length; i++)
 			{
 				var pos = new Vector3(i % 2 == 0 ? 3f : -3f, 0f, i * 6f + 4f);
 				pos.z = -pos.z;
 				
-				startingPositons[i].SetTRS(position, rotation, Vector3.one);
-				startingPositons[i] *= Matrix4x4.Translate(pos);
+				StartingPositions[i].SetTRS(position, rotation, Vector3.one);
+				StartingPositions[i] *= Matrix4x4.Translate(pos);
 			}
 			
-			return startingPositons;
+			return StartingPositions;
 		}
 
-		public void DeleteLastWaypoint()
+		private static Vector3 FindNearestPointOnLine(Vector3 start, Vector3 end, Vector3 point)
 		{
-			WPs.RemoveAt(curWpID);
-			curWpID--;
+			var line = (end - start);
+			var len = line.magnitude;
+			line.Normalize();
+
+			var v = point - start;
+			var d = Vector3.Dot(v, line);
+			d = Mathf.Clamp(d, 0f, len);
+			return start + line * d;
 		}
 
-		public void DeleteAllWaypoints()
+		private void OnDrawGizmos()
 		{
-			WPs.Clear();
-			curWpID = 0;
-		}
-		
-		public Vector2 FindNearestPointOnLine(Vector2 origin, Vector2 end, Vector2 point)
-		{
-			//Get heading
-			Vector2 heading = (end - origin);
-			float magnitudeMax = heading.magnitude;
-			heading.Normalize();
+			StartingPositions = GetStartPositions();
 
-			//Do projection from the point but clamp it
-			Vector2 lhs = point - origin;
-			float dotP = Vector2.Dot(lhs, heading);
-			dotP = Mathf.Clamp(dotP, 0f, magnitudeMax);
-			return origin + heading * dotP;
-		}
-
-		void OnDrawGizmos()
-		{
-			var c = WaypointColour;
-
-			for (int i = 0; i < WPs.Count; i++)
-			{
-				Gizmos.matrix = Matrix4x4.TRS(WPs[i].point, WPs[i].rotation, Vector3.one);
-				var cube = new Vector3(WPs[i].WPwidth * 2f, 4f, 0.5f);
-				// Fill
-				c.a = 0.5f;
-				Gizmos.color = c;
-				Gizmos.DrawCube(Vector3.zero, cube);
-				// Outline
-				c.a = 1f;
-				Gizmos.color = c;
-				Gizmos.DrawWireCube(Vector3.zero, cube);
-			}
-
-			startingPositons = GetStartPositions();
-
-			c = Color.green;
+			var c = Color.green;
 			var startBox = new Vector3(2f, 0.1f, 6f);
-			foreach (var startPos in startingPositons)
+			foreach (var startPos in StartingPositions)
 			{
 				Gizmos.matrix = startPos;
 				c.a = 0.5f;

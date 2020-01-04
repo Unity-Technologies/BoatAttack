@@ -2,33 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "VolumeHolder", menuName = "Volume Holder", order = 0)]
 public class VolumeHolder : ScriptableObject
 {
     [SerializeField]
     public VolumeProfile[] _Volumes;
-    [SerializeField]
-    public List<int> qualityIndicies = new List<int>();
-    [SerializeField]
-    public List<int> qualityVolumeIndicies = new List<int>();
+    [FormerlySerializedAs("qualityIndicies")] [SerializeField]
+    public List<int> qualityIndices = new List<int>();
+    [FormerlySerializedAs("qualityVolumeIndicies")] [SerializeField]
+    public List<int> qualityVolumeIndices = new List<int>();
 
     public bool ContainsKey(int key)
     {
-        return qualityIndicies.Contains(key);
+        return qualityIndices.Contains(key);
     }
 
     public void Add(int key, int value)
     {
-        qualityIndicies.Add(key);
-        qualityVolumeIndicies.Add(value);
+        qualityIndices.Add(key);
+        qualityVolumeIndices.Add(value);
     }
 
     public void SetKey(int key, int value)
     {
-        if (qualityIndicies.Contains(key))
+        if (qualityIndices.Contains(key))
         {
-            qualityVolumeIndicies[qualityIndicies.IndexOf(key)] = value;
+            qualityVolumeIndices[qualityIndices.IndexOf(key)] = value;
         }
         else
         {
@@ -38,11 +39,11 @@ public class VolumeHolder : ScriptableObject
 
     public int GetValue(int key)
     {
-        if (qualityIndicies.Contains(key))
+        if (qualityIndices.Contains(key))
         {
-            return qualityVolumeIndicies[qualityIndicies.IndexOf(key)];
+            return qualityVolumeIndices[qualityIndices.IndexOf(key)];
         }
 
-        throw new Exception(message: $"{qualityIndicies} does not contain key {key}");
+        throw new Exception(message: $"{qualityIndices} does not contain key {key}");
     }
 }

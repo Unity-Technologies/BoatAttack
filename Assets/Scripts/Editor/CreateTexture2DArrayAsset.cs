@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using UnityEngine.Experimental.Rendering;
 
 /// <summary>
 /// Not ideal code, use at own peril...

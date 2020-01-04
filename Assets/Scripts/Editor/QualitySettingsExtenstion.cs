@@ -58,7 +58,7 @@ static class UniversalSettings
                 if (EditorGUI.EndChangeCheck() && displayAssetIndex != 0)
                 {
                     QualitySettings.SetQualityLevel(displayAssetIndex-1);
-                    DefaultVolume.instance.UpdateVolume();
+                    DefaultVolume.Instance.UpdateVolume();
                 }
 
                 if (displayAssetIndex != 0)
@@ -158,7 +158,7 @@ static class UniversalSettings
                 {
                     volHolder.Add(displayAssetIndex, volumeIndex[displayAssetIndex] - 1);
                 }
-                DefaultVolume.instance.UpdateVolume();
+                DefaultVolume.Instance.UpdateVolume();
                 EditorUtility.SetDirty(volHolder);
             }
 

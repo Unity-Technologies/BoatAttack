@@ -7,10 +7,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 7431560672982819930, guid: c50179c6ea05c4375a004a8bc86f9a07,
+    - target: {fileID: 278269480525394044, guid: c50179c6ea05c4375a004a8bc86f9a07,
         type: 3}
-      propertyPath: m_Name
-      value: Catergory_mainmenu_exit
+      propertyPath: m_text
+      value: Exit
+      objectReference: {fileID: 0}
+    - target: {fileID: 278269480525394044, guid: c50179c6ea05c4375a004a8bc86f9a07,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 278269480525394044, guid: c50179c6ea05c4375a004a8bc86f9a07,
+        type: 3}
+      propertyPath: m_textInfo.spaceCount
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2581284092046723976, guid: c50179c6ea05c4375a004a8bc86f9a07,
         type: 3}
@@ -112,20 +122,26 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 278269480525394044, guid: c50179c6ea05c4375a004a8bc86f9a07,
+    - target: {fileID: 6761081892819760560, guid: c50179c6ea05c4375a004a8bc86f9a07,
         type: 3}
-      propertyPath: m_text
-      value: Exit
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 3829577903138488074, guid: 7ad8269e6bbda4db3a76a6e41c11a5db,
+        type: 3}
+    - target: {fileID: 6761081892819760560, guid: c50179c6ea05c4375a004a8bc86f9a07,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ExitGame
       objectReference: {fileID: 0}
-    - target: {fileID: 278269480525394044, guid: c50179c6ea05c4375a004a8bc86f9a07,
+    - target: {fileID: 6761081892819760560, guid: c50179c6ea05c4375a004a8bc86f9a07,
         type: 3}
-      propertyPath: m_textInfo.characterCount
-      value: 4
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
-    - target: {fileID: 278269480525394044, guid: c50179c6ea05c4375a004a8bc86f9a07,
+    - target: {fileID: 7431560672982819930, guid: c50179c6ea05c4375a004a8bc86f9a07,
         type: 3}
-      propertyPath: m_textInfo.spaceCount
-      value: 0
+      propertyPath: m_Name
+      value: Catergory_mainmenu_exit
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c50179c6ea05c4375a004a8bc86f9a07, type: 3}

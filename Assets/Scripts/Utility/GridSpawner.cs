@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GridSpawner : MonoBehaviour
 {
@@ -19,8 +17,9 @@ public class GridSpawner : MonoBehaviour
 		{
 			for (int y = 0; y < rows; y++)
 			{
-				Vector3 pos = transform.position + new Vector3(xStep * x, 0f, yStep * -y);
-				Instantiate(spawnedObject, pos, transform.rotation, transform);
+				var t = transform;
+				var pos = t.position + new Vector3(xStep * x, 0f, yStep * -y);
+				Instantiate(spawnedObject, pos, t.rotation, t);
 			}
 		}
 	}

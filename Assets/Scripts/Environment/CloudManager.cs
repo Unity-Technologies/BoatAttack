@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Rendering;
 
 [ExecuteAlways]
@@ -9,7 +8,7 @@ public class CloudManager : MonoBehaviour
     public Material material;
     public LayerMask layer;
 
-    [NonSerialized] private Cloud[] clouds;
+    private Cloud[] _clouds;
     
     private void OnValidate()
     {
@@ -19,31 +18,29 @@ public class CloudManager : MonoBehaviour
     private void OnEnable()
     {
         RenderPipelineManager.beginCameraRendering += CloudAlign;
-        //PlanarReflections.beginPlanarReflections += CloudAlign;
         Init();
     }
 
-    void Init()
+    private void Init()
     {
         transform.localScale = Vector3.one * scale;
         
-        clouds = new Cloud[transform.childCount];
+        _clouds = new Cloud[transform.childCount];
 
-        for (int i = 0; i < clouds.Length; i++)
+        for (int i = 0; i < _clouds.Length; i++)
         {
             var cloud = new Cloud();
-            cloud.t = transform.GetChild(i);
-            cloud.matrix = cloud.t.localToWorldMatrix;
-            cloud.mesh = cloud.t.GetComponent<MeshFilter>().sharedMesh;
-            cloud.t.GetComponent<Renderer>().enabled = false;
-            clouds[i] = cloud;
+            cloud.T = transform.GetChild(i);
+            cloud.Matrix = cloud.T.localToWorldMatrix;
+            cloud.Mesh = cloud.T.GetComponent<MeshFilter>().sharedMesh;
+            cloud.T.GetComponent<Renderer>().enabled = false;
+            _clouds[i] = cloud;
         }
     }
 
     private void OnDisable()
     {
         RenderPipelineManager.beginCameraRendering -= CloudAlign;
-        //PlanarReflections.beginPlanarReflections -= CloudAlign;
     }
 
     void CloudAlign(ScriptableRenderContext context, Camera camera)
@@ -54,19 +51,12 @@ public class CloudManager : MonoBehaviour
             var position = t.position;
             position -= position * scale;
             transform.position = position;
-
-            //var cmd = CommandBufferPool.Get("clouds");
             
-            Debug.Log($"Rendering {clouds.Length} clouds for camera:{camera.name}");
-            foreach (var cloud in clouds)
+            Debug.Log($"Rendering {_clouds.Length} clouds for camera:{camera.name}");
+            foreach (var cloud in _clouds)
             {
-                //cmd.DrawMesh(cloud.mesh, cloud.t.localToWorldMatrix, material);
-                Graphics.DrawMesh(cloud.mesh, cloud.t.localToWorldMatrix, material, 8);
+                Graphics.DrawMesh(cloud.Mesh, cloud.T.localToWorldMatrix, material, 8);
             }
-            
-            //context.ExecuteCommandBuffer(cmd);
-            //context.Submit();
-            //CommandBufferPool.Release(cmd);
         }
     }
 
@@ -75,10 +65,10 @@ public class CloudManager : MonoBehaviour
         Gizmos.DrawWireSphere(Vector3.zero, 750f);
     }
 
-    public class Cloud
+    private class Cloud
     {
-        public Transform t;
-        public Matrix4x4 matrix;
-        public Mesh mesh;
+        public Transform T;
+        public Matrix4x4 Matrix;
+        public Mesh Mesh;
     }
 }

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3829577903138488073}
   - component: {fileID: 3829577903138488074}
+  - component: {fileID: 8490184438857729681}
   - component: {fileID: 7312333174115242941}
   m_Layer: 0
   m_Name: AppManager
@@ -49,6 +50,61 @@ MonoBehaviour:
   axisBias: 0.5
   minScale: 0.5
   targetFramerate: 0
+  speedFormat: 0
+--- !u!114 &8490184438857729681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3829577903138488069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce2d6128fa5c04c7e84e7978ef8b37a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  autoStart: 1
+  raceData:
+    game: 0
+    type: 0
+    boatCount: 4
+    level: 
+    laps: 3
+    reversed: 0
+    boats:
+    - boatName: Player 1
+      boatPrefab:
+        m_AssetGUID: 405c4bc591de844a3a100e1538790229
+      livery:
+        PrimaryColor: {r: 0.78823537, g: 0.19215688, b: 0.15294118, a: 0}
+        TrimColor: {r: 0.8352942, g: 0.8352942, b: 0.8352942, a: 0}
+      Human: 0
+    - boatName: Player 2
+      boatPrefab:
+        m_AssetGUID: 70d78230a0527e74dabc4f14906eef98
+      livery:
+        PrimaryColor: {r: 0.2901961, g: 0.6156863, b: 0.19215688, a: 0}
+        TrimColor: {r: 0.57254905, g: 0.20000002, b: 0.86274517, a: 0}
+      Human: 0
+    - boatName: Player 3
+      boatPrefab:
+        m_AssetGUID: 405c4bc591de844a3a100e1538790229
+      livery:
+        PrimaryColor: {r: 0.57254905, g: 0.47450984, b: 0.3372549, a: 0}
+        TrimColor: {r: 0.16078432, g: 0.16078432, b: 0.16078432, a: 0}
+      Human: 0
+    - boatName: Player 4
+      boatPrefab:
+        m_AssetGUID: 70d78230a0527e74dabc4f14906eef98
+      livery:
+        PrimaryColor: {r: 0.8745099, g: 0.7607844, b: 0.27058825, a: 0}
+        TrimColor: {r: 0.03529412, g: 0.10588236, b: 0.6039216, a: 0}
+      Human: 0
+  boats:
+  - m_AssetGUID: 405c4bc591de844a3a100e1538790229
+  - m_AssetGUID: 70d78230a0527e74dabc4f14906eef98
+  raceUiPrefab:
+    m_AssetGUID: 0482dcbdb79ee4d7eb43a774a90bda4e
 --- !u!114 &7312333174115242941
 MonoBehaviour:
   m_ObjectHideFlags: 0

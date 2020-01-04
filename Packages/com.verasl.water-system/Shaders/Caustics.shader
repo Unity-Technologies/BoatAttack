@@ -5,8 +5,8 @@
         //Vector1_F3303B3C("Speed", Float) = 0.5
         _Size("Size", Float) = 0.5
         [NoScaleOffset]_CausticMap("Caustics", 2D) = "white" {}
-        _WaterLevel("WaterLevel", Float) = -0.25
-        _BlendDistance("BlendDistance", Float) = 0.1
+        _WaterLevel("WaterLevel", Float) = 0
+        _BlendDistance("BlendDistance", Float) = 3
         //Vector1_CD857B77("CausticsRGB Split", Float) = 2
         
         //Color blends
@@ -22,6 +22,7 @@
         Pass
         {
             Blend [_SrcBlend] [_DstBlend], One Zero
+            
             HLSLPROGRAM
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             
@@ -83,8 +84,9 @@
                 float4 screenPos = input.screenpos / input.screenpos.w;
             
                 real depth = SAMPLE_DEPTH_TEXTURE( _CameraDepthTexture, sampler_CameraDepthTexture, screenPos.xy);
-                
+
                 float3 worldPos = ReconstructWorldPos(screenPos.xy, depth);
+
                 float2 uv = worldPos.xz * 0.025 + _Time.x * 0.25;
                 float waveOffset = SAMPLE_TEXTURE2D(_CausticMap, sampler_CausticMap, uv).w - 0.5;
                 
@@ -92,15 +94,15 @@
                 
                 half upperMask = saturate(-worldPos.y + _WaterLevel);
                 half lowerMask = saturate((worldPos.y - _WaterLevel) / _BlendDistance + _BlendDistance);
-                
-                float3 caustics = SAMPLE_TEXTURE2D_LOD(_CausticMap, sampler_CausticMap, causticUV, abs(worldPos.y - _WaterLevel) * 5 / _BlendDistance).bbb;
 
+                float3 caustics = SAMPLE_TEXTURE2D_LOD(_CausticMap, sampler_CausticMap, causticUV, abs(worldPos.y - _WaterLevel) * 5 / _BlendDistance).bbb;
+                //return real4(caustics, 1);
 #ifdef _DEBUG
-                return half4(caustics * min(upperMask, lowerMask), 1);
+                return real4(caustics * min(upperMask, lowerMask), 1);
 #endif
                 caustics *= min(upperMask, lowerMask) * 2;
                 
-                return half4(caustics + 1, 1);
+                return real4(caustics + 1, 1);
             }
             ENDHLSL
         }

@@ -4,6 +4,7 @@
 	{
 		_BumpScale("Detail Wave Amount", Range(0, 2)) = 0.2//fine detail multiplier
 		_DitherPattern ("Dithering Pattern", 2D) = "bump" {}
+		[Toggle(_STATIC_SHADER)] _Static ("Static", Float) = 0
 	}
 	SubShader
 	{
@@ -20,7 +21,7 @@
 			/////////////////SHADER FEATURES//////////////////
 			#pragma shader_feature _REFLECTION_CUBEMAP _REFLECTION_PROBES _REFLECTION_PLANARREFLECTION
 			#pragma multi_compile _ USE_STRUCTURED_BUFFER
-			#pragma shader_feature _ _STATIC_WATER
+			#pragma shader_feature _ _STATIC_SHADER
 						
 			// -------------------------------------
             // Lightweight Pipeline keywords

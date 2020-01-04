@@ -12,7 +12,7 @@
         Tags
         {
             "RenderPipeline"="UniversalPipeline"
-            "RenderType"="Transparent"
+            "RenderType"="Transparent-10"
         }
         
         Pass
@@ -76,7 +76,8 @@
                 
                 // Gradient
                 half rotate = _Rotation * 3.1425;
-                half gradient = dot(((input.screenPos.xy / input.screenPos.w) * 2 - 1) + half2(_OffsetX, _OffsetY), half2(sin(rotate), cos(rotate)));
+                half2 gradientCoords = input.uv; // ((input.screenPos.xy / input.screenPos.w) * 2 - 1;
+                half gradient = dot(gradientCoords + half2(_OffsetX, _OffsetY), half2(sin(rotate), cos(rotate)));
                 gradient = Remap(gradient, float2(-_Width, _Width), float2(0, 1));
                 
                 half base = 0.5;

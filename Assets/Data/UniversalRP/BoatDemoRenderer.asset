@@ -21,6 +21,7 @@ MonoBehaviour:
     screenSpaceShadowPS: {fileID: 4800000, guid: 0f854b35a0cf61a429bd5dcfea30eddd,
       type: 3}
     samplingPS: {fileID: 4800000, guid: 04c410c9937594faa893a11dceb85f7e, type: 3}
+    fallbackErrorPS: {fileID: 4800000, guid: e6e9a19c3678ded42a3bc431ebef7dbd, type: 3}
   m_OpaqueLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -44,9 +45,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: adbe377f4f72c497faee64bc3f0580b9, type: 3}
-  m_Name: WaterSystem
+  m_Name: WaterSystemPass
   m_EditorClassIdentifier: 
   settings:
-    causticMaterial: {fileID: 2100000, guid: 7e6ea000873112847bd146ddb78ac67d, type: 2}
-    mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+    causticScale: 0.25
     debug: 0
+  causticsMaterial: {fileID: 0}

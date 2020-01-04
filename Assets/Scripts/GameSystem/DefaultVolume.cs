@@ -7,10 +7,10 @@ using UnityEditor;
 
 public class DefaultVolume : MonoBehaviour
 {
-    public static DefaultVolume instance;
-    private Volume volBaseComponent;
-    private Volume volQualityComponent;
-    private VolumeHolder volHolder;
+    public static DefaultVolume Instance;
+    private Volume _volBaseComponent;
+    private Volume _volQualityComponent;
+    private VolumeHolder _volHolder;
     
     private void OnEnable()
     {
@@ -19,62 +19,57 @@ public class DefaultVolume : MonoBehaviour
 
     private void OnValidate()
     {
-        if (!instance)
-            instance = this;
+        if (!Instance)
+            Instance = this;
         gameObject.hideFlags = HideFlags.HideAndDontSave;
-        if(!volBaseComponent)
-            volBaseComponent = gameObject.AddComponent<Volume>();
-        volBaseComponent.priority = -100;
-        if(!volQualityComponent)
-            volQualityComponent = gameObject.AddComponent<Volume>();
-        volQualityComponent.priority = 100;
-        if(!volHolder)
-            volHolder = Resources.Load<VolumeHolder>("VolumeHolder");
+        if(!_volBaseComponent)
+            _volBaseComponent = gameObject.AddComponent<Volume>();
+        _volBaseComponent.priority = -100;
+        if(!_volQualityComponent)
+            _volQualityComponent = gameObject.AddComponent<Volume>();
+        _volQualityComponent.priority = 100;
+        if(!_volHolder)
+            _volHolder = Resources.Load<VolumeHolder>("VolumeHolder");
 
         UpdateVolume();
     }
 
     public void UpdateVolume()
     {
-        if (volHolder)
+        if (_volHolder)
         {
             //Setup Base Vol if needed
-            var baseVolIndex = volHolder.GetValue(0);
+            var baseVolIndex = _volHolder.GetValue(0);
             if (baseVolIndex >= 0)
             {
-                var vol = volHolder._Volumes[baseVolIndex];
-                volBaseComponent.sharedProfile = vol;
+                var vol = _volHolder._Volumes[baseVolIndex];
+                _volBaseComponent.sharedProfile = vol;
             }
             else
             {
-                volBaseComponent.sharedProfile = null;
+                _volBaseComponent.sharedProfile = null;
             }
 
             //Setup Quality Vol if needed
-            var qualityVolIndex = volHolder.GetValue(QualitySettings.GetQualityLevel() + 1);
+            var qualityVolIndex = _volHolder.GetValue(QualitySettings.GetQualityLevel() + 1);
             if (qualityVolIndex >= 0)
             {
-                var vol = volHolder._Volumes[qualityVolIndex];
-                volQualityComponent.sharedProfile = vol;
+                var vol = _volHolder._Volumes[qualityVolIndex];
+                _volQualityComponent.sharedProfile = vol;
             }
             else
             {
-                volQualityComponent.sharedProfile = null;
+                _volQualityComponent.sharedProfile = null;
             }
         }
 
-        if (UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
+        if (UniversalRenderPipeline.asset.debugLevel == PipelineDebugLevel.Disabled) return;
+        if (_volBaseComponent.sharedProfile != null && _volQualityComponent.sharedProfile != null)
         {
-            string vols = "";
-            foreach (var vol in VolumeManager.instance.stack.components)
-            {
-                vols += $"{vol.Key.Name}\n";
-            }
-            Debug.Log($"Updated volumes:\n" +
-                      $"    Base Volume : {volBaseComponent.sharedProfile?.name}\n" +
-                      $"    Quality Volume : {volQualityComponent.sharedProfile?.name}\n" +
-                      $"Total Volume Stack is now:\n" +
-                      $"{vols}");
+            Debug.Log(message: $"Updated volumes:\n" +
+                               $"    Base Volume : {_volBaseComponent.sharedProfile.name}\n" +
+                               $"    Quality Volume : {_volQualityComponent.sharedProfile.name}\n" +
+                               $"Total Volume Stack is now:\n");
         }
     }
 }
@@ -83,19 +78,18 @@ public class DefaultVolume : MonoBehaviour
 [InitializeOnLoad]
 public class StartupVolume
 {
-    private const string goName = "[Volume Manager]";
+    private const string GoName = "[Volume Manager]";
 
     static StartupVolume()
     {
-        var obj = GameObject.Find(goName)?.GetComponent<DefaultVolume>();
+        var obj = GameObject.Find(GoName)?.GetComponent<DefaultVolume>();
         if (obj != null)
         {
             return;
         }
 
-        var go = new GameObject { name = goName };
-        var volMan = go.AddComponent<DefaultVolume>();
-        obj = volMan;
+        var go = new GameObject { name = GoName };
+        go.AddComponent<DefaultVolume>();
     }
 }
 #endif

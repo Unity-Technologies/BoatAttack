@@ -10,6 +10,7 @@ Material:
   m_Name: Sea
   m_Shader: {fileID: 4800000, guid: a94edd303261140cf9e6ce8c90d7a99a, type: 3}
   m_ShaderKeywords: _GLOSSINESS_FROM_BASE_ALPHA _REFLECTION_PLANARREFLECTION _SPECULAR_COLOR
+    _STATIC_WATER
   m_LightmapFlags: 6
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
@@ -74,6 +75,7 @@ Material:
     - _SpecSource: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _Static: 1
     - _Surface: 0
     - _TessellationEdgeLength: 50
     - _UVSec: 0
