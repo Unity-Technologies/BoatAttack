@@ -12,15 +12,18 @@ namespace BoatAttack
         private SerializedProperty _waypoints;
         private ReorderableList _waypointList;
         private int _selectedWp = -1;
-        private const bool WpHeaderBool = false;
+        private bool _wpHeaderBool;
 
         private void OnEnable()
         {
+            if(_wpGroup == null)
+                _wpGroup = (WaypointGroup) target;
+
             _waypoints = serializedObject.FindProperty("WPs");
             _waypointList = new ReorderableList(serializedObject, _waypoints)
             {
                 drawElementCallback = DrawElementCallback,
-                drawHeaderCallback = rect => { EditorGUI.LabelField(rect, "Way Points"); },
+                drawHeaderCallback = rect => { EditorGUI.LabelField(rect, "Waypoints"); },
                 onSelectCallback = list => { _selectedWp = list.index; },
                 elementHeightCallback = index => EditorGUI.GetPropertyHeight(_waypoints.GetArrayElementAtIndex(index))
             };
@@ -35,24 +38,37 @@ namespace BoatAttack
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-            
+
             DrawPropertiesExcluding(serializedObject, "WPs");
-            
-            if(WpHeaderBool == EditorGUILayout.BeginFoldoutHeaderGroup(WpHeaderBool, "Waypoints"))
+
+            EditorGUI.BeginChangeCheck();
+            _wpHeaderBool = EditorGUILayout.BeginFoldoutHeaderGroup(_wpHeaderBool, "Waypoint List");
+            if (_wpHeaderBool)
+            {
+                EditorGUILayout.Space();
                 _waypointList.DoLayoutList();
+            }
             EditorGUILayout.EndFoldoutHeaderGroup();
-            
+
+            if (EditorGUI.EndChangeCheck())
+            {
+                var len = _wpGroup.CalculateTrackDistance();
+                _wpGroup.length = len;
+            }
             serializedObject.ApplyModifiedProperties();
         }
 
         private void OnSceneGUI()
         {
-            _wpGroup = (WaypointGroup) target;
+            if(_wpGroup == null)
+                _wpGroup = (WaypointGroup) target;
 
-            for (int i = 0; i < _wpGroup.WPs.Count; i++)
+            for (var i = 0; i < _wpGroup.WPs.Count; i++)
             {
-                WaypointGroup.Waypoint wp = _wpGroup.WPs[i];
+                var wp = _wpGroup.WPs[i];
                 Handles.color = _wpGroup.waypointColour;
+
+                #region Control
 
                 if (_selectedWp == i)
                 {
@@ -92,33 +108,66 @@ namespace BoatAttack
                         }
                     }
                 }
-                
-                var a = wp;
-                var b = i != _wpGroup.WPs.Count - 1 ? _wpGroup.WPs[i + 1] : _wpGroup.WPs[0];
 
-                Handles.DrawDottedLine(a.point, b.point, 4f);
+                #endregion
 
-                var aMatrix = Matrix4x4.Rotate(a.rotation);
-                var aW = Vector3.right * a.width;
-                Vector3 a1 = aMatrix * aW;
-                Vector3 a2 = aMatrix * -aW;
-                
-                var bMatrix = Matrix4x4.Rotate(b.rotation);
-                var bW = Vector3.right * b.width;
-                Vector3 b1 = bMatrix * bW;
-                Vector3 b2 = bMatrix * -bW;
-                
-                Handles.DrawLine(a.point + a1, b.point + b1);
-                Handles.DrawLine(a.point + a2, b.point + b2);
+                #region Visualization
 
-                var col = _wpGroup.waypointColour;
-                col.a = 0.05f;
-                Handles.color = col;
-                Handles.DrawAAConvexPolygon(a.point + a1,
-                    a.point + a2,
-                    b.point + b2,
-                    b.point + b1);
+                { // Draw lines
+                    var a = wp;
+                    var b = i != _wpGroup.WPs.Count - 1 ? _wpGroup.WPs[i + 1] : _wpGroup.WPs[0];
+
+                    Handles.DrawDottedLine(a.point, b.point, 4f);
+
+                    var aMatrix = Matrix4x4.Rotate(a.rotation);
+                    var aW = Vector3.right * a.width;
+                    Vector3 a1 = aMatrix * aW;
+                    Vector3 a2 = aMatrix * -aW;
+
+                    var bMatrix = Matrix4x4.Rotate(b.rotation);
+                    var bW = Vector3.right * b.width;
+                    Vector3 b1 = bMatrix * bW;
+                    Vector3 b2 = bMatrix * -bW;
+
+                    Handles.DrawLine(a.point + a1, b.point + b1);
+                    Handles.DrawLine(a.point + a2, b.point + b2);
+
+                    var col = _wpGroup.waypointColour;
+                    col.a = 0.05f;
+                    Handles.color = col;
+                    Handles.DrawAAConvexPolygon(a.point + a1,
+                        a.point + a2,
+                        b.point + b2,
+                        b.point + b1);
+                }
+
+                { // Draw points
+                    var p = wp.point;
+                    var r = wp.rotation;
+                    var w = wp.width;
+
+                    if (i == 0) // Draw Start/Finish line
+                    {
+                        Handles.color = new Color(0f, 1f, 0f, 0.5f);
+                    }
+                    else if (wp.isCheckpoint) // Draw Checkpoints
+                    {
+                        Handles.color = new Color(0f, 0f, 1f, 0.5f);
+                    }
+                    DrawRectangle(p, r, new Vector2(w, 1f));
+                }
+
+                #endregion
+
             }
+        }
+
+        private void DrawRectangle(Vector3 center, Quaternion rotation, Vector2 size)
+        {
+            var m = Matrix4x4.Rotate(rotation);
+            Vector3 a = m * new Vector3(size.x, 0f, size.y);
+            Vector3 b = m * new Vector3(size.x, 0f, -size.y);
+            Handles.DrawAAConvexPolygon(center + a, center + b, center - a, center - b);
         }
     }
 }

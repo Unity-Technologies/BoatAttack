@@ -1,4 +1,5 @@
-﻿using Cinemachine;
+﻿using System;
+using Cinemachine;
 using UnityEngine;
 
 namespace BoatAttack
@@ -6,17 +7,32 @@ namespace BoatAttack
     public class ReplayCamera : MonoBehaviour
     {
         public static ReplayCamera Instance;
+        private static bool _spectatorEnabled;
+        private static BoatData _focusedBoat;
+        private Transform _focusPoint;
         public CinemachineVirtualCamera droneCamera;
+        //public CinemachineVirtualCamera[] levelCameras;
+        public CinemachineClearShot clearShot;
 
         private void OnEnable()
         {
             Instance = this;
         }
 
-        public void EnableSpectatorMode(GameObject focus)
+        private void LateUpdate()
         {
-            SetReplayTarget(focus);
-            droneCamera.Priority = 100;
+            if (_spectatorEnabled && _focusedBoat == null)
+            {
+                _focusedBoat = RaceManager.RaceData.boats[0];
+                _focusPoint = _focusedBoat.BoatObject.transform;
+                SetReplayTarget(_focusPoint);
+            }
+        }
+
+        public void EnableSpectatorMode()
+        {
+            _spectatorEnabled = true;
+            //droneCamera.Priority = 100;
         }
 
         public void DisableSpectatorMode()
@@ -31,8 +47,16 @@ namespace BoatAttack
 
         private void SetReplayTarget(Transform target)
         {
-            droneCamera.Follow = target;
-            droneCamera.LookAt = target;
+            _focusPoint = target;
+            
+            if (clearShot)
+            {
+                clearShot.Priority = 100;
+                clearShot.LookAt = _focusPoint;
+            }
+            
+            droneCamera.Follow = _focusPoint;
+            droneCamera.LookAt = _focusPoint;
         }
     }
 }

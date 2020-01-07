@@ -87,87 +87,104 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 647b62ae31d264ee5a0839e89dcad48f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WaypointGroupID: 0
-  WaypointColour: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  Loop: 1
-  NextWPradius: 5
+  waypointGroupId: 0
+  waypointColour: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  loop: 1
   raceStarted: 0
   WPs:
   - point: {x: -76.22, y: 0, z: -30.11}
-    WPwidth: 6.4
+    width: 6.4
     rotation: {x: 0, y: 0.27563736, z: 0, w: -0.9612617}
-    WPnumber: 0
+    index: 0
     isCheckpoint: 0
+    normalizedDistance: 0
   - point: {x: -93.66, y: 0, z: -0.15}
-    WPwidth: 7.32
+    width: 7.32
     rotation: {x: 0, y: 0.21643972, z: 0, w: -0.976296}
-    WPnumber: 1
+    index: 0
     isCheckpoint: 0
+    normalizedDistance: 0
   - point: {x: -106.82, y: 0, z: 40.37}
-    WPwidth: 6.4
+    width: 6.4
     rotation: {x: 0, y: 0.06975647, z: 0, w: 0.9975641}
-    WPnumber: 2
-    isCheckpoint: 0
+    index: 0
+    isCheckpoint: 1
+    normalizedDistance: 0
   - point: {x: -88.95, y: 0, z: 61.94}
-    WPwidth: 7.33
+    width: 7.33
     rotation: {x: 0, y: 0.6427876, z: 0, w: 0.76604444}
-    WPnumber: 3
+    index: 0
     isCheckpoint: 0
+    normalizedDistance: 0
   - point: {x: -60, y: 0, z: 50.22}
-    WPwidth: 6.514844
+    width: 6.514844
     rotation: {x: 0, y: 0.9063078, z: 0, w: 0.42261824}
-    WPnumber: 4
+    index: 0
     isCheckpoint: 0
+    normalizedDistance: 0
   - point: {x: -34.7, y: 0, z: 34.7}
-    WPwidth: 4.8
+    width: 4.8
     rotation: {x: 0, y: 0.6691306, z: 0, w: 0.7431448}
-    WPnumber: 5
-    isCheckpoint: 0
+    index: 0
+    isCheckpoint: 1
+    normalizedDistance: 0
   - point: {x: -7.98, y: 0, z: 54.16}
-    WPwidth: 5.6619344
+    width: 5.6619344
     rotation: {x: 0, y: 0.58070296, z: 0, w: 0.8141155}
-    WPnumber: 6
+    index: 0
     isCheckpoint: 0
+    normalizedDistance: 0
   - point: {x: 18.6, y: 0, z: 50.95}
-    WPwidth: 6.995
+    width: 6.995
     rotation: {x: 0, y: 0.8241262, z: 0, w: 0.56640625}
-    WPnumber: 7
+    index: 0
     isCheckpoint: 0
+    normalizedDistance: 0
   - point: {x: 47.9, y: 0, z: 33.3}
-    WPwidth: 7.15
+    width: 7.15
     rotation: {x: 0, y: 0.8870109, z: 0, w: 0.4617486}
-    WPnumber: 8
+    index: 0
     isCheckpoint: 0
+    normalizedDistance: 0
   - point: {x: 91.38, y: 0, z: 1.1}
-    WPwidth: 10.37
+    width: 10.37
     rotation: {x: 0, y: 0.9099613, z: 0, w: 0.41469327}
-    WPnumber: 9
-    isCheckpoint: 0
+    index: 0
+    isCheckpoint: 1
+    normalizedDistance: 0
   - point: {x: 121.34, y: 0, z: -31.15}
-    WPwidth: 3.75
+    width: 3.75
     rotation: {x: 0, y: 0.99026805, z: 0, w: -0.13917308}
-    WPnumber: 10
+    index: 0
     isCheckpoint: 0
+    normalizedDistance: 0
   - point: {x: 71.1, y: 0, z: -50.7}
-    WPwidth: 9.15
+    width: 9.15
     rotation: {x: 0, y: 0.7986355, z: 0, w: -0.6018151}
-    WPnumber: 11
+    index: 0
     isCheckpoint: 0
+    normalizedDistance: 0
   - point: {x: 27.2, y: 0, z: -62.7}
-    WPwidth: 7.24
+    width: 7.24
     rotation: {x: 0, y: 0.7431448, z: 0, w: -0.6691307}
-    WPnumber: 12
-    isCheckpoint: 0
+    index: 0
+    isCheckpoint: 1
+    normalizedDistance: 0
   - point: {x: -18.4, y: 0, z: -64.11}
-    WPwidth: 5.635
+    width: 5.635
     rotation: {x: 0, y: 0.64278764, z: 0, w: -0.76604444}
-    WPnumber: 13
+    index: 0
     isCheckpoint: 0
+    normalizedDistance: 0
   - point: {x: -53.78, y: 0, z: -52.76}
-    WPwidth: 5.235
+    width: 5.235
     rotation: {x: 0, y: 0.46174866, z: 0, w: -0.8870108}
-    WPnumber: 14
+    index: 0
     isCheckpoint: 0
+    normalizedDistance: 0
+  length: 540.5497
+  checkpoint:
+    m_AssetGUID: 5b930c10a697b4d8c9c8084e03800523
 --- !u!1 &5076232291228677030
 GameObject:
   m_ObjectHideFlags: 0

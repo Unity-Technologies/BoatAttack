@@ -7,6 +7,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
 using BoatAttack.UI;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace BoatAttack
@@ -22,7 +23,7 @@ namespace BoatAttack
             Spectator = 3,
             Benchmark = 4
         }
-        
+
         [Serializable]
         public enum RaceType
         {
@@ -43,106 +44,142 @@ namespace BoatAttack
             public string level;
             public int laps = 3;
             public bool reversed;
-            
+
             //Competitors
             public List<BoatData> boats;
         }
 
         public static RaceManager Instance;
-        private bool _raceStarted;
-		public Race raceData = new Race();
+        [NonSerialized] public static bool RaceStarted;
+        public static Race RaceData;
+		[FormerlySerializedAs("raceData")]
+        public Race demoRaceData = new Race();
+        [NonSerialized] public static float RaceTime;
         private readonly Dictionary<int, float> _boatTimes = new Dictionary<int, float>();
-        
+
+        public static void BoatFinished(int player)
+        {
+            Debug.Log($"Player {player + 1} just finished.");
+
+            switch (RaceData.game)
+            {
+                case GameType.Singleplayer:
+                    if (player == 0)
+                    {
+                        var raceUi = RaceData.boats[0].Boat.RaceUi;
+                        raceUi.SetGameplayUi(false);
+                        raceUi.SetGameStats(true);
+                        ReplayCamera.Instance.EnableSpectatorMode();
+                    }
+                    break;
+                case GameType.LocalMultiplayer:
+                    break;
+                case GameType.Multiplayer:
+                    break;
+                case GameType.Spectator:
+                    break;
+                case GameType.Benchmark:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         [Header("Assets")] public AssetReference[] boats;
         public AssetReference raceUiPrefab;
-        
+
         private void OnEnable()
         {
             Instance = this;
+            RaceData = demoRaceData;
             SceneManager.sceneLoaded += SetupRace;
             SetupRace(SceneManager.GetActiveScene(), LoadSceneMode.Single);
         }
 
-        private void SetupRace(Scene scene, LoadSceneMode mode)
+        private static void SetupRace(Scene scene, LoadSceneMode mode)
         {
+            WaypointGroup.Instance.Setup(RaceData.reversed); // setup waypoints
+            var boatSetup = Instance.StartCoroutine(CreateBoats()); // spawn boats
+            Coroutine uiSetup = null;
+
+            switch (RaceData.game)
+            {
+                case GameType.Singleplayer:
+                    uiSetup = Instance.StartCoroutine(CreatePlayerUi(0));
+                    break;
+                case GameType.LocalMultiplayer:
+                    break;
+                case GameType.Multiplayer:
+                    break;
+                case GameType.Spectator:
+                    break;
+                case GameType.Benchmark:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
             if (scene.name.Contains("level") || scene.name.Contains("demo"))
             {
-                StartCoroutine(BeginRace()); // TODO need to make much better with race intro etc
+                Instance.StartCoroutine(BeginRace( new []{boatSetup, uiSetup})); // TODO need to make much better with race intro etc
             }
         }
-        
-        public void SetupGame(GameType gameType)
+
+        public static void SetGameType(GameType gameType)
         {
-            raceData.game = gameType;
-            raceData.boats = new List<BoatData>();
-            Debug.Log($"Game type set to:{raceData.game}");
-            switch (raceData.game)
+            RaceData.game = gameType;
+            RaceData.boats = new List<BoatData>();
+            Debug.Log($"Game type set to:{RaceData.game}");
+            switch (RaceData.game)
             {
                 case GameType.Singleplayer:
                     BoatData b = new BoatData();
                     b.human = false; //true; // TODO for testing
-                    raceData.boats.Add(b); // add player boat
-                    GenerateRandomBoats(raceData.boatCount - 1); // add random AI
+                    RaceData.boats.Add(b); // add player boat
+                    GenerateRandomBoats(RaceData.boatCount - 1); // add random AI
                     break;
                 case GameType.Spectator:
-                    GenerateRandomBoats(raceData.boatCount);
+                    GenerateRandomBoats(RaceData.boatCount);
                     break;
             }
         }
 
-        public void SetLevel(int levelIndex)
+        public static void SetLevel(int levelIndex)
         {
-            raceData.level = ConstantData.GetLevelName(levelIndex);
-            Debug.Log($"Level set to:{levelIndex} with path:{raceData.level}");
+            RaceData.level = ConstantData.GetLevelName(levelIndex);
+            Debug.Log($"Level set to:{levelIndex} with path:{RaceData.level}");
         }
 
-        public void SetHull(int player, int hull)
+        public static void SetHull(int player, int hull)
         {
-            raceData.boats[player].boatPrefab = boats[hull];
+            RaceData.boats[player].boatPrefab = Instance.boats[hull];
         }
 
-        public void LoadGame()
+        public static void LoadGame()
         {
             Application.backgroundLoadingPriority = ThreadPriority.Low;
-            SceneManager.LoadSceneAsync(raceData.level);
+            SceneManager.LoadSceneAsync(RaceData.level);
         }
 
-        private IEnumerator BeginRace()
+        private static IEnumerator BeginRace(IEnumerable<Coroutine> loading)
         {
-            yield return new WaitForSeconds(1f); // TODO should not wait here
-            
-            WaypointGroup.Instance.Reverse = raceData.reversed;
-            WaypointGroup.Instance.Setup();
-            
-            yield return StartCoroutine(CreateBoats());
-
-            switch (raceData.game)
+            foreach (var load in loading)
             {
-                case GameType.Singleplayer:
-                    // Setup race UI
-                    var uiLoading = raceUiPrefab.InstantiateAsync();
-                    yield return uiLoading;
-                    if (uiLoading.Result.TryGetComponent(out RaceUI uiComponent))
-                    {
-                        raceData.boats[0].Boat.RaceUi = uiComponent;
-                        uiComponent.Setup(0);
-                    }
-                    // Setup race camera
-                    Camera.main.cullingMask |= 1 << LayerMask.NameToLayer("Player1");
-                    break;
-                case GameType.Spectator:
-                    ReplayCamera.Instance.EnableSpectatorMode(raceData.boats[0].BoatObject);
-                    break;
+                yield return load;
             }
 
-            _raceStarted = true;
+            if(RaceData.game == GameType.Spectator) ReplayCamera.Instance.EnableSpectatorMode();
+
+            yield return new WaitForSeconds(5f);
+
+            RaceStarted = true;
         }
 
-        void GenerateRandomBoats(int count, bool ai = true)
+        private static void GenerateRandomBoats(int count, bool ai = true)
         {
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
-                BoatData boat = new BoatData();
+                var boat = new BoatData();
                 Random.InitState(ConstantData.SeedNow+i);
                 boat.boatName = ConstantData.AiNames[Random.Range(0, ConstantData.AiNames.Length)];
                 BoatLivery livery = new BoatLivery
@@ -151,64 +188,86 @@ namespace BoatAttack
                     trimColor = ConstantData.GetRandomPaletteColor
                 };
                 boat.livery = livery;
-                boat.boatPrefab = boats[Random.Range(0, boats.Length)];
+                boat.boatPrefab = Instance.boats[Random.Range(0, Instance.boats.Length)];
 
                 if (ai)
                     boat.human = false;
 
-                raceData.boats.Add(boat);
+                RaceData.boats.Add(boat);
             }
         }
 
-        void Update()
+        void LateUpdate()
         {
-            if (_raceStarted)
+            if (RaceStarted)
             {
-                for (int i = 0; i < raceData.boats.Count; i++)
+                for (int i = 0; i < RaceData.boats.Count; i++)
                 {
-                    var boat = raceData.boats[i].Boat;
-                    _boatTimes[i] = boat.LapPercentage + boat.LapCount;
+                    var boat = RaceData.boats[i].Boat;
+                    if (boat.MatchComplete)
+                    {
+                        _boatTimes[i] = boat.SplitTimes.Last();
+                    }
+                    else
+                    {
+                        _boatTimes[i] = boat.LapPercentage + boat.LapCount;
+                    }
                 }
                 var mySortedList = _boatTimes.OrderBy(d => d.Value).ToList();
                 mySortedList.Reverse();
                 var place = 1;
                 foreach (var index in mySortedList)
                 {
-                    raceData.boats[index.Key].Boat.Place = place;
+                    RaceData.boats[index.Key].Boat.Place = place;
                     place++;
                 }
+
+                RaceTime += Time.deltaTime;
             }
         }
 
-        public int GetLapCount()
+        public static int GetLapCount()
         {
-            if (raceData != null && raceData.type == RaceType.Race)
+            if (RaceData != null && RaceData.type == RaceType.Race)
             {
-                return raceData.laps;
+                return RaceData.laps;
             }
             return -1;
         }
 
-        private IEnumerator CreateBoats()
+        private static IEnumerator CreateBoats()
         {
-            for (int i = 0; i < raceData.boats.Count; i++)
+            for (int i = 0; i < RaceData.boats.Count; i++)
             {
-                var boat = raceData.boats[i]; // boat to setup
-                
+                var boat = RaceData.boats[i]; // boat to setup
+
                 // Load prefab
                 var startingPosition = WaypointGroup.Instance.StartingPositions[i];
                 AsyncOperationHandle<GameObject> boatLoading = Addressables.InstantiateAsync(boat.boatPrefab, startingPosition.GetColumn(3),
                     Quaternion.LookRotation(startingPosition.GetColumn(2)));
-                
+
                 yield return boatLoading; // wait for boat asset to load
-                
+
                 boatLoading.Result.name = boat.boatName; // set the name of the boat
                 boatLoading.Result.TryGetComponent<Boat>(out var boatController);
                 boat.SetController(boatLoading.Result, boatController);
                 boatController.Setup(i + 1, boat.human, boat.livery);
-                _boatTimes.Add(i, 0f);
+                Instance._boatTimes.Add(i, 0f);
             }
-            
+
+        }
+
+        private static IEnumerator CreatePlayerUi(int player)
+        {
+            var uiLoading = Instance.raceUiPrefab.InstantiateAsync();
+            yield return uiLoading;
+            if (uiLoading.Result.TryGetComponent(out RaceUI uiComponent))
+            {
+                RaceData.boats[player].Boat.RaceUi = uiComponent;
+                uiComponent.Setup(player);
+            }
+            // Setup race camera
+            Camera.main.cullingMask |= 1 << LayerMask.NameToLayer($"Player{player + 1}");
         }
     }
 }

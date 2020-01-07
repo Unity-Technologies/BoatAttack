@@ -15,7 +15,15 @@ namespace BoatAttack.UI
         public TextMeshProUGUI timeLap;
         public TextMeshProUGUI speedText;
         public TextMeshProUGUI speedFormatText;
-        public AssetReference playerMarkerPrefab;
+
+        public RectTransform map;
+        public GameObject gameplayUi;
+        public GameObject raceStat;
+
+        [Header("Assets")]
+        public AssetReference playerMarker;
+        public AssetReference playerMapMarker;
+        public AssetReference raceStatsPlayer;
 
         private int _playerIndex;
         private int _totalLaps;
@@ -24,14 +32,14 @@ namespace BoatAttack.UI
         private float _smoothedSpeed;
         private float _smoothSpeedVel;
         private AppSettings.SpeedFormat _speedFormat;
+        private RaceStatsPlayer[] _raceStats;
 
         public void Setup(int player)
         {
             _playerIndex = player;
-            var manager = RaceManager.Instance;
-            _boat = manager.raceData.boats[_playerIndex].Boat;
-            _totalLaps = manager.GetLapCount();
-            _totalPlayers = manager.raceData.boats.Count;
+            _boat = RaceManager.RaceData.boats[_playerIndex].Boat;
+            _totalLaps = RaceManager.GetLapCount();
+            _totalPlayers = RaceManager.RaceData.boats.Count;
             _timeOffset = Time.time;
 
             switch (AppSettings.Instance.speedFormat)
@@ -47,19 +55,69 @@ namespace BoatAttack.UI
             }
 
             StartCoroutine(SetupPlayerMarkers(player));
+            StartCoroutine(SetupPlayerMapMarkers());
+            StartCoroutine(CreateGameStats());
         }
 
-        IEnumerator SetupPlayerMarkers(int player)
+        public void Disable()
         {
-            for (int i = 0; i < RaceManager.Instance.raceData.boats.Count; i++)
+            gameObject.SetActive(false);
+        }
+
+        public void SetGameplayUi(bool enable)
+        {
+            if (enable)
+            {
+                foreach (var stat in _raceStats)
+                {
+                    stat.UpdateStats();
+                }
+            }
+            gameplayUi.SetActive(enable);
+        }
+
+        public void SetGameStats(bool enable)
+        {
+            raceStat.SetActive(enable);
+        }
+
+        private IEnumerator CreateGameStats()
+        {
+            _raceStats = new RaceStatsPlayer[RaceManager.RaceData.boatCount];
+            for(var i = 0; i < RaceManager.RaceData.boatCount; i++)
+            {
+                var raceStatLoading = raceStatsPlayer.InstantiateAsync(raceStat.transform);
+                yield return raceStatLoading;
+                raceStatLoading.Result.name += RaceManager.RaceData.boats[i].boatName;
+                raceStatLoading.Result.TryGetComponent(out _raceStats[i]);
+                _raceStats[i].Setup(RaceManager.RaceData.boats[i].Boat);
+            }
+        }
+
+        private IEnumerator SetupPlayerMarkers(int player)
+        {
+            for (int i = 0; i < RaceManager.RaceData.boats.Count; i++)
             {
                 if (i == player) continue;
-                
-                var markerLoading = playerMarkerPrefab.InstantiateAsync(transform);
+
+                var markerLoading = playerMarker.InstantiateAsync(gameplayUi.transform);
                 yield return markerLoading; // wait for marker to load
-                
+
+                markerLoading.Result.name += RaceManager.RaceData.boats[i].boatName;
                 if (markerLoading.Result.TryGetComponent<PlayerMarker>(out var pm))
-                    pm.Setup(RaceManager.Instance.raceData.boats[i]);
+                    pm.Setup(RaceManager.RaceData.boats[i]);
+            }
+        }
+
+        private IEnumerator SetupPlayerMapMarkers()
+        {
+            foreach (var boatData in RaceManager.RaceData.boats)
+            {
+                var mapMarkerLoading = playerMapMarker.InstantiateAsync(map);
+                yield return mapMarkerLoading; // wait for marker to load
+
+                if (mapMarkerLoading.Result.TryGetComponent<PlayerMapMarker>(out var pm))
+                    pm.Setup(boatData);
             }
         }
 
@@ -93,14 +151,17 @@ namespace BoatAttack.UI
 
         public void LateUpdate()
         {
-            var t = TimeSpan.FromSeconds(_boat.TotalTime);
-            timeTotal.text = $"time {t.Minutes:D2}:{t.Seconds:D2}.{t.Milliseconds:D3}";
+            var rawTime = RaceManager.RaceTime;
+            timeTotal.text = $"time {FormatRaceTime(rawTime)}";
 
-            var l = _boat.TotalTime;
-            if (_boat.LapCount > 1)
-                l -= _boat.SplitTimes[_boat.LapCount - 2];
-            var lt = TimeSpan.FromSeconds(l);
-            timeLap.text = $"lap +{lt.Minutes:D2}:{lt.Seconds:D2}.{lt.Milliseconds:D3}";
+            var l = (_boat.SplitTimes.Count > 0) ? rawTime - _boat.SplitTimes[_boat.LapCount - 1] : 0f;
+            timeLap.text = $"lap {FormatRaceTime(l)}";
+        }
+
+        public static string FormatRaceTime(float seconds)
+        {
+            var t = TimeSpan.FromSeconds(seconds);
+            return $"{t.Minutes:D2}:{t.Seconds:D2}.{t.Milliseconds:D3}";
         }
     }
 }

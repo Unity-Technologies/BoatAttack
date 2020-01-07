@@ -10,7 +10,7 @@ namespace BoatAttack
     /// </summary>
     public class AiController : BaseController
     {
-        public NavMeshPath navPath;//navigation path;
+        private NavMeshPath _navPath;// navigation path
         private Vector3[] _pathPoint;
         private Vector3 _curWpPos;
         private int _curPoint;
@@ -25,67 +25,54 @@ namespace BoatAttack
     
         private WaypointGroup.Waypoint[] _wPs;
 
-        public AiController()
-        {
-            _curWp = 0;
-        }
-
         // Use this for initialization
-        IEnumerator Start ()
+        private IEnumerator Start ()
         {
-            float delay = WaypointGroup.RaceDelay;
-            yield return new WaitForSeconds(delay);
+            while (!RaceManager.RaceStarted)
+            {
+                yield return new WaitForEndOfFrame();
+            }
             AssignWp(WaypointGroup.Instance.GetWaypoint(0));
         }
 
         // Update is called once per frame
         private void LateUpdate()
         {
-            if (_pathPoint != null)
+            if (_pathPoint != null &&_pathPoint.Length > _curPoint && _foundPath)
             {
-                if (_pathPoint.Length > _curPoint && _foundPath)
+                // If we are close to the current point on the path get the next
+                if (Vector3.Distance(transform.position, _pathPoint[_curPoint]) < 8)
                 {
-                    if ((Vector3.Distance(transform.position, _pathPoint[_curPoint])) < 8) // If we are close to the current point on the path get the next
-                    {
-                        _curPoint++; // Move on to next point
-                        if (_curPoint >= _pathPoint.Length)
-                            GetNextWp();
-                    }
-                    
+                    _curPoint++; // Move on to next point
+                    if (_curPoint >= _pathPoint.Length)
+                        GetNextWp();
                 }
             }
-
-            if (_idleTime > 4f)
+            
+            if(RaceManager.RaceStarted)
             {
-                Debug.Log($"AI boat {gameObject.name} was stuck, re-spawning.");
-                _idleTime = 0f;
-                controller.ResetPosition();
-            }
-
-            if (engine.VelocityMag < 0.1f)
-            {
-                _idleTime += Time.deltaTime;
-            }
-            else
-            {
-                _idleTime = 0f;
+                if (_idleTime > 3f) // if been idle for 3 seconds assume AI is stuck
+                {
+                    Debug.Log($"AI boat {gameObject.name} was stuck, re-spawning.");
+                    _idleTime = 0f;
+                    controller.ResetPosition();
+                }
+                _idleTime = (engine.VelocityMag < 0.15f || transform.up.y < 0) ? _idleTime + Time.deltaTime : _idleTime = 0f;
             }
         }
         
         // Update is called once per frame
         private void FixedUpdate () 
         {
-            if (_pathPoint != null && _pathPoint.Length > _curPoint)
-            {
-                //\\\\\\\\Get angle to the destination and the side
-                var normDir = _pathPoint[_curPoint] - transform.position;
-                normDir = normDir.normalized;
-                var dot = Vector3.Dot(normDir, transform.forward);
-                _targetSide = Vector3.Cross(transform.forward, normDir).y;//positive on right side, negative on left side
+            if (_pathPoint == null || _pathPoint.Length <= _curPoint) return;
+            //\\\\\\\\Get angle to the destination and the side
+            var normDir = _pathPoint[_curPoint] - transform.position;
+            normDir = normDir.normalized;
+            var dot = Vector3.Dot(normDir, transform.forward);
+            _targetSide = Vector3.Cross(transform.forward, normDir).y;//positive on right side, negative on left side
 
-                engine.Turn(Mathf.Clamp(_targetSide, -1.0f, 1.0f));
-                engine.Accelerate(dot > 0 ? 1f : 0.25f);
-            }
+            engine.Turn(Mathf.Clamp(_targetSide, -1.0f, 1.0f));
+            engine.Accelerate(dot > 0 ? 1f : 0.25f);
         }
 
         private void GetNextWp()
@@ -97,9 +84,7 @@ namespace BoatAttack
         {
             var offset = (Random.value * 2f - 1f) * wp.width * Vector3.left;
             _curWpPos = wp.point + wp.rotation * offset;
-            _curWp++;
-            if (_curWp >= WaypointGroup.Instance.WPs.Count)
-                _curWp = 0;
+            _curWp = _curWp >= WaypointGroup.Instance.WPs.Count ? 0 : _curWp + 1;
             CalculatePath();
         }
 
@@ -108,15 +93,15 @@ namespace BoatAttack
         /// </summary>
         private void CalculatePath()
         {
-            navPath = new NavMeshPath(); // New nav path
-            NavMesh.CalculatePath(transform.position, _curWpPos, 255, navPath);
-            if (navPath.status == NavMeshPathStatus.PathComplete) // if the path is good(complete) use it
+            _navPath = new NavMeshPath(); // New nav path
+            NavMesh.CalculatePath(transform.position, _curWpPos, 255, _navPath);
+            if (_navPath.status == NavMeshPathStatus.PathComplete) // if the path is good(complete) use it
             {
-                _pathPoint = navPath.corners;
+                _pathPoint = _navPath.corners;
                 _curPoint = 1;
                 _foundPath = true;
             }
-            else if(navPath == null || navPath.status == NavMeshPathStatus.PathInvalid) // if the path is bad, we haven't found a path
+            else if(_navPath == null || _navPath.status == NavMeshPathStatus.PathInvalid) // if the path is bad, we haven't found a path
             {
                 _foundPath = false;
             }
