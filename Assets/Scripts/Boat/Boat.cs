@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Cinemachine;
@@ -20,9 +21,9 @@ namespace BoatAttack
         private Matrix4x4 _spawnPosition;
 
         // RaceStats
+        [NonSerialized] public int Place = 0;
         [NonSerialized] public float LapPercentage;
         [NonSerialized] public int LapCount;
-        [NonSerialized] public int Place = 0;
         [NonSerialized] public bool MatchComplete;
         private int _wpCount = -1;
         private WaypointGroup.Waypoint _lastCheckpoint;
@@ -98,8 +99,9 @@ namespace BoatAttack
                 var target = WaypointGroup.Instance.StartingPositions[_playerIndex];
                 Vector3 targetPosition = target.GetColumn(3);
                 Vector3 targetForward = target.GetColumn(2);
-                var currentPosition = transform.position;
-                var currentForward = transform.forward;
+                var t = transform;
+                var currentPosition = t.position;
+                var currentForward = t.forward;
 
                 targetPosition.y = currentPosition.y;
                 engine.RB.AddForce((currentPosition - targetPosition) * 0.25f);
@@ -124,7 +126,7 @@ namespace BoatAttack
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!other.CompareTag("waypoint")) return;
+            if (!other.CompareTag("waypoint") || MatchComplete) return;
 
             var wp = WaypointGroup.Instance.GetTriggersWaypoint(other as BoxCollider);
             var wpIndex = WaypointGroup.Instance.GetWaypointIndex(wp);
@@ -132,7 +134,6 @@ namespace BoatAttack
             {
                 _lastCheckpoint = wp;
                 _nextCheckpoint = WaypointGroup.Instance.GetNextCheckpoint(wpIndex);
-                Debug.Log($"{name} clamping between checkpoint {_lastCheckpoint.normalizedDistance} and {_nextCheckpoint.normalizedDistance}");
             }
 
             EnteredWaypoint(wpIndex, wp.isCheckpoint);
@@ -145,15 +146,18 @@ namespace BoatAttack
 
             if (nextWp != index) return;
             _wpCount = nextWp;
+
             if (index != 0) return;
             LapCount++;
+            SplitTimes.Add(RaceManager.RaceTime);
+
             if (LapCount > RaceManager.GetLapCount())
             {
+                Debug.Log($"Boat {name} finished {RaceUI.OrdinalNumber(Place)} with time:{RaceUI.FormatRaceTime(SplitTimes.Last())}");
                 RaceManager.BoatFinished(_playerIndex);
                 MatchComplete = true;
             }
 
-            SplitTimes.Add(RaceManager.RaceTime);
         }
 
         [ContextMenu("Randomize")]

@@ -1,6 +1,4 @@
-﻿using Unity.Mathematics;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEditor;
 
 namespace WaterSystem
 {
@@ -8,7 +6,9 @@ namespace WaterSystem
     public class BuoyantObjectEditor : Editor
     {
         private BuoyantObject obj;
-        
+        private bool _heightsDebugBool;
+        private bool _generalSettingsBool;
+
         private void OnEnable()
         {
             obj = serializedObject.targetObject as BuoyantObject;
@@ -16,22 +16,29 @@ namespace WaterSystem
 
         public override void OnInspectorGUI()
         {
-            base.OnInspectorGUI();
-
-            EditorGUILayout.BeginFoldoutHeaderGroup(true, "Debug Info");
-
-            EditorGUILayout.LabelField("Height Values", EditorStyles.boldLabel);
-            if (obj.Heights != null)
+            _generalSettingsBool = EditorGUILayout.BeginFoldoutHeaderGroup(_generalSettingsBool, "General Settings");
+            if (_generalSettingsBool)
             {
-                for (int i = 0; i < obj.Heights.Length; i++)
+                base.OnInspectorGUI();
+            }
+            EditorGUILayout.EndFoldoutHeaderGroup();
+
+            _heightsDebugBool = EditorGUILayout.BeginFoldoutHeaderGroup(_heightsDebugBool, "Height Debug Values");
+            if (_heightsDebugBool)
+            {
+                if (obj.Heights != null)
                 {
-                    EditorGUILayout.BeginHorizontal();
-                    float3 h = obj.Heights[i];
-                    EditorGUILayout.LabelField($"{i})Wave(heights):", $"X:{h.x:00.00} Y:{h.y:00.00} Z:{h.z:00.00}");
-                    EditorGUILayout.EndHorizontal();
+                    for (var i = 0; i < obj.Heights.Length; i++)
+                    {
+                        var h = obj.Heights[i];
+                        EditorGUILayout.LabelField($"{i})Wave(heights):", $"X:{h.x:00.00} Y:{h.y:00.00} Z:{h.z:00.00}");
+                    }
+                }
+                else
+                {
+                    EditorGUILayout.HelpBox("Height debug info only available in playmode.", MessageType.Info);
                 }
             }
-
             EditorGUILayout.EndFoldoutHeaderGroup();
         }
     }

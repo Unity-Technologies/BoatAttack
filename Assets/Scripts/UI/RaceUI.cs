@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.SceneManagement;
 
 namespace BoatAttack.UI
 {
@@ -19,6 +21,7 @@ namespace BoatAttack.UI
         public RectTransform map;
         public GameObject gameplayUi;
         public GameObject raceStat;
+        public GameObject matchEnd;
 
         [Header("Assets")]
         public AssetReference playerMarker;
@@ -33,6 +36,11 @@ namespace BoatAttack.UI
         private float _smoothSpeedVel;
         private AppSettings.SpeedFormat _speedFormat;
         private RaceStatsPlayer[] _raceStats;
+
+        private void OnEnable()
+        {
+            RaceManager.raceStarted += SetGameplayUi;
+        }
 
         public void Setup(int player)
         {
@@ -79,6 +87,13 @@ namespace BoatAttack.UI
         public void SetGameStats(bool enable)
         {
             raceStat.SetActive(enable);
+        }
+
+        public void MatchEnd()
+        {
+            matchEnd.SetActive(true);
+            SetGameStats(true);
+            SetGameplayUi(false);
         }
 
         private IEnumerator CreateGameStats()
@@ -149,6 +164,11 @@ namespace BoatAttack.UI
             speedText.text = _smoothedSpeed.ToString("000");
         }
 
+        public void FinishMatch()
+        {
+            AppSettings.LoadScene(0, LoadSceneMode.Single);
+        }
+
         public void LateUpdate()
         {
             var rawTime = RaceManager.RaceTime;
@@ -162,6 +182,32 @@ namespace BoatAttack.UI
         {
             var t = TimeSpan.FromSeconds(seconds);
             return $"{t.Minutes:D2}:{t.Seconds:D2}.{t.Milliseconds:D3}";
+        }
+
+        public static string OrdinalNumber(int num)
+        {
+            var number = num.ToString();
+            if (number.EndsWith("11")) return $"{number}th";
+            if (number.EndsWith("12")) return $"{number}th";
+            if (number.EndsWith("13")) return $"{number}th";
+            if (number.EndsWith("1")) return $"{number}st";
+            if (number.EndsWith("2")) return $"{number}nd";
+            if (number.EndsWith("3")) return $"{number}rd";
+            return $"{number}th";
+        }
+
+        public static float BestLapFromSplitTimes(List<float> splits)
+        {
+            // ignore 0 as it's the beginning of the race
+            if (splits.Count <= 1) return 0;
+            var fastestLap = Mathf.Infinity;
+
+            for (var i = 1; i < splits.Count; i++)
+            {
+                var lap = splits[i] - splits[i - 1];
+                fastestLap = lap < fastestLap ? lap : fastestLap;
+            }
+            return fastestLap;
         }
     }
 }

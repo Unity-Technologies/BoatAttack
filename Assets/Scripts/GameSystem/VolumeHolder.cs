@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering;
 using UnityEngine.Serialization;
 
@@ -8,7 +9,7 @@ using UnityEngine.Serialization;
 public class VolumeHolder : ScriptableObject
 {
     [SerializeField]
-    public VolumeProfile[] _Volumes;
+    public AssetReference[] _Volumes;
     [FormerlySerializedAs("qualityIndicies")] [SerializeField]
     public List<int> qualityIndices = new List<int>();
     [FormerlySerializedAs("qualityVolumeIndicies")] [SerializeField]

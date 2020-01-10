@@ -16,7 +16,9 @@ namespace BoatAttack
 
         private void OnEnable()
         {
+            #pragma warning disable
             CopyLightmapSettings();
+            #pragma warning restore
         }
 
         /// <summary>

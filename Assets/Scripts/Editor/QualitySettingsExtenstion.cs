@@ -20,9 +20,9 @@ static class UniversalSettings
     private static int displayAssetIndex = qualityAssetIndex + 1;
 
     private static int[] volumeIndex = new int[QualitySettings.names.Length + 1];
-    
+
     private static bool foldout;
-    
+
     [SettingsProvider]
     public static SettingsProvider CreateUniversalSettings()
     {
@@ -37,10 +37,10 @@ static class UniversalSettings
             {
                 Styles.header.fontSize = 16;
                 var asset = GraphicsSettings.renderPipelineAsset;
-                
+
                 if(asset == null) // No Pipeline asset in Graphics Settings
                     return;
-                
+
                 string[] names = QualitySettings.names;
                 for (int i = 0; i < names.Length; i++)
                 {
@@ -50,7 +50,7 @@ static class UniversalSettings
 
                 names.CopyTo(names = new string[names.Length+1], 1);
                 names[0] = "Default Asset";
-                
+
                 EditorGUILayout.BeginVertical(Styles.frameBox);
                 GUILayout.Label($"Quality Level: {names[displayAssetIndex]}", Styles.header);
                 EditorGUI.BeginChangeCheck();
@@ -76,13 +76,13 @@ static class UniversalSettings
                 }
 
                 EditorGUILayout.Separator();
-                
+
                 DoRenderPipelineSettings(asset);
 
                 EditorGUILayout.Separator();
-                
-                DoVolumeSettings();
-                
+
+                //DoVolumeSettings();
+
                 EditorGUILayout.EndVertical();
             },
 
@@ -96,7 +96,7 @@ static class UniversalSettings
     private static void DoRenderPipelineSettings(RenderPipelineAsset asset)
     {
         EditorGUILayout.BeginVertical(Styles.frameBox);
-        
+
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Render Pipeline Asset", Styles.header);
         GenericMenu menu = new GenericMenu();
@@ -114,11 +114,12 @@ static class UniversalSettings
 
         EditorGUILayout.EndVertical();
     }
-    
+
+    /*
     private static void DoVolumeSettings()
     {
         EditorGUILayout.BeginVertical(Styles.frameBox);
-        
+
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Volume Profile", Styles.header);
         GenericMenu menu = new GenericMenu();
@@ -140,7 +141,7 @@ static class UniversalSettings
             {
                 names[i] = $"{volHolder._Volumes[i - 1].name} ({typeof(VolumeProfile)})";
             }
-            
+
             if (volHolder.ContainsKey(displayAssetIndex))
             {
                 volumeIndex[displayAssetIndex] = volHolder.GetValue(displayAssetIndex) + 1;
@@ -177,4 +178,5 @@ static class UniversalSettings
 
         EditorGUILayout.EndVertical();
     }
+    */
 }

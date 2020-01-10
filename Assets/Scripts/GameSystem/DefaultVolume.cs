@@ -1,95 +1,106 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
+[ExecuteAlways]
 public class DefaultVolume : MonoBehaviour
 {
     public static DefaultVolume Instance;
-    private Volume _volBaseComponent;
-    private Volume _volQualityComponent;
-    private VolumeHolder _volHolder;
-    
+    public Volume volBaseComponent;
+    public Volume volQualityComponent;
+    public AssetReference[] qualityVolumes;
+    private int _currentQualityLevel;
+
     private void OnEnable()
     {
-        OnValidate();
+        if (!Instance)
+        {
+            Instance = this;
+        }
+        else if(Instance != this)
+        {
+            Debug.LogWarning($"Extra Volume Manager cleaned up. GUID:{gameObject.GetInstanceID()}");
+#if UNITY_EDITOR
+            DestroyImmediate(gameObject);
+#else
+            Destroy(gameObject);
+#endif
+        }
+        DontDestroyOnLoad(gameObject);
+        _currentQualityLevel = QualitySettings.GetQualityLevel();
+        UpdateVolume();
     }
 
-    private void OnValidate()
+    private void LateUpdate()
     {
-        if (!Instance)
-            Instance = this;
-        gameObject.hideFlags = HideFlags.HideAndDontSave;
-        if(!_volBaseComponent)
-            _volBaseComponent = gameObject.AddComponent<Volume>();
-        _volBaseComponent.priority = -100;
-        if(!_volQualityComponent)
-            _volQualityComponent = gameObject.AddComponent<Volume>();
-        _volQualityComponent.priority = 100;
-        if(!_volHolder)
-            _volHolder = Resources.Load<VolumeHolder>("VolumeHolder");
-
-        UpdateVolume();
+        if (_currentQualityLevel != QualitySettings.GetQualityLevel())
+        {
+            _currentQualityLevel = QualitySettings.GetQualityLevel();
+            UpdateVolume();
+        }
     }
 
     public void UpdateVolume()
     {
-        if (_volHolder)
+        //Setup Quality Vol if needed
+        if (qualityVolumes?.Length > _currentQualityLevel && qualityVolumes[_currentQualityLevel] != null)
         {
-            //Setup Base Vol if needed
-            var baseVolIndex = _volHolder.GetValue(0);
-            if (baseVolIndex >= 0)
-            {
-                var vol = _volHolder._Volumes[baseVolIndex];
-                _volBaseComponent.sharedProfile = vol;
-            }
-            else
-            {
-                _volBaseComponent.sharedProfile = null;
-            }
-
-            //Setup Quality Vol if needed
-            var qualityVolIndex = _volHolder.GetValue(QualitySettings.GetQualityLevel() + 1);
-            if (qualityVolIndex >= 0)
-            {
-                var vol = _volHolder._Volumes[qualityVolIndex];
-                _volQualityComponent.sharedProfile = vol;
-            }
-            else
-            {
-                _volQualityComponent.sharedProfile = null;
-            }
+#if UNITY_EDITOR
+            LoadVolEditor(_currentQualityLevel);
+#else
+            StartCoroutine(LoadAndApplyQualityVolume(_currentQualityLevel));
+#endif
+        }
+        else
+        {
+            volQualityComponent.sharedProfile = null;
         }
 
         if (UniversalRenderPipeline.asset.debugLevel == PipelineDebugLevel.Disabled) return;
-        if (_volBaseComponent.sharedProfile != null && _volQualityComponent.sharedProfile != null)
+        if (volBaseComponent.sharedProfile != null && volQualityComponent.sharedProfile != null)
         {
             Debug.Log(message: $"Updated volumes:\n" +
-                               $"    Base Volume : {_volBaseComponent.sharedProfile.name}\n" +
-                               $"    Quality Volume : {_volQualityComponent.sharedProfile.name}\n" +
+                               $"    Base Volume : {volBaseComponent.sharedProfile.name}\n" +
+                               $"    Quality Volume : {volQualityComponent.sharedProfile.name}\n" +
                                $"Total Volume Stack is now:\n");
         }
     }
+
+#if UNITY_EDITOR
+    private void LoadVolEditor(int index)
+    {
+        Debug.Log("Loading volumes in editor.");
+        var assetRef = qualityVolumes[index];
+        var obj = assetRef.editorAsset;
+        volQualityComponent.sharedProfile = obj as VolumeProfile;
+    }
+#else
+    private IEnumerator LoadAndApplyQualityVolume(int index)
+    {
+        var volLoading = qualityVolumes[index].LoadAssetAsync<VolumeProfile>();
+        yield return volLoading;
+        volQualityComponent.sharedProfile = volLoading.Result;
+    }
+#endif
 }
 
 #if UNITY_EDITOR
 [InitializeOnLoad]
 public class StartupVolume
 {
-    private const string GoName = "[Volume Manager]";
+    private static GameObject vol;
 
     static StartupVolume()
     {
-        var obj = GameObject.Find(GoName)?.GetComponent<DefaultVolume>();
-        if (obj != null)
-        {
-            return;
-        }
-
-        var go = new GameObject { name = GoName };
-        go.AddComponent<DefaultVolume>();
+        var thing = AssetDatabase.LoadAssetAtPath("Assets/Objects/misc/DefaultVolume.prefab", typeof(GameObject)) as GameObject;
+        Debug.LogWarning($"Creating Volume Manager");
+        vol = Object.Instantiate(thing);
+        vol.hideFlags = HideFlags.HideAndDontSave;
     }
 }
 #endif

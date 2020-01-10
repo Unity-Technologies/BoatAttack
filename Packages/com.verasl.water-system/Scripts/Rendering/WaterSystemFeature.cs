@@ -112,7 +112,9 @@ namespace WaterSystem
 
         public WaterSystemSettings settings = new WaterSystemSettings();
         [SerializeField]
-        private Material causticsMaterial;
+        private Shader causticShader;
+
+        private Material _causticMaterial;
 
         private static readonly int SrcBlend = Shader.PropertyToID("_SrcBlend");
         private static readonly int DstBlend = Shader.PropertyToID("_DstBlend");
@@ -126,25 +128,31 @@ namespace WaterSystem
             // Caustic Pass
             m_CausticsPass = new WaterCausticsPass();
 
-            if (causticsMaterial == null) causticsMaterial = new Material(Shader.Find("Hidden/BoatAttack/Caustics"));
+            causticShader = causticShader ? causticShader : Shader.Find("Hidden/BoatAttack/Caustics");
+            _causticMaterial = _causticMaterial ? _causticMaterial : new Material(causticShader);
 
-            if (settings.debug == WaterSystemSettings.DebugMode.Caustics)
+            switch (settings.debug)
             {
-                causticsMaterial.SetFloat(SrcBlend, 1f);
-                causticsMaterial.SetFloat(DstBlend, 0f);
-                causticsMaterial.EnableKeyword("_DEBUG");
-                m_CausticsPass.renderPassEvent = RenderPassEvent.AfterRenderingPostProcessing;
-            }
-            else
-            {
-                causticsMaterial.SetFloat(SrcBlend, 2f);
-                causticsMaterial.SetFloat(DstBlend, 0f);
-                causticsMaterial.DisableKeyword("_DEBUG");
-                m_CausticsPass.renderPassEvent = RenderPassEvent.AfterRenderingSkybox + 1;
+                case WaterSystemSettings.DebugMode.Caustics:
+                    _causticMaterial.SetFloat(SrcBlend, 1f);
+                    _causticMaterial.SetFloat(DstBlend, 0f);
+                    _causticMaterial.EnableKeyword("_DEBUG");
+                    m_CausticsPass.renderPassEvent = RenderPassEvent.AfterRenderingPostProcessing;
+                    break;
+                case WaterSystemSettings.DebugMode.WaterEffects:
+                    break;
+                case WaterSystemSettings.DebugMode.Disabled:
+                    // Caustics
+                    _causticMaterial.SetFloat(SrcBlend, 2f);
+                    _causticMaterial.SetFloat(DstBlend, 0f);
+                    _causticMaterial.DisableKeyword("_DEBUG");
+                    m_CausticsPass.renderPassEvent = RenderPassEvent.AfterRenderingSkybox + 1;
+                    // WaterEffects
+                    break;
             }
 
-            causticsMaterial.SetFloat(Size, settings.causticScale);
-            m_CausticsPass.WaterCausticMaterial = causticsMaterial;
+            _causticMaterial.SetFloat(Size, settings.causticScale);
+            m_CausticsPass.WaterCausticMaterial = _causticMaterial;
         }
 
         public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)

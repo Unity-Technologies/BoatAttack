@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
@@ -10,11 +11,11 @@ namespace BoatAttack
     /// </summary>
     public class AiController : BaseController
     {
-        private NavMeshPath _navPath;// navigation path
+        [NonSerialized] public NavMeshPath NavPath;// navigation path
         private Vector3[] _pathPoint;
         private Vector3 _curWpPos;
         private int _curPoint;
-        private int _curWp;
+        [NonSerialized] public int CurWp;
         private bool _foundPath;
         private int _pathPointNum;
 
@@ -22,22 +23,25 @@ namespace BoatAttack
         private Vector3 _tempFrom;//nav from position
         private Vector3 _tempTo;//nav to position
         private float _targetSide;//side of destination, positive on right side, negative on left side
-    
+
         private WaypointGroup.Waypoint[] _wPs;
 
-        // Use this for initialization
-        private IEnumerator Start ()
+        private void Start ()
         {
-            while (!RaceManager.RaceStarted)
-            {
-                yield return new WaitForEndOfFrame();
-            }
-            AssignWp(WaypointGroup.Instance.GetWaypoint(0));
+            RaceManager.raceStarted += StartRace;
         }
 
-        // Update is called once per frame
+        private void StartRace(bool start)
+        {
+            AssignWp(WaypointGroup.Instance.GetWaypoint(0));
+            InvokeRepeating(nameof(CalculatePath), 1f, 1f);
+        }
+
         private void LateUpdate()
         {
+            if(NavPath?.status == NavMeshPathStatus.PathInvalid)
+                CalculatePath();
+
             if (_pathPoint != null &&_pathPoint.Length > _curPoint && _foundPath)
             {
                 // If we are close to the current point on the path get the next
@@ -45,10 +49,10 @@ namespace BoatAttack
                 {
                     _curPoint++; // Move on to next point
                     if (_curPoint >= _pathPoint.Length)
-                        GetNextWp();
+                        AssignWp(WaypointGroup.Instance.GetWaypoint(CurWp));
                 }
             }
-            
+
             if(RaceManager.RaceStarted)
             {
                 if (_idleTime > 3f) // if been idle for 3 seconds assume AI is stuck
@@ -60,9 +64,9 @@ namespace BoatAttack
                 _idleTime = (engine.VelocityMag < 0.15f || transform.up.y < 0) ? _idleTime + Time.deltaTime : _idleTime = 0f;
             }
         }
-        
+
         // Update is called once per frame
-        private void FixedUpdate () 
+        private void FixedUpdate ()
         {
             if (_pathPoint == null || _pathPoint.Length <= _curPoint) return;
             //\\\\\\\\Get angle to the destination and the side
@@ -75,16 +79,11 @@ namespace BoatAttack
             engine.Accelerate(dot > 0 ? 1f : 0.25f);
         }
 
-        private void GetNextWp()
-        {
-            AssignWp(WaypointGroup.Instance.GetWaypoint(_curWp));
-        }
-
         private void AssignWp(WaypointGroup.Waypoint wp)
         {
             var offset = (Random.value * 2f - 1f) * wp.width * Vector3.left;
             _curWpPos = wp.point + wp.rotation * offset;
-            _curWp = _curWp >= WaypointGroup.Instance.WPs.Count ? 0 : _curWp + 1;
+            CurWp = CurWp >= WaypointGroup.Instance.WPs.Count ? 0 : CurWp + 1;
             CalculatePath();
         }
 
@@ -93,15 +92,15 @@ namespace BoatAttack
         /// </summary>
         private void CalculatePath()
         {
-            _navPath = new NavMeshPath(); // New nav path
-            NavMesh.CalculatePath(transform.position, _curWpPos, 255, _navPath);
-            if (_navPath.status == NavMeshPathStatus.PathComplete) // if the path is good(complete) use it
+            NavPath = new NavMeshPath(); // New nav path
+            NavMesh.CalculatePath(transform.position, _curWpPos, 255, NavPath);
+            if (NavPath.status == NavMeshPathStatus.PathComplete) // if the path is good(complete) use it
             {
-                _pathPoint = _navPath.corners;
+                _pathPoint = NavPath.corners;
                 _curPoint = 1;
                 _foundPath = true;
             }
-            else if(_navPath == null || _navPath.status == NavMeshPathStatus.PathInvalid) // if the path is bad, we haven't found a path
+            else if(NavPath == null || NavPath.status == NavMeshPathStatus.PathInvalid) // if the path is bad, we haven't found a path
             {
                 _foundPath = false;
             }
@@ -115,16 +114,20 @@ namespace BoatAttack
             Gizmos.color = c;
 
             if (!_foundPath) return;
-            
+
             Gizmos.DrawLine(transform.position + (Vector3.up * 0.1f),
-                WaypointGroup.Instance.GetWaypoint(_curWp).point);
+                WaypointGroup.Instance.GetWaypoint(CurWp).point);
             Gizmos.DrawSphere(_curWpPos, 1);
 
             c = Color.red;
             Gizmos.color = c;
             if (_pathPoint[_curPoint] != Vector3.zero)
                 Gizmos.DrawLine(transform.position + (Vector3.up * 0.1f), _pathPoint[_curPoint]);
-            c = Color.yellow;
+        }
+
+        private void OnDrawGizmos()
+        {
+            var c = Color.yellow;
             Gizmos.color = c;
 
             for (var i = 0; i < _pathPoint.Length - 1; i++)

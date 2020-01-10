@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections;
 using GameplayIngredients;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 // ReSharper disable InconsistentNaming
 
@@ -33,6 +37,8 @@ namespace BoatAttack
         }
 
         public static AppSettings Instance;
+        private GameObject loadingScreenObject;
+        public static Camera MainCamera;
         [Header("Resolution Settings")]
         public RenderRes maxRenderSize = RenderRes._720p;
         public bool variableResolution;
@@ -43,23 +49,30 @@ namespace BoatAttack
         private float currentDynamicScale = 1.0f;
         private float maxScale = 1.0f;
         public SpeedFormat speedFormat = SpeedFormat._Mph;
-        
+
+        [Header("Asset References")]
+        public AssetReference loadingScreen;
+        public AssetReference volumeManager;
+
         // Use this for initialization
-        void OnEnable()
+        private void OnEnable()
         {
             Initialize();
             RenderPipelineManager.beginCameraRendering += SetRenderScale;
+            SceneManager.sceneLoaded += LevelWasLoaded;
         }
 
-        void Initialize()
+        private void Initialize()
         {
             Instance = this;
             Application.targetFrameRate = 300;
+            MainCamera = Camera.main;
+            StartCoroutine(LoadPrefab<GameObject>(volumeManager, new AsyncOperationHandle()));
         }
 
         private void Start()
         {
-            var obj = GameObject.Find("[Debug Updater]");
+            var obj = GameObject.Find("[Debug Updater]"); // TODO hack to solve input class issues
             if(obj != null)
                 Destroy(obj);
         }
@@ -69,7 +82,33 @@ namespace BoatAttack
             RenderPipelineManager.beginCameraRendering -= SetRenderScale;
         }
 
-        void SetRenderScale(ScriptableRenderContext context, Camera cam)
+        private static void LevelWasLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (!MainCamera)
+            {
+                MainCamera = Camera.main;
+            }
+            else
+            {
+                var cams = GameObject.FindGameObjectsWithTag("MainCamera");
+                foreach (var c in cams)
+                {
+                    if (c != MainCamera.gameObject) Destroy(c);
+                }
+            }
+
+            Instance.Invoke(nameof(CleanupLoadingScreen), 0.5f);
+        }
+
+        private void CleanupLoadingScreen()
+        {
+            if (Instance.loadingScreenObject != null)
+            {
+                Instance.loadingScreen.ReleaseInstance(Instance.loadingScreenObject);
+            }
+        }
+
+        private void SetRenderScale(ScriptableRenderContext context, Camera cam)
         {
             float res;
             switch (maxRenderSize)
@@ -97,11 +136,11 @@ namespace BoatAttack
 
         private void Update()
         {
-            if (Camera.main == null) return;
-            
+            if (!MainCamera) return;
+
             if (variableResolution)
             {
-                Camera.main.allowDynamicResolution = true;
+                MainCamera.allowDynamicResolution = true;
 
                 var offset = 0f;
                 var currentFrametime = Time.deltaTime;
@@ -129,13 +168,57 @@ namespace BoatAttack
             }
             else
             {
-                Camera.main.allowDynamicResolution = false;
+                MainCamera.allowDynamicResolution = false;
             }
         }
 
         public void ToggleSRPBatcher(bool enabled)
         {
             UniversalRenderPipeline.asset.useSRPBatcher = enabled;
+        }
+
+        public static void LoadScene(string scenePath, LoadSceneMode mode = LoadSceneMode.Single)
+        {
+            LoadScene(SceneUtility.GetBuildIndexByScenePath(scenePath), mode);
+        }
+
+        public static void LoadScene(int buildIndex, LoadSceneMode mode)
+        {
+            Application.backgroundLoadingPriority = ThreadPriority.Low;
+            switch (mode)
+            {
+                case LoadSceneMode.Single:
+                    Instance.StartCoroutine(LoadScene(buildIndex));
+                    break;
+                case LoadSceneMode.Additive:
+                    SceneManager.LoadSceneAsync(buildIndex, LoadSceneMode.Additive);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+            }
+        }
+
+        private static IEnumerator LoadScene(int scene)
+        {
+            var loadingScreenLoading = Instance.loadingScreen.InstantiateAsync();
+            yield return loadingScreenLoading;
+            Instance.loadingScreenObject = loadingScreenLoading.Result;
+            DontDestroyOnLoad(Instance.loadingScreenObject);
+            Debug.Log($"loading scene {SceneUtility.GetScenePathByBuildIndex(scene)} at build index {scene}");
+            SceneManager.LoadScene(scene);
+        }
+
+        private static IEnumerator LoadPrefab<T>(AssetReference assetRef, AsyncOperationHandle assetLoading, Transform parent = null)
+        {
+            if (typeof(T) == typeof(GameObject))
+            {
+                assetLoading = assetRef.InstantiateAsync(parent);
+            }
+            else
+            {
+                assetLoading = assetRef.LoadAssetAsync<T>();
+            }
+            yield return assetLoading;
         }
 
         public void ExitGame()
@@ -147,7 +230,7 @@ namespace BoatAttack
 #endif
         }
     }
-    
+
     public static class ConstantData
     {
         private static readonly string[] Levels =
@@ -159,7 +242,7 @@ namespace BoatAttack
         {
             return $"level_{Levels[level]}";
         }
-        
+
         public static readonly string[] AiNames =
         {
             "Felipe",
@@ -213,7 +296,7 @@ namespace BoatAttack
         private static void GenerateColors()
         {
             if (ColorPalette != null && ColorPalette.Length != 0) return;
-            
+
             if (_colorPaletteRaw == null)
                 _colorPaletteRaw = Resources.Load<Texture2D>("textures/colorSwatch");
 

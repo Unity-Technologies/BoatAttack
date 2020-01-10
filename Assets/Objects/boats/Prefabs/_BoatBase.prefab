@@ -24179,6 +24179,7 @@ Transform:
   - {fileID: 4603238648617514}
   - {fileID: 4154958958717284}
   - {fileID: 2901399632790975270}
+  - {fileID: 4399986893398198514}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -24224,8 +24225,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e14db15b85a74d2288a792b27ee0fa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Human: 0
-  RandomizeColors: 1
   boatRenderer: {fileID: 23139903168929634}
   engineRenderer: {fileID: 3607957023957793550}
   engine: {fileID: 4301521246144889673}
@@ -24296,15 +24295,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e8a6257865674c219fc5cdb6145cc12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wakes:
-  - origin: {x: 0.48, y: 0, z: -3.64}
-    lines: []
-  - origin: {x: 0.17, y: 0, z: 0.84}
-    lines: []
-  _wakePrefab: {fileID: 1446377775785148, guid: dd07c82db50e943ca8314f2c407ea841,
-    type: 3}
-  _genDistance: 2.5
-  _maxAge: 5
+  wakes: []
+  wakePrefab:
+    m_AssetGUID: 
+  genDistance: 0.5
+  maxAge: 5
 --- !u!1 &1852268228170652
 GameObject:
   m_ObjectHideFlags: 0
@@ -33943,6 +33938,53 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!1 &3078379310858947122
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4399986893398198514}
+  - component: {fileID: 1964776752951650828}
+  m_Layer: 11
+  m_Name: NavmeshCarver
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4399986893398198514
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3078379310858947122}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4534809148113994}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!208 &1964776752951650828
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3078379310858947122}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 1, y: 3.085, z: 1}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 0
+  m_Center: {x: 0, y: -0.5, z: -0.4}
+  m_TimeToStationary: 0.5
 --- !u!1 &3138619813684846845
 GameObject:
   m_ObjectHideFlags: 0
@@ -34103,8 +34145,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01c46922a8ed04b0081de10e51b3762f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RB: {fileID: 54710712322113256}
-  velocityMag: 0
   engineSound: {fileID: 82633756123786494}
   waterSound: {fileID: 82912682702107868}
   steeringTorque: 5
