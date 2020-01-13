@@ -152,7 +152,7 @@ namespace BoatAttack
                         offset = currentFrametime > (1000f / 30f) ? -rate : rate;
                         break;
                     case Framerate._60:
-                        offset = currentFrametime > (1000f / 30f) ? -rate : rate;
+                        offset = currentFrametime > (1000f / 60f) ? -rate : rate;
                         break;
                     case Framerate._120:
                         offset = currentFrametime > (1000f / 120f) ? -rate : rate;
