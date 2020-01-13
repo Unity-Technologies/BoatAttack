@@ -21,19 +21,22 @@ public class DefaultVolume : MonoBehaviour
         if (!Instance)
         {
             Instance = this;
+            if(Application.isPlaying)
+                DontDestroyOnLoad(gameObject);
+            _currentQualityLevel = QualitySettings.GetQualityLevel();
+            UpdateVolume();
         }
         else if(Instance != this)
         {
             Debug.LogWarning($"Extra Volume Manager cleaned up. GUID:{gameObject.GetInstanceID()}");
 #if UNITY_EDITOR
             DestroyImmediate(gameObject);
+            return;
 #else
             Destroy(gameObject);
+            return;
 #endif
         }
-        DontDestroyOnLoad(gameObject);
-        _currentQualityLevel = QualitySettings.GetQualityLevel();
-        UpdateVolume();
     }
 
     private void LateUpdate()

@@ -16,7 +16,7 @@ namespace UnityEngine.Rendering.Universal
             Third,
             Quarter
         }
-        
+
         [Serializable]
         public class PlanarReflectionSettings
         {
@@ -25,17 +25,17 @@ namespace UnityEngine.Rendering.Universal
             public LayerMask m_ReflectLayers = -1;
             public bool m_Shadows;
         }
-        
+
         [SerializeField]
         public PlanarReflectionSettings m_settings = new PlanarReflectionSettings();
 
         public GameObject target;
         [FormerlySerializedAs("camOffset")] public float m_planeOffset;
-        
+
         private static Camera _reflectionCamera;
         private RenderTexture _reflectionTexture;
         private readonly int _planarReflectionTextureId = Shader.PropertyToID("_PlanarReflectionTexture");
-        
+
         private int2 _oldReflectionTextureSize;
 
         public static event Action<ScriptableRenderContext, Camera> BeginPlanarReflections;
@@ -56,10 +56,10 @@ namespace UnityEngine.Rendering.Universal
             Cleanup();
         }
 
-        void Cleanup()
+        private void Cleanup()
         {
             RenderPipelineManager.beginCameraRendering -= ExecutePlanarReflections;
-            
+
             if(_reflectionCamera)
             {
                 _reflectionCamera.targetTexture = null;
@@ -82,24 +82,24 @@ namespace UnityEngine.Rendering.Universal
                 Destroy(obj);
             }
         }
-        
-        private static void UpdateCamera(Camera src, Camera dest)
+
+        private void UpdateCamera(Camera src, Camera dest)
         {
             if (dest == null) return;
-            
+
             dest.CopyFrom(src);
             dest.useOcclusionCulling = false;
             if (dest.gameObject.TryGetComponent(out UniversalAdditionalCameraData camData))
             {
-                camData.renderShadows = true;// m_settings.m_Shadows; // turn off shadows for the reflection camera
+                camData.renderShadows = m_settings.m_Shadows; // turn off shadows for the reflection camera
             }
         }
-        
+
         private void UpdateReflectionCamera(Camera realCamera)
         {
             if (_reflectionCamera == null)
                 _reflectionCamera = CreateMirrorObjects();
-            
+
             // find out the reflection plane: position and normal in world space
             Vector3 pos = Vector3.zero;
             Vector3 normal = Vector3.up;
@@ -110,7 +110,7 @@ namespace UnityEngine.Rendering.Universal
             }
 
             UpdateCamera(realCamera, _reflectionCamera);
-            
+
             // Render reflection
             // Reflect camera around reflection plane
             var d = -Vector3.Dot(normal, pos) - m_settings.m_ClipPlaneOffset;
@@ -133,7 +133,7 @@ namespace UnityEngine.Rendering.Universal
             _reflectionCamera.cullingMask = m_settings.m_ReflectLayers; // never render water layer
             _reflectionCamera.transform.position = newPosition;
         }
-        
+
         // Calculates reflection matrix around the given plane
         private static void CalculateReflectionMatrix(ref Matrix4x4 reflectionMat, Vector4 plane)
         {
@@ -180,7 +180,7 @@ namespace UnityEngine.Rendering.Universal
                     return 0.5f; // default to half res
             }
         }
-        
+
         // Compare two int2
         private static bool Int2Compare(int2 a, int2 b)
         {
@@ -201,7 +201,7 @@ namespace UnityEngine.Rendering.Universal
         {
             var go = new GameObject("Planar Reflections",typeof(Camera));
             var cameraData = go.AddComponent(typeof(UniversalAdditionalCameraData)) as UniversalAdditionalCameraData;
-            
+
             cameraData.requiresColorOption = CameraOverrideOption.Off;
             cameraData.requiresDepthOption = CameraOverrideOption.Off;
             cameraData.SetRenderer(1);

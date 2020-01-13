@@ -14,11 +14,12 @@
             "RenderPipeline"="UniversalPipeline"
             "RenderType"="Transparent-10"
         }
-        
+
         Pass
         {
-        Blend SrcAlpha OneMinusSrcAlpha
-        
+            Blend SrcAlpha OneMinusSrcAlpha
+            Cull Off
+
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -46,7 +47,7 @@
                 float4 color : TEXCOORD2;
                 float4 positionCS : SV_POSITION;
             };
-            
+
             half _Rotation;
             half _OffsetX;
             half _OffsetY;
@@ -56,7 +57,7 @@
             {
                 Varyings output;
                 VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
-                
+
                 output.positionCS = vertexInput.positionCS;
                 output.uv = input.uv;
                 output.color = input.color;
@@ -68,27 +69,27 @@
             {
                 // sample the texture
                 real4 color = input.color;;
-                
+
                 // Halftone
                 float2 centerScreenPos = float2((input.screenPos.x / input.screenPos.w * 2 - 1) * _ScreenParams.x / _ScreenParams.y, input.screenPos.y / input.screenPos.w * 2 - 1);
                 float halftone = distance(frac((centerScreenPos + half2(-_Time.x, 0)) * 10), 0.5);
                 halftone = Remap(halftone, float2(0.5, 1), float2(1, 0));
-                
+
                 // Gradient
                 half rotate = _Rotation * 3.1425;
                 half2 gradientCoords = input.uv; // ((input.screenPos.xy / input.screenPos.w) * 2 - 1;
                 half gradient = dot(gradientCoords + half2(_OffsetX, _OffsetY), half2(sin(rotate), cos(rotate)));
                 gradient = Remap(gradient, float2(-_Width, _Width), float2(0, 1));
-                
+
                 half base = 0.5;
                 half diff = 0.1;
                 half spread = 0.02;
-                
+
                 float a = smoothstep(base - diff - spread, base - diff + spread, halftone * gradient);
                 float b = smoothstep(base + diff - spread, base + diff + spread, halftone * gradient);
-                
+
                 color.a *= lerp(a, b, 0.5);
-                
+
                 return color;
             }
             ENDHLSL

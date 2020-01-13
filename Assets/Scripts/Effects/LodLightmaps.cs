@@ -16,9 +16,7 @@ namespace BoatAttack
 
         private void OnEnable()
         {
-            #pragma warning disable
             CopyLightmapSettings();
-            #pragma warning restore
         }
 
         /// <summary>
@@ -57,6 +55,7 @@ namespace BoatAttack
 
             for (var i = 0; i < _main.Length; i++)
             {
+#pragma warning disable
                 _lod1[i].lightmapIndex = lmIndex[i];
                 _lod1[i].lightmapScaleOffset = lmScaleOffset[i];
                 if (!_lod2[i]) continue;
@@ -65,6 +64,7 @@ namespace BoatAttack
                 if (!_lod3[i]) continue;
                 _lod3[i].lightmapIndex = lmIndex[i];
                 _lod3[i].lightmapScaleOffset = lmScaleOffset[i];
+#pragma warning restore
             }
         }
     }
