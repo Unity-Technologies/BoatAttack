@@ -37,6 +37,20 @@ struct WaterVertexOutput // fragment struct
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+//          	   	       Water debug functions                             //
+///////////////////////////////////////////////////////////////////////////////
+
+half3 DebugWaterFX(half3 input, half4 waterFX, half screenUV)
+{
+    input = lerp(input, half3(waterFX.y, 1, waterFX.z), saturate(floor(screenUV + 0.7)));
+    input = lerp(input, waterFX.xxx, saturate(floor(screenUV + 0.5)));
+    half3 disp = lerp(0, half3(1, 0, 0), saturate((waterFX.www - 0.5) * 4));
+    disp += lerp(0, half3(0, 0, 1), saturate(((1-waterFX.www) - 0.5) * 4));
+    input = lerp(input, disp, saturate(floor(screenUV + 0.3)));
+    return input;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 //          	   	      Water shading functions                            //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -61,7 +75,7 @@ float3 WaterDepth(float3 posWS, half2 texcoords, half4 additionalData, half2 scr
 {
 	float3 outDepth = 0;
 	outDepth.xz = AdjustedDepth(screenUVs, additionalData);
-	float wd = (1 - SAMPLE_TEXTURE2D_LOD(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, texcoords, 3).r) * 19.1;
+	float wd = (1 - SAMPLE_TEXTURE2D_LOD(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, texcoords, 1).r) * 19.1;
 	outDepth.y = (wd - 3.5) + posWS.y;
 	return outDepth;
 }
@@ -110,7 +124,7 @@ WaterVertexOutput WaveVertexOperations(WaterVertexOutput input)
 	screenUV.xyz /= screenUV.w;
 
     // shallows mask
-    half waterDepth = (1 - SAMPLE_TEXTURE2D_LOD(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, (input.posWS.xz * half2(0.002, -0.002)) + 0.5, 1).r) * 19.1;
+    half waterDepth = (1 - SAMPLE_TEXTURE2D_LOD(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, (input.posWS.xz * 0.002) + 0.5, 1).r) * 19.1;
     waterDepth = waterDepth - 4.1;
     input.posWS.y += saturate((1-waterDepth) * 0.6 - 0.5);
 
@@ -175,7 +189,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	half4 waterFX = SAMPLE_TEXTURE2D(_WaterFXMap, sampler_ScreenTextures_linear_clamp, IN.preWaveSP.xy);
 
 	// Depth
-	float3 depth = WaterDepth(IN.posWS, (IN.posWS.xz * half2(0.002, -0.002)) + 0.5, IN.additionalData, screenUV.xy);// TODO - hardcoded shore depth UVs
+	float3 depth = WaterDepth(IN.posWS, (IN.posWS.xz * 0.002) + 0.5, IN.additionalData, screenUV.xy);// TODO - hardcoded shore depth UVs
 	half depthMulti = 1 / _MaxDepth;
 
 	// Lighting
@@ -206,7 +220,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	// Detail waves
 	half2 detailBump1 = SAMPLE_TEXTURE2D(_SurfaceMap, sampler_SurfaceMap, IN.uv.zw).xy * 2 - 1;
 	half2 detailBump2 = SAMPLE_TEXTURE2D(_SurfaceMap, sampler_SurfaceMap, IN.uv.xy).xy * 2 - 1;
-	half2 detailBump = (detailBump1 + detailBump2 * 0.5) * saturate(depth.x * 0.25);
+	half2 detailBump = (detailBump1 + detailBump2 * 0.5) * saturate(depth.x * 0.25 + 0.25);
 	
 	IN.normal += half3(detailBump.x, 0, detailBump.y) * _BumpScale;
 	IN.normal += half3(1-waterFX.y, 0.5h, 1-waterFX.z) - 0.5;
@@ -254,11 +268,13 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	// Fog
     float fogFactor = IN.fogFactorNoise.x;
     comp = MixFog(comp, fogFactor);
+    //comp = DebugWaterFX(comp, waterFX, screenUV.x);
 	return half4(comp, 1);
-	//return half4(reflection, 1); // debug line
+	//return SAMPLE_TEXTURE2D(_PlanarReflectionTexture, sampler_ScreenTextures_linear_clamp, screenUV);
+	//return half4(spec, 1); // debug line
 	//return half4(diffuse, 1); // debug line
 	//return half4( (1 - foamMask).xxx, 1); // debug line
-	//return half4(IN.normal, 1); // debug line
+	//eturn half4(pow(dot(IN.normal,float3(0, 1, 0)), 10).xxx, 1); // debug line
 }
 
 #endif // WATER_COMMON_INCLUDED

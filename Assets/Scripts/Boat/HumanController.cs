@@ -1,49 +1,45 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace BoatAttack.Boat
+namespace BoatAttack
 {
     /// <summary>
     /// This sends input controls to the boat engine if 'Human'
     /// </summary>
-    public class HumanController : MonoBehaviour
+    public class HumanController : BaseController
     {
-        public BoatController controller; // the boat controller
-        public Engine engine; // the engine script
+        private InputControls _controls;
 
-        public InputControls controls;
+        private float _throttle;
+        private float _steering;
 
-        public float throttle;
-        public float steering;
-
-        public bool paused;
+        private bool _paused;
         
-        void Awake()
+        private void Awake()
         {
-            controls = new InputControls();
+            _controls = new InputControls();
             
-            controls.BoatControls.Trottle.performed += context => throttle = context.ReadValue<float>();
-            controls.BoatControls.Trottle.canceled += context => throttle = 0f;
+            _controls.BoatControls.Trottle.performed += context => _throttle = context.ReadValue<float>();
+            _controls.BoatControls.Trottle.canceled += context => _throttle = 0f;
             
-            controls.BoatControls.Steering.performed += context => steering = context.ReadValue<float>();
-            controls.BoatControls.Steering.canceled += context => steering = 0f;
+            _controls.BoatControls.Steering.performed += context => _steering = context.ReadValue<float>();
+            _controls.BoatControls.Steering.canceled += context => _steering = 0f;
 
-            controls.BoatControls.Reset.performed += ResetBoat;
-            controls.BoatControls.Freeze.performed += FreezeBoat;
+            _controls.BoatControls.Reset.performed += ResetBoat;
+            _controls.BoatControls.Freeze.performed += FreezeBoat;
 
-            controls.BoatControls.Time.performed += SelectTime;
+            _controls.BoatControls.Time.performed += SelectTime;
+        }
 
-            engine = GetComponent<Engine>(); // get the engine script
-		}
-
-        private void OnEnable()
+        public override void OnEnable()
         {
-            controls.BoatControls.Enable();
+            base.OnEnable();
+            _controls.BoatControls.Enable();
         }
 
         private void OnDisable()
         {
-            controls.BoatControls.Disable();
+            _controls.BoatControls.Disable();
         }
 
         private void ResetBoat(InputAction.CallbackContext context)
@@ -53,8 +49,8 @@ namespace BoatAttack.Boat
 
         private void FreezeBoat(InputAction.CallbackContext context)
         {
-            paused = !paused;
-            if(paused)
+            _paused = !_paused;
+            if(_paused)
             {
                 Time.timeScale = 0f;
             }
@@ -62,7 +58,6 @@ namespace BoatAttack.Boat
             {
                 Time.timeScale = 1f;
             }
-            //engine.RB.isKinematic = !engine.RB.isKinematic;
         }
 
         private void SelectTime(InputAction.CallbackContext context)
@@ -74,8 +69,8 @@ namespace BoatAttack.Boat
 
         void FixedUpdate()
         {
-            engine.Accel(throttle);
-            engine.Turn(steering);
+            engine.Accelerate(_throttle);
+            engine.Turn(_steering);
         }
     }
 }

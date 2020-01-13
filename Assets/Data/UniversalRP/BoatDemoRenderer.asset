@@ -1,19 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-5007552800156170450
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc3f76324391a408d9c0770ca6fcb666, type: 3}
-  m_Name: Water FX
-  m_EditorClassIdentifier: 
-  settings:
-    debug: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27,8 +13,7 @@ MonoBehaviour:
   m_Name: BoatDemoRenderer
   m_EditorClassIdentifier: 
   m_RendererFeatures:
-  - {fileID: 7749027049794126836}
-  - {fileID: -5007552800156170450}
+  - {fileID: 770174969183694509}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   shaders:
     blitPS: {fileID: 4800000, guid: c17132b1f77d20942aa75f8429c0f8bc, type: 3}
@@ -36,6 +21,7 @@ MonoBehaviour:
     screenSpaceShadowPS: {fileID: 4800000, guid: 0f854b35a0cf61a429bd5dcfea30eddd,
       type: 3}
     samplingPS: {fileID: 4800000, guid: 04c410c9937594faa893a11dceb85f7e, type: 3}
+    fallbackErrorPS: {fileID: 4800000, guid: e6e9a19c3678ded42a3bc431ebef7dbd, type: 3}
   m_OpaqueLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -49,7 +35,7 @@ MonoBehaviour:
     passOperation: 2
     failOperation: 0
     zFailOperation: 0
---- !u!114 &7749027049794126836
+--- !u!114 &770174969183694509
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -58,10 +44,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01c60659bc43f4603be9d5b8afb185fb, type: 3}
-  m_Name: Caustics
+  m_Script: {fileID: 11500000, guid: adbe377f4f72c497faee64bc3f0580b9, type: 3}
+  m_Name: WaterSystemPass
   m_EditorClassIdentifier: 
   settings:
-    material: {fileID: 2100000, guid: 7e6ea000873112847bd146ddb78ac67d, type: 2}
-    mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+    causticScale: 0.25
     debug: 0
+  causticShader: {fileID: 4800000, guid: 90939d2e4b62841d29c136c866715501, type: 3}

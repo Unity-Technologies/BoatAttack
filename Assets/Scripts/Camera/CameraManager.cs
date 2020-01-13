@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
-using Cinemachine;
 using UnityEngine.UI;
+using Cinemachine;
 
 namespace BoatAttack
 {
