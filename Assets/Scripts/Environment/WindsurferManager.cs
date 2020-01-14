@@ -25,7 +25,7 @@ namespace BoatAttack
             _heights = new float3[surfers.Length];
             _normals = new float3[surfers.Length];
             _smoothPositions = new Vector3[surfers.Length];
-            
+
             for (var i = 0; i < surfers.Length; i++)
             {
                 _smoothPositions[i] = surfers[i].position;
@@ -37,13 +37,13 @@ namespace BoatAttack
         {
             _points.Dispose();
         }
-        
-        // Update is called once per frame - TODO - need to validate logic here (not smooth at all in demo)
+
+        // TODO - need to validate logic here (not smooth at all in demo)
         private void Update()
         {
             GerstnerWavesJobs.UpdateSamplePoints(ref _points, _guid);
             GerstnerWavesJobs.GetData(_guid, ref _heights, ref _normals);
-            
+
             for (int i = 0; i < surfers.Length; i++)
             {
                 _smoothPositions[i] = surfers[i].position;

@@ -140,7 +140,7 @@ namespace BoatAttack
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            Instance.StartCoroutine(BeginRace()); // TODO need to make much better with race intro etc
+            Instance.StartCoroutine(BeginRace());
         }
 
         private static void UnloadRace(Scene scene)
@@ -165,7 +165,7 @@ namespace BoatAttack
             {
                 case GameType.Singleplayer:
                     var b = new BoatData();
-                    b.human = false; //true; // TODO for testing
+                    b.human = true; // single player is human
                     RaceData.boats.Add(b); // add player boat
                     GenerateRandomBoats(RaceData.boatCount - 1); // add random AI
                     break;
