@@ -95,6 +95,7 @@ namespace BoatAttack
 
         [Header("Assets")] public AssetReference[] boats;
         public AssetReference raceUiPrefab;
+        public AssetReference raceUiTouchPrefab;
 
         private void OnEnable()
         {
@@ -298,7 +299,9 @@ namespace BoatAttack
 
         private static IEnumerator CreatePlayerUi(int player)
         {
-            var uiLoading = Instance.raceUiPrefab.InstantiateAsync();
+            var touch = Input.touchSupported && Input.multiTouchEnabled;
+            var uiAsset = touch ? Instance.raceUiTouchPrefab : Instance.raceUiPrefab;
+            var uiLoading = uiAsset.InstantiateAsync();
             yield return uiLoading;
             if (uiLoading.Result.TryGetComponent(out RaceUI uiComponent))
             {
