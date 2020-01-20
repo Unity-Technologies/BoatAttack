@@ -28,7 +28,6 @@ GraphicsSettings:
   m_LensFlare:
     m_Mode: 1
     m_Shader: {fileID: 102, guid: 0000000000000000f000000000000000, type: 0}
-  m_VideoShadersIncludeMode: 2
   m_AlwaysIncludedShaders:
   - {fileID: 15104, guid: 0000000000000000f000000000000000, type: 0}
   - {fileID: 15105, guid: 0000000000000000f000000000000000, type: 0}
@@ -150,8 +149,8 @@ GraphicsSettings:
       enableLPPV: 0
       useDitherMaskForAlphaBlendedShadows: 0
     m_Automatic: 1
-  m_LightmapStripping: 1
-  m_FogStripping: 1
+  m_LightmapStripping: 0
+  m_FogStripping: 0
   m_InstancingStripping: 0
   m_LightmapKeepPlain: 0
   m_LightmapKeepDirCombined: 1

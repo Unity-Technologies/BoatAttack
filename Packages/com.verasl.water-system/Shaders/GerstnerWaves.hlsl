@@ -55,7 +55,7 @@ WaveStruct GerstnerWave(half2 pos, float waveCountMulti, half amplitude, half di
 	// calculate the offsets for the current point
 	wave.xz = qi * amplitude * windDir.xy * cosCalc;
 	wave.y = ((sinCalc * amplitude)) * waveCountMulti;// the height is divided by the number of waves
-	
+
 	////////////////////////////normal output calculations/////////////////////////
 	half wa = w * amplitude;
 	// normal vector
@@ -72,35 +72,34 @@ WaveStruct GerstnerWave(half2 pos, float waveCountMulti, half amplitude, half di
 inline void SampleWaves(float3 position, half opacity, out WaveStruct waveOut)
 {
 	half2 pos = position.xz;
-	WaveStruct waves[10];
 	waveOut.position = 0;
 	waveOut.normal = 0;
 	half waveCountMulti = 1.0 / _WaveCount;
 	half3 opacityMask = saturate(half3(3, 3, 1) * opacity);
-	
+
 	UNITY_LOOP
 	for(uint i = 0; i < _WaveCount; i++)
 	{
-		#if defined(USE_STRUCTURED_BUFFER)
-		waves[i] = GerstnerWave(pos,
-								waveCountMulti, 
-								_WaveDataBuffer[i].amplitude, 
-								_WaveDataBuffer[i].direction, 
-								_WaveDataBuffer[i].wavelength, 
-								_WaveDataBuffer[i].omni, 
-								_WaveDataBuffer[i].origin); // calculate the wave		
-		#else
-		waves[i] = GerstnerWave(pos,
-        								waveCountMulti, 
-        								waveData[i].x, 
-        								waveData[i].y, 
-        								waveData[i].z, 
-        								waveData[i].w, 
-        								waveData[i + 10].xy); // calculate the wave
+#if defined(USE_STRUCTURED_BUFFER)
+		Wave w = _WaveDataBuffer[i];
+#else
+		Wave w;
+		w.amplitude = waveData[i].x;
+		w.direction = waveData[i].y;
+		w.wavelength = waveData[i].z;
+		w.omni = waveData[i].w;
+		w.origin = waveData[i + 10].xy;
+#endif
+		WaveStruct wave = GerstnerWave(pos,
+								waveCountMulti,
+								w.amplitude,
+								w.direction,
+								w.wavelength,
+								w.omni,
+								w.origin); // calculate the wave
 
-		#endif
-		waveOut.position += waves[i].position; // add the position
-		waveOut.normal += waves[i].normal; // add the normal
+		waveOut.position += wave.position; // add the position
+		waveOut.normal += wave.normal; // add the normal
 	}
 	waveOut.position *= opacityMask;
 }

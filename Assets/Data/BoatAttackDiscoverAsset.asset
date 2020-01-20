@@ -19,13 +19,20 @@ MonoBehaviour:
   DiscoverListWidth: 180
   EnableShowAtStartup: 1
   PreferenceName: Discover
-  Title: Boat Attack Demo
-  Description: "Welcome to the Boat Attack demo project!\n\tThis demo makes use of
-    the Universal Render Pipeline and is deisgned to showcase and display examples
-    of how to use some of the features included with Universal RP and other exciting
-    features available in Unity.\n\n\tUsing this window you can explore parts of
-    the project and some of the examples in isolation to learn how they work and
-    what they were used for.\n"
+  Title: Welcome to the Boat Attack demo project!
+  Description: 'This demo makes use of the Universal Render Pipeline and is deisgned
+    to showcase and display examples of how to use some of the features included
+    with Universal RP and other exciting features available in Unity.
+
+
+    Using
+    this window you can explore parts of the project and some of the examples in
+    isolation to learn how they work and what they were used for.
+
+
+    To build
+    this project, make sure to build the addressable content first, for information
+    about how to do so please check the Addressables package manual.'
   Scenes:
   - Title: Main menu
     Description: This is where you can start the project in playmode and try the
@@ -33,9 +40,10 @@ MonoBehaviour:
     SceneSetups: []
     SingleScenes:
     - {fileID: 102900000, guid: c817c1b09586c49e5b4a849ce1cf119b, type: 3}
-  - Title: The Island
-    Description: This level contains the full racing experience
+  - Title: Demo Island
+    Description: This scene (demo_Island) contains the island scene with everything
+      setup for the boats to start racing in AI mode.
     SceneSetups: []
     SingleScenes:
-    - {fileID: 102900000, guid: e49366a21c3d84388bfb33016c0e77e2, type: 3}
+    - {fileID: 102900000, guid: b3bf1324da98a41e796a5881dd3812eb, type: 3}
   Debug: 0
