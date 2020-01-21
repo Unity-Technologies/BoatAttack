@@ -15,7 +15,7 @@ GameObject:
   m_Icon: {fileID: 2800000, guid: d6e27dc5ad82e7c4e8cddded5872eb77, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7473329029648627037
 Transform:
   m_ObjectHideFlags: 0
@@ -43,7 +43,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7473329029991716460}
   - component: {fileID: 7473329029991716461}
-  m_Layer: 8
+  - component: {fileID: 1353077144841069509}
+  m_Layer: 0
   m_Name: Vol_Main
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,6 +78,23 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 75.92345, y: 33, z: 35.632183}
   m_Center: {x: -2.3334885, y: -2, z: -1.6808491}
+--- !u!114 &1353077144841069509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7473329029991716459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGlobal: 0
+  priority: 0
+  blendDistance: 4
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: fb5f8303a889847b487b598625aff3bb, type: 2}
 --- !u!1 &7473329030308491863
 GameObject:
   m_ObjectHideFlags: 0
@@ -87,7 +105,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7473329030308491848}
   - component: {fileID: 7473329030308491849}
-  m_Layer: 8
+  - component: {fileID: 275362022624562760}
+  m_Layer: 0
   m_Name: Vol_Entrance
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,6 +140,23 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 18.868795, y: 33, z: 12.698131}
   m_Center: {x: 7.6051254, y: -2, z: 2.0470119}
+--- !u!114 &275362022624562760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7473329030308491863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGlobal: 0
+  priority: 0
+  blendDistance: 4
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: fb5f8303a889847b487b598625aff3bb, type: 2}
 --- !u!1 &7473329030466396888
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,7 +167,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7473329030466396889}
   - component: {fileID: 7473329030466396890}
-  m_Layer: 8
+  - component: {fileID: 6738929011541283269}
+  m_Layer: 0
   m_Name: Vol_Exit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -165,3 +202,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 31.89573, y: 18.334175, z: 15.519621}
   m_Center: {x: 9.010681, y: -1.5555, z: 5.555482}
+--- !u!114 &6738929011541283269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7473329030466396888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGlobal: 0
+  priority: 0
+  blendDistance: 4
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: fb5f8303a889847b487b598625aff3bb, type: 2}

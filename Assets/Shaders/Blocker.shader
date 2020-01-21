@@ -6,7 +6,7 @@
     }
     SubShader
     {
-        Tags{"RenderType" = "Opaque" "RenderPipeline" = "LightweightPipeline" "IgnoreProjector" = "True"}
+        Tags{"RenderType" = "Opaque" "RenderPipeline" = "Universal" "IgnoreProjector" = "True"}
         LOD 100
         
         Cull front
@@ -17,7 +17,7 @@
             #pragma vertex vert
             #pragma fragment frag
             
-            #include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
             float4 vert (float4 vertex : POSITION) : SV_POSITION
             {

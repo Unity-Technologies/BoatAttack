@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using UnityEngine.Rendering.LWRP;
+using UnityEngine.Rendering.Universal;
 
 namespace WaterSystem
 {

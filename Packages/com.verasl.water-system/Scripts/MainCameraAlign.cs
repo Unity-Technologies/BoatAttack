@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace WaterSystem
@@ -14,7 +12,7 @@ namespace WaterSystem
 
         public float quantizeValue = 6.25f;
         public float forwards = 10f;
-        public float yOffset = -1f;
+        public float yOffset = -0.25f;
 
         private void OnEnable()
         {
@@ -26,13 +24,20 @@ namespace WaterSystem
             RenderPipelineManager.beginCameraRendering -= UpdatePosition;
         }
 
-        void UpdatePosition(ScriptableRenderContext src, Camera cam)
+        private void UpdatePosition(ScriptableRenderContext src, Camera cam)
         {
-            Vector3 newPos = cam.transform.TransformPoint(Vector3.forward * forwards);
+            if (cam.cameraType == CameraType.Preview) return;
+            
+            var newPos = cam.transform.TransformPoint(Vector3.forward * forwards);
             newPos.y = yOffset;
-            newPos.x = quantizeValue * (int)(newPos.x / quantizeValue);
-            newPos.z = quantizeValue * (int)(newPos.z / quantizeValue);
+            newPos.x = QuantizeValue(newPos.x);
+            newPos.z = QuantizeValue(newPos.z);
             transform.position = newPos;
+        }
+
+        private float QuantizeValue(float value)
+        {
+            return quantizeValue * (int) (value / quantizeValue);
         }
     }
 }

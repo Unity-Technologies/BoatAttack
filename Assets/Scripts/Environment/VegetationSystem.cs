@@ -1,17 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
+﻿using UnityEngine;
 
 namespace BoatAttack
 {
     public class VegetationSystem : MonoBehaviour
     {
-        MaterialPropertyBlock props; // material propery block for instance value setting
+        private MaterialPropertyBlock _props; // material propery block for instance value setting
+        private static readonly int Position = Shader.PropertyToID("_Position");
 
         void Start()
         {
-            props = new MaterialPropertyBlock();
+            _props = new MaterialPropertyBlock();
             SetProperties(transform);
         }
 
@@ -19,16 +17,15 @@ namespace BoatAttack
         /// Sets the properties for the vegetations shader
         /// </summary>
         /// <param name="t">Transform to use</param>
-        void SetProperties(Transform t)
+        private void SetProperties(Transform t)
         {
-            MeshRenderer rend;
             foreach (Transform child in t)
             {
-                rend = child.gameObject.GetComponent<MeshRenderer>();
+                var rend = child.gameObject.GetComponent<MeshRenderer>();
                 if (rend)
                 {
-                    props.SetVector("_Position", child.position);
-                    rend.SetPropertyBlock(props);
+                    _props.SetVector(Position, child.position);
+                    rend.SetPropertyBlock(_props);
                 }
                 if (child.childCount > 0)
                     SetProperties(child);

@@ -1,12 +1,11 @@
 ﻿Shader "Hidden/Post/BasicAO"
 {
     HLSLINCLUDE
-        //#include "Packages/com.unity.render-pipelines.lightweight/ShaderLibrary/Core.hlsl"
-        #include "Packages/com.unity.postprocessing/PostProcessing/Shaders/StdLib.hlsl"
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
-        TEXTURE2D_SAMPLER2D(_MainTex, sampler_MainTex);
-        TEXTURE2D_SAMPLER2D(_NoiseTex, sampler_NoiseTex);
-        TEXTURE2D_SAMPLER2D(_CameraDepthTexture, sampler_CameraDepthTexture);
+        TEXTURE2D(_MainTex); SAMPLER(sampler_MainTex);
+        TEXTURE2D(_NoiseTex); SAMPLER(sampler_NoiseTex);
+        TEXTURE2D(_CameraDepthTexture); SAMPLER(sampler_CameraDepthTexture);
         
         float _Blend;
         float _Intensity;
