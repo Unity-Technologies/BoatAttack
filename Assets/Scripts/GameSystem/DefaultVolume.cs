@@ -28,7 +28,7 @@ public class DefaultVolume : MonoBehaviour
         }
         else if(Instance != this)
         {
-            Debug.LogWarning($"Extra Volume Manager cleaned up. GUID:{gameObject.GetInstanceID()}");
+            Debug.Log($"Extra Volume Manager cleaned up. GUID:{gameObject.GetInstanceID()}");
 #if UNITY_EDITOR
             DestroyImmediate(gameObject);
             return;
@@ -101,7 +101,7 @@ public class StartupVolume
     static StartupVolume()
     {
         var thing = AssetDatabase.LoadAssetAtPath("Assets/Objects/misc/DefaultVolume.prefab", typeof(GameObject)) as GameObject;
-        Debug.LogWarning($"Creating Volume Manager");
+        Debug.Log($"Creating Volume Manager");
         vol = Object.Instantiate(thing);
         vol.hideFlags = HideFlags.HideAndDontSave;
     }
