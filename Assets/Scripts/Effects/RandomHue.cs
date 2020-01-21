@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace BoatAttack
 {
@@ -10,40 +8,26 @@ namespace BoatAttack
     public class RandomHue : MonoBehaviour
     {
         public MeshRenderer[] renderers;
+        private static readonly int Hue = Shader.PropertyToID("_Hue");
 
         private void OnEnable()
         {
-            RandomizeHUE();
+            RandomizeHue();
         }
 
-        private void OnValidate()
+        void RandomizeHue()
         {
-            RandomizeHUE();
-        }
+            var hue = Random.Range(0f, 1f);
 
-        void RandomizeHUE()
-        {
-            float hue = Random.Range(0f, 1f);
+            if (renderers == null || renderers.Length <= 0) return;
             
-            if (renderers != null || renderers.Length > 0)
+            foreach (var t in renderers)
             {
-                for (int i = 0; i < renderers.Length; i++)
-                {
-                    if (renderers[i] != null)
-                    {
-                        // Set as MPB in editor but in playmode(runtime) create instance for SRP batcher to work
-                        if (Application.isPlaying)
-                        {
-                            renderers[i].material.SetFloat("_Hue", hue);
-                        }
-                        else
-                        {
-                            MaterialPropertyBlock mtb = new MaterialPropertyBlock();
-                            mtb.SetFloat("_Hue", hue);
-                            renderers[i].SetPropertyBlock(mtb);
-                        }
-                    }
-                }
+                if (t == null) continue;
+                
+                var mat = new Material(t.sharedMaterial);
+                mat.SetFloat(Hue, hue);
+                t.material = mat;
             }
         }
     }

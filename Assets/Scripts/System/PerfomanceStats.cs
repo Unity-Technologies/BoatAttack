@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.UI;
@@ -13,11 +12,7 @@ public class PerfomanceStats : MonoBehaviour {
 
     // UI display
     public Text frametimeDisplay;
-
-    void Start () {
-		
-	}
-	
+    
 	void Update () {
         frametimeDisplay.text = "";
         // sample frametime

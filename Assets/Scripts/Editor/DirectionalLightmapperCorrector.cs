@@ -1,15 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEditor;
 using UnityEngine;
-using UnityEditor;
 
 public class DirectionalLightmapperCorrector : AssetPostprocessor
 {
-    void OnPostprocessTexture(Texture2D texture)
+    private void OnPostprocessTexture(Texture2D texture)
     {
         if (!(assetPath.Contains("Lightmap-") && assetPath.Contains("_comp_dir")))
             return;
-        
+    
         Color[] c = texture.GetPixels();
 
         for (int i = 0; i < c.Length; i++)

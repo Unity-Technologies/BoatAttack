@@ -1,0 +1,221 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3829577903138488069
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3829577903138488073}
+  - component: {fileID: 3829577903138488074}
+  - component: {fileID: 8490184438857729681}
+  - component: {fileID: 7312333174115242941}
+  - component: {fileID: 5054393478131282040}
+  m_Layer: 0
+  m_Name: AppManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3829577903138488073
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3829577903138488069}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 108.12326, y: 11.028929, z: -31.28112}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3829577903138488074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3829577903138488069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de62f03c3364421389a6c95485ec756, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxRenderSize: 3
+  variableResolution: 0
+  axisBias: 0.5
+  minScale: 0.5
+  targetFramerate: 0
+  speedFormat: 0
+  loadingScreen:
+    m_AssetGUID: 179a2376fe443449d9046bc913164c8b
+  volumeManager:
+    m_AssetGUID: d4548d51034644d21971f134c82b6a9a
+--- !u!114 &8490184438857729681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3829577903138488069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce2d6128fa5c04c7e84e7978ef8b37a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  demoRaceData:
+    game: 0
+    type: 0
+    boatCount: 4
+    level: 
+    laps: 1
+    reversed: 0
+    boats:
+    - boatName: Player 1
+      boatPrefab:
+        m_AssetGUID: 405c4bc591de844a3a100e1538790229
+      livery:
+        primaryColor: {r: 0.8773585, g: 0.09518514, b: 0.09518514, a: 0}
+        trimColor: {r: 0.8679245, g: 0.8679245, b: 0.8679245, a: 0}
+      human: 0
+    - boatName: Player 2
+      boatPrefab:
+        m_AssetGUID: 70d78230a0527e74dabc4f14906eef98
+      livery:
+        primaryColor: {r: 0.11053756, g: 0.8679245, b: 0.17524286, a: 0}
+        trimColor: {r: 0.7354654, g: 0.122774996, b: 0.8396226, a: 0}
+      human: 0
+    - boatName: Player 3
+      boatPrefab:
+        m_AssetGUID: 405c4bc591de844a3a100e1538790229
+      livery:
+        primaryColor: {r: 0.098039225, g: 0.8980392, b: 0.8708881, a: 0}
+        trimColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 0}
+      human: 0
+    - boatName: Player 4
+      boatPrefab:
+        m_AssetGUID: 70d78230a0527e74dabc4f14906eef98
+      livery:
+        primaryColor: {r: 0.1481844, g: 0.2092964, b: 0.8490566, a: 0}
+        trimColor: {r: 0.9339623, g: 0.7163166, b: 0.074893214, a: 0}
+      human: 0
+  boats:
+  - m_AssetGUID: 405c4bc591de844a3a100e1538790229
+  - m_AssetGUID: 70d78230a0527e74dabc4f14906eef98
+  raceUiPrefab:
+    m_AssetGUID: 0482dcbdb79ee4d7eb43a774a90bda4e
+  raceUiTouchPrefab:
+    m_AssetGUID: c080ffd98277d4e3f97f96dedf2ec960
+--- !u!114 &7312333174115242941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3829577903138488069}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12170cf0581b249279bf9ba0eda0b212, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!82 &5054393478131282040
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3829577903138488069}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 643024a49360c40c0a27365c40d4d58d, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.5
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 256
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 1
+  BypassListenerEffects: 1
+  BypassReverbZones: 1
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
