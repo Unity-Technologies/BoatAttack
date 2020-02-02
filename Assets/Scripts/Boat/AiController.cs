@@ -129,7 +129,8 @@ namespace BoatAttack
         {
             var c = Color.yellow;
             Gizmos.color = c;
-
+            if (_pathPoint == null)
+                return;
             for (var i = 0; i < _pathPoint.Length - 1; i++)
             {
                 if (i == _pathPoint.Length - 1)
