@@ -44,7 +44,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   computeOverride: 1
-  _bakedDepthTex: {fileID: 2800000, guid: 93bf4e51726633144823e135b668c836, type: 3}
+  _depthTex: {fileID: 0}
+  bakedDepthTex: {fileID: 0}
   _waves:
   - amplitude: 0.22704089
     direction: -88.46054
@@ -697,10 +698,10 @@ ReflectionProbe:
   m_Enabled: 1
   serializedVersion: 2
   m_Type: 0
-  m_Mode: 1
+  m_Mode: 0
   m_RefreshMode: 2
   m_TimeSlicingMode: 1
-  m_Resolution: 64
+  m_Resolution: 128
   m_UpdateFrequency: 0
   m_BoxSize: {x: 66.135086, y: 100, z: 48.24503}
   m_BoxOffset: {x: -10.163631, y: 0, z: -2.0956554}
@@ -1067,7 +1068,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.9269918, b: 0.7688679, a: 1}
-  m_Intensity: 3
+  m_Intensity: 4
   m_Range: 39.903427
   m_SpotAngle: 59.46183
   m_InnerSpotAngle: 44.63453
