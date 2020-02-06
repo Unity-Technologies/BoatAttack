@@ -60,7 +60,7 @@ namespace WaterSystem
         private static readonly int WaveDataBuffer = Shader.PropertyToID("_WaveDataBuffer");
         private static readonly int WaveData = Shader.PropertyToID("waveData");
         private static readonly int AbsorptionScatteringRamp = Shader.PropertyToID("_AbsorptionScatteringRamp");
-        private static readonly int DepthCamZParams = Shader.PropertyToID("_depthCamZParams");
+        private static readonly int DepthCamZParams = Shader.PropertyToID("_VeraslWater_DepthCamParams");
 
         private void OnValidate() { Init(); }
 
@@ -116,25 +116,25 @@ namespace WaterSystem
             const float quantizeValue = 6.25f;
             const float forwards = 10f;
             const float yOffset = -0.25f;
-        
+
             var newPos = cam.transform.TransformPoint(Vector3.forward * forwards);
             newPos.y = yOffset;
             newPos.x = quantizeValue * (int) (newPos.x / quantizeValue);
             newPos.z = quantizeValue * (int) (newPos.z / quantizeValue);
-                
+
             var matrix = Matrix4x4.TRS(newPos + transform.position, Quaternion.identity, Vector3.one); // transform.localToWorldMatrix;
-                
+
             foreach (var mesh in resources.defaultWaterMeshes)
             {
                 Graphics.DrawMesh(mesh,
                     matrix,
                     resources.defaultSeaMaterial,
-                    gameObject.layer, 
-                    cam, 
-                    0, 
-                    null, 
-                    ShadowCastingMode.Off, 
-                    true, 
+                    gameObject.layer,
+                    cam,
+                    0,
+                    null,
+                    ShadowCastingMode.Off,
+                    true,
                     null,
                     LightProbeUsage.Off,
                     null);
@@ -170,7 +170,7 @@ namespace WaterSystem
             {
                 resources = Resources.Load("WaterResources") as WaterResources;
             }
-            //CaptureDepthMap();
+            CaptureDepthMap();
         }
 
         private void LateUpdate()
@@ -342,30 +342,26 @@ namespace WaterSystem
             //Generate the camera
             if(_depthCam == null)
             {
-                GameObject go =
+                var go =
                     new GameObject("depthCamera") {hideFlags = HideFlags.HideAndDontSave}; //create the cameraObject
                 _depthCam = go.AddComponent<Camera>();
             }
 
-            if (!_depthCam.TryGetComponent<UniversalAdditionalCameraData>(out var additionalCamData))
-            {
-                additionalCamData = _depthCam.gameObject.AddComponent(typeof(UniversalAdditionalCameraData)) as UniversalAdditionalCameraData;
-            }
-
+            var additionalCamData = _depthCam.GetUniversalAdditionalCameraData();
             additionalCamData.renderShadows = false;
             additionalCamData.requiresColorOption = CameraOverrideOption.Off;
             additionalCamData.requiresDepthOption = CameraOverrideOption.Off;
-            
+
             var t = _depthCam.transform;
-            t.position = Vector3.up * 4f;//center the camera on this water plane
-            t.up = Vector3.forward;//face teh camera down
-            
+            var depthExtra = 4.0f;
+            t.position = Vector3.up * (transform.position.y + depthExtra);//center the camera on this water plane height
+            t.up = Vector3.forward;//face the camera down
+
             _depthCam.enabled = true;
             _depthCam.orthographic = true;
             _depthCam.orthographicSize = 250;//hardcoded = 1k area - TODO
-            //_depthCam.depthTextureMode = DepthTextureMode.Depth;
-            _depthCam.nearClipPlane =0.1f;
-            _depthCam.farClipPlane = surfaceData._waterMaxVisibility;
+            _depthCam.nearClipPlane =0.01f;
+            _depthCam.farClipPlane = surfaceData._waterMaxVisibility + depthExtra;
             _depthCam.allowHDR = false;
             _depthCam.allowMSAA = false;
             _depthCam.cullingMask = (1 << 10);
@@ -375,27 +371,25 @@ namespace WaterSystem
             if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.OpenGLES2 || SystemInfo.graphicsDeviceType == GraphicsDeviceType.OpenGLES3)
             {
                 _depthTex.filterMode = FilterMode.Point;
-                _depthTex.wrapMode = TextureWrapMode.Clamp;
             }
+            _depthTex.wrapMode = TextureWrapMode.Clamp;
             _depthTex.name = "WaterDepthMap";
             //do depth capture
             _depthCam.targetTexture = _depthTex;
             _depthCam.Render();
             Shader.SetGlobalTexture(WaterDepthMap, _depthTex);
             // set depth bufferParams for depth cam(since it doesnt exist and only temporary)
-            var n = _depthCam.nearClipPlane;
-            var f = _depthCam.farClipPlane;
-            var zParams = new Vector4(n, f, f / (f-n), f * n / (n-f));
+            var _params = new Vector4(t.position.y, 250, 0, 0);
             //Vector4 zParams = new Vector4(1-f/n, f/n, (1-f/n)/f, (f/n)/f);//2015
-            Shader.SetGlobalVector(DepthCamZParams, zParams);
-            
+            Shader.SetGlobalVector(DepthCamZParams, _params);
+
 /*            #if UNITY_EDITOR
             Texture2D tex2D = new Texture2D(1024, 1024, TextureFormat.Alpha8, false);
             Graphics.CopyTexture(_depthTex, tex2D);
             byte[] image = tex2D.EncodeToPNG();
             System.IO.File.WriteAllBytes(Application.dataPath + "/WaterDepth.png", image);
             #endif*/
-            
+
             _depthCam.enabled = false;
             _depthCam.targetTexture = null;
         }

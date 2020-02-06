@@ -71,12 +71,17 @@ float2 AdjustedDepth(half2 uvs, half4 additionalData)
 	return float2(d * additionalData.x - additionalData.y, (rawD * -_ProjectionParams.x) + (1-UNITY_REVERSED_Z));
 }
 
-float3 WaterDepth(float3 posWS, half2 texcoords, half4 additionalData, half2 screenUVs)// x = seafloor depth, y = water depth
+float WaterTextureDepth(float3 posWS)
+{
+    return (1 - SAMPLE_TEXTURE2D_LOD(_WaterDepthMap, sampler_WaterDepthMap_clamp, posWS.xz * 0.002 + 0.5, 1).r) * (_MaxDepth + _VeraslWater_DepthCamParams.x) - _VeraslWater_DepthCamParams.x;
+}
+
+float3 WaterDepth(float3 posWS, half4 additionalData, half2 screenUVs)// x = seafloor depth, y = water depth
 {
 	float3 outDepth = 0;
 	outDepth.xz = AdjustedDepth(screenUVs, additionalData);
-	float wd = (1 - SAMPLE_TEXTURE2D_LOD(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, texcoords, 1).r) * 19.1;
-	outDepth.y = (wd - 3.5) + posWS.y;
+	float wd = WaterTextureDepth(posWS);
+	outDepth.y = wd + posWS.y;
 	return outDepth;
 }
 
@@ -124,13 +129,12 @@ WaterVertexOutput WaveVertexOperations(WaterVertexOutput input)
 	screenUV.xyz /= screenUV.w;
 
     // shallows mask
-    half waterDepth = (1 - SAMPLE_TEXTURE2D_LOD(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, (input.posWS.xz * 0.002) + 0.5, 1).r) * 19.1;
-    waterDepth = waterDepth - 4.1;
-    input.posWS.y += saturate((1-waterDepth) * 0.6 - 0.5);
+    half waterDepth = WaterTextureDepth(input.posWS);
+    input.posWS.y += saturate((-waterDepth + 1.5) * 0.4);
 
 	//Gerstner here
 	WaveStruct wave;
-	SampleWaves(input.posWS, saturate((waterDepth * 0.25)) + 0.05, wave);
+	SampleWaves(input.posWS, saturate((waterDepth * 0.1 + 0.05)), wave);
 	input.normal = wave.normal.xzy;
     input.posWS += wave.position;
 
@@ -189,7 +193,9 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	half4 waterFX = SAMPLE_TEXTURE2D(_WaterFXMap, sampler_ScreenTextures_linear_clamp, IN.preWaveSP.xy);
 
 	// Depth
-	float3 depth = WaterDepth(IN.posWS, (IN.posWS.xz * 0.002) + 0.5, IN.additionalData, screenUV.xy);// TODO - hardcoded shore depth UVs
+	float3 depth = WaterDepth(IN.posWS, IN.additionalData, screenUV.xy);// TODO - hardcoded shore depth UVs
+	half depthEdge = saturate(depth.y * 20 + 1);
+	//return half4(0, frac(ceil(depth.y) / _MaxDepth), frac(IN.posWS.y), 1);
 	half depthMulti = 1 / _MaxDepth;
 
 	// Lighting
@@ -209,8 +215,8 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 
 	// Foam
 	half3 foamMap = SAMPLE_TEXTURE2D(_FoamMap, sampler_FoamMap,  IN.uv.zw).rgb; //r=thick, g=medium, b=light
-	half waveFoam = saturate(IN.posWS.y + 0.5);
-	half edgeFoam = saturate(1 - depth.x * 0.5 - 0.25);
+	half waveFoam = 0;// saturate(IN.posWS.y + 0.5);
+	half edgeFoam = saturate(1 - depth.x * 0.5 - 0.25) * depthEdge;
 	half foamBlendMask = max(max(waveFoam, edgeFoam), waterFX.r * 2);// + IN.fogFactorNoise.y * 0.1; //max(max((foamMask + shoreMask) - IN.fogFactorNoise.y * 0.25, waterFX.r * 2), shoreWave);
 	half3 foamBlend = SAMPLE_TEXTURE2D(_AbsorptionScatteringRamp, sampler_AbsorptionScatteringRamp, half2(foamBlendMask, 0.66)).rgb;
 	half foamMask = saturate(length(foamMap * foamBlend) * 1.5 - 0.1 + saturate(1 - depth.x * 4) * 0.5);
@@ -236,6 +242,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 
 	// Fresnel
 	half fresnelTerm = CalculateFresnelTerm(IN.normal, IN.viewDir.xyz);
+	//return fresnelTerm.xxxx;
 
     BRDFData brdfData;
     InitializeBRDFData(half3(0, 0, 0), 0, half3(1, 1, 1), 0.9, 1, brdfData);
@@ -254,7 +261,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 
 	// Reflections
 	half3 reflection = SampleReflections(IN.normal, IN.viewDir.xyz, screenUV.xy, fresnelTerm, 0.0);
-	reflection = clamp(reflection + spec, 0, 1024);
+	reflection = clamp(reflection + spec, 0, 1024) * depthEdge;
 
 	// Refraction
 	half3 refraction = Refraction(distortion, depth.x, depthMulti);

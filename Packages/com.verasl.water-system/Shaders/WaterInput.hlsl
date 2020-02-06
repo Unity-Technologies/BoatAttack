@@ -10,7 +10,7 @@ CBUFFER_END
 half _MaxDepth;
 half _MaxWaveHeight;
 int _DebugPass;
-half4 _depthCamZParams;
+half4 _VeraslWater_DepthCamParams;
 float4x4 _InvViewProjection;
 
 // Screen Effects textures
@@ -25,7 +25,7 @@ TEXTURE2D(_WaterFXMap);
 TEXTURE2D(_CameraDepthTexture);
 TEXTURE2D(_CameraOpaqueTexture); SAMPLER(sampler_CameraOpaqueTexture_linear_clamp);
 
-TEXTURE2D(_WaterDepthMap); SAMPLER(sampler_WaterDepthMap_linear_clamp);
+TEXTURE2D(_WaterDepthMap); SAMPLER(sampler_WaterDepthMap_clamp);
 
 // Surface textures
 TEXTURE2D(_AbsorptionScatteringRamp); SAMPLER(sampler_AbsorptionScatteringRamp);
