@@ -174,7 +174,7 @@ SubShader {
             v2f OUT;
             UNITY_SETUP_INSTANCE_ID(v);
             UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
-            
+
             VertexPositionInputs vertexPositions = GetVertexPositionInputs(v.vertex.xyz);
             OUT.pos = vertexPositions.positionCS;
 
@@ -195,7 +195,7 @@ SubShader {
 
             float far = 0.0;
             half3 cIn, cOut;
-            
+
             Light mainLight = GetMainLight();
 
             if(eyeRay.y >= 0.0)
@@ -363,7 +363,7 @@ SubShader {
         half4 frag (v2f IN) : SV_Target
         {
             half3 col = half3(0.0, 0.0, 0.0);
-            
+
             Light mainLight = GetMainLight();
 
         // if y > 1 [eyeRay.y < -SKY_GROUND_THRESHOLD] - ground
@@ -393,7 +393,7 @@ SubShader {
             col = LINEAR_2_OUTPUT(col);
         #endif
 
-            return half4(clamp(col, 0, 100),1.0);
+            return half4(clamp(col, 0, 25),1.0);
 
         }
         ENDHLSL
