@@ -67,7 +67,8 @@ namespace BoatAttack
             Instance = this;
             Application.targetFrameRate = 300;
             MainCamera = Camera.main;
-            StartCoroutine(LoadPrefab<GameObject>(volumeManager, new AsyncOperationHandle()));
+            if(DefaultVolume.Instance == null)
+                StartCoroutine(LoadPrefab<GameObject>(volumeManager, new AsyncOperationHandle()));
         }
 
         private void Start()
