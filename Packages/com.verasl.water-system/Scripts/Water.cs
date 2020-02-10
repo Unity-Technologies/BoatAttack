@@ -347,10 +347,12 @@ namespace WaterSystem
                 _depthCam = go.AddComponent<Camera>();
             }
 
-            var additionalCamData = _depthCam.GetUniversalAdditionalCameraData();
-            additionalCamData.renderShadows = false;
-            additionalCamData.requiresColorOption = CameraOverrideOption.Off;
-            additionalCamData.requiresDepthOption = CameraOverrideOption.Off;
+            if (_depthCam.TryGetComponent<UniversalAdditionalCameraData>(out var additionalCamData))
+            {
+                additionalCamData.renderShadows = false;
+                additionalCamData.requiresColorOption = CameraOverrideOption.Off;
+                additionalCamData.requiresDepthOption = CameraOverrideOption.Off;
+            }
 
             var t = _depthCam.transform;
             var depthExtra = 4.0f;
