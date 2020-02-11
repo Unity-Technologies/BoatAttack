@@ -62,8 +62,6 @@ namespace WaterSystem
         private static readonly int AbsorptionScatteringRamp = Shader.PropertyToID("_AbsorptionScatteringRamp");
         private static readonly int DepthCamZParams = Shader.PropertyToID("_VeraslWater_DepthCamParams");
 
-        private void OnValidate() { Init(); }
-
         private void OnEnable()
         {
             if (!computeOverride)
@@ -170,7 +168,7 @@ namespace WaterSystem
             {
                 resources = Resources.Load("WaterResources") as WaterResources;
             }
-            CaptureDepthMap();
+            Invoke(nameof(CaptureDepthMap), 1.0f);
         }
 
         private void LateUpdate()
