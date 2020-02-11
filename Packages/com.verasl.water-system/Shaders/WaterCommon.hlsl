@@ -130,7 +130,7 @@ WaterVertexOutput WaveVertexOperations(WaterVertexOutput input)
 
     // shallows mask
     half waterDepth = WaterTextureDepth(input.posWS);
-    input.posWS.y += saturate((-waterDepth + 1.5) * 0.4);
+    input.posWS.y += pow(saturate((-waterDepth + 1.5) * 0.4), 2);
 
 	//Gerstner here
 	WaveStruct wave;
