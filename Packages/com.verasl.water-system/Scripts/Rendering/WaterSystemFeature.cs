@@ -113,8 +113,7 @@ namespace WaterSystem
         WaterCausticsPass m_CausticsPass;
 
         public WaterSystemSettings settings = new WaterSystemSettings();
-        [SerializeField]
-        private Shader causticShader;
+        [SerializeField] private Shader causticShader;
 
         private Material _causticMaterial;
 
@@ -131,6 +130,7 @@ namespace WaterSystem
             m_CausticsPass = new WaterCausticsPass();
 
             causticShader = causticShader ? causticShader : Shader.Find("Hidden/BoatAttack/Caustics");
+            if (causticShader == null) return;
             _causticMaterial = _causticMaterial ? _causticMaterial : new Material(causticShader);
 
             switch (settings.debug)
@@ -160,7 +160,8 @@ namespace WaterSystem
         public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
         {
             renderer.EnqueuePass(m_WaterFxPass);
-            renderer.EnqueuePass(m_CausticsPass);
+            if(_causticMaterial == null)
+                renderer.EnqueuePass(m_CausticsPass);
         }
 
         /// <summary>
