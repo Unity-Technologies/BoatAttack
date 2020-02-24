@@ -98,15 +98,19 @@ public class DefaultVolume : MonoBehaviour
 [InitializeOnLoad]
 public class StartupVolume
 {
-    private static GameObject vol;
+    private static GameObject _vol;
 
     static StartupVolume()
     {
-        var thing = AssetDatabase.LoadAssetAtPath("Assets/Objects/misc/DefaultVolume.prefab", typeof(GameObject)) as GameObject;
-        if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
-            Debug.Log($"Creating Volume Manager");
-        vol = Object.Instantiate(thing);
-        vol.hideFlags = HideFlags.HideAndDontSave;
+        EditorApplication.delayCall += () =>
+        {
+            var obj = AssetDatabase.LoadAssetAtPath("Assets/objects/misc/DefaultVolume.prefab", typeof(GameObject)) as GameObject;
+            if (obj == null) return;
+            if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
+                Debug.Log($"Creating Volume Manager");
+            _vol = Object.Instantiate(obj);
+            _vol.hideFlags = HideFlags.HideAndDontSave;
+        };
     }
 }
 #endif
