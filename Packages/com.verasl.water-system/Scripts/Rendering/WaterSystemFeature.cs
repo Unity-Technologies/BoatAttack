@@ -12,6 +12,7 @@ namespace WaterSystem
         class WaterFxPass : ScriptableRenderPass
         {
             private const string k_RenderWaterFXTag = "Render Water FX";
+            private ProfilingSampler m_WaterFX_Profile = new ProfilingSampler(k_RenderWaterFXTag);
             private readonly ShaderTagId m_WaterFXShaderTag = new ShaderTagId("WaterFX");
             private readonly Color m_ClearColor = new Color(0.0f, 0.5f, 0.5f, 0.5f); //r = foam mask, g = normal.x, b = normal.z, a = displacement
             private FilteringSettings m_FilteringSettings;
@@ -44,7 +45,7 @@ namespace WaterSystem
             public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
             {
                 CommandBuffer cmd = CommandBufferPool.Get(k_RenderWaterFXTag);
-                using (new ProfilingSample(cmd, k_RenderWaterFXTag)) // makes sure we have profiling ability
+                using (new ProfilingScope(cmd, m_WaterFX_Profile)) // makes sure we have profiling ability
                 {
                     context.ExecuteCommandBuffer(cmd);
                     cmd.Clear();
@@ -74,6 +75,7 @@ namespace WaterSystem
         class WaterCausticsPass : ScriptableRenderPass
         {
             private const string k_RenderWaterCausticsTag = "Render Water Caustics";
+            private ProfilingSampler m_WaterCaustics_Profile = new ProfilingSampler(k_RenderWaterCausticsTag);
             public Material WaterCausticMaterial;
             private static Mesh m_mesh;
 
@@ -85,7 +87,7 @@ namespace WaterSystem
                     return;
 
                 CommandBuffer cmd = CommandBufferPool.Get(k_RenderWaterCausticsTag);
-                using (new ProfilingSample(cmd, k_RenderWaterCausticsTag))
+                using (new ProfilingScope(cmd, m_WaterCaustics_Profile))
                 {
                     // Create mesh if needed
                     if (!m_mesh)
