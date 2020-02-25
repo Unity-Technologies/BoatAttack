@@ -16,7 +16,7 @@ public class DefaultVolume : MonoBehaviour
     public AssetReference[] qualityVolumes;
     private int _currentQualityLevel;
 
-    private void OnEnable()
+    private void Start()
     {
         if (!Instance)
         {
