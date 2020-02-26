@@ -16,7 +16,7 @@ public class DefaultVolume : MonoBehaviour
     public AssetReference[] qualityVolumes;
     private int _currentQualityLevel;
 
-    private void OnEnable()
+    private void Start()
     {
         if (!Instance)
         {
@@ -28,7 +28,8 @@ public class DefaultVolume : MonoBehaviour
         }
         else if(Instance != this)
         {
-            Debug.Log($"Extra Volume Manager cleaned up. GUID:{gameObject.GetInstanceID()}");
+            if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
+                Debug.Log($"Extra Volume Manager cleaned up. GUID:{gameObject.GetInstanceID()}");
 #if UNITY_EDITOR
             DestroyImmediate(gameObject);
             return;
@@ -65,19 +66,20 @@ public class DefaultVolume : MonoBehaviour
         }
 
         if (UniversalRenderPipeline.asset.debugLevel == PipelineDebugLevel.Disabled) return;
-        if (volBaseComponent.sharedProfile != null && volQualityComponent.sharedProfile != null)
+        if (volBaseComponent.sharedProfile && volQualityComponent.sharedProfile)
         {
-            Debug.Log(message: $"Updated volumes:\n" +
+            Debug.Log(message: "Updated volumes:\n" +
                                $"    Base Volume : {volBaseComponent.sharedProfile.name}\n" +
                                $"    Quality Volume : {volQualityComponent.sharedProfile.name}\n" +
-                               $"Total Volume Stack is now:\n");
+                               "Total Volume Stack is now:\n");
         }
     }
 
 #if UNITY_EDITOR
     private void LoadVolEditor(int index)
     {
-        Debug.Log("Loading volumes in editor.");
+        if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
+            Debug.Log("Loading volumes in editor.");
         var assetRef = qualityVolumes[index];
         var obj = assetRef.editorAsset;
         volQualityComponent.sharedProfile = obj as VolumeProfile;
@@ -96,14 +98,19 @@ public class DefaultVolume : MonoBehaviour
 [InitializeOnLoad]
 public class StartupVolume
 {
-    private static GameObject vol;
+    private static GameObject _vol;
 
     static StartupVolume()
     {
-        var thing = AssetDatabase.LoadAssetAtPath("Assets/Objects/misc/DefaultVolume.prefab", typeof(GameObject)) as GameObject;
-        Debug.Log($"Creating Volume Manager");
-        vol = Object.Instantiate(thing);
-        vol.hideFlags = HideFlags.HideAndDontSave;
+        EditorApplication.delayCall += () =>
+        {
+            var obj = AssetDatabase.LoadAssetAtPath("Assets/objects/misc/DefaultVolume.prefab", typeof(GameObject)) as GameObject;
+            if (obj == null) return;
+            if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
+                Debug.Log($"Creating Volume Manager");
+            _vol = Object.Instantiate(obj);
+            _vol.hideFlags = HideFlags.HideAndDontSave;
+        };
     }
 }
 #endif
