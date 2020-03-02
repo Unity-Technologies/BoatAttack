@@ -39,7 +39,7 @@ namespace BoatAttack.UI
         public void UpdateStats()
         {
             _place = _boat.Place;
-            transform.SetSiblingIndex(_place);
+            transform.SetSiblingIndex(_place + 1);
             place.text = RaceUI.OrdinalNumber(_boat.Place);
 
             var bestLapTime = RaceUI.BestLapFromSplitTimes(_boat.SplitTimes);
