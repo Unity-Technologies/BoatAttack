@@ -93,6 +93,8 @@ namespace BoatAttack
 
         private void FixedUpdate()
         {
+            if (WaypointGroup.Instance == null)
+                return;
             if (!RaceManager.RaceStarted)
             {
                 // race not started, make sure to keep boat fairly aligned.
@@ -113,6 +115,8 @@ namespace BoatAttack
 
         private void UpdateLaps()
         {
+            if (WaypointGroup.Instance == null)
+                return;
             LapPercentage = WaypointGroup.Instance.GetPercentageAroundTrack(transform.position);
             var lowPercentage = _lastCheckpoint?.normalizedDistance ?? 0f;
             var highPercentage = _nextCheckpoint?.normalizedDistance ?? 1f;
