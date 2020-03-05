@@ -7,8 +7,9 @@ using UnityEngine.Playables;
 public class GunController : MonoBehaviour
 {
     public InputAction fireAction;
-
     public GameObject gun;
+    public ParticleSystem ps1;
+    public ParticleSystem ps2;
 
     private PlayableDirector gunDirector;
 
@@ -18,19 +19,10 @@ public class GunController : MonoBehaviour
         InitGuns();
         
         // Have it run your code when the Action is triggered.
-        fireAction.performed += FireGuns;
+        fireAction.performed += DeployGuns;
 
         // Start listening for control changes.
         fireAction.Enable();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-//        if (Input.GetAxis("fire") > 1)
-//        {
-//            DeployGuns();
-//        }
     }
 
     void InitGuns()
@@ -38,18 +30,23 @@ public class GunController : MonoBehaviour
         gunDirector = gun.GetComponent<PlayableDirector>();
         gunDirector.time = 0f;
         gunDirector.Stop();
-        
-        Debug.LogFormat("InitGuns {0}", gunDirector.time);
     }
 
-    void DeployGuns()
+    void DeployGuns(InputAction.CallbackContext ctx)
     {
+        fireAction.performed -= DeployGuns;
         gunDirector.Play();
+    }
+
+    public void GunsReady()
+    {
+        fireAction.performed += FireGuns;
     }
 
     void FireGuns(InputAction.CallbackContext ctx)
     {
-        Debug.Log("FIRE!!!!");
-        gunDirector.Play();
+        Debug.Log("Fire guns!");
+        ps1.Play();
+        ps2.Play();
     }
 }
