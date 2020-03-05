@@ -252,7 +252,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
     for (uint lightIndex = 0u; lightIndex < pixelLightCount; ++lightIndex)
     {
         Light light = GetAdditionalLight(lightIndex, IN.posWS);
-        spec += LightingPhysicallyBased(brdfData, light, IN.normal, IN.viewDir);
+        spec += LightingPhysicallyBased(brdfData, light, IN.normal, IN.viewDir, true);
         sss += light.distanceAttenuation * light.color;
     }
 #endif
