@@ -44,6 +44,14 @@
                     "expectedControlType": "",
                     "processors": "AxisDeadzone(min=0.1,max=1)",
                     "interactions": ""
+                },
+                {
+                    "name": "Fire",
+                    "type": "Button",
+                    "id": "332a0724-a896-4f33-b724-dfba70e0acbe",
+                    "expectedControlType": "",
+                    "processors": "AxisDeadzone(min=0.1,max=1)",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -473,6 +481,17 @@
                     "processors": "",
                     "groups": "TouchScreen",
                     "action": "Time",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7f367731-0900-42d0-869c-070335cfc410",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Fire",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

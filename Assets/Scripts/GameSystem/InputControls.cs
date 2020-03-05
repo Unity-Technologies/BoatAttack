@@ -57,6 +57,14 @@ public class @InputControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": ""AxisDeadzone(min=0.1,max=1)"",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""332a0724-a896-4f33-b724-dfba70e0acbe"",
+                    ""expectedControlType"": """",
+                    ""processors"": ""AxisDeadzone(min=0.1,max=1)"",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -488,6 +496,17 @@ public class @InputControls : IInputActionCollection, IDisposable
                     ""action"": ""Time"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7f367731-0900-42d0-869c-070335cfc410"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -540,6 +559,7 @@ public class @InputControls : IInputActionCollection, IDisposable
         m_BoatControls_Steering = m_BoatControls.FindAction("Steering", throwIfNotFound: true);
         m_BoatControls_Reset = m_BoatControls.FindAction("Reset", throwIfNotFound: true);
         m_BoatControls_Freeze = m_BoatControls.FindAction("Freeze", throwIfNotFound: true);
+        m_BoatControls_Fire = m_BoatControls.FindAction("Fire", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -594,6 +614,7 @@ public class @InputControls : IInputActionCollection, IDisposable
     private readonly InputAction m_BoatControls_Steering;
     private readonly InputAction m_BoatControls_Reset;
     private readonly InputAction m_BoatControls_Freeze;
+    private readonly InputAction m_BoatControls_Fire;
     public struct BoatControlsActions
     {
         private @InputControls m_Wrapper;
@@ -603,6 +624,7 @@ public class @InputControls : IInputActionCollection, IDisposable
         public InputAction @Steering => m_Wrapper.m_BoatControls_Steering;
         public InputAction @Reset => m_Wrapper.m_BoatControls_Reset;
         public InputAction @Freeze => m_Wrapper.m_BoatControls_Freeze;
+        public InputAction @Fire => m_Wrapper.m_BoatControls_Fire;
         public InputActionMap Get() { return m_Wrapper.m_BoatControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -627,6 +649,9 @@ public class @InputControls : IInputActionCollection, IDisposable
                 @Freeze.started -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnFreeze;
                 @Freeze.performed -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnFreeze;
                 @Freeze.canceled -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnFreeze;
+                @Fire.started -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnFire;
+                @Fire.performed -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnFire;
+                @Fire.canceled -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnFire;
             }
             m_Wrapper.m_BoatControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -646,6 +671,9 @@ public class @InputControls : IInputActionCollection, IDisposable
                 @Freeze.started += instance.OnFreeze;
                 @Freeze.performed += instance.OnFreeze;
                 @Freeze.canceled += instance.OnFreeze;
+                @Fire.started += instance.OnFire;
+                @Fire.performed += instance.OnFire;
+                @Fire.canceled += instance.OnFire;
             }
         }
     }
@@ -684,5 +712,6 @@ public class @InputControls : IInputActionCollection, IDisposable
         void OnSteering(InputAction.CallbackContext context);
         void OnReset(InputAction.CallbackContext context);
         void OnFreeze(InputAction.CallbackContext context);
+        void OnFire(InputAction.CallbackContext context);
     }
 }
