@@ -1,9 +1,8 @@
 {
   "dependencies": {
     "com.unity.2d.sprite": "1.0.0",
-    "com.unity.addressables": "1.6.0",
+    "com.unity.addressables": "1.6.2",
     "com.unity.build-report-inspector": "0.1.2-preview",
-    "com.unity.burst": "1.1.2",
     "com.unity.cinemachine": "2.5.0",
     "com.unity.ide.rider": "1.2.1",
     "com.unity.ide.visualstudio": "2.0.0",
@@ -12,9 +11,9 @@
     "com.unity.mathematics": "1.1.0",
     "com.unity.memoryprofiler": "0.2.1-preview.1",
     "com.unity.recorder": "2.1.0-preview.1",
-    "com.unity.render-pipelines.universal": "7.2.1",
+    "com.unity.render-pipelines.universal": "8.0.1",
     "com.unity.terrain-tools": "3.0.1-preview",
-    "com.unity.textmeshpro": "2.1.0-preview.4",
+    "com.unity.textmeshpro": "3.0.0-preview.1",
     "com.unity.timeline": "1.2.11",
     "com.unity.ugui": "1.0.0",
     "net.peeweek.gameplay-ingredients": "https://github.com/peeweek/net.peeweek.gameplay-ingredients.git#2019.3.0",
@@ -46,7 +45,18 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0"
+    "com.unity.modules.xr": "1.0.0",
+    "com.unity.collections": "file:../../../dots/Samples/Packages/com.unity.collections",
+    "com.unity.entities": "file:../../../dots/Samples/Packages/com.unity.entities",
+    "com.unity.jobs": "file:../../../dots/Samples/Packages/com.unity.jobs",
+    "com.unity.mobile.android-logcat": "1.1.0",
+    "com.unity.platforms": "file:../../../dots-platforms/com.unity.platforms",
+    "com.unity.platforms.android": "file:../../../dots-platforms/com.unity.platforms.android",
+    "com.unity.platforms.ios": "file:../../../dots-platforms/com.unity.platforms.ios",
+    "com.unity.platforms.linux": "file:../../../dots-platforms/com.unity.platforms.linux",
+    "com.unity.platforms.macos": "file:../../../dots-platforms/com.unity.platforms.macos",
+    "com.unity.platforms.windows": "file:../../../dots-platforms/com.unity.platforms.windows",
+    "com.unity.rendering.hybrid": "file:../../../dots/Samples/Packages/com.unity.rendering.hybrid"
   },
   "lock": {
     "net.peeweek.gameplay-ingredients": {
