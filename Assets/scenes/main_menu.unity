@@ -29513,9 +29513,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e14db15b85a74d2288a792b27ee0fa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boatRenderer: {fileID: 8688320743401502054}
-  engineRenderer: {fileID: 8688320743401502053}
-  engine: {fileID: 8688320743401502051}
+  boatRenderer: {fileID: 0}
+  engineRenderer: {fileID: 0}
+  engine: {fileID: 0}
   cam: {fileID: 3062196128562409895}
 --- !u!82 &832250500037008061
 AudioSource:
@@ -29882,7 +29882,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2388229251112210076}
-  m_LocalRotation: {x: 0.19106944, y: 0.000000032706136, z: -0.000000006366438, w: 0.98157656}
+  m_LocalRotation: {x: 0.19106941, y: -1.1232817e-14, z: -1.0921301e-15, w: 0.98157656}
   m_LocalPosition: {x: 0, y: 3.0604334, z: -5.699002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -30157,7 +30157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f895dcd0fa9e40b18253a3ca46c4d78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  engine: {fileID: 8688320743401502051}
+  engine: {fileID: 0}
   anim: {fileID: 8985997000260853801}
 --- !u!114 &6730872702215213746
 MonoBehaviour:
@@ -30885,6 +30885,21 @@ PrefabInstance:
       propertyPath: waterSound
       value: 
       objectReference: {fileID: 832250500037008061}
+    - target: {fileID: 7175416437550934882, guid: 6e6ea4135954a9647bf2c909bc69e6ee,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8302360717158751534, guid: 6e6ea4135954a9647bf2c909bc69e6ee,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.352
+      objectReference: {fileID: 0}
+    - target: {fileID: 8302360717158751534, guid: 6e6ea4135954a9647bf2c909bc69e6ee,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.203
+      objectReference: {fileID: 0}
     - target: {fileID: 9126027659688549801, guid: 6e6ea4135954a9647bf2c909bc69e6ee,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -30893,7 +30908,7 @@ PrefabInstance:
     - target: {fileID: 9126027659688549801, guid: 6e6ea4135954a9647bf2c909bc69e6ee,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.675
       objectReference: {fileID: 0}
     - target: {fileID: 9126027659688549801, guid: 6e6ea4135954a9647bf2c909bc69e6ee,
         type: 3}
@@ -30942,33 +30957,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e6ea4135954a9647bf2c909bc69e6ee, type: 3}
---- !u!114 &8688320743401502051 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6004665258719245258, guid: 6e6ea4135954a9647bf2c909bc69e6ee,
-    type: 3}
-  m_PrefabInstance: {fileID: 8688320743401502050}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01c46922a8ed04b0081de10e51b3762f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &8688320743401502052 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9126027659688549801, guid: 6e6ea4135954a9647bf2c909bc69e6ee,
-    type: 3}
-  m_PrefabInstance: {fileID: 8688320743401502050}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &8688320743401502053 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 114699130469510210, guid: 6e6ea4135954a9647bf2c909bc69e6ee,
-    type: 3}
-  m_PrefabInstance: {fileID: 8688320743401502050}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &8688320743401502054 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 7175416437550934882, guid: 6e6ea4135954a9647bf2c909bc69e6ee,
     type: 3}
   m_PrefabInstance: {fileID: 8688320743401502050}
   m_PrefabAsset: {fileID: 0}
