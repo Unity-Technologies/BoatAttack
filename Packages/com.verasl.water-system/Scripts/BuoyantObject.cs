@@ -101,6 +101,9 @@ namespace WaterSystem
 
         private void OnEnable()
         {
+			if (colliders.Length > 0 && colliders[0] != null && colliders[0].enabled == false)
+				colliders[0].enabled = true;
+
             _guid = gameObject.GetInstanceID();
             Init();
             LocalToWorldConversion();
