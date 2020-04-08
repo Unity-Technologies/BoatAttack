@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 276101159509555795}
+  - component: {fileID: 6070276580876490451}
   m_Layer: 11
   m_Name: Right Gun
   m_TagString: Untagged
@@ -23,14 +24,33 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3169750568348808386}
-  m_LocalRotation: {x: 0, y: 0, z: -0.21643952, w: 0.97629607}
+  m_LocalRotation: {x: 0, y: 0, z: -0.2164395, w: 0.9762961}
   m_LocalPosition: {x: 0.684, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5806748987617188268}
   m_Father: {fileID: 7484563968368068873}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -25}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -0.000001855821}
+--- !u!95 &6070276580876490451
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3169750568348808386}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &3980123518103819091
 GameObject:
   m_ObjectHideFlags: 0
@@ -42,6 +62,7 @@ GameObject:
   - component: {fileID: 7484563968368068873}
   - component: {fileID: 2640065453175500159}
   - component: {fileID: 5247412576866406672}
+  - component: {fileID: 6070276580876490453}
   m_Layer: 11
   m_Name: Guns
   m_TagString: Untagged
@@ -112,9 +133,42 @@ PlayableDirector:
   m_InitialTime: 0
   m_SceneBindings:
   - key: {fileID: -746715573979496274, guid: 435e49ddae142467abd06b6da2976364, type: 2}
-    value: {fileID: 0}
+    value: {fileID: 6070276580876490453}
+  - key: {fileID: -7803614955725046787, guid: 435e49ddae142467abd06b6da2976364, type: 2}
+    value: {fileID: 6070276580876490452}
+  - key: {fileID: 6414686326522177939, guid: 435e49ddae142467abd06b6da2976364, type: 2}
+    value: {fileID: 6070276580876490451}
   m_ExposedReferences:
     m_References: []
+--- !u!114 &6070276580876490453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3980123518103819091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: 8b91cd92bcc3142cb958b6399d31525d, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2640065453175500159}
+          m_MethodName: GunsReady
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &8053743852111657212
 GameObject:
   m_ObjectHideFlags: 0
@@ -124,6 +178,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8813142231530180715}
+  - component: {fileID: 6070276580876490452}
   m_Layer: 11
   m_Name: Left Gun
   m_TagString: Untagged
@@ -145,7 +200,26 @@ Transform:
   - {fileID: 7895699439566566294}
   m_Father: {fileID: 7484563968368068873}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 25}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 335}
+--- !u!95 &6070276580876490452
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8053743852111657212}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &464779163639921471
 PrefabInstance:
   m_ObjectHideFlags: 0

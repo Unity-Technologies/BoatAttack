@@ -28673,13 +28673,14 @@ GameObject:
   - component: {fileID: 2449697672857243399}
   - component: {fileID: 2345865146860646005}
   - component: {fileID: 2345340029082263153}
+  - component: {fileID: 893965812}
   m_Layer: 11
   m_Name: _BoatPrototype
   m_TagString: boat
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2381072088178590965
 Transform:
   m_ObjectHideFlags: 0
@@ -28722,7 +28723,7 @@ MeshCollider:
   m_GameObject: {fileID: 2386587455219411773}
   m_Material: {fileID: 13400000, guid: bd4c82ff9a8164f5c96a49347c431b99, type: 2}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Convex: 1
   m_CookingOptions: 14
@@ -28763,6 +28764,18 @@ MonoBehaviour:
   waterLevelOffset: 0.25
   colliders:
   - {fileID: 2449697672857243399}
+--- !u!114 &893965812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2386587455219411773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47387b38c339a4c5985bc9aff68264c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2386592195805588629
 GameObject:
   m_ObjectHideFlags: 0
@@ -33915,7 +33928,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3148429413694683286}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.307, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3148429412365326587}
@@ -35992,7 +36005,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4094710129953997709}
-  - component: {fileID: 3420685678320603012}
   - component: {fileID: 1921149007730394102}
   m_Layer: 0
   m_Name: engine root
@@ -36016,14 +36028,6 @@ Transform:
   m_Father: {fileID: 3148429412365326587}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &3420685678320603012
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8223132233121269268}
-  m_Mesh: {fileID: 6235005220218627844, guid: a362db008c5274e03bf6f3d2387cf617, type: 3}
 --- !u!114 &1921149007730394102
 MonoBehaviour:
   m_ObjectHideFlags: 0
