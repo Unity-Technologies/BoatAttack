@@ -45,7 +45,14 @@ public class GunController : MonoBehaviour
 
     void FireGuns(InputAction.CallbackContext ctx)
     {
-        Debug.Log("Fire guns!");
+		RaycastHit hit;
+
+		if (Physics.Raycast(transform.position + new Vector3(0, 0, 5), transform.forward, out hit, 100))
+		{
+			PirateScript p = hit.transform.GetComponent<PirateScript>();
+			if (p != null)
+				p.Sink();
+		}
         ps1.Play();
         ps2.Play();
     }
