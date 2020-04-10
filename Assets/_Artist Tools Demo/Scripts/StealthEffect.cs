@@ -4,7 +4,7 @@ public class StealthEffect : MonoBehaviour
 {
 	MeshRenderer rend;
 	Material mat;
-	string propName = "_Dissolve";
+	string propName = "_dissolve";
 
 	int dir = -1;
 	float elapsedTime;
