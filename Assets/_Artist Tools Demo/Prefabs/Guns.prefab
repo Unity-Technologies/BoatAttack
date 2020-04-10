@@ -61,8 +61,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7484563968368068873}
   - component: {fileID: 2640065453175500159}
-  - component: {fileID: 5247412576866406672}
-  - component: {fileID: 6070276580876490453}
   m_Layer: 11
   m_Name: Guns
   m_TagString: Untagged
@@ -117,58 +115,6 @@ MonoBehaviour:
   gun: {fileID: 3980123518103819091}
   ps1: {fileID: 3775600884724162328}
   ps2: {fileID: 736473054200896097}
---- !u!320 &5247412576866406672
-PlayableDirector:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3980123518103819091}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: 435e49ddae142467abd06b6da2976364, type: 2}
-  m_InitialState: 1
-  m_WrapMode: 2
-  m_DirectorUpdateMode: 1
-  m_InitialTime: 0
-  m_SceneBindings:
-  - key: {fileID: -746715573979496274, guid: 435e49ddae142467abd06b6da2976364, type: 2}
-    value: {fileID: 6070276580876490453}
-  - key: {fileID: -7803614955725046787, guid: 435e49ddae142467abd06b6da2976364, type: 2}
-    value: {fileID: 6070276580876490452}
-  - key: {fileID: 6414686326522177939, guid: 435e49ddae142467abd06b6da2976364, type: 2}
-    value: {fileID: 6070276580876490451}
-  m_ExposedReferences:
-    m_References: []
---- !u!114 &6070276580876490453
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3980123518103819091}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Events:
-    m_Signals:
-    - {fileID: 11400000, guid: 8b91cd92bcc3142cb958b6399d31525d, type: 2}
-    m_Events:
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 2640065453175500159}
-          m_MethodName: GunsReady
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!1 &8053743852111657212
 GameObject:
   m_ObjectHideFlags: 0
