@@ -1,11 +1,14 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using Unity.Build.Classic;
 using UnityEngine.AddressableAssets;
 
-public class AddressableFilesProvider : AdditionalFilesProviderBase
+
+
+public class AddressablesBuildPipelineCustomizer : ClassicBuildPipelineCustomizer
 {
-    protected override void OnPrepareAdditionalAssetsBeforeBuild()
+    public override void RegisterAdditionalFilesToDeploy(Action<string, string> registerAdditionalFileToDeploy)
     {
         if (!Directory.Exists(Addressables.BuildPath))
             return;
@@ -17,7 +20,7 @@ public class AddressableFilesProvider : AdditionalFilesProviderBase
         {
             var relative = fileToCopy.Substring(relativeRoot.Length+1);
             var targetFile = $"{StreamingAssetsDirectory}/{relative}";
-            AddFile(fileToCopy, targetFile);
+            registerAdditionalFileToDeploy(fileToCopy, targetFile);
         }
     }
 }
