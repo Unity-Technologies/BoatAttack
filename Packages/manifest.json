@@ -1,17 +1,29 @@
 {
-  "registry": "https://staging-packages.unity.com",
   "dependencies": {
-    "com.unity.burst": "1.1.1",
-    "com.unity.cinemachine": "2.3.4",
+    "com.unity.2d.sprite": "1.0.0",
+    "com.unity.addressables": "1.6.0",
+    "com.unity.build-report-inspector": "0.1.2-preview",
+    "com.unity.burst": "1.1.2",
+    "com.unity.cinemachine": "2.5.0",
+    "com.unity.ide.rider": "1.2.1",
+    "com.unity.ide.visualstudio": "2.0.0",
+    "com.unity.ide.vscode": "1.1.4",
+    "com.unity.inputsystem": "1.0.0-preview.4",
     "com.unity.mathematics": "1.1.0",
-    "com.unity.render-pipelines.universal": "7.0.0",
-    "com.unity.textmeshpro": "2.0.1",
-    "com.unity.timeline": "1.1.0",
+    "com.unity.memoryprofiler": "0.2.1-preview.1",
+    "com.unity.recorder": "2.1.0-preview.1",
+    "com.unity.render-pipelines.universal": "7.2.1",
+    "com.unity.terrain-tools": "3.0.1-preview",
+    "com.unity.textmeshpro": "2.1.0-preview.4",
+    "com.unity.timeline": "1.2.11",
     "com.unity.ugui": "1.0.0",
+    "net.peeweek.gameplay-ingredients": "https://github.com/peeweek/net.peeweek.gameplay-ingredients.git#2019.3.0",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
+    "com.unity.modules.assetbundle": "1.0.0",
     "com.unity.modules.audio": "1.0.0",
+    "com.unity.modules.cloth": "1.0.0",
     "com.unity.modules.director": "1.0.0",
     "com.unity.modules.imageconversion": "1.0.0",
     "com.unity.modules.imgui": "1.0.0",
@@ -25,8 +37,21 @@
     "com.unity.modules.ui": "1.0.0",
     "com.unity.modules.uielements": "1.0.0",
     "com.unity.modules.umbra": "1.0.0",
+    "com.unity.modules.unityanalytics": "1.0.0",
+    "com.unity.modules.unitywebrequest": "1.0.0",
+    "com.unity.modules.unitywebrequestassetbundle": "1.0.0",
+    "com.unity.modules.unitywebrequestaudio": "1.0.0",
+    "com.unity.modules.unitywebrequesttexture": "1.0.0",
+    "com.unity.modules.unitywebrequestwww": "1.0.0",
+    "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
+  },
+  "lock": {
+    "net.peeweek.gameplay-ingredients": {
+      "revision": "2019.3.0",
+      "hash": "604801ada543d20bc302f6310305fe29016d23d2"
+    }
   }
 }

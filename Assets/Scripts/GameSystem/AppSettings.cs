@@ -1,17 +1,24 @@
-﻿using UnityEngine;
+﻿using System;
 using System.Collections;
-using UnityEngine.Experimental.Rendering;
+using GameplayIngredients;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.LWRP;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
+// ReSharper disable InconsistentNaming
 
 namespace BoatAttack
 {
-    public class AppSettings : MonoBehaviour
+    [ManagerDefaultPrefab("AppManager")]
+    public class AppSettings : Manager
     {
         public enum RenderRes
         {
             _Native,
-            _2440p,
+            _1440p,
             _1080p,
             _720p
         }
@@ -23,50 +30,118 @@ namespace BoatAttack
             _120
         }
 
+        public enum SpeedFormat
+        {
+            _Kph,
+            _Mph
+        }
+
+        public static AppSettings Instance;
+        private GameObject loadingScreenObject;
+        public static Camera MainCamera;
+        [Header("Resolution Settings")]
         public RenderRes maxRenderSize = RenderRes._720p;
-        public bool variableResolution = false;
+        public bool variableResolution;
         [Range(0f, 1f)]
         public float axisBias = 0.5f;
         public float minScale = 0.5f;
         public Framerate targetFramerate = Framerate._30;
         private float currentDynamicScale = 1.0f;
         private float maxScale = 1.0f;
+        public SpeedFormat speedFormat = SpeedFormat._Mph;
 
-        public Material seaMat;
+        [Header("Asset References")]
+        public AssetReference loadingScreen;
+        public AssetReference volumeManager;
 
-        private Shader seaShader;
         // Use this for initialization
-        void Start()
+        private void OnEnable()
         {
-            Application.targetFrameRate = 300;
+            Initialize();
+            RenderPipelineManager.beginCameraRendering += SetRenderScale;
+            SceneManager.sceneLoaded += LevelWasLoaded;
+        }
 
+        private void Initialize()
+        {
+            Instance = this;
+            Application.targetFrameRate = 300;
+            MainCamera = Camera.main;
+            if(DefaultVolume.Instance == null)
+                StartCoroutine(LoadPrefab<GameObject>(volumeManager, new AsyncOperationHandle()));
+        }
+
+        private void Start()
+        {
+            var obj = GameObject.Find("[Debug Updater]"); // TODO hack to solve input class issues
+            if(obj != null)
+                Destroy(obj);
+        }
+
+        private void OnDisable()
+        {
+            RenderPipelineManager.beginCameraRendering -= SetRenderScale;
+        }
+
+        private static void LevelWasLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (!MainCamera)
+            {
+                MainCamera = Camera.main;
+            }
+            else
+            {
+                var cams = GameObject.FindGameObjectsWithTag("MainCamera");
+                foreach (var c in cams)
+                {
+                    if (c != MainCamera.gameObject) Destroy(c);
+                }
+            }
+
+            Instance.Invoke(nameof(CleanupLoadingScreen), 0.5f);
+        }
+
+        private void CleanupLoadingScreen()
+        {
+            if (Instance.loadingScreenObject != null)
+            {
+                Instance.loadingScreen.ReleaseInstance(Instance.loadingScreenObject);
+            }
+        }
+
+        private void SetRenderScale(ScriptableRenderContext context, Camera cam)
+        {
             float res;
-            
             switch (maxRenderSize)
             {
                 case RenderRes._720p:
-                    res = 720f;
+                    res = 1280f;
                     break;
                 case RenderRes._1080p:
-                    res = 1080f;
+                    res = 1920f;
                     break;
-                case RenderRes._2440p:
-                    res = 2440f;
+                case RenderRes._1440p:
+                    res = 2560f;
                     break;
                 default:
-                    res = Camera.main.pixelHeight;
+                    res = cam.pixelWidth;
                     break;
             }
-            var renderScale = Mathf.Clamp(res / Camera.main.pixelHeight, 0.1f, 1.0f);
+
+            var renderScale = Mathf.Clamp(res / cam.pixelWidth, 0.1f, 1.0f);
             maxScale = renderScale;
-            UnityEngine.Rendering.Universal.UniversalRenderPipeline.asset.renderScale = renderScale;
+#if !UNITY_EDITOR
+            UniversalRenderPipeline.asset.renderScale = renderScale;
+#endif
         }
 
         private void Update()
         {
+            if (!MainCamera) return;
+
             if (variableResolution)
             {
-                Camera.main.allowDynamicResolution = true;
+                MainCamera.allowDynamicResolution = true;
 
                 var offset = 0f;
                 var currentFrametime = Time.deltaTime;
@@ -78,15 +153,15 @@ namespace BoatAttack
                         offset = currentFrametime > (1000f / 30f) ? -rate : rate;
                         break;
                     case Framerate._60:
-                        offset = currentFrametime > (1000f / 30f) ? -rate : rate;
+                        offset = currentFrametime > (1000f / 60f) ? -rate : rate;
                         break;
                     case Framerate._120:
                         offset = currentFrametime > (1000f / 120f) ? -rate : rate;
                         break;
                 }
 
-                currentDynamicScale = Mathf.Clamp(currentFrametime + offset, minScale, 1f);
-                
+                currentDynamicScale = Mathf.Clamp(currentDynamicScale + offset, minScale, 1f);
+
                 var offsetVec = new Vector2(Mathf.Lerp(1, currentDynamicScale, Mathf.Clamp01((1 - axisBias) * 2f)),
                     Mathf.Lerp(1, currentDynamicScale, Mathf.Clamp01(axisBias * 2f)));
 
@@ -94,26 +169,141 @@ namespace BoatAttack
             }
             else
             {
-                Camera.main.allowDynamicResolution = false;
+                MainCamera.allowDynamicResolution = false;
             }
         }
 
-        public void ToggleWaterShader(bool detailed)
+        public void ToggleSRPBatcher(bool enabled)
         {
-            if (detailed == false)
+            UniversalRenderPipeline.asset.useSRPBatcher = enabled;
+        }
+
+        public static void LoadScene(string scenePath, LoadSceneMode mode = LoadSceneMode.Single)
+        {
+            LoadScene(SceneUtility.GetBuildIndexByScenePath(scenePath), mode);
+        }
+
+        public static void LoadScene(int buildIndex, LoadSceneMode mode)
+        {
+            Application.backgroundLoadingPriority = ThreadPriority.Low;
+            switch (mode)
             {
-                seaShader = seaMat.shader;
-                seaMat.shader = Shader.Find("Unlit/Color");
+                case LoadSceneMode.Single:
+                    Instance.StartCoroutine(LoadScene(buildIndex));
+                    break;
+                case LoadSceneMode.Additive:
+                    SceneManager.LoadSceneAsync(buildIndex, LoadSceneMode.Additive);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+            }
+        }
+
+        private static IEnumerator LoadScene(int scene)
+        {
+            var loadingScreenLoading = Instance.loadingScreen.InstantiateAsync();
+            yield return loadingScreenLoading;
+            Instance.loadingScreenObject = loadingScreenLoading.Result;
+            DontDestroyOnLoad(Instance.loadingScreenObject);
+            Debug.Log($"loading scene {SceneUtility.GetScenePathByBuildIndex(scene)} at build index {scene}");
+            SceneManager.LoadScene(scene);
+        }
+
+        private static IEnumerator LoadPrefab<T>(AssetReference assetRef, AsyncOperationHandle assetLoading, Transform parent = null)
+        {
+            if (typeof(T) == typeof(GameObject))
+            {
+                assetLoading = assetRef.InstantiateAsync(parent);
             }
             else
             {
-                seaMat.shader = seaShader;
+                assetLoading = assetRef.LoadAssetAsync<T>();
+            }
+            yield return assetLoading;
+        }
+
+        public void ExitGame()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.ExitPlaymode();
+#else
+            Application.Quit();
+#endif
+        }
+    }
+
+    public static class ConstantData
+    {
+        private static readonly string[] Levels =
+        {
+            "Island",
+        };
+
+        public static string GetLevelName(int level)
+        {
+            return $"level_{Levels[level]}";
+        }
+
+        public static readonly string[] AiNames =
+        {
+            "Felipe",
+            "Andre",
+            "Elvar",
+            "Jonas",
+            "Erika",
+            "Tim",
+            "Florin",
+            "Andy",
+            "Hakeem",
+            "Sophia",
+            "Martin",
+        };
+
+        public static readonly int[] Laps =
+        {
+            3,
+            6,
+            9
+        };
+
+        public static int SeedNow
+        {
+            get
+            {
+                DateTime dt = DateTime.Now;
+                return dt.Year + dt.Month + dt.Day + dt.Hour + dt.Minute + dt.Second;
             }
         }
-        
-        public void ToggleSRPBatcher(bool enabled)
+
+        public static Color[] ColorPalette;
+        private static Texture2D _colorPaletteRaw;
+
+        public static Color GetPaletteColor(int index)
         {
-            UnityEngine.Rendering.Universal.UniversalRenderPipeline.asset.useSRPBatcher = enabled;
+            GenerateColors();
+            return ColorPalette[index];
         }
+
+        public static Color GetRandomPaletteColor
+        {
+            get
+            {
+                GenerateColors();
+                Random.InitState(SeedNow+Random.Range(0,1000));
+                return ColorPalette[Random.Range(0, ColorPalette.Length)];
+            }
+        }
+
+        private static void GenerateColors()
+        {
+            if (ColorPalette != null && ColorPalette.Length != 0) return;
+
+            if (_colorPaletteRaw == null)
+                _colorPaletteRaw = Resources.Load<Texture2D>("textures/colorSwatch");
+
+            ColorPalette = _colorPaletteRaw.GetPixels();
+            Debug.Log($"Found {ColorPalette.Length} colors.");
+        }
+
     }
 }

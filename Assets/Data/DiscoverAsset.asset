@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99c49654b9bada340bfd165d70dc8296, type: 3}
+  m_Name: DiscoverAsset
+  m_EditorClassIdentifier: 
+  WindowTitle: Boat Attack | Universal RP Demo Project
+  HeaderTexture: {fileID: 2800000, guid: 20f44f4e6dce741088b8aab3af0bb8e5, type: 3}
+  WindowWidth: 640
+  WindowHeight: 640
+  DiscoverListWidth: 180
+  EnableShowAtStartup: 1
+  PreferenceName: Discover
+  Title: Welcome to the Boat Attack demo project!
+  Description: 'This demo makes use of the Universal Render Pipeline and is designed
+    to showcase and display examples of how to use some of the features included
+    with Universal RP and other exciting features available in Unity.
+
+
+    Using
+    this window you can explore parts of the project and some of the examples in
+    isolation to learn how they work and what they were used for.
+
+
+    To build
+    this project, make sure to build the addressable content first, for information
+    about how to do so please check the Addressables package manual.'
+  Scenes:
+  - Title: Main menu
+    Description: This is where you can start the project in playmode and try the
+      games full vertical slice.
+    SceneSetups: []
+    SingleScenes:
+    - {fileID: 102900000, guid: c817c1b09586c49e5b4a849ce1cf119b, type: 3}
+  - Title: Demo Island
+    Description: This scene (demo_Island) contains the island scene with everything
+      setup for the boats to start racing in AI mode.
+    SceneSetups: []
+    SingleScenes:
+    - {fileID: 102900000, guid: b3bf1324da98a41e796a5881dd3812eb, type: 3}
+  Debug: 0

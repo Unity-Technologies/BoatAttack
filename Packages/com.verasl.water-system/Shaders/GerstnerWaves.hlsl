@@ -2,7 +2,6 @@
 #define GERSTNER_WAVES_INCLUDED
 
 uniform uint 	_WaveCount; // how many waves, set via the water component
-float 			_GlobalTime; // global scene time
 
 struct Wave
 {
@@ -28,12 +27,17 @@ struct WaveStruct
 WaveStruct GerstnerWave(half2 pos, float waveCountMulti, half amplitude, half direction, half wavelength, half omni, half2 omniPos)
 {
 	WaveStruct waveOut;
+#if defined(_STATIC_WATER)
+	float time = 0;
+#else
+	float time = _Time.y;
+#endif
 
 	////////////////////////////////wave value calculations//////////////////////////
 	half3 wave = 0; // wave vector
 	half w = 6.28318 / wavelength; // 2pi over wavelength(hardcoded)
 	half wSpeed = sqrt(9.8 * w); // frequency of the wave based off wavelength
-	half peak = 1; // peak value, 1 is the sharpest peaks
+	half peak = 1.2; // peak value, 1 is the sharpest peaks
 	half qi = peak / (amplitude * w * _WaveCount);
 
 	direction = radians(direction); // convert the incoming degrees to radians, for directional waves
@@ -44,14 +48,14 @@ WaveStruct GerstnerWave(half2 pos, float waveCountMulti, half amplitude, half di
 	half dir = dot(windDir, pos - (omniPos * omni)); // calculate a gradient along the wind direction
 
 	////////////////////////////position output calculations/////////////////////////
-	half calc = dir * w + -_GlobalTime * wSpeed; // the wave calculation
+	half calc = dir * w + -time * wSpeed; // the wave calculation
 	half cosCalc = cos(calc); // cosine version(used for horizontal undulation)
 	half sinCalc = sin(calc); // sin version(used for vertical undulation)
 
 	// calculate the offsets for the current point
 	wave.xz = qi * amplitude * windDir.xy * cosCalc;
 	wave.y = ((sinCalc * amplitude)) * waveCountMulti;// the height is divided by the number of waves
-	
+
 	////////////////////////////normal output calculations/////////////////////////
 	half wa = w * amplitude;
 	// normal vector
@@ -68,36 +72,36 @@ WaveStruct GerstnerWave(half2 pos, float waveCountMulti, half amplitude, half di
 inline void SampleWaves(float3 position, half opacity, out WaveStruct waveOut)
 {
 	half2 pos = position.xz;
-	WaveStruct waves[10];
 	waveOut.position = 0;
 	waveOut.normal = 0;
 	half waveCountMulti = 1.0 / _WaveCount;
-	half3 opacityMask = saturate(half3(3, 1, 3) * opacity);
-	
+	half3 opacityMask = saturate(half3(3, 3, 1) * opacity);
+
 	UNITY_LOOP
 	for(uint i = 0; i < _WaveCount; i++)
 	{
-		#if defined(USE_STRUCTURED_BUFFER)
-		waves[i] = GerstnerWave(pos,
-								waveCountMulti, 
-								_WaveDataBuffer[i].amplitude, 
-								_WaveDataBuffer[i].direction, 
-								_WaveDataBuffer[i].wavelength, 
-								_WaveDataBuffer[i].omni, 
-								_WaveDataBuffer[i].origin); // calculate the wave		
-		#else
-		waves[i] = GerstnerWave(pos,
-        								waveCountMulti, 
-        								waveData[i].x, 
-        								waveData[i].y, 
-        								waveData[i].z, 
-        								waveData[i].w, 
-        								waveData[i + 10].xy); // calculate the wave
+#if defined(USE_STRUCTURED_BUFFER)
+		Wave w = _WaveDataBuffer[i];
+#else
+		Wave w;
+		w.amplitude = waveData[i].x;
+		w.direction = waveData[i].y;
+		w.wavelength = waveData[i].z;
+		w.omni = waveData[i].w;
+		w.origin = waveData[i + 10].xy;
+#endif
+		WaveStruct wave = GerstnerWave(pos,
+								waveCountMulti,
+								w.amplitude,
+								w.direction,
+								w.wavelength,
+								w.omni,
+								w.origin); // calculate the wave
 
-		#endif
-		waveOut.position += waves[i].position * opacityMask; // add the position
-		waveOut.normal += waves[i].normal * opacityMask; // add the normal
+		waveOut.position += wave.position; // add the position
+		waveOut.normal += wave.normal; // add the normal
 	}
+	waveOut.position *= opacityMask;
 }
 
 #endif // GERSTNER_WAVES_INCLUDED

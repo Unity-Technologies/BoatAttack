@@ -5,7 +5,7 @@
 
 half CalculateFresnelTerm(half3 normalWS, half3 viewDirectionWS)
 {
-    return pow(1.0 - saturate(dot(normalWS, viewDirectionWS)), 5);//fresnel TODO - find a better place
+    return pow(1.0 - saturate(dot(normalWS, viewDirectionWS)), 10);//fresnel TODO - find a better place
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ half3 SampleReflections(half3 normalWS, half3 viewDirectionWS, half2 screenUV, h
 
     half3 viewNormal = mul(normalWS, (float3x3)GetWorldToViewMatrix()).xyz;
     half3 reflectVector = reflect(-viewDir, viewNormal);
-    
+
     half2 reflectionUV = screenUV + normalWS.zx * half2(0.02, 0.15);
     reflection += SAMPLE_TEXTURE2D_LOD(_PlanarReflectionTexture, sampler_ScreenTextures_linear_clamp, reflectionUV, 6 * roughness).rgb;//planar reflection
 #endif
