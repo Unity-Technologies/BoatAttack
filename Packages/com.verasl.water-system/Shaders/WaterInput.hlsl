@@ -21,9 +21,9 @@ TEXTURE2D(_PlanarReflectionTexture);
 TEXTURECUBE(_CubemapTexture);
 SAMPLER(sampler_CubemapTexture);
 #endif
-TEXTURE2D(_WaterFXMap);
-TEXTURE2D(_CameraDepthTexture);
-TEXTURE2D(_CameraOpaqueTexture); SAMPLER(sampler_CameraOpaqueTexture_linear_clamp);
+TEXTURE2D_X(_WaterFXMap);
+TEXTURE2D_X(_CameraDepthTexture);
+TEXTURE2D_X(_CameraOpaqueTexture); SAMPLER(sampler_CameraOpaqueTexture_linear_clamp);
 
 TEXTURE2D(_WaterDepthMap); SAMPLER(sampler_WaterDepthMap_linear_clamp);
 
