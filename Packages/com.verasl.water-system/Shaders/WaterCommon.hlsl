@@ -188,6 +188,7 @@ WaterVertexOutput WaterVertex(WaterVertexInput v)
 half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 {
 	UNITY_SETUP_INSTANCE_ID(IN);
+	UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(IN);
 	half3 screenUV = IN.shadowCoord.xyz / IN.shadowCoord.w;//screen UVs
 
 	half4 waterFX = SAMPLE_TEXTURE2D_X(_WaterFXMap, sampler_ScreenTextures_linear_clamp, IN.preWaveSP.xy);
