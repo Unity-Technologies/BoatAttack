@@ -174,7 +174,6 @@ WaterVertexOutput WaterVertex(WaterVertexInput v)
 {
     WaterVertexOutput o;// = (WaterVertexOutput)0;
 	UNITY_SETUP_INSTANCE_ID(v);
-    UNITY_TRANSFER_INSTANCE_ID(v, o);
 	UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
     o.uv.xy = v.texcoord; // geo uvs
@@ -187,7 +186,6 @@ WaterVertexOutput WaterVertex(WaterVertexInput v)
 // Fragment for water
 half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 {
-	UNITY_SETUP_INSTANCE_ID(IN);
 	UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(IN);
 	half3 screenUV = IN.shadowCoord.xyz / IN.shadowCoord.w;//screen UVs
 
