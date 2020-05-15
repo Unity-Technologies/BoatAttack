@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BoatDemoRenderer
   m_EditorClassIdentifier: 
   m_RendererFeatures:
-  - {fileID: 770174969183694509}
+  - {fileID: 1493603568523985814}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   shaders:
     blitPS: {fileID: 4800000, guid: c17132b1f77d20942aa75f8429c0f8bc, type: 3}
@@ -35,7 +35,8 @@ MonoBehaviour:
     passOperation: 2
     failOperation: 0
     zFailOperation: 0
---- !u!114 &770174969183694509
+  m_ShadowTransparentReceive: 1
+--- !u!114 &1493603568523985814
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,7 +46,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: adbe377f4f72c497faee64bc3f0580b9, type: 3}
-  m_Name: WaterSystemPass
+  m_Name: WaterSystem
   m_EditorClassIdentifier: 
   settings:
     causticScale: 0.25

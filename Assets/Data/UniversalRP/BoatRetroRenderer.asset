@@ -1,5 +1,59 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-4878736563600351927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 804bf49869d3b4315a850958d8530433, type: 3}
+  m_Name: NewBlit
+  m_EditorClassIdentifier: 
+  settings:
+    Event: 500
+    blitMaterial: {fileID: 2100000, guid: 03d7b241c3fee9946a8c70aa8ffc18f1, type: 2}
+    blitMaterialPassIndex: -1
+    destination: 0
+    textureId: _BlitPassTexture
+--- !u!114 &-3189639346213710365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 804bf49869d3b4315a850958d8530433, type: 3}
+  m_Name: Toon Pass
+  m_EditorClassIdentifier: 
+  settings:
+    Event: 500
+    blitMaterial: {fileID: 2100000, guid: bb822321860d6af44a4abeb570b648d1, type: 2}
+    blitMaterialPassIndex: -1
+    destination: 0
+    textureId: _BlitPassTexture
+--- !u!114 &-1317020491931952740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 804bf49869d3b4315a850958d8530433, type: 3}
+  m_Name: Outline Pass
+  m_EditorClassIdentifier: 
+  settings:
+    Event: 500
+    blitMaterial: {fileID: 2100000, guid: 40085b480ff98a944af12796f052956e, type: 2}
+    blitMaterialPassIndex: -1
+    destination: 0
+    textureId: _BlitPassTexture
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12,14 +66,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de640fe3d0db1804a85f9fc8f5cadab6, type: 3}
   m_Name: BoatRetroRenderer
   m_EditorClassIdentifier: 
-  m_RendererFeatures: []
-  postProcessData: {fileID: 0}
+  m_RendererFeatures:
+  - {fileID: 4860357971611268930}
+  - {fileID: -3189639346213710365}
+  - {fileID: -1317020491931952740}
+  - {fileID: -4878736563600351927}
+  postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   shaders:
-    blitPS: {fileID: 0}
-    copyDepthPS: {fileID: 0}
-    screenSpaceShadowPS: {fileID: 0}
-    samplingPS: {fileID: 0}
-    fallbackErrorPS: {fileID: 0}
+    blitPS: {fileID: 4800000, guid: c17132b1f77d20942aa75f8429c0f8bc, type: 3}
+    copyDepthPS: {fileID: 4800000, guid: d6dae50ee9e1bfa4db75f19f99355220, type: 3}
+    screenSpaceShadowPS: {fileID: 4800000, guid: 0f854b35a0cf61a429bd5dcfea30eddd,
+      type: 3}
+    samplingPS: {fileID: 4800000, guid: 04c410c9937594faa893a11dceb85f7e, type: 3}
+    fallbackErrorPS: {fileID: 4800000, guid: e6e9a19c3678ded42a3bc431ebef7dbd, type: 3}
   m_OpaqueLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -34,3 +93,19 @@ MonoBehaviour:
     failOperation: 0
     zFailOperation: 0
   m_ShadowTransparentReceive: 1
+--- !u!114 &4860357971611268930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adbe377f4f72c497faee64bc3f0580b9, type: 3}
+  m_Name: NewWaterSystemFeature
+  m_EditorClassIdentifier: 
+  settings:
+    causticScale: 0.25
+    debug: 0
+  causticShader: {fileID: 4800000, guid: 90939d2e4b62841d29c136c866715501, type: 3}
