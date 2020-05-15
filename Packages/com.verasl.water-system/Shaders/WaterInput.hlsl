@@ -10,7 +10,7 @@ CBUFFER_END
 half _MaxDepth;
 half _MaxWaveHeight;
 int _DebugPass;
-half4 _VeraslWater_DepthCamParams;
+half4 _depthCamZParams;
 float4x4 _InvViewProjection;
 
 // Screen Effects textures
