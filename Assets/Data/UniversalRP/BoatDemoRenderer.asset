@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BoatDemoRenderer
   m_EditorClassIdentifier: 
   m_RendererFeatures:
-  - {fileID: 1493603568523985814}
+  - {fileID: 4860357971611268930, guid: 74177b577927ace4798a79666640ab41, type: 2}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   shaders:
     blitPS: {fileID: 4800000, guid: c17132b1f77d20942aa75f8429c0f8bc, type: 3}
@@ -36,7 +36,7 @@ MonoBehaviour:
     failOperation: 0
     zFailOperation: 0
   m_ShadowTransparentReceive: 1
---- !u!114 &1493603568523985814
+--- !u!114 &684880503429451503
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,10 +45,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adbe377f4f72c497faee64bc3f0580b9, type: 3}
-  m_Name: WaterSystem
+  m_Script: {fileID: 11500000, guid: f62c9c65cf3354c93be831c8bc075510, type: 3}
+  m_Name: NewScreenSpaceAmbientOcclusion
   m_EditorClassIdentifier: 
-  settings:
-    causticScale: 0.25
-    debug: 0
-  causticShader: {fileID: 4800000, guid: 90939d2e4b62841d29c136c866715501, type: 3}
+  m_Active: 1
+  settings: {Shader: {fileID: 4800000, guid: 0849e84e3d62649e8882e9d6f056a017, type: 3},
+    Quality: 2, Params:
+      Downsample: 1
+      NormalSamples: 1
+      Intensity: 1
+      Radius: 0.1
+      SampleCount: 7
+      BlurPasses: 3
+}
+  m_Material: {fileID: 0}
