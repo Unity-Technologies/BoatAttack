@@ -1,25 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8245398564993106213
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1386573b276c54a468778c523d829e91, type: 3}
-  m_Name: Gradient Fog
-  m_EditorClassIdentifier: 
-  m_Active: 1
-  settings:
-    Event: 500
-    StartDistance: -8.7
-    EndDistance: 58
-    NearColor: {r: 0.42866677, g: 0.5183965, b: 0.5377358, a: 0.31764707}
-    MiddleColor: {r: 0.5566038, g: 0.42360774, b: 0.31243324, a: 0.72156864}
-    FarColor: {r: 0.40650585, g: 0.5703295, b: 0.8207547, a: 0.4117647}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30,12 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de640fe3d0db1804a85f9fc8f5cadab6, type: 3}
-  m_Name: BoatGradientFogRenderer
+  m_Name: CustomRenderer_Normal
   m_EditorClassIdentifier: 
   m_RendererFeatures:
-  - {fileID: 1999314579490882026}
-  - {fileID: -8245398564993106213}
-  m_RendererFeatureMap: ea41d06804febe1bdbfe11eeb075928d
+  - {fileID: 1493603568523985814}
+  m_RendererFeatureMap: 
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   shaders:
     blitPS: {fileID: 4800000, guid: c17132b1f77d20942aa75f8429c0f8bc, type: 3}
@@ -52,13 +31,13 @@ MonoBehaviour:
     m_Bits: 4294967295
   m_DefaultStencilState:
     overrideStencilState: 0
-    stencilReference: 0
+    stencilReference: 1
     stencilCompareFunction: 8
-    passOperation: 0
+    passOperation: 2
     failOperation: 0
     zFailOperation: 0
   m_ShadowTransparentReceive: 1
---- !u!114 &1999314579490882026
+--- !u!114 &1493603568523985814
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -68,7 +47,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: adbe377f4f72c497faee64bc3f0580b9, type: 3}
-  m_Name: NewWaterSystemFeature
+  m_Name: WaterSystem
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:

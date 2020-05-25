@@ -13,6 +13,7 @@ public class GradientFog : ScriptableRendererFeature
         public Color NearColor = new Color(0, 0.2f, 0.35f, 1);
         public Color MiddleColor = new Color(0.62f, 0.86f, 1, 1);
         public Color FarColor = new Color(0.85f, 0.96f, 1, 1);
+        [Range(0, 1)] public float Fade = 0.5f;
     }
     
     
@@ -39,6 +40,7 @@ public class GradientFog : ScriptableRendererFeature
             fogMaterial.SetColor("_NearCol", settings.NearColor);
             fogMaterial.SetColor("_MidCol", settings.MiddleColor);
             fogMaterial.SetColor("_FarCol", settings.FarColor);
+            fogMaterial.SetFloat("_Fade", settings.Fade);
         }
         
         // This method is called before executing the render pass.

@@ -7,9 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mat_Pass_Retro
-  m_Shader: {fileID: -6465566751694194690, guid: 25d24a1ca2aabec4296aa0b381bdbbb9,
-    type: 3}
+  m_Name: Mat_Pass_OutlineSobel
+  m_Shader: {fileID: 4800000, guid: 229f626996f73b743a938a40bf5712d6, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -20,14 +19,14 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Vector1_A02E52BC: 312
-    m_Colors: []
+    - _Delta: 0.000955
+    - _DepthIntensity: 90
+    - _Raw: 0
+    - _Value: 0.4
+    m_Colors:
+    - _LineColor: {r: 0, g: 1, b: 0.07609868, a: 1}
