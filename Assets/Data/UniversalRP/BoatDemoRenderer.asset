@@ -47,7 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adbe377f4f72c497faee64bc3f0580b9, type: 3}
   m_Name: WaterSystemPass
   m_EditorClassIdentifier: 
+  m_Active: 1
   settings:
-    causticScale: 0.25
+    causticScale: 0.176
+    causticBlendDistance: 3.36
     debug: 0
   causticShader: {fileID: 4800000, guid: 90939d2e4b62841d29c136c866715501, type: 3}

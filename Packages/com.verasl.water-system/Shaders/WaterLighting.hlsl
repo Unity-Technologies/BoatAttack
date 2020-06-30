@@ -5,7 +5,7 @@
 
 half CalculateFresnelTerm(half3 normalWS, half3 viewDirectionWS)
 {
-    return pow(1.0 - saturate(dot(normalWS, viewDirectionWS)), 10);//fresnel TODO - find a better place
+    return pow(1.0 - (saturate(dot(normalWS, viewDirectionWS)) - 0.05), 5);//fresnel TODO - find a better place
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,11 +45,31 @@ half3 Highlights(half3 positionWS, half roughness, half3 normalWS, half3 viewDir
     return specularTerm * mainLight.color * mainLight.distanceAttenuation;
 }
 
+//Soft Shadows
+half SoftShadows(float3 screenUV, float3 positionWS)
+{
+    half2 jitterUV = screenUV.xy * _ScreenParams.xy * _DitherPattern_TexelSize.xy;
+	half shadowAttenuation = 0;
+	
+	uint loop = 4;
+	float loopDiv = 1.0 / loop;
+	for (uint i = 0u; i < loop; ++i)
+    {
+#ifndef _STATIC_WATER
+        jitterUV += frac(half2(_Time.x, -_Time.z));
+#endif
+        float3 jitterTexture = SAMPLE_TEXTURE2D(_DitherPattern, sampler_DitherPattern, jitterUV + i * _ScreenParams.xy).xyz * 2 - 1;
+	    float3 lightJitter = positionWS + jitterTexture.xzy * 2;
+	    shadowAttenuation += SAMPLE_TEXTURE2D_SHADOW(_MainLightShadowmapTexture, sampler_MainLightShadowmapTexture, TransformWorldToShadowCoord(lightJitter));
+	}
+    return shadowAttenuation * loopDiv;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 //                           Reflection Modes                                //
 ///////////////////////////////////////////////////////////////////////////////
 
-half3 SampleReflections(half3 normalWS, half3 viewDirectionWS, half2 screenUV, half fresnelTerm, half roughness)
+half3 SampleReflections(half3 normalWS, half3 viewDirectionWS, half2 screenUV, half roughness)
 {
     half3 reflection = 0;
     half2 refOffset = 0;
@@ -75,7 +95,7 @@ half3 SampleReflections(half3 normalWS, half3 viewDirectionWS, half2 screenUV, h
 #endif
     //do backup
     //return reflectVector.yyy;
-    return reflection * fresnelTerm;
+    return reflection;
 }
 
 #endif // WATER_LIGHTING_INCLUDED

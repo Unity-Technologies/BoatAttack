@@ -86,6 +86,8 @@ namespace WaterSystem
                 if (cam.cameraType == CameraType.Preview || !WaterCausticMaterial)
                     return;
 
+                WaterCausticMaterial.SetMatrix("_MainLightDir", RenderSettings.sun.transform.localToWorldMatrix);
+                
                 CommandBuffer cmd = CommandBufferPool.Get(k_RenderWaterCausticsTag);
                 using (new ProfilingScope(cmd, m_WaterCaustics_Profile))
                 {
@@ -97,7 +99,6 @@ namespace WaterSystem
                     var position = cam.transform.position;
                     position.y = 0; // TODO should read a global 'water height' variable.
                     var matrix = Matrix4x4.TRS(position, Quaternion.identity, Vector3.one);
-
                     // Setup the CommandBuffer and draw the mesh with the caustic material and matrix
                     cmd.DrawMesh(m_mesh, matrix, WaterCausticMaterial, 0, 0);
                 }
@@ -131,8 +132,14 @@ namespace WaterSystem
 
             causticShader = causticShader ? causticShader : Shader.Find("Hidden/BoatAttack/Caustics");
             if (causticShader == null) return;
-            _causticMaterial = _causticMaterial ? _causticMaterial : new Material(causticShader);
-
+            if (_causticMaterial)
+            {
+                DestroyImmediate(_causticMaterial);
+            }
+            
+            _causticMaterial = CoreUtils.CreateEngineMaterial(causticShader);
+            _causticMaterial.SetFloat("_BlendDistance", settings.causticBlendDistance);
+            
             switch (settings.debug)
             {
                 case WaterSystemSettings.DebugMode.Caustics:
@@ -160,8 +167,7 @@ namespace WaterSystem
         public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
         {
             renderer.EnqueuePass(m_WaterFxPass);
-            if(_causticMaterial == null)
-                renderer.EnqueuePass(m_CausticsPass);
+            renderer.EnqueuePass(m_CausticsPass);
         }
 
         /// <summary>
@@ -198,6 +204,8 @@ namespace WaterSystem
         {
             [Header("Caustics Settings")] [Range(0.1f, 1f)]
             public float causticScale = 0.25f;
+
+            public float causticBlendDistance = 3f;
 
             [Header("Advanced Settings")] public DebugMode debug = DebugMode.Disabled;
 

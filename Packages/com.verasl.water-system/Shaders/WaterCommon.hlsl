@@ -199,15 +199,8 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	half depthMulti = 1 / _MaxDepth;
 
 	// Lighting
-	half2 jitterUV = screenUV.xy * _ScreenParams.xy * _DitherPattern_TexelSize.xy;
-#ifndef _STATIC_WATER
-    jitterUV += frac(_Time.zw);
-#endif
-	float3 jitterTexture = SAMPLE_TEXTURE2D(_DitherPattern, sampler_DitherPattern, jitterUV).xyz * 2 - 1;
-	float3 lightJitter = IN.posWS + jitterTexture.xzy * 2.5;
-	Light mainLightJittered = GetMainLight(TransformWorldToShadowCoord(lightJitter));
 	Light mainLight = GetMainLight(TransformWorldToShadowCoord(IN.posWS));
-    half shadow = mainLightJittered.shadowAttenuation;
+    half shadow = SoftShadows(screenUV, IN.posWS);
     half3 GI = SampleSH(IN.normal);
 
     // SSS
@@ -245,7 +238,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	//return fresnelTerm.xxxx;
 
     BRDFData brdfData;
-    InitializeBRDFData(half3(0, 0, 0), 0, half3(1, 1, 1), 0.9, 1, brdfData);
+    InitializeBRDFData(half3(0, 0, 0), 0, half3(1, 1, 1), 0.95, 1, brdfData);
 	half3 spec = DirectBDRF(brdfData, IN.normal, mainLight.direction, IN.viewDir) * shadow * mainLight.color;
 #ifdef _ADDITIONAL_LIGHTS
     uint pixelLightCount = GetAdditionalLightsCount();
@@ -260,23 +253,33 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
     sss *= Scattering(depth.x * depthMulti);
 
 	// Reflections
-	half3 reflection = SampleReflections(IN.normal, IN.viewDir.xyz, screenUV.xy, fresnelTerm, 0.0);
-	reflection = clamp(reflection + spec, 0, 1024) * depthEdge;
+	half3 reflection = SampleReflections(IN.normal, IN.viewDir.xyz, screenUV.xy, 0.0);
 
 	// Refraction
 	half3 refraction = Refraction(distortion, depth.x, depthMulti);
 
-	// Final Colouring
-    half3 diffuse = refraction + sss;
-
 	// Do compositing
-	half3 comp = lerp(reflection + diffuse, foam, foamMask); //lerp(refraction, color + reflection + foam, 1-saturate(1-depth.x * 25));
+	half3 comp = lerp(lerp(refraction, reflection, fresnelTerm) + sss + spec, foam, foamMask); //lerp(refraction, color + reflection + foam, 1-saturate(1-depth.x * 25));
 
 	// Fog
     float fogFactor = IN.fogFactorNoise.x;
     comp = MixFog(comp, fogFactor);
     //comp = DebugWaterFX(comp, waterFX, screenUV.x);
-	return half4(comp, 1);
+#if defined(_DEBUG_SSS)
+    return half4(sss, 1);
+#elif defined(_DEBUG_REFLECTION)
+    return half4(reflection, 1);
+#elif defined(_DEBUG_NORMAL)
+    return half4(IN.normal.x * 0.5 + 0.5, 0, IN.normal.z * 0.5 + 0.5, 1);
+#elif defined(_DEBUG_FRESNEL)
+    return half4(fresnelTerm.xxx, 1);
+#elif defined(_DEBUG_WATEREFFECTS)
+    return half4(waterFX);
+#elif defined(_DEBUG_WATERDEPTH)
+    return half4(frac(depth), 1);
+#else
+    return half4(comp, 1);
+#endif
 	//return SAMPLE_TEXTURE2D(_PlanarReflectionTexture, sampler_ScreenTextures_linear_clamp, screenUV);
 	//return half4(spec, 1); // debug line
 	//return half4(diffuse, 1); // debug line

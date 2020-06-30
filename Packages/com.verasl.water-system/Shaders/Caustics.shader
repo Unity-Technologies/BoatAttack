@@ -15,8 +15,6 @@
     }
     SubShader
     {
-        // No culling or depth
-        Cull Off
         ZWrite Off
 
         Pass
@@ -25,6 +23,8 @@
 
             HLSLPROGRAM
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
             #pragma shader_feature _DEBUG
 
@@ -42,20 +42,26 @@
                 float2 uv : TEXCOORD0;
                 float4 screenpos : TEXCOORD1;
                 float4 positionOS : SV_POSITION;
+                float3 positionWS : TEXCOORD2;
             };
 
-            TEXTURE2D(_CameraDepthTexture); SAMPLER(sampler_CameraDepthTexture);
             TEXTURE2D(_CausticMap); SAMPLER(sampler_CausticMap);
+            TEXTURE2D(_AbsorptionScatteringRamp); SAMPLER(sampler_AbsorptionScatteringRamp);
 
             half _Size;
             half _WaterLevel;
+            half _MaxDepth;
             half _BlendDistance;
+            half4x4 _MainLightDir;
 
             float3 ReconstructWorldPos(half2 screenPos, float depth)
             {
+#ifdef UNITY_REVERSED_Z
+                depth = 1 - depth;
+#endif
                 // World Pos reconstriction
-                float4 raw = mul(UNITY_MATRIX_I_VP, float4(screenPos * 2 - 1, depth, 1));
-                float3 worldPos = raw.rgb / raw.a;
+                float4 raw = mul(UNITY_MATRIX_I_VP, float4(screenPos * 2 - 1, depth * 2 - 1, 1));
+                float3 worldPos = raw.rgb / raw.a;                
                 return worldPos;
             }
 
@@ -63,8 +69,8 @@
             float2 CausticUVs(float2 rawUV, float2 offset)
             {
                 //anim
-                float2 uv = rawUV * _Size + float2(_Time.y, _Time.x) * 0.1;
-                return uv + offset * 0.25;
+                float2 uv = rawUV * _Size;
+                return uv + offset * 0.1;
             }
 
             Varyings vert (Attributes input)
@@ -72,6 +78,7 @@
                 Varyings output;
                 VertexPositionInputs vertexInput = GetVertexPositionInputs(input.positionOS.xyz);
                 output.positionOS = vertexInput.positionCS;
+                output.positionWS = vertexInput.positionWS;
                 output.screenpos = ComputeScreenPos(output.positionOS);
                 output.uv = float2(input.uv.x, 1.0 - input.uv.y);
                 return output;
@@ -83,26 +90,32 @@
             {
                 float4 screenPos = input.screenpos / input.screenpos.w;
 
-                real depth = SAMPLE_DEPTH_TEXTURE( _CameraDepthTexture, sampler_CameraDepthTexture, screenPos.xy);
+                real depth = SampleSceneDepth(screenPos.xy);
+                float3 WorldPos = ReconstructWorldPos(screenPos.xy, depth);
+                
+                Light mainLight = GetMainLight();
+                float3 lightPos = mul(WorldPos, _MainLightDir).xyz;
 
-                float3 worldPos = ReconstructWorldPos(screenPos.xy, depth);
-
-                float2 uv = worldPos.xz * 0.025 + _Time.x * 0.25;
+                float2 uv = WorldPos.xz * 0.025 + _Time.x * 0.25;
                 float waveOffset = SAMPLE_TEXTURE2D(_CausticMap, sampler_CausticMap, uv).w - 0.5;
 
-                float2 causticUV = CausticUVs(worldPos.xz, waveOffset);
+                float2 causticUV = CausticUVs(lightPos.xy, waveOffset);
 
-                half upperMask = saturate(-worldPos.y + _WaterLevel);
-                half lowerMask = saturate((worldPos.y - _WaterLevel) / _BlendDistance + _BlendDistance);
+                half upperMask = saturate(-WorldPos.y + _WaterLevel);
+                half lowerMask = saturate((WorldPos.y - _WaterLevel) / _BlendDistance + _BlendDistance);
 
-                float3 caustics = SAMPLE_TEXTURE2D_LOD(_CausticMap, sampler_CausticMap, causticUV, abs(worldPos.y - _WaterLevel) * 5 / _BlendDistance).bbb;
-                //return real4(caustics, 1);
+                float4 ref1 = SAMPLE_TEXTURE2D_LOD(_CausticMap, sampler_CausticMap, causticUV + _Time.x, abs(WorldPos.y - _WaterLevel) * 4 / _BlendDistance);
+                float4 ref2 = SAMPLE_TEXTURE2D_LOD(_CausticMap, sampler_CausticMap, causticUV * 2, abs(WorldPos.y - _WaterLevel) * 4 / _BlendDistance);
+                
+                float ref = (ref1.z * ref2.z) * 10 + ref1.z + ref2.z;
+                float3 caustics = ref * min(upperMask, lowerMask);
+                caustics *= float3(ref1.w * 0.5, ref2.w * 0.75, ref2.x) * mainLight.color;
+                
+                half3 output = caustics + 1;
 #ifdef _DEBUG
-                return real4(caustics * min(upperMask, lowerMask), 1);
+                return real4(caustics, 1);
 #endif
-                caustics *= min(upperMask, lowerMask) * 2;
-
-                return real4(caustics + 1, 1);
+                return real4(output, 1);
             }
             ENDHLSL
         }

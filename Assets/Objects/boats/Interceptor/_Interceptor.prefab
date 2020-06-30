@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1553288845585282, guid: fc3ffb83d6eafb1489a5b23bc82d25b6, type: 3}
       propertyPath: m_Name
-      value: _BoatBase
+      value: _Interceptor
       objectReference: {fileID: 0}
     - target: {fileID: 4534809148113994, guid: fc3ffb83d6eafb1489a5b23bc82d25b6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -54,6 +54,36 @@ PrefabInstance:
     - target: {fileID: 4534809148113994, guid: fc3ffb83d6eafb1489a5b23bc82d25b6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114135153223430406, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
+        type: 3}
+      propertyPath: wakes.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114135153223430406, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
+        type: 3}
+      propertyPath: wakes.Array.data[0].origin.x
+      value: 0.47
+      objectReference: {fileID: 0}
+    - target: {fileID: 114135153223430406, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
+        type: 3}
+      propertyPath: wakes.Array.data[0].origin.z
+      value: 0.32
+      objectReference: {fileID: 0}
+    - target: {fileID: 114135153223430406, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
+        type: 3}
+      propertyPath: wakes.Array.data[1].origin.x
+      value: 0.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 114135153223430406, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
+        type: 3}
+      propertyPath: wakes.Array.data[1].origin.z
+      value: -3.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 114135153223430406, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
+        type: 3}
+      propertyPath: wakes.Array.data[0].origin.y
+      value: -0.12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc3ffb83d6eafb1489a5b23bc82d25b6, type: 3}
