@@ -183,10 +183,23 @@ namespace WaterSystem
         }
 
         private void LateUpdate() { LocalToWorldConversion(); }
-
-        private void OnDisable() { LocalToWorldJob.Cleanup(_guid); }
         
-        private void OnDestroy() { LocalToWorldJob.Cleanup(_guid); }
+        private void OnDestroy()
+        {
+            CleanUp();
+        }
+
+        void CleanUp()
+        {
+            if (_buoyancyType == BuoyancyType.Physical || _buoyancyType == BuoyancyType.PhysicalVoxel)
+            {
+                LocalToWorldJob.Cleanup(_guid);
+            }
+            else
+            {
+                _samplePoints.Dispose();
+            }
+        }
 
         private void LocalToWorldConversion()
         {

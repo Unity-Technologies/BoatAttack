@@ -79,14 +79,17 @@ namespace WaterSystem
             }
         }
 
-        private void OnDisable() {
+        private void OnDestroy() {
             Cleanup();
+        }
+
+        private void OnApplicationQuit()
+        {
+            GerstnerWavesJobs.Cleanup();
         }
 
         void Cleanup()
         {
-            //if(Application.isPlaying)
-                //GerstnerWavesJobs.Cleanup();
             RenderPipelineManager.beginCameraRendering -= BeginCameraRendering;
             if (_depthCam)
             {
