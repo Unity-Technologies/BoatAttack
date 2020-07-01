@@ -5,7 +5,7 @@
 		_BumpScale("Detail Wave Amount", Range(0, 2)) = 0.2//fine detail multiplier
 		_DitherPattern ("Dithering Pattern", 2D) = "bump" {}
 		[Toggle(_STATIC_SHADER)] _Static ("Static", Float) = 0
-		[KeywordEnum(Off, SSS, Reflection, Normal, Fresnel, WaterEffects, WaterDepth)] _Debug ("Debug mode", Float) = 0
+		[KeywordEnum(Off, SSS, Refraction, Reflection, Normal, Fresnel, WaterEffects, WaterDepth)] _Debug ("Debug mode", Float) = 0
 	}
 	SubShader
 	{
@@ -23,7 +23,7 @@
 			#pragma shader_feature _REFLECTION_CUBEMAP _REFLECTION_PROBES _REFLECTION_PLANARREFLECTION
 			#pragma multi_compile _ USE_STRUCTURED_BUFFER
 			#pragma shader_feature _ _STATIC_SHADER
-			#pragma shader_feature _DEBUG_OFF _DEBUG_SSS _DEBUG_REFLECTION _DEBUG_NORMAL _DEBUG_FRESNEL _DEBUG_WATEREFFECTS _DEBUG_WATERDEPTH
+			#pragma shader_feature _DEBUG_OFF _DEBUG_SSS _DEBUG_REFRACTION _DEBUG_REFLECTION _DEBUG_NORMAL _DEBUG_FRESNEL _DEBUG_WATEREFFECTS _DEBUG_WATERDEPTH
 						
 			// -------------------------------------
             // Lightweight Pipeline keywords

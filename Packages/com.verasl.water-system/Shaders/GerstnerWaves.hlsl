@@ -64,7 +64,7 @@ WaveStruct GerstnerWave(half2 pos, float waveCountMulti, half amplitude, half di
 
 	////////////////////////////////assign to output///////////////////////////////
 	waveOut.position = wave * saturate(amplitude * 10000);
-	waveOut.normal = (n * waveCountMulti);
+	waveOut.normal = (n.xzy * waveCountMulti);
 
 	return waveOut;
 }
@@ -102,6 +102,7 @@ inline void SampleWaves(float3 position, half opacity, out WaveStruct waveOut)
 		waveOut.normal += wave.normal; // add the normal
 	}
 	waveOut.position *= opacityMask;
+	waveOut.normal *= half3(opacity, 1, opacity);
 }
 
 #endif // GERSTNER_WAVES_INCLUDED

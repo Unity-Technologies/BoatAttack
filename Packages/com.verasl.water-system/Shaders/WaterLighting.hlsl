@@ -5,7 +5,7 @@
 
 half CalculateFresnelTerm(half3 normalWS, half3 viewDirectionWS)
 {
-    return pow(1.0 - (saturate(dot(normalWS, viewDirectionWS)) - 0.05), 5);//fresnel TODO - find a better place
+    return saturate(pow(1.0 - dot(normalWS, viewDirectionWS), 5));//fresnel TODO - find a better place
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -62,7 +62,7 @@ half SoftShadows(float3 screenUV, float3 positionWS)
 	    float3 lightJitter = positionWS + jitterTexture.xzy * 2;
 	    shadowAttenuation += SAMPLE_TEXTURE2D_SHADOW(_MainLightShadowmapTexture, sampler_MainLightShadowmapTexture, TransformWorldToShadowCoord(lightJitter));
 	}
-    return shadowAttenuation * loopDiv;
+    return BEYOND_SHADOW_FAR(TransformWorldToShadowCoord(positionWS * 1.1)) ? 1.0 : shadowAttenuation * loopDiv;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

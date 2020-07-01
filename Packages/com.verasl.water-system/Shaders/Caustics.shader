@@ -91,7 +91,7 @@
                 float4 screenPos = input.screenpos / input.screenpos.w;
 
                 real depth = SampleSceneDepth(screenPos.xy);
-                float3 WorldPos = ReconstructWorldPos(screenPos.xy, depth);
+                float4 WorldPos = ReconstructWorldPos(screenPos.xy, depth).xyzz;
                 
                 Light mainLight = GetMainLight();
                 float3 lightPos = mul(WorldPos, _MainLightDir).xyz;

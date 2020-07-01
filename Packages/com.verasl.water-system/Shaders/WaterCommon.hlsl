@@ -105,7 +105,7 @@ half4 AdditionalData(float3 postionWS, WaveStruct wave)
     float3 viewPos = TransformWorldToView(postionWS);
 	data.x = length(viewPos / viewPos.z);// distance to surface
     data.y = length(GetCameraPositionWS().xyz - postionWS); // local position in camera space
-	data.z = wave.position.y / _MaxWaveHeight; // encode the normalized wave height into additional data
+	data.z = wave.position.y / _MaxWaveHeight * 0.5 + 0.5; // encode the normalized wave height into additional data
 	data.w = wave.position.x + wave.position.z;
 	return data;
 }
@@ -135,7 +135,7 @@ WaterVertexOutput WaveVertexOperations(WaterVertexOutput input)
 	//Gerstner here
 	WaveStruct wave;
 	SampleWaves(input.posWS, saturate((waterDepth * 0.1 + 0.05)), wave);
-	input.normal = wave.normal.xzy;
+	input.normal = wave.normal;
     input.posWS += wave.position;
 
 #ifdef SHADER_API_PS4
@@ -198,13 +198,24 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	//return half4(0, frac(ceil(depth.y) / _MaxDepth), frac(IN.posWS.y), 1);
 	half depthMulti = 1 / _MaxDepth;
 
+    // Detail waves
+	half2 detailBump1 = SAMPLE_TEXTURE2D(_SurfaceMap, sampler_SurfaceMap, IN.uv.zw).xy * 2 - 1;
+	half2 detailBump2 = SAMPLE_TEXTURE2D(_SurfaceMap, sampler_SurfaceMap, IN.uv.xy).xy * 2 - 1;
+	half2 detailBump = (detailBump1 + detailBump2 * 0.5) * saturate(depth.x * 0.25 + 0.25);
+
+	IN.normal += half3(detailBump.x, 0, detailBump.y) * _BumpScale;
+	IN.normal += half3(1-waterFX.y, 0.5h, 1-waterFX.z) - 0.5;
+	IN.normal = normalize(IN.normal);
+
 	// Lighting
 	Light mainLight = GetMainLight(TransformWorldToShadowCoord(IN.posWS));
     half shadow = SoftShadows(screenUV, IN.posWS);
     half3 GI = SampleSH(IN.normal);
 
     // SSS
-    half3 sss = 1 * (shadow * mainLight.color + GI);
+    half3 directLighting = dot(mainLight.direction, half3(0, 1, 0)) * mainLight.color;
+    directLighting += saturate(pow(dot(IN.viewDir, -mainLight.direction) * IN.additionalData.z, 3)) * 5 * mainLight.color;
+    half3 sss = directLighting * shadow + GI;
 
 	// Foam
 	half3 foamMap = SAMPLE_TEXTURE2D(_FoamMap, sampler_FoamMap,  IN.uv.zw).rgb; //r=thick, g=medium, b=light
@@ -215,15 +226,6 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	half foamMask = saturate(length(foamMap * foamBlend) * 1.5 - 0.1 + saturate(1 - depth.x * 4) * 0.5);
 	// Foam lighting
 	half3 foam = foamMask.xxx * (mainLight.shadowAttenuation * mainLight.color + GI);
-
-	// Detail waves
-	half2 detailBump1 = SAMPLE_TEXTURE2D(_SurfaceMap, sampler_SurfaceMap, IN.uv.zw).xy * 2 - 1;
-	half2 detailBump2 = SAMPLE_TEXTURE2D(_SurfaceMap, sampler_SurfaceMap, IN.uv.xy).xy * 2 - 1;
-	half2 detailBump = (detailBump1 + detailBump2 * 0.5) * saturate(depth.x * 0.25 + 0.25);
-
-	IN.normal += half3(detailBump.x, 0, detailBump.y) * _BumpScale;
-	IN.normal += half3(1-waterFX.y, 0.5h, 1-waterFX.z) - 0.5;
-	IN.normal = normalize(IN.normal);
 
 	// Distortion
 	half2 distortion = DistortionUVs(depth.x, IN.normal);
@@ -267,6 +269,8 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
     //comp = DebugWaterFX(comp, waterFX, screenUV.x);
 #if defined(_DEBUG_SSS)
     return half4(sss, 1);
+#elif defined(_DEBUG_REFRACTION)
+    return half4(refraction, 1);
 #elif defined(_DEBUG_REFLECTION)
     return half4(reflection, 1);
 #elif defined(_DEBUG_NORMAL)
@@ -280,11 +284,6 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 #else
     return half4(comp, 1);
 #endif
-	//return SAMPLE_TEXTURE2D(_PlanarReflectionTexture, sampler_ScreenTextures_linear_clamp, screenUV);
-	//return half4(spec, 1); // debug line
-	//return half4(diffuse, 1); // debug line
-	//return half4( (1 - foamMask).xxx, 1); // debug line
-	//eturn half4(pow(dot(IN.normal,float3(0, 1, 0)), 10).xxx, 1); // debug line
 }
 
 #endif // WATER_COMMON_INCLUDED
