@@ -30,10 +30,10 @@ Feel free to post any issues, but know this is a 'as is' repo, it's meant more f
 via Git:
   1. Make sure you have GitLFS installed, check [here](https://git-lfs.github.com) for details.
   2. Clone the repo as usual via cmd/terminal or in your favourite Git GUI software.
-  3. Checkout the branch that matches the Unity verison you are using, eg `release/2019.3`
+  3. Checkout the branch that matches the Unity verison you are using, eg `release/2019.4`
 
 Downloadable zips:
-  1. [2019.3 Project (Unity 2019.3f5)](https://drive.google.com/file/d/1vXpbVC36GHnyC-Eitl1WpLay9l_YqJGQ/view?usp=sharing)
+  1. [2019.4 Project (Unity 2019.4.2f1)](https://drive.google.com/file/d/19SRLm_jp9z0yeDgmHpwBdGaPShwc4FDW/view?usp=sharing)
 
 #### Load the project:
 Once you have the project files locally you can load the project, ideally in the Unity version that is noted in the `ProjectSettings/ProjectVersion.txt` for the best experience.
