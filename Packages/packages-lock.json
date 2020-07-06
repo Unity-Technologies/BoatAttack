@@ -102,7 +102,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {
-      "version": "7.4.1",
+      "version": "9.0.0-preview.38",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -111,12 +111,14 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.universal": {
-      "version": "7.4.1",
+      "version": "9.0.0-preview.35",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.render-pipelines.core": "7.4.1",
-        "com.unity.shadergraph": "7.4.1"
+        "com.unity.mathematics": "1.1.0",
+        "com.unity.burst": "1.2.3",
+        "com.unity.render-pipelines.core": "9.0.0-preview.38",
+        "com.unity.shadergraph": "9.0.0-preview.34"
       },
       "url": "https://packages.unity.com"
     },
@@ -127,12 +129,20 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.searcher": {
+      "version": "4.2.0",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.shadergraph": {
-      "version": "7.4.1",
+      "version": "9.0.0-preview.34",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.render-pipelines.core": "7.4.1"
+        "com.unity.render-pipelines.core": "9.0.0-preview.38",
+        "com.unity.searcher": "4.2.0"
       },
       "url": "https://packages.unity.com"
     },
@@ -155,7 +165,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.textmeshpro": {
-      "version": "2.1.0-preview.14",
+      "version": "3.0.0-preview.14",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -164,7 +174,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.timeline": {
-      "version": "1.2.15",
+      "version": "1.3.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -322,6 +332,18 @@
       "depth": 0,
       "source": "builtin",
       "dependencies": {
+        "com.unity.modules.ui": "1.0.0",
+        "com.unity.modules.imgui": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.modules.uielementsnative": "1.0.0"
+      }
+    },
+    "com.unity.modules.uielementsnative": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0"
       }

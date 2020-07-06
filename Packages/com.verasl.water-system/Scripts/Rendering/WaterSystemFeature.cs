@@ -61,7 +61,7 @@ namespace WaterSystem
                 CommandBufferPool.Release(cmd);
             }
 
-            public override void FrameCleanup(CommandBuffer cmd)
+            public override void OnCameraCleanup(CommandBuffer cmd) 
             {
                 // since the texture is used within the single cameras use we need to cleanup the RT afterwards
                 cmd.ReleaseTemporaryRT(m_WaterFX.id);
