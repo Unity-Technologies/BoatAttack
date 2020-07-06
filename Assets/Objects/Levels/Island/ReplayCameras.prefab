@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7496210737525571426}
   - component: {fileID: 4197516600372097407}
   - component: {fileID: 1744162998482369098}
-  - component: {fileID: 3174328860400228272}
   - component: {fileID: 71397576968582216}
   m_Layer: 0
   m_Name: cm
@@ -73,28 +72,6 @@ MonoBehaviour:
   m_BiasX: 0
   m_BiasY: 0
   m_CenterOnActivate: 1
---- !u!114 &3174328860400228272
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1858610677192987399}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa7155796051b734daa718462081dc5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_BindingMode: 1
-  m_FollowOffset: {x: 0, y: -6.25, z: 3}
-  m_XDamping: 0
-  m_YDamping: 0
-  m_ZDamping: 0
-  m_AngularDampingMode: 0
-  m_PitchDamping: 0
-  m_YawDamping: 0
-  m_RollDamping: 0
-  m_AngularDamping: 0
 --- !u!114 &71397576968582216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,6 +85,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_NoiseProfile: {fileID: 11400000, guid: a3dacaec0287d7444b4bd276816e1666, type: 2}
+  m_PivotOffset: {x: 0, y: 0, z: 0}
   m_AmplitudeGain: 0.25
   m_FrequencyGain: 4
   mNoiseOffsets: {x: 0, y: 0, z: 0}
@@ -122,6 +100,7 @@ GameObject:
   - component: {fileID: 571479311832868573}
   - component: {fileID: 4243276894543955315}
   - component: {fileID: 8906673978498950123}
+  - component: {fileID: 8099686524558702375}
   m_Layer: 0
   m_Name: BlimpCamera
   m_TagString: Untagged
@@ -195,6 +174,25 @@ MonoBehaviour:
   m_Damping: 1
   m_MinFOV: 3
   m_MaxFOV: 40
+--- !u!1818360608 &8099686524558702375
+PositionConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2671655056577180351}
+  m_Enabled: 1
+  m_Weight: 1
+  m_TranslationAtRest: {x: 4.409273, y: 38.868496, z: 72.38463}
+  m_TranslationOffset: {x: 0, y: 0, z: 0}
+  m_AffectTranslationX: 1
+  m_AffectTranslationY: 1
+  m_AffectTranslationZ: 1
+  m_IsContraintActive: 1
+  m_IsLocked: 0
+  m_Sources:
+  - sourceTransform: {fileID: 0}
+    weight: 1
 --- !u!1 &3234866870885967210
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,7 +238,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f65b0d1a4ea542698c1c5bdf9ab57e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  droneCamera: {fileID: 4724235160255684310}
   clearShot: {fileID: 776099557020744923}
 --- !u!1 &3664626529338384677
 GameObject:
@@ -299,10 +296,14 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_ShowDebugText: 0
-  m_ChildCameras: []
+  m_ChildCameras:
+  - {fileID: 4724235160255684310}
+  - {fileID: 4243276894543955315}
+  - {fileID: 8328869504314803904}
+  - {fileID: 8580961361257517894}
   m_ActivateAfter: 0
-  m_MinDuration: 2
-  m_RandomizeChoice: 0
+  m_MinDuration: 1
+  m_RandomizeChoice: 1
   m_DefaultBlend:
     m_Style: 0
     m_Time: 0
@@ -460,7 +461,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: -100
+  m_Priority: 10
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
@@ -520,7 +521,6 @@ GameObject:
   - component: {fileID: 8404867229143526628}
   - component: {fileID: 2307378836733225337}
   - component: {fileID: 7060883759400718409}
-  - component: {fileID: 8993637441016039515}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -581,28 +581,6 @@ MonoBehaviour:
   m_BiasX: 0
   m_BiasY: 0
   m_CenterOnActivate: 1
---- !u!114 &8993637441016039515
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6248716019008032031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa7155796051b734daa718462081dc5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_BindingMode: 1
-  m_FollowOffset: {x: 14.530655, y: -1.9251443, z: 59.971115}
-  m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
-  m_AngularDampingMode: 0
-  m_PitchDamping: 0
-  m_YawDamping: 0
-  m_RollDamping: 0
-  m_AngularDamping: 0
 --- !u!1 &7875996308580046279
 GameObject:
   m_ObjectHideFlags: 0
@@ -662,6 +640,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_NoiseProfile: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  m_PivotOffset: {x: 0, y: 0, z: 0}
   m_AmplitudeGain: 1
   m_FrequencyGain: 1
   mNoiseOffsets: {x: -539.1776, y: -314.93887, z: 367.37033}
@@ -798,7 +777,6 @@ GameObject:
   - component: {fileID: 6762570200046604378}
   - component: {fileID: 5527093981515814156}
   - component: {fileID: 6265161977818636379}
-  - component: {fileID: 686125807202346112}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -859,28 +837,6 @@ MonoBehaviour:
   m_BiasX: 0
   m_BiasY: 0
   m_CenterOnActivate: 1
---- !u!114 &686125807202346112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8505767975599569218}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa7155796051b734daa718462081dc5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_BindingMode: 1
-  m_FollowOffset: {x: -9.750008, y: 0, z: -107.21}
-  m_XDamping: 1
-  m_YDamping: 1
-  m_ZDamping: 1
-  m_AngularDampingMode: 0
-  m_PitchDamping: 0
-  m_YawDamping: 0
-  m_RollDamping: 0
-  m_AngularDamping: 0
 --- !u!1 &8633527972912473155
 GameObject:
   m_ObjectHideFlags: 0

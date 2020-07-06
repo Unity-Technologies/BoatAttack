@@ -194,7 +194,6 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 
 	// Depth
 	float3 depth = WaterDepth(IN.posWS, IN.additionalData, screenUV.xy);// TODO - hardcoded shore depth UVs
-	half depthEdge = saturate(depth.y * 20 + 1);
 	//return half4(0, frac(ceil(depth.y) / _MaxDepth), frac(IN.posWS.y), 1);
 	half depthMulti = 1 / _MaxDepth;
 
@@ -219,11 +218,13 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 
 	// Foam
 	half3 foamMap = SAMPLE_TEXTURE2D(_FoamMap, sampler_FoamMap,  IN.uv.zw).rgb; //r=thick, g=medium, b=light
-	half waveFoam = 0;// saturate(IN.posWS.y + 0.5);
-	half edgeFoam = saturate(1 - depth.x * 0.5 - 0.25) * depthEdge;
-	half foamBlendMask = max(max(waveFoam, edgeFoam), waterFX.r * 2);// + IN.fogFactorNoise.y * 0.1; //max(max((foamMask + shoreMask) - IN.fogFactorNoise.y * 0.25, waterFX.r * 2), shoreWave);
+	half depthEdge = saturate(depth.x * 20);
+	half waveFoam = saturate(IN.additionalData.z - 0.75 * 0.5); // wave tips
+	half depthAdd = saturate(1 - depth.x * 4) * 0.5;
+	half edgeFoam = saturate((1 - min(depth.x, depth.y) * 0.5 - 0.25) + depthAdd) * depthEdge;
+	half foamBlendMask = max(max(waveFoam, edgeFoam), waterFX.r * 2);
 	half3 foamBlend = SAMPLE_TEXTURE2D(_AbsorptionScatteringRamp, sampler_AbsorptionScatteringRamp, half2(foamBlendMask, 0.66)).rgb;
-	half foamMask = saturate(length(foamMap * foamBlend) * 1.5 - 0.1 + saturate(1 - depth.x * 4) * 0.5);
+	half foamMask = saturate(length(foamMap * foamBlend) * 1.5 - 0.1);
 	// Foam lighting
 	half3 foam = foamMask.xxx * (mainLight.shadowAttenuation * mainLight.color + GI);
 
@@ -266,8 +267,9 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	// Fog
     float fogFactor = IN.fogFactorNoise.x;
     comp = MixFog(comp, fogFactor);
-    //comp = DebugWaterFX(comp, waterFX, screenUV.x);
-#if defined(_DEBUG_SSS)
+#if defined(_DEBUG_FOAM)
+    return half4(foamMask.xxx, 1);
+#elif defined(_DEBUG_SSS)
     return half4(sss, 1);
 #elif defined(_DEBUG_REFRACTION)
     return half4(refraction, 1);

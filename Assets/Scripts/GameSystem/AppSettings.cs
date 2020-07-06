@@ -261,6 +261,7 @@ namespace BoatAttack
 
         public static readonly int[] Laps =
         {
+            1,
             3,
             6,
             9

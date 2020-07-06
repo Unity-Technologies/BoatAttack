@@ -8,9 +8,15 @@ TerrainLayer:
   m_PrefabAsset: {fileID: 0}
   m_Name: BeachSand_wet
   m_DiffuseTexture: {fileID: 2800000, guid: 9b83018dda05e4cffb3ca62e0d54d252, type: 3}
-  m_NormalMapTexture: {fileID: 2800000, guid: 58c621426b0004e43b875f1bfbbbf2d9, type: 3}
+  m_NormalMapTexture: {fileID: 2800000, guid: b793a644029c648a286a2ebd00e9e848, type: 3}
+  m_MaskMapTexture: {fileID: 0}
   m_TileSize: {x: 40, y: 40}
   m_TileOffset: {x: 0, y: 0}
   m_Specular: {r: 0, g: 0, b: 0, a: 0}
   m_Metallic: 0
-  m_Smoothness: 0
+  m_Smoothness: 0.75
+  m_NormalScale: 1
+  m_DiffuseRemapMin: {x: 0, y: 0, z: 0, w: 0}
+  m_DiffuseRemapMax: {x: 1, y: 1, z: 1, w: 1}
+  m_MaskMapRemapMin: {x: 0, y: 0, z: 0, w: 0}
+  m_MaskMapRemapMax: {x: 1, y: 1, z: 1, w: 1}

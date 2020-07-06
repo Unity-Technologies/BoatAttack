@@ -21,7 +21,7 @@ public class BuoyManager : MonoBehaviour
     {
         _guid = gameObject.GetInstanceID();
 
-        _buoys = new Transform[transform.childCount];
+        _buoys = new Transform[transform.childCount - 1];
         _mesh = new Mesh();
         var triangles = new int[_buoys.Length * 3];
         _vertices = new Vector3[_buoys.Length];

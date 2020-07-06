@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Quaternion = UnityEngine.Quaternion;
@@ -56,53 +57,52 @@ namespace BoatAttack
         private void Update()
         {
             //For each wake pair
-            var wCount = wakes.Count;
-            for (var w = 0; w < wCount; w++)
+            foreach (var wake in wakes.Where(wake => wake != null && wake.lines.Count == 2))
             {
-                var wake = wakes[w];
-                int s = 0;
-                for (int x = -1; x <= 1; x += 2)
+                DoWake(-1, wake, wake.lines[0]);
+                DoWake(1, wake, wake.lines[1]);
+            }
+        }
+
+        private void DoWake(int side, Wake wake, WakeLine wakeLine)
+        {
+            var origin = wake.origin;
+            origin.x *= side;
+            origin = transform.TransformPoint(origin);
+            origin.y = 0;//flatten origin in world
+            var pointCount = wakeLine.points.Count;
+            //////////////////////////// create points, if needed ///////////////////////////////
+            if (pointCount == 0)
+            {
+                wakeLine.points.Insert(0, CreateWakePoint(origin, side));
+                pointCount++;
+            }
+            else if (Vector3.Distance(wakeLine.points[0].pos, origin) > genDistance)
+            {
+                wakeLine.points.Insert(0, CreateWakePoint(origin, side));
+                pointCount++;
+            }
+            ///////////////////////////// kill points, if needed ////////////////////////////////
+            for (int i = wakeLine.points.Count - 1; i >= 0; i--)
+            {
+                if (wakeLine.points[i].age > maxAge)
                 {
-                    var origin = wake.origin;
-                    origin.x *= x;
-                    origin = transform.TransformPoint(origin);
-                    origin.y = 0;//flatten origin in world
-                    var pointCount = wake.lines[s].points.Count;
-                    //////////////////////////// create points, if needed ///////////////////////////////
-                    if (pointCount == 0)
-                    {
-                        wake.lines[s].points.Insert(0, CreateWakePoint(origin, x));
-                        pointCount++;
-                    }
-                    else if (Vector3.Distance(wake.lines[s].points[0].pos, origin) > genDistance)
-                    {
-                        wake.lines[s].points.Insert(0, CreateWakePoint(origin, x));
-                        pointCount++;
-                    }
-                    ///////////////////////////// kill points, if needed ////////////////////////////////
-                    for (int i = wake.lines[s].points.Count - 1; i >= 0; i--)
-                    {
-                        if (wake.lines[s].points[i].age > maxAge)
-                        {
-                            wake.lines[s].points.RemoveAt(i);
-                            pointCount--;
-                        }
-                        else
-                        {
-                            wake.lines[s].points[i].age += Time.deltaTime; // increment age
-                            wake.lines[s].points[i].pos += Time.deltaTime * 3 * wake.lines[s].points[i].dir; // move points by dir
-                        }
-                    }
-                    ///////////////////// Create the line renderer points ///////////////////////////////
-                    
-                    wake.lines[s].lineRenderer.positionCount = pointCount + 1;
-                    wake.lines[s].lineRenderer.SetPosition(0, origin);
-                    for (var i = 0; i < pointCount; i++)
-                    {
-                        wake.lines[s].lineRenderer.SetPosition(i + 1, wake.lines[s].points[i].pos);
-                    }
-                    s++;
+                    wakeLine.points.RemoveAt(i);
+                    pointCount--;
                 }
+                else
+                {
+                    wakeLine.points[i].age += Time.deltaTime; // increment age
+                    wakeLine.points[i].pos += Time.deltaTime * 3 * wakeLine.points[i].dir; // move points by dir
+                }
+            }
+            ///////////////////// Create the line renderer points ///////////////////////////////
+            
+            wakeLine.lineRenderer.positionCount = pointCount + 1;
+            wakeLine.lineRenderer.SetPosition(0, origin);
+            for (var i = 0; i < pointCount; i++)
+            {
+                wakeLine.lineRenderer.SetPosition(i + 1, wakeLine.points[i].pos);
             }
         }
 

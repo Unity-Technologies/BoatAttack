@@ -166,7 +166,7 @@ namespace BoatAttack.UI
 
         public void FinishMatch()
         {
-            AppSettings.LoadScene(0, LoadSceneMode.Single);
+            RaceManager.UnloadRace();
         }
 
         public void LateUpdate()

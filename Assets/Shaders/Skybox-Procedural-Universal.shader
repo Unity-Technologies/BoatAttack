@@ -61,7 +61,7 @@ SubShader {
 
         static const float kCameraHeight = 0.0001;
 
-        #define kRAYLEIGH (lerp(0.0, 0.0025, pow(_AtmosphereThickness,2.5)))      // Rayleigh constant
+        #define kRAYLEIGH (lerp(0.0, 0.0025, pow(abs(_AtmosphereThickness),2.5)))      // Rayleigh constant
         #define kMIE 0.0010             // Mie constant
         #define kSUN_BRIGHTNESS 20.0    // Sun brightness
 
@@ -178,7 +178,7 @@ SubShader {
             VertexPositionInputs vertexPositions = GetVertexPositionInputs(v.vertex.xyz);
             OUT.pos = vertexPositions.positionCS;
 
-            float3 kSkyTintInGammaSpace = COLOR_2_GAMMA(_SkyTint); // convert tint from Linear back to Gamma
+            float3 kSkyTintInGammaSpace = COLOR_2_GAMMA(abs(_SkyTint)); // convert tint from Linear back to Gamma
             float3 kScatteringWavelength = lerp (
                 kDefaultScatteringWavelength-kVariableRangeForScatteringWavelength,
                 kDefaultScatteringWavelength+kVariableRangeForScatteringWavelength,

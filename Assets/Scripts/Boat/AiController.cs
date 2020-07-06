@@ -37,6 +37,12 @@ namespace BoatAttack
             InvokeRepeating(nameof(CalculatePath), 1f, 1f);
         }
 
+        private void OnDisable()
+        {
+            StopAllCoroutines();
+            RaceManager.raceStarted -= StartRace;
+        }
+
         private void LateUpdate()
         {
             if(NavPath?.status == NavMeshPathStatus.PathInvalid)

@@ -79,7 +79,7 @@ namespace WaterSystem
             }
         }
 
-        private void OnDestroy() {
+        private void OnDisable() {
             Cleanup();
         }
 
@@ -237,8 +237,8 @@ namespace WaterSystem
             if (_useComputeBuffer)
             {
                 Shader.EnableKeyword("USE_STRUCTURED_BUFFER");
-                if (waveBuffer == null)
-                    waveBuffer = new ComputeBuffer(10, (sizeof(float) * 6));
+                waveBuffer?.Dispose();
+                waveBuffer = new ComputeBuffer(10, (sizeof(float) * 6));
                 waveBuffer.SetData(_waves);
                 Shader.SetGlobalBuffer(WaveDataBuffer, waveBuffer);
             }

@@ -43,7 +43,7 @@ namespace BoatAttack.UI
         private void UpdateBoat(int index)
         {
             RaceManager.SetHull(0, index);
-            for (int i = 0; i < boatMeshes.Length; i++)
+            for (var i = 0; i < boatMeshes.Length; i++)
             {
                 boatMeshes[i].SetActive(i == index);
             }
@@ -61,19 +61,19 @@ namespace BoatAttack.UI
             SetupDefaults();
         }
 
-        private static void SetLevel(int index) { RaceManager.SetLevel(index); }
-        
-        private static void SetLaps(int index) { RaceManager.RaceData.laps = ConstantData.Laps[index]; }
-        
-        private static void SetReverse(int reverse) { RaceManager.RaceData.reversed = reverse == 1; }
-        
-        public void StartRace() { RaceManager.LoadGame(); }
-        
-        public void SetSinglePlayerName(string playerName) { RaceManager.RaceData.boats[0].boatName = playerName; }
-        
-        private void UpdatePrimaryColor(int index) { UpdateBoatColor(index, true); }
-        
-        private void UpdateTrimColor(int index) { UpdateBoatColor(index, false); }
+        private static void SetLevel(int index) => RaceManager.SetLevel(index);
+
+        private static void SetLaps(int index) => RaceManager.RaceData.laps = ConstantData.Laps[index];
+
+        private static void SetReverse(int reverse) => RaceManager.RaceData.reversed = reverse == 1;
+
+        public void StartRace() => RaceManager.LoadGame();
+
+        public void SetSinglePlayerName(string playerName) => RaceManager.RaceData.boats[0].boatName = playerName;
+
+        private void UpdatePrimaryColor(int index) => UpdateBoatColor(index, true);
+
+        private void UpdateTrimColor(int index) => UpdateBoatColor(index, false);
 
         private void UpdateBoatColor(int index, bool primary)
         {

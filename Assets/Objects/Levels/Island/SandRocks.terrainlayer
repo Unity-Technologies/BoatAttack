@@ -9,8 +9,14 @@ TerrainLayer:
   m_Name: SandRocks
   m_DiffuseTexture: {fileID: 2800000, guid: 36283a22a982c44448b4a62732a0866f, type: 3}
   m_NormalMapTexture: {fileID: 2800000, guid: 9b6c255f1b0f84e4caab0ca53ff3d44a, type: 3}
+  m_MaskMapTexture: {fileID: 0}
   m_TileSize: {x: 33, y: 33}
   m_TileOffset: {x: 0, y: 0}
   m_Specular: {r: 0, g: 0, b: 0, a: 0}
   m_Metallic: 0
   m_Smoothness: 0
+  m_NormalScale: 2
+  m_DiffuseRemapMin: {x: 0, y: 0, z: 0, w: 0}
+  m_DiffuseRemapMax: {x: 1, y: 1, z: 1, w: 1}
+  m_MaskMapRemapMin: {x: 0, y: 0, z: 0, w: 0}
+  m_MaskMapRemapMax: {x: 1, y: 1, z: 1, w: 1}

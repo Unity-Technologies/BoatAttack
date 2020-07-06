@@ -54,8 +54,10 @@ MonoBehaviour:
   speedFormat: 0
   loadingScreen:
     m_AssetGUID: 179a2376fe443449d9046bc913164c8b
+    m_SubObjectName: 
   volumeManager:
     m_AssetGUID: d4548d51034644d21971f134c82b6a9a
+    m_SubObjectName: 
 --- !u!114 &8490184438857729681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,12 +75,13 @@ MonoBehaviour:
     type: 0
     boatCount: 4
     level: 
-    laps: 1
+    laps: 3
     reversed: 0
     boats:
     - boatName: Player 1
       boatPrefab:
         m_AssetGUID: 405c4bc591de844a3a100e1538790229
+        m_SubObjectName: 
       livery:
         primaryColor: {r: 0.8773585, g: 0.09518514, b: 0.09518514, a: 0}
         trimColor: {r: 0.8679245, g: 0.8679245, b: 0.8679245, a: 0}
@@ -86,6 +89,7 @@ MonoBehaviour:
     - boatName: Player 2
       boatPrefab:
         m_AssetGUID: 70d78230a0527e74dabc4f14906eef98
+        m_SubObjectName: 
       livery:
         primaryColor: {r: 0.11053756, g: 0.8679245, b: 0.17524286, a: 0}
         trimColor: {r: 0.7354654, g: 0.122774996, b: 0.8396226, a: 0}
@@ -93,6 +97,7 @@ MonoBehaviour:
     - boatName: Player 3
       boatPrefab:
         m_AssetGUID: 405c4bc591de844a3a100e1538790229
+        m_SubObjectName: 
       livery:
         primaryColor: {r: 0.098039225, g: 0.8980392, b: 0.8708881, a: 0}
         trimColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 0}
@@ -100,17 +105,22 @@ MonoBehaviour:
     - boatName: Player 4
       boatPrefab:
         m_AssetGUID: 70d78230a0527e74dabc4f14906eef98
+        m_SubObjectName: 
       livery:
         primaryColor: {r: 0.1481844, g: 0.2092964, b: 0.8490566, a: 0}
         trimColor: {r: 0.9339623, g: 0.7163166, b: 0.074893214, a: 0}
       human: 0
   boats:
   - m_AssetGUID: 405c4bc591de844a3a100e1538790229
+    m_SubObjectName: 
   - m_AssetGUID: 70d78230a0527e74dabc4f14906eef98
+    m_SubObjectName: 
   raceUiPrefab:
     m_AssetGUID: 0482dcbdb79ee4d7eb43a774a90bda4e
+    m_SubObjectName: 
   raceUiTouchPrefab:
     m_AssetGUID: c080ffd98277d4e3f97f96dedf2ec960
+    m_SubObjectName: 
 --- !u!114 &7312333174115242941
 MonoBehaviour:
   m_ObjectHideFlags: 0

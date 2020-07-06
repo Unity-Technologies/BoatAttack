@@ -151,12 +151,11 @@ namespace BoatAttack
             LapCount++;
             SplitTimes.Add(RaceManager.RaceTime);
 
-            if (LapCount > RaceManager.GetLapCount())
-            {
-                Debug.Log($"Boat {name} finished {RaceUI.OrdinalNumber(Place)} with time:{RaceUI.FormatRaceTime(SplitTimes.Last())}");
-                RaceManager.BoatFinished(_playerIndex);
-                MatchComplete = true;
-            }
+            if (LapCount <= RaceManager.GetLapCount()) return;
+            
+            Debug.Log($"Boat {name} finished {RaceUI.OrdinalNumber(Place)} with time:{RaceUI.FormatRaceTime(SplitTimes.Last())}");
+            RaceManager.BoatFinished(_playerIndex);
+            MatchComplete = true;
 
         }
 

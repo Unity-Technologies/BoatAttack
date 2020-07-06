@@ -86,7 +86,10 @@ namespace WaterSystem
                 if (cam.cameraType == CameraType.Preview || !WaterCausticMaterial)
                     return;
 
-                WaterCausticMaterial.SetMatrix("_MainLightDir", RenderSettings.sun.transform.localToWorldMatrix);
+                var sunMatrix = RenderSettings.sun != null
+                    ? RenderSettings.sun.transform.localToWorldMatrix
+                    : Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(-45f, 45f, 0f), Vector3.one);
+                WaterCausticMaterial.SetMatrix("_MainLightDir", sunMatrix);
                 
                 CommandBuffer cmd = CommandBufferPool.Get(k_RenderWaterCausticsTag);
                 using (new ProfilingScope(cmd, m_WaterCaustics_Profile))

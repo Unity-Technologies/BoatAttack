@@ -45,6 +45,7 @@ QualitySettings:
     excludedTargetPlatforms:
     - PS4
     - XboxOne
+    - Nintendo Switch
   - serializedVersion: 2
     name: Medium
     pixelLightCount: 4
@@ -66,7 +67,7 @@ QualitySettings:
     realtimeReflectionProbes: 1
     billboardsFaceCameraPosition: 0
     vSyncCount: 1
-    lodBias: 2
+    lodBias: 3
     maximumLODLevel: 0
     streamingMipmapsActive: 1
     streamingMipmapsAddAllCameras: 1
@@ -83,7 +84,6 @@ QualitySettings:
       type: 2}
     excludedTargetPlatforms:
     - WebGL
-    - Nintendo Switch
     - PS4
     - XboxOne
   - serializedVersion: 2
@@ -101,7 +101,7 @@ QualitySettings:
     skinWeights: 2
     textureQuality: 0
     anisotropicTextures: 2
-    antiAliasing: 0
+    antiAliasing: 2
     softParticles: 1
     softVegetation: 1
     realtimeReflectionProbes: 1
@@ -130,7 +130,7 @@ QualitySettings:
   m_PerPlatformDefaultQuality:
     Android: 0
     Nintendo 3DS: 0
-    Nintendo Switch: 0
+    Nintendo Switch: 1
     PS4: 2
     PSP2: 0
     Standalone: 2
