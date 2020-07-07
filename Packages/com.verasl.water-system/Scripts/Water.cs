@@ -123,7 +123,7 @@ namespace WaterSystem
             newPos.x = quantizeValue * (int) (newPos.x / quantizeValue);
             newPos.z = quantizeValue * (int) (newPos.z / quantizeValue);
 
-            var matrix = Matrix4x4.TRS(newPos + transform.position, Quaternion.identity, Vector3.one); // transform.localToWorldMatrix;
+            var matrix = Matrix4x4.TRS(newPos + transform.position, Quaternion.identity, transform.localScale); // transform.localToWorldMatrix;
 
             foreach (var mesh in resources.defaultWaterMeshes)
             {
