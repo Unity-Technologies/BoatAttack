@@ -117,13 +117,15 @@ namespace WaterSystem
         WaterCausticsPass m_CausticsPass;
 
         public WaterSystemSettings settings = new WaterSystemSettings();
-        [SerializeField] private Shader causticShader;
+        [HideInInspector][SerializeField] private Shader causticShader;
+        [HideInInspector][SerializeField] private Texture2D causticTexture;
 
         private Material _causticMaterial;
 
         private static readonly int SrcBlend = Shader.PropertyToID("_SrcBlend");
         private static readonly int DstBlend = Shader.PropertyToID("_DstBlend");
         private static readonly int Size = Shader.PropertyToID("_Size");
+        private static readonly int CausticTexture = Shader.PropertyToID("_CausticMap");
 
         public override void Create()
         {
@@ -139,9 +141,17 @@ namespace WaterSystem
             {
                 DestroyImmediate(_causticMaterial);
             }
-            
             _causticMaterial = CoreUtils.CreateEngineMaterial(causticShader);
             _causticMaterial.SetFloat("_BlendDistance", settings.causticBlendDistance);
+            
+            if (causticTexture == null)
+            {
+                Debug.Log("Caustics Texture missing, attempting to load.");
+#if UNITY_EDITOR
+                causticTexture = UnityEditor.AssetDatabase.LoadAssetAtPath<Texture2D>("Packages/com.verasl.water-system/Textures/WaterSurface_single.tif");
+#endif
+            }
+            _causticMaterial.SetTexture(CausticTexture, causticTexture);
             
             switch (settings.debug)
             {
