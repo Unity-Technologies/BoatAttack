@@ -57,8 +57,9 @@
             float3 ReconstructWorldPos(half2 screenPos, float depth)
             {
                 float4x4 mat = UNITY_MATRIX_I_VP;
+#ifdef UNITY_UV_STARTS_AT_TOP
                 mat._12_22_32_42 = -mat._12_22_32_42;
-//#ifdef UNITY_REVERSED_Z
+#endif
                 // World Pos reconstriction
                 float4 raw = mul(mat, float4(screenPos * 2 - 1, depth, 1));
                 float3 worldPos = raw.rgb / raw.a;                
