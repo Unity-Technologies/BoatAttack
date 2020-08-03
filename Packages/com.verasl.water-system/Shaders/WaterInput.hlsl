@@ -33,8 +33,7 @@ TEXTURE2D(_SurfaceMap); SAMPLER(sampler_SurfaceMap);
 TEXTURE2D(_FoamMap); SAMPLER(sampler_FoamMap);
 TEXTURE2D(_DitherPattern); SAMPLER(sampler_DitherPattern);
 
-// Must match Lightweigth ShaderGraph master node
-struct SurfaceData
+struct WaterSurfaceData
 {
     half3 absorption;
 	half3 scattering;
