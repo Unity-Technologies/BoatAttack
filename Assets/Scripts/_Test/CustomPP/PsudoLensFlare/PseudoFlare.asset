@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
+  m_Name: PseudoFlare
+  m_EditorClassIdentifier: 
+  components:
+  - {fileID: 8989136020346695368}
+--- !u!114 &8989136020346695368
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89201a0f12f0ed4479dc17dd1184d946, type: 3}
+  m_Name: PseudoFlareVolume
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  enabled:
+    m_OverrideState: 1
+    m_Value: 1
+  offset:
+    m_OverrideState: 1
+    m_Value: -1.51
+  power:
+    m_OverrideState: 1
+    m_Value: 0.76
+  ghostSpacing:
+    m_OverrideState: 1
+    m_Value: 0.57
+  ghostCount:
+    m_OverrideState: 1
+    m_Value: 4
+  haloWidth:
+    m_OverrideState: 1
+    m_Value: 0.45
