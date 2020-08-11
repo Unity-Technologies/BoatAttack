@@ -138,6 +138,8 @@ namespace BoatAttack
         private void Update()
         {
             if (!MainCamera) return;
+            
+            
 
             if (variableResolution)
             {
