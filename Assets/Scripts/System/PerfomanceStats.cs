@@ -7,14 +7,14 @@ using UnityEngine.UI;
 
 public class PerfomanceStats : MonoBehaviour
 {
-	private int _runNumber = 0;
+	private int _runNumber = 1;
 	public int runCount = 4;
 
 	public int runLength = 2000;
 
 	// Frame time stats
 	private List<PerfBasic> _stats = new List<PerfBasic>();
-	public PerfBasic Stats => _stats[_runNumber];
+	public PerfBasic Stats => _stats[_runNumber - 1];
     private List<float> samples = new List<float>();
     private int totalSamples = 250;
     private int curFrame = 0;
@@ -82,7 +82,14 @@ public class PerfomanceStats : MonoBehaviour
 		
 		curFrame = 0;
 		_stats.Add(new PerfBasic(runLength));
-		_runNumber++;
+		if (_runNumber < runCount)
+		{
+			_runNumber++;
+		}
+		else
+		{
+			Benchmark.EndBenchmark();
+		}
 	}
 
 	private void UpdateFrametime()

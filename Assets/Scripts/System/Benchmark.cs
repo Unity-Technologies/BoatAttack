@@ -1,17 +1,78 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
+#if UNITY_EDITOR
+using System.Collections;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+
+#endif
 
 namespace BoatAttack
 {
     public class Benchmark : MonoBehaviour
     {
+        public Object[] scenes;
 
+        private static bool _exitOnCompletion;
+        public string scene;
 
+        private void Start()
+        {
+#if UNITY_EDITOR
+            
+#endif
+            DontDestroyOnLoad(gameObject);
+            LoadBenchmark(scene, 4, true, true);
+        }
 
+        public static void LoadBenchmark(string scene, int runs, bool perfstats, bool quitOnFinish)
+        {
+            _exitOnCompletion = quitOnFinish;
+            AppSettings.LoadScene(scene);
+        }
+
+        public static void EndBenchmark()
+        {
+            if (_exitOnCompletion)
+            {
+                AppSettings.ExitGame();
+            }
+        }
     }
+    
+#if UNITY_EDITOR
+    [InitializeOnLoad]
+    public class BenchmarkTool
+    {
+        static BenchmarkTool()
+        {
+            EditorApplication.playModeStateChanged += Cleanup;
+        }
+        
+        [MenuItem("Boat Attack/Benchmark/Island Flythrough")]
+        public static void IslandFlyThrough()
+        {
+            EditorApplication.EnterPlaymode();
+            //EditorSceneManager.NewScene(NewSceneSetup.EmptyScene);
+            var go = new GameObject("BenchmarkManager");
+            var bench = go.AddComponent<Benchmark>();
+            bench.scene = "benchmark_island-flythrough";
+        }
+
+        private static void Cleanup(PlayModeStateChange state)
+        {
+            Debug.Log("statechange");
+            if (state == PlayModeStateChange.EnteredEditMode)
+            {
+                var go = GameObject.Find("BenchmarkManager");
+                if(go)
+                    Object.DestroyImmediate(go);
+            }
+        }
+    }
+#endif
 
     [Serializable]
     public class PerfBasic
