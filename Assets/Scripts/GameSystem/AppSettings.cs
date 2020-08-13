@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using GameplayIngredients;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -58,6 +59,7 @@ namespace BoatAttack
         private void OnEnable()
         {
             Initialize();
+            CmdArgs();
             RenderPipelineManager.beginCameraRendering += SetRenderScale;
             SceneManager.sceneLoaded += LevelWasLoaded;
         }
@@ -124,11 +126,11 @@ namespace BoatAttack
                     res = 2560f;
                     break;
                 default:
-                    res = cam.pixelWidth;
+                    res = Screen.currentResolution.width;
                     break;
             }
 
-            var renderScale = Mathf.Clamp(res / cam.pixelWidth, 0.1f, 1.0f);
+            var renderScale = Mathf.Clamp(res / Screen.currentResolution.width, 0.1f, 1.0f);
             maxScale = renderScale;
 #if !UNITY_EDITOR
             UniversalRenderPipeline.asset.renderScale = renderScale;
@@ -138,8 +140,6 @@ namespace BoatAttack
         private void Update()
         {
             if (!MainCamera) return;
-            
-            
 
             if (variableResolution)
             {
@@ -179,12 +179,12 @@ namespace BoatAttack
         {
             UniversalRenderPipeline.asset.useSRPBatcher = enabled;
         }
-        
+
         public static void LoadScene(string scenePath, LoadSceneMode mode = LoadSceneMode.Single)
         {
             LoadScene(SceneUtility.GetBuildIndexByScenePath(scenePath), mode);
         }
-        
+
         public static void LoadScene(int buildIndex, LoadSceneMode mode = LoadSceneMode.Single)
         {
             Application.backgroundLoadingPriority = ThreadPriority.Low;
@@ -209,16 +209,16 @@ namespace BoatAttack
             DontDestroyOnLoad(Instance.loadingScreenObject);
             if(Debug.isDebugBuild)
                 Debug.Log($"loading scene {SceneUtility.GetScenePathByBuildIndex(scene)} at build index {scene}");
-            
+
             // get current scene and set a loading scene as active
             var currentScene = SceneManager.GetActiveScene();
             var loadingScene = SceneManager.CreateScene("Loading");
             SceneManager.SetActiveScene(loadingScene);
-            
+
             // unload last scene
             var unload = SceneManager.UnloadSceneAsync(currentScene, UnloadSceneOptions.None);
             while (!unload.isDone) { yield return null; }
-            
+
             // clean up
             var clean = Resources.UnloadUnusedAssets();
             while (!clean.isDone) { yield return null; }
@@ -248,6 +248,28 @@ namespace BoatAttack
 #else
             Application.Quit();
 #endif
+        }
+
+        private static void CmdArgs()
+        {
+            var args = Environment.GetCommandLineArgs();
+            if (args.Length <= 0) return;
+            foreach (var argRaw in args)
+            {
+                if (argRaw[0] != '-') continue;
+
+                var arg = argRaw.Split(':');
+
+                switch (arg[0])
+                {
+                    case "-loadlevel":
+                        LoadScene(arg[1]);
+                        break;
+                    case "-benchmarkFlythrough":
+                        LoadScene("benchmark_island-flythrough");
+                        break;
+                }
+            }
         }
     }
 
