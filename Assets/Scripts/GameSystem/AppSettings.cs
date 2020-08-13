@@ -179,19 +179,19 @@ namespace BoatAttack
         {
             UniversalRenderPipeline.asset.useSRPBatcher = enabled;
         }
-
+        
         public static void LoadScene(string scenePath, LoadSceneMode mode = LoadSceneMode.Single)
         {
             LoadScene(SceneUtility.GetBuildIndexByScenePath(scenePath), mode);
         }
-
-        public static void LoadScene(int buildIndex, LoadSceneMode mode)
+        
+        public static void LoadScene(int buildIndex, LoadSceneMode mode = LoadSceneMode.Single)
         {
             Application.backgroundLoadingPriority = ThreadPriority.Low;
             switch (mode)
             {
                 case LoadSceneMode.Single:
-                    Instance.StartCoroutine(LoadScene(buildIndex));
+                    Instance.StartCoroutine(LoadSceneInternal(buildIndex));
                     break;
                 case LoadSceneMode.Additive:
                     SceneManager.LoadSceneAsync(buildIndex, LoadSceneMode.Additive);
@@ -201,14 +201,31 @@ namespace BoatAttack
             }
         }
 
-        private static IEnumerator LoadScene(int scene)
+        private static IEnumerator LoadSceneInternal(int scene)
         {
             var loadingScreenLoading = Instance.loadingScreen.InstantiateAsync();
             yield return loadingScreenLoading;
             Instance.loadingScreenObject = loadingScreenLoading.Result;
             DontDestroyOnLoad(Instance.loadingScreenObject);
-            Debug.Log($"loading scene {SceneUtility.GetScenePathByBuildIndex(scene)} at build index {scene}");
-            SceneManager.LoadScene(scene);
+            if(Debug.isDebugBuild)
+                Debug.Log($"loading scene {SceneUtility.GetScenePathByBuildIndex(scene)} at build index {scene}");
+            
+            // get current scene and set a loading scene as active
+            var currentScene = SceneManager.GetActiveScene();
+            var loadingScene = SceneManager.CreateScene("Loading");
+            SceneManager.SetActiveScene(loadingScene);
+            
+            // unload last scene
+            var unload = SceneManager.UnloadSceneAsync(currentScene, UnloadSceneOptions.None);
+            while (!unload.isDone) { yield return null; }
+            
+            // clean up
+            var clean = Resources.UnloadUnusedAssets();
+            while (!clean.isDone) { yield return null; }
+
+            // load new scene
+            var load = SceneManager.LoadSceneAsync(scene);
+            while (!load.isDone) { yield return null; }
         }
 
         private static IEnumerator LoadPrefab<T>(AssetReference assetRef, AsyncOperationHandle assetLoading, Transform parent = null)
@@ -224,7 +241,7 @@ namespace BoatAttack
             yield return assetLoading;
         }
 
-        public void ExitGame()
+        public static void ExitGame()
         {
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.ExitPlaymode();
