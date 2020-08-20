@@ -57,13 +57,13 @@ namespace BoatAttack
             {
 #pragma warning disable
                 _lod1[i].lightmapIndex = lmIndex[i];
-                _lod1[i].lightmapScaleOffset = lmScaleOffset[i];
+                //_lod1[i].lightmapScaleOffset = lmScaleOffset[i];
                 if (!_lod2[i]) continue;
                 _lod2[i].lightmapIndex = lmIndex[i];
-                _lod2[i].lightmapScaleOffset = lmScaleOffset[i];
+               // _lod2[i].lightmapScaleOffset = lmScaleOffset[i];
                 if (!_lod3[i]) continue;
                 _lod3[i].lightmapIndex = lmIndex[i];
-                _lod3[i].lightmapScaleOffset = lmScaleOffset[i];
+                //_lod3[i].lightmapScaleOffset = lmScaleOffset[i];
 #pragma warning restore
             }
         }

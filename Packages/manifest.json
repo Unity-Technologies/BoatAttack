@@ -11,7 +11,11 @@
     "com.unity.inputsystem": "1.0.0",
     "com.unity.mathematics": "1.1.0",
     "com.unity.memoryprofiler": "0.2.4-preview.1",
-    "com.unity.render-pipelines.universal": "10.0.0-preview.26",
+    "com.unity.render-pipelines.core": "file:D:/Graphics/com.unity.render-pipelines.core",
+    "com.unity.render-pipelines.universal": "file:D:/Graphics/com.unity.render-pipelines.universal",
+    "com.unity.shaderanalysis": "file:../../../com.unity.shaderanalysis",
+    "com.unity.shadergraph": "file:D:/Graphics/com.unity.shadergraph",
+    "com.unity.test-framework": "1.2.1-preview.1",
     "com.unity.textmeshpro": "3.0.0-preview.14",
     "com.unity.timeline": "1.3.4",
     "com.unity.ugui": "1.0.0",
@@ -45,5 +49,10 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  }
+  },
+  "registry": "https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/npm/upm-candidates",
+  "testables": [
+    "com.unity.testing.graphics-performance",
+    "com.unity.testframework.graphics"
+  ]
 }
