@@ -42,8 +42,8 @@ public class RuntimeTests : PerformanceTests
     // struct returned by GetCounterTests(). If you want to change the test
     // name structure, you'll have to create a new struct and function to
     // iterate over your test list.
-    [Timeout(GlobalTimeout), Version("1"), UnityTest, Performance]
-    public IEnumerator Counters([ValueSource(nameof(GetCounterTests))] CounterTestDescription testDescription)
+    [Timeout(GlobalTimeout), Version("2"), UnityTest, Performance, Category("URP"), Category("Performance"), Category("URP"), Category("Runtime"), Category("ProfilerMetrics")]
+    public IEnumerator RuntimeProfilerMetrics([ValueSource(nameof(GetCounterTests))] CounterTestDescription testDescription)
     {
         // This function will load the scene and assign the SRP asset in parameter.
         yield return LoadScene(testDescription.sceneData.scene, testDescription.assetData.asset);
@@ -69,8 +69,8 @@ public class RuntimeTests : PerformanceTests
                 yield return new MemoryTestDescription{ assetData = asset, sceneData = scene, assetType = objectType };
     }
 
-    [Timeout(GlobalTimeout), Version("1"), UnityTest, Performance]
-    public IEnumerator Memory([ValueSource(nameof(GetMemoryTests))] MemoryTestDescription testDescription)
+    [Timeout(GlobalTimeout), Version("1"), UnityTest, Performance, Category("URP"), Category("Performance"), Category("URP"), Category("Runtime"), Category("MemoryAllocation")]
+    public IEnumerator MemoryAllocation([ValueSource(nameof(GetMemoryTests))] MemoryTestDescription testDescription)
     {
         yield return ReportMemoryUsage(testDescription);
     }
