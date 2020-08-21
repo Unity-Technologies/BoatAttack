@@ -155,6 +155,7 @@ PlayerSettings:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -856,27 +857,27 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
-    1: 
-    4: 
+    1: USE_CUSTOM_METADATA;URP
+    4: USE_CUSTOM_METADATA;URP
     7: USE_CUSTOM_METADATA;URP
-    13: 
-    14: 
-    17: 
-    18: 
-    19: 
-    21: 
-    23: 
-    24: 
-    25: 
-    26: 
-    27: 
-    28: 
-    29: 
+    13: USE_CUSTOM_METADATA;URP
+    14: USE_CUSTOM_METADATA;URP
+    17: USE_CUSTOM_METADATA;URP
+    18: USE_CUSTOM_METADATA;URP
+    19: USE_CUSTOM_METADATA;URP
+    21: USE_CUSTOM_METADATA;URP
+    23: USE_CUSTOM_METADATA;URP
+    24: USE_CUSTOM_METADATA;URP
+    25: USE_CUSTOM_METADATA;URP
+    26: USE_CUSTOM_METADATA;URP
+    27: USE_CUSTOM_METADATA;URP
+    28: USE_CUSTOM_METADATA;URP
+    29: USE_CUSTOM_METADATA;URP
   platformArchitecture:
     iPhone: 1
   scriptingBackend:
     Android: 1
-    Standalone: 0
+    Standalone: 1
   il2cppCompilerConfiguration: {}
   managedStrippingLevel:
     Standalone: 0
