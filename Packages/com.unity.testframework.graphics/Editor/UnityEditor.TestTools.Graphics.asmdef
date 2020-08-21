@@ -1,0 +1,27 @@
+{
+    "name": "UnityEditor.TestTools.Graphics",
+    "rootNamespace": "",
+    "references": [
+        "UnityEngine.TestTools.Graphics",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Unity.XR.Management.Editor",
+        "Unity.XR.Management",
+        "com.unity.cli-project-setup"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
