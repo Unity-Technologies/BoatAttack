@@ -44,6 +44,10 @@ namespace com.unity.cliprojectsetup
         public string Username;
         public string JobLink;
         public int JobWorkerCount = -1; // sentinel value indicating we don't want to set the JobWorkerCount
+        public ApiCompatibilityLevel ApiCompatibilityLevel = ApiCompatibilityLevel.NET_2_0;
+        public bool StringEngineCode;
+        public ManagedStrippingLevel ManagedStrippingLevel;
+        public bool ScriptDebugging;
 
         public void SerializeToAsset()
         {
@@ -62,6 +66,10 @@ namespace com.unity.cliprojectsetup
             settingsAsset.TestsBranch = TestsBranch;
             settingsAsset.JobLink = JobLink;
             settingsAsset.JobWorkerCount = Unity.Jobs.LowLevel.Unsafe.JobsUtility.JobWorkerCount;
+            settingsAsset.ApiCompatibilityLevel = ApiCompatibilityLevel.ToString();
+            settingsAsset.StripEngineCode = StringEngineCode;
+            settingsAsset.ManagedStrippingLevel = ManagedStrippingLevel.ToString();
+            settingsAsset.ScriptDebugging = ScriptDebugging;
 
             GetPackageUnderTestVersionInfo(settingsAsset);
             settingsAsset.RenderPipeline = RenderPipeline =  $"{(GraphicsSettings.renderPipelineAsset != null ? GraphicsSettings.renderPipelineAsset.name : "BuiltInRenderer")}";

@@ -26,8 +26,8 @@
       "url": "https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/npm/upm-candidates"
     },
     "com.unity.burst": {
-      "version": "1.4.0-preview.3",
-      "depth": 0,
+      "version": "1.2.3",
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.mathematics": "1.1.0"
@@ -94,7 +94,7 @@
       "url": "https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/npm/upm-candidates"
     },
     "com.unity.inputsystem": {
-      "version": "1.0.0",
+      "version": "1.1.0-preview.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -115,6 +115,13 @@
         "com.unity.editorcoroutines": "1.0.0"
       },
       "url": "https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/npm/upm-candidates"
+    },
+    "com.unity.mobile.android-logcat": {
+      "version": "https://github.com/Unity-Technologies/com.unity.mobile.logcat.git?path=/com.unity.mobile.android-logcat",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "e2a927e34d7ac9493c08f3f2a0bdd28dcaa6a589"
     },
     "com.unity.nuget.newtonsoft-json": {
       "version": "2.0.0-preview",
@@ -178,7 +185,7 @@
       "url": "https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/npm/upm-candidates"
     },
     "com.unity.test-framework": {
-      "version": "1.2.1-preview.1",
+      "version": "1.2.0-preview.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -189,14 +196,13 @@
       "url": "https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/npm/upm-candidates"
     },
     "com.unity.test-framework.performance": {
-      "version": "2.3.1-preview",
-      "depth": 1,
-      "source": "registry",
+      "version": "file:com.unity.test-framework.performance/package",
+      "depth": 0,
+      "source": "local",
       "dependencies": {
         "com.unity.test-framework": "1.1.0",
         "com.unity.nuget.newtonsoft-json": "2.0.0-preview"
-      },
-      "url": "https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/npm/upm-candidates"
+      }
     },
     "com.unity.test.metadata-manager": {
       "version": "file:com.unity.test.metadata-manager",

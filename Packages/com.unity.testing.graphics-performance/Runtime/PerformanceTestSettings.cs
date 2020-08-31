@@ -47,9 +47,7 @@ public class PerformanceTestSettings : ScriptableObject
 
     public static TestSceneAsset GetTestSceneDescriptionAsset()
     {
-        Debug.Log("sean: Calling in runtime");
         var testSceneAsset = Resources.Load<TestSceneAsset>(instance.testDescriptionAsset);
-        Debug.Log("sean: Call returned.");
         return testSceneAsset;
     }
 

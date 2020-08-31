@@ -2,15 +2,17 @@
     "name": "com.unity.cli-project-setup",
     "rootNamespace": "",
     "references": [
+        "Unity.RenderPipelines.Universal.Runtime",
         "com.unity.tests.performance.runtimesettings",
-        "Unity.Burst",
-        "Unity.RenderPipelines.Universal.Runtime"
+        "Unity.Burst"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
-    "precompiledReferences": [],
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
     "autoReferenced": true,
     "defineConstraints": [
         "UNITY_INCLUDE_TESTS"

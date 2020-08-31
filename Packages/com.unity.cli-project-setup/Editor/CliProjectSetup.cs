@@ -1,8 +1,8 @@
-#if UNITY_EDITOR
+﻿#if UNITY_EDITOR
 using System;
 using System.Text.RegularExpressions;
 using NDesk.Options;
-#if BURST
+#if ENABLE_BURST_AOT
 using Unity.Burst;
 #endif
 using UnityEngine;
@@ -62,9 +62,14 @@ namespace com.unity.cliprojectsetup
             PlayerSettings.colorSpace = platformSettings.ColorSpace;
             PlayerSettings.SetScriptingBackend(EditorUserBuildSettings.selectedBuildTargetGroup,
                 platformSettings.ScriptingImplementation);
-#if BURST
+            PlayerSettings.SetApiCompatibilityLevel(EditorUserBuildSettings.selectedBuildTargetGroup, platformSettings.ApiCompatibilityLevel);
+            PlayerSettings.stripEngineCode = platformSettings.StringEngineCode;
+            PlayerSettings.SetManagedStrippingLevel(EditorUserBuildSettings.selectedBuildTargetGroup, platformSettings.ManagedStrippingLevel);
+            EditorUserBuildSettings.allowDebugging = platformSettings.ScriptDebugging;
+#if ENABLE_BURST_AOT
             BurstCompiler.Options.EnableBurstCompilation = platformSettings.EnableBurst;
 #endif
+
             if (platformSettings.JobWorkerCount >= 0)
             {
                 try
@@ -135,6 +140,16 @@ namespace com.unity.cliprojectsetup
                         platformSettings.JobWorkerCount = Convert.ToInt32(jobworkercount);
                     }
                 });
+            optionsSet.Add("apicompatibilitylevel=", "API compatibility to use. Default is NET_2_0",
+                apicompatibilitylevel => platformSettings.ApiCompatibilityLevel = TryParse<ApiCompatibilityLevel>(apicompatibilitylevel));
+            optionsSet.Add("stripenginecode",
+                "Enable Engine code stripping. Disabled is default. Use option to enable, or use option and append '-' to disable.",
+                option => platformSettings.StringEngineCode = option != null);
+            optionsSet.Add("managedstrippinglevel=", "Managed stripping level to use. Default is low",
+                managedstrippinglevel => platformSettings.ManagedStrippingLevel = TryParse<ManagedStrippingLevel>(managedstrippinglevel));
+            optionsSet.Add("scriptdebugging",
+                "Enable scriptdebugging. Disabled is default. Use option to enable, or use option and append '-' to disable.",
+                scriptdebugging => platformSettings.ScriptDebugging = scriptdebugging != null);
             return optionsSet;
         }
 

@@ -156,6 +156,13 @@ PlayerSettings:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -857,9 +864,9 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
-    1: USE_CUSTOM_METADATA;URP
+    1: URP;USE_CUSTOM_METADATA
     4: USE_CUSTOM_METADATA;URP
-    7: USE_CUSTOM_METADATA;URP
+    7: URP;USE_CUSTOM_METADATA
     13: USE_CUSTOM_METADATA;URP
     14: USE_CUSTOM_METADATA;URP
     17: USE_CUSTOM_METADATA;URP
@@ -880,8 +887,9 @@ PlayerSettings:
     Standalone: 1
   il2cppCompilerConfiguration: {}
   managedStrippingLevel:
-    Standalone: 0
-    iPhone: 2
+    Android: 1
+    Standalone: 1
+    iPhone: 1
   incrementalIl2cppBuild: {}
   allowUnsafeCode: 0
   useDeterministicCompilation: 1
@@ -973,7 +981,7 @@ PlayerSettings:
   projectName: 
   organizationId: 
   cloudEnabled: 0
-  enableNativePlatformBackendsForNewInputSystem: 1
-  disableOldInputManagerSupport: 1
+  enableNativePlatformBackendsForNewInputSystem: 0
+  disableOldInputManagerSupport: 0
   legacyClampBlendShapeWeights: 0
   virtualTexturingSupportEnabled: 0
