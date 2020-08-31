@@ -42,10 +42,11 @@
       "url": "https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/npm/upm-candidates"
     },
     "com.unity.cli-project-setup": {
-      "version": "file:com.unity.cli-project-setup",
+      "version": "ssh://git@github.cds.internal.unity3d.com/unity/com.unity.cli-project-setup.git",
       "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
+      "source": "git",
+      "dependencies": {},
+      "hash": "57e86fcfc47ed4cc38db12473dc83dc8c8f6a770"
     },
     "com.unity.editorcoroutines": {
       "version": "1.0.0",
@@ -115,13 +116,6 @@
         "com.unity.editorcoroutines": "1.0.0"
       },
       "url": "https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/npm/upm-candidates"
-    },
-    "com.unity.mobile.android-logcat": {
-      "version": "https://github.com/Unity-Technologies/com.unity.mobile.logcat.git?path=/com.unity.mobile.android-logcat",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "e2a927e34d7ac9493c08f3f2a0bdd28dcaa6a589"
     },
     "com.unity.nuget.newtonsoft-json": {
       "version": "2.0.0-preview",
@@ -196,25 +190,28 @@
       "url": "https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/npm/upm-candidates"
     },
     "com.unity.test-framework.performance": {
-      "version": "file:com.unity.test-framework.performance/package",
+      "version": "2.3.1-preview",
       "depth": 0,
-      "source": "local",
+      "source": "registry",
       "dependencies": {
         "com.unity.test-framework": "1.1.0",
         "com.unity.nuget.newtonsoft-json": "2.0.0-preview"
-      }
+      },
+      "url": "https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/npm/upm-candidates"
     },
     "com.unity.test.metadata-manager": {
-      "version": "file:com.unity.test.metadata-manager",
+      "version": "ssh://git@github.cds.internal.unity3d.com/unity/com.unity.test.metadata-manager.git",
       "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
+      "source": "git",
+      "dependencies": {},
+      "hash": "2475066cd8eaf05c3711c71ef0895bc08342b26b"
     },
     "com.unity.test.performance.runtimesettings": {
-      "version": "file:com.unity.test.performance.runtimesettings",
+      "version": "ssh://git@github.cds.internal.unity3d.com/unity/com.unity.test.performance.runtimesettings.git",
       "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
+      "source": "git",
+      "dependencies": {},
+      "hash": "aed1727b47b2c6c794adf4e01fd3732b20b62b2f"
     },
     "com.unity.testframework.graphics": {
       "version": "file:com.unity.testframework.graphics",
@@ -294,7 +291,7 @@
       "dependencies": {
         "com.unity.cinemachine": "2.3.4"
       },
-      "hash": "604801ada543d20bc302f6310305fe29016d23d2"
+      "hash": "f065bf9f32aa1fbf9b6290fed94feb02bebd2771"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
