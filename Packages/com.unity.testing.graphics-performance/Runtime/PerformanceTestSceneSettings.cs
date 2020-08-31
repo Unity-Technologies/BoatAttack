@@ -24,6 +24,8 @@ public class PerformanceTestSceneSettings : MonoBehaviour
     public ColorBufferFormat colorBufferFormat = ColorBufferFormat.R8G8B8A8;
 
     [Header("Performance Counters Settings")]
+    [Tooltip("Number of frames to skip before collection of performance metrics begin.")]
+    public int WarmupFrameCount = 60;
     [Tooltip("Number of frame the performance counter test will use to record the timings.")]
     public int measurementCount = 1000;
 

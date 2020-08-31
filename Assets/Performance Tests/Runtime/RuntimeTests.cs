@@ -11,10 +11,7 @@ using static PerformanceTestUtils;
 
 public class RuntimeTests : PerformanceTests
 {
-    // Number of frames before we start recording the profiling samplers
-    const int WarmupCount = 120;
-    // Number of frames we measure
-    const int MeasurementCount = 1000;
+
     // Timeout of a test in milliseconds
     const int GlobalTimeout = 360 * 1000; // 6 min
 
@@ -49,14 +46,14 @@ public class RuntimeTests : PerformanceTests
         yield return LoadScene(testDescription.sceneData.scene, testDescription.assetData.asset);
         // This function setup the camera based on the settings you have in your PerformanceTestSettings MonoBehavior.
         // It also returns the PerformanceTestSettings MonoBehavior so you can setup additional things.
-        //var sceneSettings = SetupTestScene();
+        var sceneSettings = SetupTestScene();
 
         // Here you load objects from the scene like the camera if you want to setup the camera rendering resolution for example.
         //var camera = GameObject.FindObjectOfType<Camera>();
 
         // Then we call an utility function that will measure all the markers we want
         // And send the data using this format: `Timing,CPU,sampler.name`
-        yield return MeasureProfilingSamplers(GetAllMarkers(), WarmupCount, MeasurementCount);
+        yield return MeasureProfilingSamplers(GetAllMarkers(), sceneSettings.WarmupFrameCount, sceneSettings.measurementCount);
     }
 
 
