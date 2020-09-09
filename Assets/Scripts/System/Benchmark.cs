@@ -76,12 +76,12 @@ namespace BoatAttack
 #endif
     public class BenchmarkTool
     {
+#if UNITY_EDITOR
         static BenchmarkTool()
         {
             EditorApplication.playModeStateChanged += Cleanup;
         }
-
-#if UNITY_EDITOR
+        
         [MenuItem("Boat Attack/Benchmark/Island Flythrough")]
         public static void IslandFlyThrough()
         {
