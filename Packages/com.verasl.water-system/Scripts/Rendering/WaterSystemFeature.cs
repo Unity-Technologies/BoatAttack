@@ -44,7 +44,7 @@ namespace WaterSystem
 
             public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
             {
-                CommandBuffer cmd = CommandBufferPool.Get(k_RenderWaterFXTag);
+                CommandBuffer cmd = CommandBufferPool.Get();
                 using (new ProfilingScope(cmd, m_WaterFX_Profile)) // makes sure we have profiling ability
                 {
                     context.ExecuteCommandBuffer(cmd);
@@ -86,14 +86,15 @@ namespace WaterSystem
                 if (cam.cameraType == CameraType.Preview || !WaterCausticMaterial)
                     return;
 
-                var sunMatrix = RenderSettings.sun != null
-                    ? RenderSettings.sun.transform.localToWorldMatrix
-                    : Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(-45f, 45f, 0f), Vector3.one);
-                WaterCausticMaterial.SetMatrix("_MainLightDir", sunMatrix);
-                
-                CommandBuffer cmd = CommandBufferPool.Get(k_RenderWaterCausticsTag);
+                CommandBuffer cmd = CommandBufferPool.Get();
                 using (new ProfilingScope(cmd, m_WaterCaustics_Profile))
                 {
+                    var sunMatrix = RenderSettings.sun != null
+                        ? RenderSettings.sun.transform.localToWorldMatrix
+                        : Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(-45f, 45f, 0f), Vector3.one);
+                    WaterCausticMaterial.SetMatrix("_MainLightDir", sunMatrix);
+                
+                
                     // Create mesh if needed
                     if (!m_mesh)
                         m_mesh = GenerateCausticsMesh(1000f);
