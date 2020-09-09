@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using BoatAttack;
-//using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.UI;
