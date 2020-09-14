@@ -97,7 +97,6 @@ namespace BoatAttack
 
         private static void Cleanup(PlayModeStateChange state)
         {
-            Debug.Log("statechange");
             if (state == PlayModeStateChange.EnteredEditMode)
             {
                 var go = GameObject.Find("BenchmarkManager");

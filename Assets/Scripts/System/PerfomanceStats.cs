@@ -12,7 +12,7 @@ public class PerfomanceStats : MonoBehaviour
 	public int runLength = 2000;
 
 	// Frame time stats
-	private List<PerfBasic> _stats = new List<PerfBasic>();
+	private List<PerfBasic> _stats;
 	public PerfBasic Stats => _stats[_runNumber - 1];
     private List<float> samples = new List<float>();
     private int totalSamples = 250;
@@ -24,6 +24,7 @@ public class PerfomanceStats : MonoBehaviour
 
     private void OnEnable()
     {
+	    _stats = new List<PerfBasic>();
 	    _stats.Add(new PerfBasic(runLength));
     }
 

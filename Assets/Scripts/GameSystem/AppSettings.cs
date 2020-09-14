@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
 using GameplayIngredients;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
@@ -58,9 +56,11 @@ namespace BoatAttack
         // Use this for initialization
         private void OnEnable()
         {
+            if(UniversalRenderPipeline.asset.debugLevel == PipelineDebugLevel.Profiling)
+                Debug.Log("AppManager initializing");
             Initialize();
             CmdArgs();
-            RenderPipelineManager.beginCameraRendering += SetRenderScale;
+            SetRenderScale();
             SceneManager.sceneLoaded += LevelWasLoaded;
         }
 
@@ -69,8 +69,6 @@ namespace BoatAttack
             Instance = this;
             Application.targetFrameRate = 300;
             MainCamera = Camera.main;
-            if(DefaultVolume.Instance == null)
-                StartCoroutine(LoadPrefab<GameObject>(volumeManager, new AsyncOperationHandle()));
         }
 
         private void Start()
@@ -82,7 +80,7 @@ namespace BoatAttack
 
         private void OnDisable()
         {
-            RenderPipelineManager.beginCameraRendering -= SetRenderScale;
+            SceneManager.sceneLoaded -= LevelWasLoaded;
         }
 
         private static void LevelWasLoaded(Scene scene, LoadSceneMode mode)
@@ -111,7 +109,7 @@ namespace BoatAttack
             }
         }
 
-        private void SetRenderScale(ScriptableRenderContext context, Camera cam)
+        private void SetRenderScale()
         {
             float res;
             switch (maxRenderSize)
@@ -126,11 +124,14 @@ namespace BoatAttack
                     res = 2560f;
                     break;
                 default:
-                    res = Screen.currentResolution.width;
+                    res = Screen.width;
                     break;
             }
+            var renderScale = Mathf.Clamp(res / Screen.width, 0.1f, 1.0f);
+            
+            if(UniversalRenderPipeline.asset.debugLevel == PipelineDebugLevel.Profiling)
+                Debug.Log($"Settings render scale to {renderScale * 100}% based on {maxRenderSize.ToString()}");
 
-            var renderScale = Mathf.Clamp(res / Screen.currentResolution.width, 0.1f, 1.0f);
             maxScale = renderScale;
 #if !UNITY_EDITOR
             UniversalRenderPipeline.asset.renderScale = renderScale;
@@ -139,6 +140,10 @@ namespace BoatAttack
 
         private void Update()
         {
+#if !UNITY_EDITOR
+            Utility.CheckQualityLevel(); //TODO - hoping to remove one day when we have a quality level callback
+#endif
+            
             if (!MainCamera) return;
 
             if (variableResolution)
