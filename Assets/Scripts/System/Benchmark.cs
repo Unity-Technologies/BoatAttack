@@ -113,7 +113,6 @@ namespace BoatAttack
         }
     }
 
-    [Serializable]
     public class PerfBasic
     {
         public TestInfo info;
@@ -133,7 +132,6 @@ namespace BoatAttack
         }
     }
 
-    [Serializable]
     public class TestInfo
     {
         public string Scene;
@@ -150,16 +148,16 @@ namespace BoatAttack
 
         public TestInfo()
         {
-            Scene = SceneManager.GetActiveScene().name.Replace(" ", "");
+            Scene = Utility.RemoveWhitespace(SceneManager.GetActiveScene().name);
             UnityVersion = Application.unityVersion;
             UrpVersion = "N/A";
             BoatAttackVersion = Application.version;
-            Platform = Application.platform.ToString().Replace(" ", "");
-            API = SystemInfo.graphicsDeviceType.ToString().Replace(" ", "");
-            CPU = SystemInfo.processorType.Replace(" ", "");
-            GPU = SystemInfo.graphicsDeviceName.Replace(" ", "");
-            Os = SystemInfo.operatingSystem.Replace(" ", "");
-            Quality = QualitySettings.names[QualitySettings.GetQualityLevel()].Replace(" ", "");
+            Platform =  Utility.RemoveWhitespace(Application.platform.ToString());
+            API =  Utility.RemoveWhitespace(SystemInfo.graphicsDeviceType.ToString());
+            CPU =  Utility.RemoveWhitespace(SystemInfo.processorType);
+            GPU =  Utility.RemoveWhitespace(SystemInfo.graphicsDeviceName);
+            Os =  Utility.RemoveWhitespace(SystemInfo.operatingSystem);
+            Quality =  Utility.RemoveWhitespace(QualitySettings.names[QualitySettings.GetQualityLevel()]);
             Resolution = $"{Display.main.renderingWidth}x{Display.main.renderingHeight}";
         }
     }

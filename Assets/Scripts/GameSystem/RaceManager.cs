@@ -8,6 +8,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
 using BoatAttack.UI;
 using UnityEngine.Playables;
+using UnityEngine.Rendering.Universal;
 using Random = UnityEngine.Random;
 
 namespace BoatAttack
@@ -93,7 +94,8 @@ namespace BoatAttack
         
         private void Awake()
         {
-            Debug.Log("RaceManager Loaded");
+            if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
+                Debug.Log("RaceManager Loaded");
             Instance = this;
         }
 

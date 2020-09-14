@@ -139,8 +139,8 @@ internal class InjectDefaultVolume : IProcessSceneWithReport
     {
         if(scene.buildIndex != 0)
             return;
-        
-        Debug.Log($"Injecting Default volume into scene:{scene.name}");
+        if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
+            Debug.Log($"Injecting Default volume into scene:{scene.name}");
         CreateVolumeManager();
     }
 
