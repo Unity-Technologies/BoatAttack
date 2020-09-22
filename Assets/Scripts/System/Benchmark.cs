@@ -64,7 +64,7 @@ namespace BoatAttack
 
         public static void EndBenchmark()
         {
-            if (_settings.exitOnCompletion)
+            if (_settings != null && _settings.exitOnCompletion)
             {
                 AppSettings.ExitGame();
             }
@@ -79,7 +79,7 @@ namespace BoatAttack
 #if UNITY_EDITOR
         static BenchmarkTool()
         {
-            EditorApplication.playModeStateChanged += Cleanup;
+            //EditorApplication.playModeStateChanged += Cleanup;
         }
         
         [MenuItem("Boat Attack/Benchmark/Island Flythrough")]
@@ -92,7 +92,7 @@ namespace BoatAttack
                 true,
                 true,
                 BenchmarkType.Track);
-            CreateBenchmark(settings);
+            //CreateBenchmark(settings);
         }
 
         private static void Cleanup(PlayModeStateChange state)

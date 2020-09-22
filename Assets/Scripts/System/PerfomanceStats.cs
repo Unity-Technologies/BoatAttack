@@ -13,7 +13,7 @@ public class PerfomanceStats : MonoBehaviour
 
 	// Frame time stats
 	private List<PerfBasic> _stats;
-	public PerfBasic Stats => _stats[_runNumber - 1];
+	private PerfBasic Stats => _stats[_runNumber - 1];
     private List<float> samples = new List<float>();
     private int totalSamples = 250;
     private int curFrame = 0;
@@ -22,10 +22,11 @@ public class PerfomanceStats : MonoBehaviour
     public Text frametimeDisplay;
     private string debugInfo;
 
-    private void OnEnable()
+    private void Start()
     {
 	    _stats = new List<PerfBasic>();
 	    _stats.Add(new PerfBasic(runLength));
+	    CreateTextGUI();
     }
 
     private void Update () {
@@ -71,7 +72,7 @@ public class PerfomanceStats : MonoBehaviour
 		            $"AvgFrametime:<b>{Stats.AvgMs:#0.00}ms</b>   " +
 		            $"MinFrametime:<b>{Stats.MinMs*1000:#0.00}ms</b>(frame <b>{Stats.MinMSFrame}</b>)   " +
 		            $"MaxFrametime:<b>{Stats.MaxMs*1000:#0.00}ms</b>(frame <b>{Stats.MaxMSFrame}</b>)";
-		frametimeDisplay.text = $"<b><size=50>Boat Attack Benchmark</size></b>\n{debugInfo}";
+		frametimeDisplay.text = $"<b><size=50>{Application.productName} Benchmark</size></b>\n{debugInfo}";
 	}
 
 	private void ResetRun()
@@ -116,4 +117,15 @@ public class PerfomanceStats : MonoBehaviour
 
         Stats.AvgMs *= 1000;
     }
+
+	private void CreateTextGUI()
+	{
+		var textGo = new GameObject("perfText", new []{typeof(Text)});
+		textGo.transform.SetParent(AppSettings.ConsoleCanvas.transform, true);
+		frametimeDisplay = textGo.GetComponent<Text>();
+		var rectTransform = frametimeDisplay.rectTransform;
+		rectTransform.anchorMin = rectTransform.sizeDelta = rectTransform.anchoredPosition = Vector2.zero;
+		rectTransform.anchorMax = Vector2.one;
+		frametimeDisplay.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+	}
 }

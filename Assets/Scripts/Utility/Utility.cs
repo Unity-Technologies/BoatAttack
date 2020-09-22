@@ -5,6 +5,7 @@ using System;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using Object = UnityEngine.Object;
 
 namespace BoatAttack
 {
@@ -20,13 +21,38 @@ namespace BoatAttack
             
             if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
                 Debug.Log($"Quality level changed:{lastQualityLevel} to {curLevel}");
-            QualityLevelChange?.Invoke(lastQualityLevel, curLevel);
+            var realIndex = GetTrueQualityLevel(curLevel);
+            QualityLevelChange?.Invoke(curLevel, realIndex);
             lastQualityLevel = curLevel;
+        }
+
+        public static int GetTrueQualityLevel()
+        {
+            return GetTrueQualityLevel(QualitySettings.GetQualityLevel());
+        }
+
+        public static int GetTrueQualityLevel(int level)
+        {
+            return ConstantData.QualityLevels.IndexOf(QualitySettings.names[level]);
         }
 
         public static string RemoveWhitespace(string input)
         {
             return Regex.Replace(input, @"\s+", "");
+        }
+        
+        public static void SafeDestroy(Object obj)
+        {
+            if (obj != null)
+            {
+#if UNITY_EDITOR
+                Object.DestroyImmediate(obj);
+                return;
+#else
+                Object.Destroy(obj);
+                return;
+#endif
+            }
         }
     }
     

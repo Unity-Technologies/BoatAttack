@@ -26,47 +26,47 @@ public class DefaultVolume : MonoBehaviour
         if (!Instance)
         {
             Instance = this;
-            if(Application.isPlaying)
+            if (Application.isPlaying)
                 DontDestroyOnLoad(gameObject);
         }
-        else if(Instance != this)
+        else if (Instance != this)
         {
-            if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
+            if (UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
                 Debug.Log($"Extra Volume Manager cleaned up. GUID:{gameObject.GetInstanceID()}");
-            SafeDestroy();
+            StopAllCoroutines();
+            Utility.SafeDestroy(this);
         }
-        Utility.QualityLevelChange += UpdateVolume;
-    }
 
-    public static void SafeDestroy()
-    {
-#if UNITY_EDITOR
-        DestroyImmediate(Instance);
-        return;
-#else
-        Destroy(Instance);
-        return;
-#endif
+        Utility.QualityLevelChange += UpdateVolume;
+        UpdateVolume(0, Utility.GetTrueQualityLevel()); // First time set
     }
 
     private void OnDestroy()
     {
         Utility.QualityLevelChange -= UpdateVolume;
+        StopAllCoroutines();
     }
 
-    public void UpdateVolume(int from, int to)
+    private void UpdateVolume(int level, int realLevel)
     {
         //Setup Quality Vol if needed
-        if (qualityVolumes?.Length > to && qualityVolumes[to] != null)
+        if (qualityVolumes?.Length > realLevel && qualityVolumes[realLevel] != null)
         {
-            StartCoroutine(LoadAndApplyQualityVolume(to));
+            StartCoroutine(LoadAndApplyQualityVolume(realLevel));
         }
         else
         {
             volQualityComponent.sharedProfile = null;
         }
+    }
 
-        if (UniversalRenderPipeline.asset.debugLevel == PipelineDebugLevel.Disabled) return;
+    private IEnumerator LoadAndApplyQualityVolume(int index)
+    {
+        var volLoading = qualityVolumes[index].LoadAssetAsync<VolumeProfile>();
+        yield return volLoading;
+        volQualityComponent.sharedProfile = volLoading.Result;
+
+        if (UniversalRenderPipeline.asset.debugLevel == PipelineDebugLevel.Disabled) yield break;
         if (volBaseComponent.sharedProfile && volQualityComponent.sharedProfile)
         {
             Debug.Log(message: "Updated volumes:\n" +
@@ -75,27 +75,13 @@ public class DefaultVolume : MonoBehaviour
                                "Total Volume Stack is now:\n");
         }
     }
-
-#if UNITY_EDITOR
-    private void LoadVolEditor(int index)
-    {
-        if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
-            Debug.Log("Loading volumes in editor.");
-        var assetRef = qualityVolumes[index];
-        var obj = assetRef.editorAsset;
-        volQualityComponent.sharedProfile = obj as VolumeProfile;
-    }
-#endif
-    private IEnumerator LoadAndApplyQualityVolume(int index)
-    {
-        var volLoading = qualityVolumes[index].LoadAssetAsync<VolumeProfile>();
-        yield return volLoading;
-        volQualityComponent.sharedProfile = volLoading.Result;
-    }
 }
 
-#if UNITY_EDITOR
+/// <summary>
+/// Editor Injection
+/// </summary>
 
+#if UNITY_EDITOR
 [InitializeOnLoad]
 internal class InjectDefaultVolume : IProcessSceneWithReport
 {
@@ -109,8 +95,8 @@ internal class InjectDefaultVolume : IProcessSceneWithReport
         {
             Object.DestroyImmediate(vol);
         }
-
-        EditorApplication.delayCall += () => { CreateVolumeManager(HideFlags.HideAndDontSave); };
+        CreateVolumeManager(HideFlags.HideAndDontSave);
+        //EditorApplication.delayCall += () => { CreateVolumeManager(HideFlags.HideAndDontSave); };
         EditorApplication.playModeStateChanged += StateChange;
     }
 
@@ -123,8 +109,7 @@ internal class InjectDefaultVolume : IProcessSceneWithReport
                     CreateVolumeManager(HideFlags.HideAndDontSave);
                 break;
             case PlayModeStateChange.ExitingEditMode:
-                if (DefaultVolume.Instance != null)
-                    DefaultVolume.SafeDestroy();
+                Utility.SafeDestroy(DefaultVolume.Instance);
                 break;
             case PlayModeStateChange.EnteredPlayMode:
                 break;
@@ -156,5 +141,4 @@ internal class InjectDefaultVolume : IProcessSceneWithReport
         _vol.hideFlags = flags;
     }
 }
-
 #endif

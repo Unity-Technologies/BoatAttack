@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using GameplayIngredients;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -52,9 +53,12 @@ namespace BoatAttack
         [Header("Asset References")]
         public AssetReference loadingScreen;
         public AssetReference volumeManager;
+        [Header("Prefabs")]
+        public GameObject consoleCanvas;
+        public static GameObject ConsoleCanvas;
 
         // Use this for initialization
-        private void OnEnable()
+        private void Awake()
         {
             if(UniversalRenderPipeline.asset.debugLevel == PipelineDebugLevel.Profiling)
                 Debug.Log("AppManager initializing");
@@ -67,6 +71,8 @@ namespace BoatAttack
         private void Initialize()
         {
             Instance = this;
+            ConsoleCanvas = Instantiate(consoleCanvas);
+            DontDestroyOnLoad(ConsoleCanvas);
             Application.targetFrameRate = 300;
             MainCamera = Camera.main;
         }
@@ -289,6 +295,8 @@ namespace BoatAttack
         {
             return $"level_{Levels[level]}";
         }
+        
+        public static readonly List<string> QualityLevels = new List<string>(){"Low", "Medium", "High"};
 
         public static readonly string[] AiNames =
         {
