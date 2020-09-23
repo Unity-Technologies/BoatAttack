@@ -58,7 +58,7 @@ namespace BoatAttack
         private void OnEnable()
         {
             Initialize();
-            RenderPipelineManager.beginCameraRendering += SetRenderScale;
+            //RenderPipelineManager.beginCameraRendering += SetRenderScale;
             SceneManager.sceneLoaded += LevelWasLoaded;
         }
 
@@ -135,7 +135,7 @@ namespace BoatAttack
 #endif
         }
 
-        private void Update()
+        /*private void Update()
         {
             if (!MainCamera) return;
 
@@ -171,7 +171,7 @@ namespace BoatAttack
             {
                 MainCamera.allowDynamicResolution = false;
             }
-        }
+        }*/
 
         public void ToggleSRPBatcher(bool enabled)
         {
