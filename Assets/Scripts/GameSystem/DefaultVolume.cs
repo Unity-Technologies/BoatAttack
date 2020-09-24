@@ -1,50 +1,56 @@
-﻿using System;
-using System.Collections;
+﻿using System;using System.Collections;
 using BoatAttack;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.SceneManagement;
-using Object = UnityEngine.Object;
+using UnityEngine.ResourceManagement.AsyncOperations;
 #if UNITY_EDITOR
 using UnityEditor;
-using UnityEditor.Build;
-using UnityEditor.Build.Reporting;
+using UnityEditor.AddressableAssets;
 #endif
 
 [ExecuteAlways]
 public class DefaultVolume : MonoBehaviour
 {
-    public static DefaultVolume Instance;
+    public static DefaultVolume Instance { get; private set; }
+
     public Volume volBaseComponent;
     public Volume volQualityComponent;
     public AssetReference[] qualityVolumes;
 
-    private void Start()
+    private void Awake()
     {
-        if (!Instance)
-        {
-            Instance = this;
-            if (Application.isPlaying)
-                DontDestroyOnLoad(gameObject);
-        }
-        else if (Instance != this)
+        Init();
+    }
+
+    public void Init()
+    {
+        gameObject.hideFlags = HideFlags.HideAndDontSave;
+
+        if (Instance != null && Instance != this)
         {
             if (UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
                 Debug.Log($"Extra Volume Manager cleaned up. GUID:{gameObject.GetInstanceID()}");
             StopAllCoroutines();
-            Utility.SafeDestroy(this);
+            Utility.SafeDestroy(gameObject);
         }
-
-        Utility.QualityLevelChange += UpdateVolume;
-        UpdateVolume(0, Utility.GetTrueQualityLevel()); // First time set
+        else
+        {
+            Instance = this;
+            gameObject.name = "[DefaultVolume]";
+            Debug.Log($"Default Volume is {gameObject.GetInstanceID()}");
+            Utility.QualityLevelChange += UpdateVolume;
+            UpdateVolume(0, Utility.GetTrueQualityLevel()); // First time set
+        }
     }
 
     private void OnDestroy()
     {
-        Utility.QualityLevelChange -= UpdateVolume;
         StopAllCoroutines();
+        if (Instance == this)
+            Instance = null;
+        Utility.QualityLevelChange -= UpdateVolume;
     }
 
     private void UpdateVolume(int level, int realLevel)
@@ -62,9 +68,13 @@ public class DefaultVolume : MonoBehaviour
 
     private IEnumerator LoadAndApplyQualityVolume(int index)
     {
-        var volLoading = qualityVolumes[index].LoadAssetAsync<VolumeProfile>();
-        yield return volLoading;
-        volQualityComponent.sharedProfile = volLoading.Result;
+        var vol = qualityVolumes[index];
+        if (!vol.OperationHandle.IsValid() || vol.OperationHandle.Status != AsyncOperationStatus.Succeeded)
+        {
+            qualityVolumes[index].LoadAssetAsync<VolumeProfile>();
+        }
+        yield return vol.OperationHandle;
+        volQualityComponent.sharedProfile = vol.OperationHandle.Result as VolumeProfile;
 
         if (UniversalRenderPipeline.asset.debugLevel == PipelineDebugLevel.Disabled) yield break;
         if (volBaseComponent.sharedProfile && volQualityComponent.sharedProfile)
@@ -75,29 +85,61 @@ public class DefaultVolume : MonoBehaviour
                                "Total Volume Stack is now:\n");
         }
     }
+
+#if UNITY_EDITOR
+    [InitializeOnLoadMethod]
+#else
+    [RuntimeInitializeOnLoadMethod]
+#endif
+    static void LoadMe()
+    {
+        Debug.Log("runtime loading");
+        var vols = Resources.FindObjectsOfTypeAll(typeof(DefaultVolume)) as DefaultVolume[];
+        if (vols == null) return;
+
+        if (vols.Length == 0 && Instance == null)
+        {
+            var goHandle = Addressables.InstantiateAsync("volume_manager");
+        }
+        else
+        {
+            foreach (var vol in vols)
+            {
+                if(vol.gameObject.activeSelf && vol.gameObject.activeInHierarchy)
+                    vol.Init();
+            }
+        }
+    }
 }
 
 /// <summary>
 /// Editor Injection
 /// </summary>
-
+/*
 #if UNITY_EDITOR
 [InitializeOnLoad]
-internal class InjectDefaultVolume : IProcessSceneWithReport
+internal class DefaultVolumeEditor : IProcessSceneWithReport
 {
     public int callbackOrder => 1;
     private static GameObject _vol;
 
-    static InjectDefaultVolume()
+    static DefaultVolumeEditor()
     {
+        //EditorApplication.delayCall += InjectDefaultVolume;
+        //EditorApplication.playModeStateChanged += StateChange;
+    }
+
+    private static void InjectDefaultVolume()
+    {
+        if (DefaultVolume.Instance != null) return;
+
         var vols = GameObject.FindGameObjectsWithTag("volume_manager");
         foreach (var vol in vols)
         {
             Object.DestroyImmediate(vol);
         }
-        CreateVolumeManager(HideFlags.HideAndDontSave);
-        //EditorApplication.delayCall += () => { CreateVolumeManager(HideFlags.HideAndDontSave); };
-        EditorApplication.playModeStateChanged += StateChange;
+
+        CreateVolumeManager(HideFlags.DontSaveInEditor);
     }
 
     private static void StateChange(PlayModeStateChange obj)
@@ -106,7 +148,7 @@ internal class InjectDefaultVolume : IProcessSceneWithReport
         {
             case PlayModeStateChange.EnteredEditMode:
                 if(DefaultVolume.Instance == null)
-                    CreateVolumeManager(HideFlags.HideAndDontSave);
+                    CreateVolumeManager(HideFlags.DontSaveInEditor);
                 break;
             case PlayModeStateChange.ExitingEditMode:
                 Utility.SafeDestroy(DefaultVolume.Instance);
@@ -131,6 +173,10 @@ internal class InjectDefaultVolume : IProcessSceneWithReport
 
     private static void CreateVolumeManager(HideFlags flags = HideFlags.None)
     {
+        //Addressables
+        //var asset = AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(entry.guid);
+
+
         var obj =
             AssetDatabase.LoadAssetAtPath("Assets/objects/misc/DefaultVolume.prefab", typeof(GameObject)) as
                 GameObject;
@@ -142,3 +188,4 @@ internal class InjectDefaultVolume : IProcessSceneWithReport
     }
 }
 #endif
+*/

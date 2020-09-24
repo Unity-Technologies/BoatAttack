@@ -91,50 +91,41 @@ namespace BoatAttack
 
         private static void LevelWasLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (!MainCamera)
+            CleanupCameras();
+            Instance.Invoke(nameof(CleanupLoadingScreen), 0.5f);
+        }
+
+        private static void CleanupCameras()
+        {
+            foreach (var c in GameObject.FindGameObjectsWithTag("MainCamera"))
             {
-                MainCamera = Camera.main;
-            }
-            else
-            {
-                var cams = GameObject.FindGameObjectsWithTag("MainCamera");
-                foreach (var c in cams)
+                if (MainCamera != null && c != MainCamera.gameObject)
                 {
-                    if (c != MainCamera.gameObject) Destroy(c);
+                    Destroy(c);
+                }
+                else
+                {
+                    MainCamera = c.GetComponent<Camera>();
                 }
             }
-
-            Instance.Invoke(nameof(CleanupLoadingScreen), 0.5f);
         }
 
         private void CleanupLoadingScreen()
         {
-            if (Instance.loadingScreenObject != null)
-            {
-                Instance.loadingScreen.ReleaseInstance(Instance.loadingScreenObject);
-            }
+            if(loadingScreenObject) loadingScreen?.ReleaseInstance(loadingScreenObject);
         }
 
         private void SetRenderScale()
         {
-            float res;
-            switch (maxRenderSize)
+            var res = maxRenderSize switch
             {
-                case RenderRes._720p:
-                    res = 1280f;
-                    break;
-                case RenderRes._1080p:
-                    res = 1920f;
-                    break;
-                case RenderRes._1440p:
-                    res = 2560f;
-                    break;
-                default:
-                    res = Screen.width;
-                    break;
-            }
+                RenderRes._720p => 1280f,
+                RenderRes._1080p => 1920f,
+                RenderRes._1440p => 2560f,
+                _ => Screen.width
+            };
             var renderScale = Mathf.Clamp(res / Screen.width, 0.1f, 1.0f);
-            
+
             if(UniversalRenderPipeline.asset.debugLevel == PipelineDebugLevel.Profiling)
                 Debug.Log($"Settings render scale to {renderScale * 100}% based on {maxRenderSize.ToString()}");
 
@@ -149,7 +140,7 @@ namespace BoatAttack
 #if !UNITY_EDITOR
             Utility.CheckQualityLevel(); //TODO - hoping to remove one day when we have a quality level callback
 #endif
-            
+
             if (!MainCamera) return;
 
             if (variableResolution)
@@ -158,20 +149,15 @@ namespace BoatAttack
 
                 var offset = 0f;
                 var currentFrametime = Time.deltaTime;
-                var rate = 0.1f;
+                const float rate = 0.1f;
 
-                switch (targetFramerate)
+                offset = targetFramerate switch
                 {
-                    case Framerate._30:
-                        offset = currentFrametime > (1000f / 30f) ? -rate : rate;
-                        break;
-                    case Framerate._60:
-                        offset = currentFrametime > (1000f / 60f) ? -rate : rate;
-                        break;
-                    case Framerate._120:
-                        offset = currentFrametime > (1000f / 120f) ? -rate : rate;
-                        break;
-                }
+                    Framerate._30 => currentFrametime > (1000f / 30f) ? -rate : rate,
+                    Framerate._60 => currentFrametime > (1000f / 60f) ? -rate : rate,
+                    Framerate._120 => currentFrametime > (1000f / 120f) ? -rate : rate,
+                    _ => offset
+                };
 
                 currentDynamicScale = Mathf.Clamp(currentDynamicScale + offset, minScale, 1f);
 
@@ -295,7 +281,7 @@ namespace BoatAttack
         {
             return $"level_{Levels[level]}";
         }
-        
+
         public static readonly List<string> QualityLevels = new List<string>(){"Low", "Medium", "High"};
 
         public static readonly string[] AiNames =

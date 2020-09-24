@@ -13,12 +13,12 @@ namespace BoatAttack
     {
         public static event Action<int, int> QualityLevelChange;
         private static int lastQualityLevel = -1;
-        
+
         public static void CheckQualityLevel()
         {
             var curLevel = QualitySettings.GetQualityLevel();
             if (lastQualityLevel == curLevel) return;
-            
+
             if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
                 Debug.Log($"Quality level changed:{lastQualityLevel} to {curLevel}");
             var realIndex = GetTrueQualityLevel(curLevel);
@@ -40,13 +40,13 @@ namespace BoatAttack
         {
             return Regex.Replace(input, @"\s+", "");
         }
-        
+
         public static void SafeDestroy(Object obj)
         {
             if (obj != null)
             {
 #if UNITY_EDITOR
-                Object.DestroyImmediate(obj);
+                EditorApplication.delayCall += () => Object.DestroyImmediate(obj);
                 return;
 #else
                 Object.Destroy(obj);
@@ -55,7 +55,7 @@ namespace BoatAttack
             }
         }
     }
-    
+
 #if UNITY_EDITOR
     [InitializeOnLoad]
     internal class UtilityScheduler
