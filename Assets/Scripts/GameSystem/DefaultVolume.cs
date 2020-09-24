@@ -18,6 +18,7 @@ public class DefaultVolume : MonoBehaviour
     public Volume volBaseComponent;
     public Volume volQualityComponent;
     public AssetReference[] qualityVolumes;
+    private static bool _loading;
 
     private void Awake()
     {
@@ -39,7 +40,8 @@ public class DefaultVolume : MonoBehaviour
         {
             Instance = this;
             gameObject.name = "[DefaultVolume]";
-            Debug.Log($"Default Volume is {gameObject.GetInstanceID()}");
+            if (UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
+                Debug.Log($"Default Volume is {gameObject.GetInstanceID()}");
             Utility.QualityLevelChange += UpdateVolume;
             UpdateVolume(0, Utility.GetTrueQualityLevel()); // First time set
         }
@@ -68,13 +70,16 @@ public class DefaultVolume : MonoBehaviour
 
     private IEnumerator LoadAndApplyQualityVolume(int index)
     {
+        while (_loading) { yield return null; }
+        _loading = true;
         var vol = qualityVolumes[index];
-        if (!vol.OperationHandle.IsValid() || vol.OperationHandle.Status != AsyncOperationStatus.Succeeded)
+        if (!vol.OperationHandle.IsValid() || !vol.OperationHandle.IsDone)
         {
             qualityVolumes[index].LoadAssetAsync<VolumeProfile>();
         }
         yield return vol.OperationHandle;
         volQualityComponent.sharedProfile = vol.OperationHandle.Result as VolumeProfile;
+        _loading = false;
 
         if (UniversalRenderPipeline.asset.debugLevel == PipelineDebugLevel.Disabled) yield break;
         if (volBaseComponent.sharedProfile && volQualityComponent.sharedProfile)
@@ -93,7 +98,6 @@ public class DefaultVolume : MonoBehaviour
 #endif
     static void LoadMe()
     {
-        Debug.Log("runtime loading");
         var vols = Resources.FindObjectsOfTypeAll(typeof(DefaultVolume)) as DefaultVolume[];
         if (vols == null) return;
 
