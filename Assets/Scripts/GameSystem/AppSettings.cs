@@ -101,7 +101,9 @@ namespace BoatAttack
             {
                 if (MainCamera != null && c != MainCamera.gameObject)
                 {
-                    Destroy(c);
+                    // TODO This is a temp workaround to prevent destruction of main camera in static test scene
+                    // until Andre can figure out a better fix
+                    //Destroy(c);
                 }
                 else
                 {
