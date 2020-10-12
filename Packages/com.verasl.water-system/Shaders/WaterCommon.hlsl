@@ -239,8 +239,10 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	half fresnelTerm = CalculateFresnelTerm(IN.normal, IN.viewDir.xyz);
 	//return fresnelTerm.xxxx;
 
-    BRDFData brdfData;
-    InitializeBRDFData(half3(0, 0, 0), 0, half3(1, 1, 1), 0.95, 1, brdfData);
+	BRDFData brdfData;
+	float inoutAlpha = 1.0;
+    InitializeBRDFData(half3(0, 0, 0), 0, half3(1, 1, 1), 0.95, inoutAlpha, brdfData);
+	
 	half3 spec = DirectBDRF(brdfData, IN.normal, mainLight.direction, IN.viewDir) * shadow * mainLight.color;
 #ifdef _ADDITIONAL_LIGHTS
     uint pixelLightCount = GetAdditionalLightsCount();
