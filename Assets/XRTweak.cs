@@ -9,14 +9,16 @@ namespace BoatAttack
 	public class XRTweak : MonoBehaviour
 	{
 		public Material BuiltinSky;
+		public GameObject water;
+		public GameObject waterXR;
+
 		private static bool disableRaceUI = false;
 		public static bool DisableRaceUI()
 		{
 			return disableRaceUI;
 		}
-
-				
-		// Start is called before the first frame update
+		
+		// Tweak project for XR		
 		void Start()
 		{
 			if(XRGeneralSettings.Instance.InitManagerOnStart)
@@ -26,6 +28,10 @@ namespace BoatAttack
 				
 				// Disable Screenspace Canvas for XR because it is not supported.
 				disableRaceUI = true;
+
+				// Current planar reflection feature does not work in XR. Switch to cubemap
+				water.SetActive(false);
+				waterXR.SetActive(true);
 			}
 		}
 
