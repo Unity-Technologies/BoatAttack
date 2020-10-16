@@ -22,10 +22,10 @@ TEXTURECUBE(_CubemapTexture);
 SAMPLER(sampler_CubemapTexture);
 #endif
 TEXTURE2D_X(_WaterFXMap);
-TEXTURE2D_X(_CameraDepthTexture);
+TEXTURE2D_X(_CameraDepthTexture); SAMPLER(sampler_CameraDepthTexture_linear_clamp);
 TEXTURE2D_X(_CameraOpaqueTexture); SAMPLER(sampler_CameraOpaqueTexture_linear_clamp);
 
-TEXTURE2D(_WaterDepthMap); SAMPLER(sampler_WaterDepthMap_linear_clamp);
+TEXTURE2D(_WaterDepthMap);
 
 // Surface textures
 TEXTURE2D(_AbsorptionScatteringRamp); SAMPLER(sampler_AbsorptionScatteringRamp);

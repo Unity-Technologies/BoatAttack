@@ -66,14 +66,18 @@ half3 Absorption(half depth)
 
 float2 AdjustedDepth(half2 uvs, half4 additionalData)
 {
-	float rawD = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_ScreenTextures_linear_clamp, uvs).r;
+	float rawD = SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture_linear_clamp, uvs).r;
 	float d = LinearEyeDepth(rawD, _ZBufferParams);
 	return float2(d * additionalData.x - additionalData.y, (rawD * -_ProjectionParams.x) + (1-UNITY_REVERSED_Z));
 }
 
 float WaterTextureDepth(float3 posWS)
 {
-    return (1 - SAMPLE_TEXTURE2D_LOD(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, posWS.xz * 0.002 + 0.5, 1).r) * (_MaxDepth + _VeraslWater_DepthCamParams.x) - _VeraslWater_DepthCamParams.x;
+#if UNITY_REVERSED_Z
+	return (1 - SAMPLE_TEXTURE2D_LOD(_WaterDepthMap, sampler_ScreenTextures_linear_clamp, posWS.xz * 0.002 + 0.5, 1).r) * (_MaxDepth + _VeraslWater_DepthCamParams.x) - _VeraslWater_DepthCamParams.x;
+#else
+	return (SAMPLE_TEXTURE2D_LOD(_WaterDepthMap, sampler_ScreenTextures_linear_clamp, posWS.xz * 0.002 + 0.5, 1).r) * (_MaxDepth + _VeraslWater_DepthCamParams.x) - _VeraslWater_DepthCamParams.x;
+#endif
 }
 
 float3 WaterDepth(float3 posWS, half4 additionalData, half2 screenUVs)// x = seafloor depth, y = water depth

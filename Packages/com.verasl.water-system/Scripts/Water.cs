@@ -353,6 +353,7 @@ namespace WaterSystem
             additionalCamData.renderShadows = false;
             additionalCamData.requiresColorOption = CameraOverrideOption.Off;
             additionalCamData.requiresDepthOption = CameraOverrideOption.Off;
+            additionalCamData.allowXRRendering = false;
 
             var t = _depthCam.transform;
             var depthExtra = 4.0f;
@@ -367,6 +368,7 @@ namespace WaterSystem
             _depthCam.allowHDR = false;
             _depthCam.allowMSAA = false;
             _depthCam.cullingMask = (1 << 10);
+            _depthCam.useOcclusionCulling = false; // XRTODO: Workaround Quest issue. When occlusion culling is enabled on Quest, we see part of terrain is over culled.
             //Generate RT
             if (!_depthTex)
                 _depthTex = new RenderTexture(1024, 1024, 24, RenderTextureFormat.Depth, RenderTextureReadWrite.Linear);
