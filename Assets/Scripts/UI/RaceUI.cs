@@ -39,6 +39,10 @@ namespace BoatAttack.UI
 
         private void OnEnable()
         {
+            // Disable Screenspace Canvas for XR because it is not supported.
+            if (XRTweak.DisableRaceUI())
+                return;
+
             RaceManager.raceStarted += SetGameplayUi;
         }
 
