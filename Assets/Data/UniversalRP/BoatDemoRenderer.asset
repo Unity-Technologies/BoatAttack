@@ -1,5 +1,44 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6815688936837802928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
+  m_Name: NewRenderObjects
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    passTag: NewRenderObjects
+    Event: 300
+    filterSettings:
+      RenderQueueType: 1
+      LayerMask:
+        serializedVersion: 2
+        m_Bits: 256
+      PassNames: []
+    overrideMaterial: {fileID: 0}
+    overrideMaterialPassIndex: 0
+    overrideDepthState: 0
+    depthCompareFunction: 4
+    enableWrite: 1
+    stencilSettings:
+      overrideStencilState: 0
+      stencilReference: 0
+      stencilCompareFunction: 8
+      passOperation: 0
+      failOperation: 0
+      zFailOperation: 0
+    cameraSettings:
+      overrideCamera: 1
+      restoreCamera: 1
+      offset: {x: -9.82, y: 32.74, z: 9.93, w: 1}
+      cameraFieldOfView: 60
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14,7 +53,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_RendererFeatures:
   - {fileID: 770174969183694509}
-  m_RendererFeatureMap: ad6e17cd0d36b00a
+  - {fileID: 7959035961846237700}
+  - {fileID: -6815688936837802928}
+  m_RendererFeatureMap: ad6e17cd0d36b00a048a67dc092d746e501439e405cf69a1
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   shaders:
     blitPS: {fileID: 4800000, guid: c17132b1f77d20942aa75f8429c0f8bc, type: 3}
@@ -25,18 +66,18 @@ MonoBehaviour:
     fallbackErrorPS: {fileID: 4800000, guid: e6e9a19c3678ded42a3bc431ebef7dbd, type: 3}
   m_OpaqueLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 2147614263
   m_TransparentLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 2147614263
   m_DefaultStencilState:
-    overrideStencilState: 0
+    overrideStencilState: 1
     stencilReference: 1
     stencilCompareFunction: 8
     passOperation: 2
-    failOperation: 0
+    failOperation: 2
     zFailOperation: 0
-  m_ShadowTransparentReceive: 1
+  m_ShadowTransparentReceive: 0
 --- !u!114 &770174969183694509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55,3 +96,22 @@ MonoBehaviour:
     causticBlendDistance: 3.36
     debug: 0
   causticShader: {fileID: 4800000, guid: 90939d2e4b62841d29c136c866715501, type: 3}
+  causticTexture: {fileID: 2800000, guid: f395b7d64f44848c6a3cba1f1173fe90, type: 3}
+--- !u!114 &7959035961846237700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73a60ff029db77a498e020817f4aa301, type: 3}
+  m_Name: NewSkyboxFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  injectionPoint: 400
+  mask:
+    serializedVersion: 2
+    m_Bits: 256
+  ratioScale: 64
