@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09efa0b32c4cb4a97a3a9c78e03dd4ce, type: 3}
+  m_Name: BenchmarkSettings
+  m_EditorClassIdentifier: 
+  saveData: 1
+  disableVSync: 1
+  stats: 0
+  benchmarkData:
+  - benchmarkName: Island Flythrough
+    sceneAsset: {fileID: 102900000, guid: c7a97972985ccaf4a9c8daf7e1db85ed, type: 3}
+    scene: Assets/scenes/testing/benchmark_island-flythrough.unity
+    type: 0
+    runs: 3
+    runLength: 500
+    warmup: 1
+    enabled: 1
+  - benchmarkName: Island Static
+    sceneAsset: {fileID: 102900000, guid: bf8529d52d0dac843b94245ecf955d4a, type: 3}
+    scene: Assets/scenes/testing/benchmark_island-static.unity
+    type: 0
+    runs: 5
+    runLength: 25
+    warmup: 1
+    enabled: 1

@@ -1,13 +1,11 @@
-﻿using System;using System.Collections;
+﻿using System.Collections;
 using BoatAttack;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.ResourceManagement.AsyncOperations;
 #if UNITY_EDITOR
 using UnityEditor;
-using UnityEditor.AddressableAssets;
 #endif
 
 [ExecuteAlways]
@@ -22,12 +20,23 @@ public class DefaultVolume : MonoBehaviour
 
     private void Awake()
     {
-        Init();
+        if (volBaseComponent && volQualityComponent)
+        {
+            Init();
+        }
+        else
+        {
+            Utility.SafeDestroy(gameObject);
+        }
     }
 
-    public void Init()
+    private void Init()
     {
+#if UNITY_EDITOR
         gameObject.hideFlags = HideFlags.HideAndDontSave;
+#else
+        DontDestroyOnLoad(gameObject);
+#endif
 
         if (Instance != null && Instance != this)
         {
@@ -82,13 +91,10 @@ public class DefaultVolume : MonoBehaviour
         _loading = false;
 
         if (UniversalRenderPipeline.asset.debugLevel == PipelineDebugLevel.Disabled) yield break;
-        if (volBaseComponent.sharedProfile && volQualityComponent.sharedProfile)
-        {
-            Debug.Log(message: "Updated volumes:\n" +
-                               $"    Base Volume : {volBaseComponent.sharedProfile.name}\n" +
-                               $"    Quality Volume : {volQualityComponent.sharedProfile.name}\n" +
-                               "Total Volume Stack is now:\n");
-        }
+        Debug.Log(message: "Updated volumes:\n" +
+                           $"    Base Volume : {(volBaseComponent.sharedProfile ? volBaseComponent.sharedProfile.name : "none")}\n" +
+                           $"    Quality Volume : {(volQualityComponent.sharedProfile ? volQualityComponent.sharedProfile.name : "none")}\n" +
+                           "Total Volume Stack is now:\n");
     }
 
 #if UNITY_EDITOR
@@ -96,100 +102,20 @@ public class DefaultVolume : MonoBehaviour
 #else
     [RuntimeInitializeOnLoadMethod]
 #endif
-    static void LoadMe()
+    private static void LoadMe()
     {
-        var vols = Resources.FindObjectsOfTypeAll(typeof(DefaultVolume)) as DefaultVolume[];
-        if (vols == null) return;
+        if (!(Resources.FindObjectsOfTypeAll(typeof(DefaultVolume)) is DefaultVolume[] vols)) return;
 
-        if (vols.Length == 0 && Instance == null)
-        {
-            var goHandle = Addressables.InstantiateAsync("volume_manager");
-        }
-        else
+        if (vols.Length != 0 || Instance != null)
         {
             foreach (var vol in vols)
             {
-                if(vol.gameObject.activeSelf && vol.gameObject.activeInHierarchy)
-                    vol.Init();
+                if (vol.gameObject.activeSelf && vol.gameObject.activeInHierarchy) vol.Init();
             }
         }
-    }
-}
-
-/// <summary>
-/// Editor Injection
-/// </summary>
-/*
-#if UNITY_EDITOR
-[InitializeOnLoad]
-internal class DefaultVolumeEditor : IProcessSceneWithReport
-{
-    public int callbackOrder => 1;
-    private static GameObject _vol;
-
-    static DefaultVolumeEditor()
-    {
-        //EditorApplication.delayCall += InjectDefaultVolume;
-        //EditorApplication.playModeStateChanged += StateChange;
-    }
-
-    private static void InjectDefaultVolume()
-    {
-        if (DefaultVolume.Instance != null) return;
-
-        var vols = GameObject.FindGameObjectsWithTag("volume_manager");
-        foreach (var vol in vols)
+        else
         {
-            Object.DestroyImmediate(vol);
-        }
-
-        CreateVolumeManager(HideFlags.DontSaveInEditor);
-    }
-
-    private static void StateChange(PlayModeStateChange obj)
-    {
-        switch (obj)
-        {
-            case PlayModeStateChange.EnteredEditMode:
-                if(DefaultVolume.Instance == null)
-                    CreateVolumeManager(HideFlags.DontSaveInEditor);
-                break;
-            case PlayModeStateChange.ExitingEditMode:
-                Utility.SafeDestroy(DefaultVolume.Instance);
-                break;
-            case PlayModeStateChange.EnteredPlayMode:
-                break;
-            case PlayModeStateChange.ExitingPlayMode:
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(obj), obj, null);
+            Addressables.InstantiateAsync("volume_manager");
         }
     }
-
-    public void OnProcessScene(Scene scene, BuildReport report)
-    {
-        if(scene.buildIndex != 0)
-            return;
-        if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
-            Debug.Log($"Injecting Default volume into scene:{scene.name}");
-        CreateVolumeManager();
-    }
-
-    private static void CreateVolumeManager(HideFlags flags = HideFlags.None)
-    {
-        //Addressables
-        //var asset = AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(entry.guid);
-
-
-        var obj =
-            AssetDatabase.LoadAssetAtPath("Assets/objects/misc/DefaultVolume.prefab", typeof(GameObject)) as
-                GameObject;
-        if (obj == null) return;
-        if (UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
-            Debug.Log($"Creating Volume Manager");
-        _vol = Object.Instantiate(obj);
-        _vol.hideFlags = flags;
-    }
 }
-#endif
-*/
