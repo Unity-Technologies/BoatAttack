@@ -239,7 +239,7 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
 	// Fresnel
 	half fresnelTerm = CalculateFresnelTerm(IN.normal, IN.viewDir.xyz);
 	//return fresnelTerm.xxxx;
-	
+
     BRDFData brdfData;
     half alphaInOut = 1;
     InitializeBRDFData(half3(0, 0, 0), 0, half3(1, 1, 1), 0.95, alphaInOut, brdfData);
