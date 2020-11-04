@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
 [InitializeOnLoad]
@@ -27,7 +28,8 @@ class LodLightmapCopy : IProcessSceneWithReport
     
     private static void Execute()
     {
-        Debug.Log("Baking LOD Lightmap values");
+        if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
+            Debug.Log("Baking LOD Lightmap values");
         var lodGroups= Object.FindObjectsOfType<LODGroup>();
         foreach (var lodGroup in lodGroups)
         {

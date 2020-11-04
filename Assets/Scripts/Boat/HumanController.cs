@@ -26,9 +26,9 @@ namespace BoatAttack
             _controls.BoatControls.Steering.canceled += context => _steering = 0f;
 
             _controls.BoatControls.Reset.performed += ResetBoat;
-            _controls.BoatControls.Freeze.performed += FreezeBoat;
+            _controls.BoatControls.Pause.performed += FreezeBoat;
 
-            _controls.BoatControls.Time.performed += SelectTime;
+            _controls.DebugControls.TimeOfDay.performed += SelectTime;
         }
 
         public override void OnEnable()
