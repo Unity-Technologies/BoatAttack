@@ -116,6 +116,10 @@ namespace BoatAttack
         public static IEnumerator SetupRace()
         {
             if(RaceData == null) RaceData = Instance.demoRaceData; // make sure we have the data, otherwise default to demo data
+            while (WaypointGroup.Instance == null) // TODO need to re-write whole game loading/race setup logic as it is dirty
+            {
+                yield return null;
+            }
             WaypointGroup.Instance.Setup(RaceData.reversed); // setup waypoints
             yield return Instance.StartCoroutine(CreateBoats()); // spawn boats;
 
