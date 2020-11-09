@@ -1,4 +1,3 @@
-**_Note:This repository is now a fork, the original has been moved to https://github.com/Unity-Technologies/BoatAttack_**  
 **_Note:This repository uses GitLFS, to use this repo you need to pull via Git and make sure GitLFS is installed locally_**
 
 # Boat Attack
