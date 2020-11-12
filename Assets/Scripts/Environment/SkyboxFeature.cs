@@ -34,7 +34,7 @@ public class SkyboxFeature : ScriptableRendererFeature
             m_RenderStateBlock.stencilState = stencilState;
             //DepthState depthState = new DepthState(false, CompareFunction.Less);
             //m_RenderStateBlock.depthState = depthState;
-            
+
             m_OpaqueFilteringSettings = new FilteringSettings(RenderQueueRange.opaque, mask);
             m_TransparentFilteringSettings = new FilteringSettings(RenderQueueRange.transparent, mask);
         }
@@ -46,40 +46,41 @@ public class SkyboxFeature : ScriptableRendererFeature
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
             var cameraData = renderingData.cameraData;
+            var cameraPosition = cameraData.camera.transform.position;
             DrawingSettings opaqueDrawingSettings = CreateDrawingSettings(m_ShaderTagIdList, ref renderingData, renderingData.cameraData.defaultOpaqueSortFlags);
             DrawingSettings transparentDrawingSettings = CreateDrawingSettings(m_ShaderTagIdList, ref renderingData, SortingCriteria.CommonTransparent);
-            
+
             CommandBuffer cmd = CommandBufferPool.Get(ProfilerTag);
             using (new ProfilingScope(cmd, _profilingSampler))
             {
                 // setup skybox cam
                 {
                     var viewMatrix = cameraData.GetViewMatrix();
-                    var cameraTranslation = viewMatrix.GetColumn(3);
-                    var camScale = cameraTranslation * Scale;
-                    Debug.Log($"scale is {Scale}");
-                    cameraTranslation = new Vector4(camScale.x, camScale.y, camScale.z, cameraTranslation.w);
+                    var camPosition = viewMatrix.GetColumn(3);
+                    var camScale = camPosition * Scale + camPosition;
+                    var cameraTranslation = new Vector4(camScale.x, camScale.y, camScale.z, camPosition.w);
                     viewMatrix.SetColumn(3, cameraTranslation);
-                    
+
                     RenderingUtils.SetViewAndProjectionMatrices(cmd, viewMatrix, cameraData.GetGPUProjectionMatrix(), true);
-                    cmd.SetGlobalVector("_WorldSpaceCameraPos", cameraData.camera.transform.position * Scale);
+                    cmd.SetGlobalVector("_WorldSpaceCameraPos", cameraPosition * Scale + cameraPosition);
+                    //cmd.SetGlobalVector("_WorldSpaceCameraPos", cameraPosition * Scale);
                 }
 
                 context.ExecuteCommandBuffer(cmd);
                 cmd.Clear();
-                
+
                 //draw opaque skybox
                 context.DrawRenderers(renderingData.cullResults, ref opaqueDrawingSettings, ref m_OpaqueFilteringSettings,
                     ref m_RenderStateBlock);
-                
+
                 //draw transparent skybox
                 context.DrawRenderers(renderingData.cullResults, ref transparentDrawingSettings, ref m_TransparentFilteringSettings,
                     ref m_RenderStateBlock);
-                
+
                 //return normal cam
                 {
                     RenderingUtils.SetViewAndProjectionMatrices(cmd, cameraData.GetViewMatrix(), cameraData.GetGPUProjectionMatrix(), true);
-                    cmd.SetGlobalVector("_WorldSpaceCameraPos", cameraData.camera.transform.position);
+                    cmd.SetGlobalVector("_WorldSpaceCameraPos", cameraPosition);
                 }
             }
             context.ExecuteCommandBuffer(cmd);
