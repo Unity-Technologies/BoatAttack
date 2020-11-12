@@ -4,6 +4,7 @@ using Unity.Jobs;
 using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Collections;
+using UnityEngine.Rendering.Universal;
 using WaterSystem.Data;
 
 namespace WaterSystem
@@ -30,7 +31,8 @@ namespace WaterSystem
 
         public static void Init()
         {
-            Debug.Log("Initializing Gerstner Waves Jobs");
+            if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
+                Debug.Log("Initializing Gerstner Waves Jobs");
             //Wave data
             _waveCount = Water.Instance._waves.Length;
             _waveData = new NativeArray<Wave>(_waveCount, Allocator.Persistent);
@@ -48,7 +50,8 @@ namespace WaterSystem
 
         public static void Cleanup()
         {
-            Debug.Log("Cleaning up Gerstner Wave Jobs");
+            if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
+                Debug.Log("Cleaning up Gerstner Wave Jobs");
             _waterHeightHandle.Complete();
 
             //Cleanup native arrays

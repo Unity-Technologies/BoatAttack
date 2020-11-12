@@ -58,7 +58,6 @@ static class UniversalSettings
                 if (EditorGUI.EndChangeCheck() && displayAssetIndex != 0)
                 {
                     QualitySettings.SetQualityLevel(displayAssetIndex-1);
-                    DefaultVolume.Instance.UpdateVolume();
                 }
 
                 if (displayAssetIndex != 0)

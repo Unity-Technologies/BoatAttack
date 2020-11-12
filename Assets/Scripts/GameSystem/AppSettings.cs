@@ -3,16 +3,18 @@ using System.Collections;
 using GameplayIngredients;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
+#if UNITY_EDITOR
+using UnityEditor.SceneManagement;
+#endif
 // ReSharper disable InconsistentNaming
 
 namespace BoatAttack
 {
-    [ManagerDefaultPrefab("AppManager")]
+    [ManagerDefaultPrefab(nameof(AppSettings))]
     public class AppSettings : Manager
     {
         public enum RenderRes
@@ -53,82 +55,74 @@ namespace BoatAttack
         [Header("Asset References")]
         public AssetReference loadingScreen;
         public AssetReference volumeManager;
+        [Header("Prefabs")]
+        public GameObject consoleCanvas;
+        public static GameObject ConsoleCanvas;
 
         // Use this for initialization
-        private void OnEnable()
+        private void Awake()
         {
+            if(UniversalRenderPipeline.asset.debugLevel == PipelineDebugLevel.Profiling)
+                Debug.Log("AppManager initializing");
             Initialize();
-            RenderPipelineManager.beginCameraRendering += SetRenderScale;
+            CmdArgs();
+            SetRenderScale();
             SceneManager.sceneLoaded += LevelWasLoaded;
         }
 
         private void Initialize()
         {
             Instance = this;
-            Application.targetFrameRate = 300;
+            ConsoleCanvas = Instantiate(consoleCanvas);
+            DontDestroyOnLoad(ConsoleCanvas);
             MainCamera = Camera.main;
-            if(DefaultVolume.Instance == null)
-                StartCoroutine(LoadPrefab<GameObject>(volumeManager, new AsyncOperationHandle()));
         }
-
-        private void Start()
-        {
-            var obj = GameObject.Find("[Debug Updater]"); // TODO hack to solve input class issues
-            if(obj != null)
-                Destroy(obj);
-        }
-
+        
         private void OnDisable()
         {
-            RenderPipelineManager.beginCameraRendering -= SetRenderScale;
+            SceneManager.sceneLoaded -= LevelWasLoaded;
         }
 
         private static void LevelWasLoaded(Scene scene, LoadSceneMode mode)
         {
-            if (!MainCamera)
+            CleanupCameras();
+            Instance.Invoke(nameof(CleanupLoadingScreen), 0.5f);
+        }
+
+        private static void CleanupCameras()
+        {
+            foreach (var c in GameObject.FindGameObjectsWithTag("MainCamera"))
             {
-                MainCamera = Camera.main;
-            }
-            else
-            {
-                var cams = GameObject.FindGameObjectsWithTag("MainCamera");
-                foreach (var c in cams)
+                if (MainCamera != null && c != MainCamera.gameObject)
                 {
-                    if (c != MainCamera.gameObject) Destroy(c);
+                    Destroy(c);
+                }
+                else
+                {
+                    MainCamera = c.GetComponent<Camera>();
                 }
             }
-
-            Instance.Invoke(nameof(CleanupLoadingScreen), 0.5f);
         }
 
         private void CleanupLoadingScreen()
         {
-            if (Instance.loadingScreenObject != null)
-            {
-                Instance.loadingScreen.ReleaseInstance(Instance.loadingScreenObject);
-            }
+            if(loadingScreenObject) loadingScreen?.ReleaseInstance(loadingScreenObject);
         }
 
-        private void SetRenderScale(ScriptableRenderContext context, Camera cam)
+        private void SetRenderScale()
         {
-            float res;
-            switch (maxRenderSize)
+            var res = maxRenderSize switch
             {
-                case RenderRes._720p:
-                    res = 1280f;
-                    break;
-                case RenderRes._1080p:
-                    res = 1920f;
-                    break;
-                case RenderRes._1440p:
-                    res = 2560f;
-                    break;
-                default:
-                    res = cam.pixelWidth;
-                    break;
-            }
+                RenderRes._720p => 1280f,
+                RenderRes._1080p => 1920f,
+                RenderRes._1440p => 2560f,
+                _ => Screen.width
+            };
+            var renderScale = Mathf.Clamp(res / Screen.width, 0.1f, 1.0f);
 
-            var renderScale = Mathf.Clamp(res / cam.pixelWidth, 0.1f, 1.0f);
+            if(UniversalRenderPipeline.asset.debugLevel == PipelineDebugLevel.Profiling)
+                Debug.Log($"Settings render scale to {renderScale * 100}% based on {maxRenderSize.ToString()}");
+
             maxScale = renderScale;
 #if !UNITY_EDITOR
             UniversalRenderPipeline.asset.renderScale = renderScale;
@@ -137,6 +131,10 @@ namespace BoatAttack
 
         private void Update()
         {
+#if !UNITY_EDITOR
+            Utility.CheckQualityLevel(); //TODO - hoping to remove one day when we have a quality level callback
+#endif
+
             if (!MainCamera) return;
 
             if (variableResolution)
@@ -145,20 +143,15 @@ namespace BoatAttack
 
                 var offset = 0f;
                 var currentFrametime = Time.deltaTime;
-                var rate = 0.1f;
+                const float rate = 0.1f;
 
-                switch (targetFramerate)
+                offset = targetFramerate switch
                 {
-                    case Framerate._30:
-                        offset = currentFrametime > (1000f / 30f) ? -rate : rate;
-                        break;
-                    case Framerate._60:
-                        offset = currentFrametime > (1000f / 60f) ? -rate : rate;
-                        break;
-                    case Framerate._120:
-                        offset = currentFrametime > (1000f / 120f) ? -rate : rate;
-                        break;
-                }
+                    Framerate._30 => currentFrametime > (1000f / 30f) ? -rate : rate,
+                    Framerate._60 => currentFrametime > (1000f / 60f) ? -rate : rate,
+                    Framerate._120 => currentFrametime > (1000f / 120f) ? -rate : rate,
+                    _ => offset
+                };
 
                 currentDynamicScale = Mathf.Clamp(currentDynamicScale + offset, minScale, 1f);
 
@@ -178,35 +171,76 @@ namespace BoatAttack
             UniversalRenderPipeline.asset.useSRPBatcher = enabled;
         }
 
-        public static void LoadScene(string scenePath, LoadSceneMode mode = LoadSceneMode.Single)
+        public static void LoadScene(int buildIndex, LoadSceneMode mode = LoadSceneMode.Single)
         {
-            LoadScene(SceneUtility.GetBuildIndexByScenePath(scenePath), mode);
+            LoadScene(SceneUtility.GetScenePathByBuildIndex(buildIndex), mode);
         }
 
-        public static void LoadScene(int buildIndex, LoadSceneMode mode)
+        public static void LoadScene(string scenePath, LoadSceneMode mode = LoadSceneMode.Single)
         {
             Application.backgroundLoadingPriority = ThreadPriority.Low;
             switch (mode)
             {
                 case LoadSceneMode.Single:
-                    Instance.StartCoroutine(LoadScene(buildIndex));
+                    Instance.StartCoroutine(LoadSceneInternal(scenePath));
                     break;
                 case LoadSceneMode.Additive:
-                    SceneManager.LoadSceneAsync(buildIndex, LoadSceneMode.Additive);
+                    SceneManager.LoadSceneAsync(scenePath, LoadSceneMode.Additive);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
             }
         }
 
-        private static IEnumerator LoadScene(int scene)
+        private static IEnumerator LoadSceneInternal(string scenePath)
         {
             var loadingScreenLoading = Instance.loadingScreen.InstantiateAsync();
             yield return loadingScreenLoading;
             Instance.loadingScreenObject = loadingScreenLoading.Result;
+            Instance.loadingScreenObject.SendMessage("SetLoad", 0.0001f);
             DontDestroyOnLoad(Instance.loadingScreenObject);
-            Debug.Log($"loading scene {SceneUtility.GetScenePathByBuildIndex(scene)} at build index {scene}");
-            SceneManager.LoadScene(scene);
+
+            var buildIndex = SceneUtility.GetBuildIndexByScenePath(scenePath);
+            if(Debug.isDebugBuild)
+                Debug.Log($"loading scene {scenePath} at build index {buildIndex}");
+
+            // get current scene and set a loading scene as active
+            var currentScene = SceneManager.GetActiveScene();
+            var loadingScene = SceneManager.CreateScene("Loading");
+            SceneManager.SetActiveScene(loadingScene);
+
+            // unload last scene
+            var unload = SceneManager.UnloadSceneAsync(currentScene, UnloadSceneOptions.None);
+            while (!unload.isDone)
+            {
+                Instance.loadingScreenObject.SendMessage("SetLoad", unload.progress * 0.5f);
+                yield return null;
+            }
+
+            // clean up
+            var clean = Resources.UnloadUnusedAssets();
+            while (!clean.isDone) { yield return null; }
+
+            // load new scene
+            var load = new AsyncOperation();
+#if UNITY_EDITOR
+            if (buildIndex == -1)
+            {
+                load = EditorSceneManager.LoadSceneAsyncInPlayMode(scenePath,
+                    new LoadSceneParameters(LoadSceneMode.Single));
+            }
+            else
+            {
+                load = SceneManager.LoadSceneAsync(buildIndex);
+            }
+#else
+            load = SceneManager.LoadSceneAsync(scenePath);
+#endif
+            while (!load.isDone)
+            {
+                Instance.loadingScreenObject.SendMessage("SetLoad", load.progress * 0.5f + 0.5f);
+                yield return null;
+            }
         }
 
         private static IEnumerator LoadPrefab<T>(AssetReference assetRef, AsyncOperationHandle assetLoading, Transform parent = null)
@@ -221,14 +255,38 @@ namespace BoatAttack
             }
             yield return assetLoading;
         }
-
-        public void ExitGame()
+        
+        public static void ExitGame(string s = "null")
         {
+            if(s != "null")
+                Debug.LogError(s);
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.ExitPlaymode();
 #else
             Application.Quit();
 #endif
+        }
+
+        private static void CmdArgs()
+        {
+            var args = Environment.GetCommandLineArgs();
+            if (args.Length <= 0) return;
+            foreach (var argRaw in args)
+            {
+                if (argRaw[0] != '-') continue;
+
+                var arg = argRaw.Split(':');
+
+                switch (arg[0])
+                {
+                    case "-loadlevel":
+                        LoadScene(arg[1]);
+                        break;
+                    case "-benchmarkFlythrough":
+                        LoadScene("benchmark_island-flythrough");
+                        break;
+                }
+            }
         }
     }
 
@@ -241,7 +299,7 @@ namespace BoatAttack
 
         public static string GetLevelName(int level)
         {
-            return $"level_{Levels[level]}";
+            return $"scenes/_levels/level_{Levels[level]}";
         }
 
         public static readonly string[] AiNames =
