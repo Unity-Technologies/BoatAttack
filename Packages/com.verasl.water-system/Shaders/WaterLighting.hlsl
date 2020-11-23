@@ -3,6 +3,8 @@
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
+#define SHADOW_ITERATIONS 4
+
 half CalculateFresnelTerm(half3 normalWS, half3 viewDirectionWS)
 {
     return saturate(pow(1.0 - dot(normalWS, viewDirectionWS), 5));//fresnel TODO - find a better place
@@ -50,10 +52,9 @@ half SoftShadows(float3 screenUV, float3 positionWS)
 {
     half2 jitterUV = screenUV.xy * _ScreenParams.xy * _DitherPattern_TexelSize.xy;
 	half shadowAttenuation = 0;
-	
-	uint loop = 4;
-	float loopDiv = 1.0 / loop;
-	for (uint i = 0u; i < loop; ++i)
+
+	float loopDiv = 1.0 / SHADOW_ITERATIONS;
+	for (uint i = 0u; i < SHADOW_ITERATIONS; ++i)
     {
 #ifndef _STATIC_WATER
         jitterUV += frac(half2(_Time.x, -_Time.z));
