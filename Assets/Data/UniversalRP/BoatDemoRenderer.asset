@@ -31,12 +31,12 @@ MonoBehaviour:
     materialErrorPS: {fileID: 4800000, guid: 5fd9a8feb75a4b5894c241777f519d4e, type: 3}
   m_OpaqueLayerMask:
     serializedVersion: 2
-    m_Bits: 2147614263
+    m_Bits: 130871
   m_TransparentLayerMask:
     serializedVersion: 2
-    m_Bits: 2147614263
+    m_Bits: 4294967295
   m_DefaultStencilState:
-    overrideStencilState: 1
+    overrideStencilState: 0
     stencilReference: 1
     stencilCompareFunction: 8
     passOperation: 2
@@ -76,9 +76,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73a60ff029db77a498e020817f4aa301, type: 3}
   m_Name: NewSkyboxFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   injectionPoint: 400
   mask:
     serializedVersion: 2
     m_Bits: 256
-  ratioScale: 64
+  ratioScale: 100

@@ -18,6 +18,7 @@ public class SkyboxFeature : ScriptableRendererFeature
             new ShaderTagId("LightweightForward")};
 
         public float Scale;
+        private static SkyboxSystem system;
 
         public LayerMask mask;
         // This method is called before executing the render pass.
@@ -27,12 +28,14 @@ public class SkyboxFeature : ScriptableRendererFeature
         // The render pipeline will ensure target setup and clearing happens in an performance manner.
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
+            if (system == null)
+                system = FindObjectOfType<SkyboxSystem>();
             m_RenderStateBlock.mask = RenderStateMask.Stencil | RenderStateMask.Depth;
             StencilState stencilState = StencilState.defaultValue;
             stencilState.SetCompareFunction(CompareFunction.Equal);
             m_RenderStateBlock.stencilReference = 0;
             m_RenderStateBlock.stencilState = stencilState;
-            //DepthState depthState = new DepthState(false, CompareFunction.Less);
+            //DepthState depthState = new DepthState(true, CompareFunction.Greater);
             //m_RenderStateBlock.depthState = depthState;
 
             m_OpaqueFilteringSettings = new FilteringSettings(RenderQueueRange.opaque, mask);
@@ -57,25 +60,35 @@ public class SkyboxFeature : ScriptableRendererFeature
                 {
                     var viewMatrix = cameraData.GetViewMatrix();
                     var camPosition = viewMatrix.GetColumn(3);
-                    var camScale = camPosition * Scale + camPosition;
+                    var camScale = camPosition * Scale;
                     var cameraTranslation = new Vector4(camScale.x, camScale.y, camScale.z, camPosition.w);
                     viewMatrix.SetColumn(3, cameraTranslation);
 
                     RenderingUtils.SetViewAndProjectionMatrices(cmd, viewMatrix, cameraData.GetGPUProjectionMatrix(), true);
-                    cmd.SetGlobalVector("_WorldSpaceCameraPos", cameraPosition * Scale + cameraPosition);
-                    //cmd.SetGlobalVector("_WorldSpaceCameraPos", cameraPosition * Scale);
+                    //cmd.SetGlobalVector("_WorldSpaceCameraPos", cameraPosition * Scale + cameraPosition);
+                    cmd.SetGlobalVector("_WorldSpaceCameraPos", cameraPosition * Scale);
                 }
 
                 context.ExecuteCommandBuffer(cmd);
                 cmd.Clear();
 
+                //draw system
+                if (system)
+                {
+                    foreach (var renderer in system.renderList)
+                    {
+                        var index = renderer.sharedMaterial.FindPass("ForwardLit");
+                        cmd.DrawRenderer(renderer, renderer.sharedMaterial, 0, index);
+                    }
+                }
+
                 //draw opaque skybox
-                context.DrawRenderers(renderingData.cullResults, ref opaqueDrawingSettings, ref m_OpaqueFilteringSettings,
-                    ref m_RenderStateBlock);
+                //context.DrawRenderers(renderingData.cullResults, ref opaqueDrawingSettings, ref m_OpaqueFilteringSettings,
+                    //ref m_RenderStateBlock);
 
                 //draw transparent skybox
-                context.DrawRenderers(renderingData.cullResults, ref transparentDrawingSettings, ref m_TransparentFilteringSettings,
-                    ref m_RenderStateBlock);
+                //context.DrawRenderers(renderingData.cullResults, ref transparentDrawingSettings, ref m_TransparentFilteringSettings,
+                    //ref m_RenderStateBlock);
 
                 //return normal cam
                 {
@@ -85,6 +98,7 @@ public class SkyboxFeature : ScriptableRendererFeature
             }
             context.ExecuteCommandBuffer(cmd);
             CommandBufferPool.Release(cmd);
+
         }
 
         /// Cleanup any allocated resources that were created during the execution of this render pass.
