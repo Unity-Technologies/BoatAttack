@@ -48,22 +48,29 @@ half3 Highlights(half3 positionWS, half roughness, half3 normalWS, half3 viewDir
 }
 
 //Soft Shadows
-half SoftShadows(float3 screenUV, float3 positionWS)
+half SoftShadows(float3 screenUV, float3 positionWS, half3 viewDir, half depth)
 {
+#if _MAIN_LIGHT_SHADOWS
     half2 jitterUV = screenUV.xy * _ScreenParams.xy * _DitherPattern_TexelSize.xy;
 	half shadowAttenuation = 0;
 
 	float loopDiv = 1.0 / SHADOW_ITERATIONS;
+	half depthFrac = depth * loopDiv;
+	half3 lightOffset = -viewDir * depthFrac;
 	for (uint i = 0u; i < SHADOW_ITERATIONS; ++i)
     {
 #ifndef _STATIC_WATER
         jitterUV += frac(half2(_Time.x, -_Time.z));
 #endif
         float3 jitterTexture = SAMPLE_TEXTURE2D(_DitherPattern, sampler_DitherPattern, jitterUV + i * _ScreenParams.xy).xyz * 2 - 1;
-	    float3 lightJitter = positionWS + jitterTexture.xzy * 2;
+	    half3 j = jitterTexture.xzy * depthFrac * i * 0.1;
+	    float3 lightJitter = (positionWS + j) + (lightOffset * (i + jitterTexture.y));
 	    shadowAttenuation += SAMPLE_TEXTURE2D_SHADOW(_MainLightShadowmapTexture, sampler_MainLightShadowmapTexture, TransformWorldToShadowCoord(lightJitter));
 	}
     return BEYOND_SHADOW_FAR(TransformWorldToShadowCoord(positionWS * 1.1)) ? 1.0 : shadowAttenuation * loopDiv;
+#else
+    return 1;
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////
