@@ -68,7 +68,16 @@ float2 AdjustedDepth(half2 uvs, half4 additionalData)
 {
 	float rawD = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_ScreenTextures_linear_clamp, uvs);
 	float d = LinearEyeDepth(rawD, _ZBufferParams);
-	return float2(d * additionalData.x - additionalData.y, (rawD * -_ProjectionParams.x) + (1-UNITY_REVERSED_Z));
+
+	// TODO: Changing the usage of UNITY_REVERSED_Z this way to fix testing, but I'm not sure the original code is correct anyway.
+	// In OpenGL, rawD should already have be remmapped before converting depth to linear eye depth.
+#if UNITY_REVERSED_Z
+	float offset = 0;
+#else
+	float offset = 1;
+#endif
+	
+ 	return float2(d * additionalData.x - additionalData.y, (rawD * -_ProjectionParams.x) + offset);
 }
 
 float WaterTextureDepth(float3 posWS)
