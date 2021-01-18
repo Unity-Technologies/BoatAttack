@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf2edee5c58d82540a51f03df9d42094, type: 3}
   m_Name: PipelineAsset_High
   m_EditorClassIdentifier: 
-  k_AssetVersion: 5
+  k_AssetVersion: 6
   k_AssetPreviousVersion: 5
   m_RendererType: 0
   m_RendererData: {fileID: 11400000, guid: fa301df1a78cf4a9ebe2a3139dc8be8f, type: 2}
@@ -30,13 +30,14 @@ MonoBehaviour:
   m_MainLightRenderingMode: 1
   m_MainLightShadowsSupported: 1
   m_MainLightShadowmapResolution: 4096
-  m_AdditionalLightsRenderingMode: 0
+  m_AdditionalLightsRenderingMode: 1
   m_AdditionalLightsPerObjectLimit: 8
   m_AdditionalLightShadowsSupported: 1
-  m_AdditionalLightsShadowmapResolution: 1024
+  m_AdditionalLightsShadowmapResolution: 2048
   m_ShadowDistance: 250
-  m_ShadowCascades: 2
+  m_ShadowCascadeCount: 4
   m_Cascade2Split: 0.20930393
+  m_Cascade3Split: {x: 0.1, y: 0.3}
   m_Cascade4Split: {x: 0.053413056, y: 0.13206536, z: 0.42623913}
   m_ShadowDepthBias: 0.75
   m_ShadowNormalBias: 0.75
@@ -54,3 +55,4 @@ MonoBehaviour:
   m_MaxPixelLights: 0
   m_ShadowAtlasResolution: 256
   m_ShaderVariantLogLevel: 0
+  m_ShadowCascades: 2
