@@ -16,6 +16,7 @@ public class CloudRenderer : MonoBehaviour
     public ParticleSystem ps;
 
     private NativeArray<ParticleSystem.Particle> particles;
+    //private
     private ParticleSystem.Particle[] parts;
 
     private void OnEnable()

@@ -52,6 +52,8 @@ public class SpriteMeshGenerator : ScriptableObject
 
     public static Mesh GenerateMeshFromSprite(Sprite sprite)
     {
+        Vector2 pivot = sprite.pivot / sprite.rect.size;
+
         // verts
         var verts = new List<Vector3>();
         sprite.vertices.ToList().ForEach(x => verts.Add(new Vector3(x.x, x.y, 0.0f)));
