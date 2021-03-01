@@ -29,11 +29,11 @@ public class SkyboxSystem : MonoBehaviour
 
     private void OnCamera(ScriptableRenderContext context, Camera camera)
     {
-        //transform.position = Vector3.Lerp(camera.transform.position, Vector3.zero, 1f / scalefactor);
+        transform.position = Vector3.Lerp(camera.transform.position, Vector3.zero, 1f / scalefactor);
     }
 
     private void OnCameraFinish(ScriptableRenderContext context, Camera camera)
     {
-        //transform.position = Vector3.zero;
+        transform.position = Vector3.zero;
     }
 }

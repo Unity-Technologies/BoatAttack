@@ -73,22 +73,22 @@ public class SkyboxFeature : ScriptableRendererFeature
                 cmd.Clear();
 
                 //draw system
-                if (system)
+                /*if (system)
                 {
                     foreach (var renderer in system.renderList)
                     {
                         var index = renderer.sharedMaterial.FindPass("ForwardLit");
                         cmd.DrawRenderer(renderer, renderer.sharedMaterial, 0, index);
                     }
-                }
+                }*/
 
                 //draw opaque skybox
                 //context.DrawRenderers(renderingData.cullResults, ref opaqueDrawingSettings, ref m_OpaqueFilteringSettings,
                     //ref m_RenderStateBlock);
 
                 //draw transparent skybox
-                //context.DrawRenderers(renderingData.cullResults, ref transparentDrawingSettings, ref m_TransparentFilteringSettings,
-                    //ref m_RenderStateBlock);
+                context.DrawRenderers(renderingData.cullResults, ref transparentDrawingSettings, ref m_TransparentFilteringSettings,
+                    ref m_RenderStateBlock);
 
                 //return normal cam
                 {
