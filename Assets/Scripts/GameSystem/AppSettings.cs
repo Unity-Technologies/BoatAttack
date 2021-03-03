@@ -77,7 +77,7 @@ namespace BoatAttack
             DontDestroyOnLoad(ConsoleCanvas);
             MainCamera = Camera.main;
         }
-        
+
         private void OnDisable()
         {
             SceneManager.sceneLoaded -= LevelWasLoaded;
@@ -255,7 +255,7 @@ namespace BoatAttack
             }
             yield return assetLoading;
         }
-        
+
         public static void ExitGame(string s = "null")
         {
             if(s != "null")
@@ -273,8 +273,7 @@ namespace BoatAttack
             if (args.Length <= 0) return;
             foreach (var argRaw in args)
             {
-                if (argRaw[0] != '-') continue;
-
+                if(string.IsNullOrEmpty(argRaw) || argRaw[0] != '-') continue;
                 var arg = argRaw.Split(':');
 
                 switch (arg[0])
