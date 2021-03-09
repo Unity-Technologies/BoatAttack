@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_RendererFeatures:
   - {fileID: 770174969183694509}
-  m_RendererFeatureMap: ad6e17cd0d36b00a
+  - {fileID: 7959035961846237700}
+  m_RendererFeatureMap: ad6e17cd0d36b00a048a67dc092d746e
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
@@ -28,7 +29,7 @@ MonoBehaviour:
     materialErrorPS: {fileID: 4800000, guid: 5fd9a8feb75a4b5894c241777f519d4e, type: 3}
   m_OpaqueLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 130871
   m_TransparentLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -37,9 +38,9 @@ MonoBehaviour:
     stencilReference: 0
     stencilCompareFunction: 8
     passOperation: 2
-    failOperation: 0
+    failOperation: 2
     zFailOperation: 0
-  m_ShadowTransparentReceive: 1
+  m_ShadowTransparentReceive: 0
   m_RenderingMode: 0
   m_AccurateGbufferNormals: 0
 --- !u!114 &770174969183694509
@@ -61,3 +62,21 @@ MonoBehaviour:
     debug: 0
   causticShader: {fileID: 4800000, guid: 90939d2e4b62841d29c136c866715501, type: 3}
   causticTexture: {fileID: 2800000, guid: f395b7d64f44848c6a3cba1f1173fe90, type: 3}
+--- !u!114 &7959035961846237700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73a60ff029db77a498e020817f4aa301, type: 3}
+  m_Name: NewSkyboxFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  injectionPoint: 400
+  mask:
+    serializedVersion: 2
+    m_Bits: 256
+  ratioScale: 100

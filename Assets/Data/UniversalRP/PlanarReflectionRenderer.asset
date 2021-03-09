@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f971995892640ec4f807ef396269e91e, type: 3}
   m_Name: PlanarReflectionRenderer
   m_EditorClassIdentifier: 
-  m_RendererFeatures: []
-  m_RendererFeatureMap: 
+  m_RendererFeatures:
+  - {fileID: 2592635787774994150}
+  m_RendererFeatureMap: e6264b3a83e4fa23
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
@@ -39,5 +40,21 @@ MonoBehaviour:
     failOperation: 0
     zFailOperation: 0
   m_ShadowTransparentReceive: 1
-  m_RenderingMode: 0
-  m_AccurateGbufferNormals: 0
+--- !u!114 &2592635787774994150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73a60ff029db77a498e020817f4aa301, type: 3}
+  m_Name: NewSkyboxFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  injectionPoint: 400
+  mask:
+    serializedVersion: 2
+    m_Bits: 256
+  ratioScale: 64
