@@ -247,12 +247,15 @@ namespace UnityEngine.Rendering.Universal
 
             var data = new PlanarReflectionSettingData(); // save quality settings and lower them for the planar reflections
             data.Set(); // set quality settings
+            
+            Shader.EnableKeyword("_PLANAR_REFLECTION_CAMERA");
 
             BeginPlanarReflections?.Invoke(context, _reflectionCamera); // callback Action for PlanarReflection
             UniversalRenderPipeline.RenderSingleCamera(context, _reflectionCamera); // render planar reflections
 
             data.Restore(); // restore the quality settings
             Shader.SetGlobalTexture(_planarReflectionTextureId, _reflectionTexture); // Assign texture to water shader
+            Shader.DisableKeyword("_PLANAR_REFLECTION_CAMERA");
         }
 
         class PlanarReflectionSettingData
