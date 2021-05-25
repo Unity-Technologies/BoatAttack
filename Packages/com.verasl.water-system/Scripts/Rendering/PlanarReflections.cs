@@ -221,8 +221,8 @@ namespace UnityEngine.Rendering.Universal
             if (_reflectionTexture == null)
             {
                 var res = ReflectionResolution(cam, UniversalRenderPipeline.asset.renderScale);
-                const bool useHdr10 = true;
-                const RenderTextureFormat hdrFormat = useHdr10 ? RenderTextureFormat.RGB111110Float : RenderTextureFormat.DefaultHDR;
+                bool useHdr10 = RenderingUtils.SupportsRenderTextureFormat(RenderTextureFormat.RGB111110Float);
+                RenderTextureFormat hdrFormat = useHdr10 ? RenderTextureFormat.RGB111110Float : RenderTextureFormat.DefaultHDR;
                 _reflectionTexture = RenderTexture.GetTemporary(res.x, res.y, 16,
                     GraphicsFormatUtility.GetGraphicsFormat(hdrFormat, true));
             }
