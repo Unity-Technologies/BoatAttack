@@ -42,7 +42,7 @@ public class CloudRenderer : MonoBehaviour
         {
             var camPos = Camera.main.transform.position;
             ps.GetParticles(parts);
-            var l = parts.ToList().OrderByDescending(x => Vector3.Distance(x.position * 64f, camPos));
+            var l = parts.ToList().OrderByDescending(x => Vector3.Distance(x.position, camPos));
             parts = l.ToArray();
         }
     }
@@ -51,10 +51,12 @@ public class CloudRenderer : MonoBehaviour
     {
         if (!cloudMaterial || cloudMeshes == null || cloudMeshes.Length == 0) return;
 
-        var camPos = camera.transform.position * (1f / 64f);
+        var camPos = camera.transform.position;
 
         foreach (var particle in parts)
         {
+            var pos = particle.position * SkyboxSystem.SkyboxScale + camPos * (1 - SkyboxSystem.SkyboxScale);
+            
             var q = Quaternion.LookRotation(particle.position - camPos);
             Random.InitState((int)particle.randomSeed);
             var mesh = cloudMeshes[Random.Range(0, cloudMeshes.Length)];
@@ -69,7 +71,10 @@ public class CloudRenderer : MonoBehaviour
             m.SetColors(colors);
             m.UploadMeshData(true);*/
 
-            Graphics.DrawMesh(mesh, Matrix4x4.TRS(particle.position, q, particle.startSize3D), cloudMaterial, LayerMask.NameToLayer("3DSkybox"), camera);
+            MaterialPropertyBlock mpb = new MaterialPropertyBlock();
+            mpb.SetFloat("Cloud_Fade",  particle.GetCurrentColor(ps).a / 255f);
+
+            Graphics.DrawMesh(mesh, Matrix4x4.TRS(pos, q, particle.startSize3D * SkyboxSystem.SkyboxScale), cloudMaterial, LayerMask.NameToLayer("3DSkybox"), camera, 0, mpb, false, false, false);
         }
     }
 }

@@ -6,13 +6,15 @@ public class SkyboxSystem : MonoBehaviour
 {
     public int scalefactor = 64;
 
+    public static float SkyboxScale { get; set; }
+
     public Renderer[] renderList;
 
     private void OnEnable()
     {
         RenderPipelineManager.beginCameraRendering += OnCamera;
         RenderPipelineManager.endCameraRendering += OnCameraFinish;
-
+        
         CollectRenderers();
     }
 
@@ -29,11 +31,15 @@ public class SkyboxSystem : MonoBehaviour
 
     private void OnCamera(ScriptableRenderContext context, Camera camera)
     {
-        transform.position = Vector3.Lerp(camera.transform.position, Vector3.zero, 1f / scalefactor);
+        var scaleRatio = 1.0f / scalefactor;
+        SkyboxScale = scaleRatio;
+        transform.position = camera.transform.position * (1 - scaleRatio);
+        transform.localScale = Vector3.one * scaleRatio;
     }
 
     private void OnCameraFinish(ScriptableRenderContext context, Camera camera)
     {
         transform.position = Vector3.zero;
+        transform.localScale = Vector3.one;
     }
 }
