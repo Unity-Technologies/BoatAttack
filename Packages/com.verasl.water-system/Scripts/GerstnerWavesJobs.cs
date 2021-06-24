@@ -4,7 +4,6 @@ using Unity.Jobs;
 using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Collections;
-using UnityEngine.Rendering.Universal;
 using WaterSystem.Data;
 
 namespace WaterSystem
@@ -27,9 +26,19 @@ namespace WaterSystem
         private static NativeArray<float3> _wavePos;
         private static NativeArray<float3> _waveNormal;
         private static JobHandle _waterHeightHandle;
-        static readonly Dictionary<int, int2> Registry = new Dictionary<int, int2>();
+        static readonly public List<SampleData> Registry = new List<SampleData>();
 
-        public static void Init()
+        public static void OnEnabled()
+        {
+            Init();
+        }
+
+        public static void OnDisabled()
+        {
+            Cleanup();
+        }
+
+        private static void Init()
         {
             if(Debug.isDebugBuild)
                 Debug.Log("Initializing Gerstner Waves Jobs");
@@ -48,8 +57,10 @@ namespace WaterSystem
             Initialized = true;
         }
 
-        public static void Cleanup()
+        private static void Cleanup()
         {
+            Registry.Clear();
+            
             if(Debug.isDebugBuild)
                 Debug.Log("Cleaning up Gerstner Wave Jobs");
             _waterHeightHandle.Complete();
@@ -64,24 +75,53 @@ namespace WaterSystem
         public static void UpdateSamplePoints(ref NativeArray<float3> samplePoints, int guid)
         {
             CompleteJobs();
-
-            if (Registry.TryGetValue(guid, out var offsets))
+            
+            if (Registry.Exists(x => x.guid == guid))
             {
+                var offsets = Registry.Find(x => x.guid == guid).offsets;
                 for (var i = offsets.x; i < offsets.y; i++) _positions[i] = samplePoints[i - offsets.x];
             }
             else
             {
-                if (_positionCount + samplePoints.Length >= _positions.Length) return;
-                
-                offsets = new int2(_positionCount, _positionCount + samplePoints.Length);
-                Registry.Add(guid, offsets);
+                if (_positionCount + samplePoints.Length >= _positions.Length)
+                {
+                    Debug.LogError($"GUID:{guid} cannot fit, all sample points used");
+                    return;
+                }
+                Debug.Log($"GUID:{guid} is new, adding to Registry");
+                var offsets = new int2(_positionCount, _positionCount + samplePoints.Length);
+                Registry.Add(new SampleData(guid, offsets));
                 _positionCount += samplePoints.Length;
+            }
+        }
+
+        public static void RemoveSamplePoints(int guid)
+        {
+            if (Registry.Exists(x => x.guid == guid))
+            {
+                var index = Registry.FindIndex(x => x.guid == guid);
+
+                var offset = Registry[index].offsets;
+                var count = offset.y - offset.x;
+                
+                for (int i = index; i < Registry.Count; i++)
+                {
+                    Registry[i].offsets -= count;
+                }
+                Registry.RemoveAt(index);
+                _positionCount -= count;
             }
         }
 
         public static void GetData(int guid, ref float3[] outPos, ref float3[] outNorm)
         {
-            if (!Registry.TryGetValue(guid, out var offsets)) return;
+            if (!Registry.Exists(x => x.guid == guid))
+            {
+                Debug.Log($"GUID:{guid} does not exist in Registry");
+                return;
+            }
+
+            var offsets = Registry.Find(x => x.guid == guid).offsets;
             
             _wavePos.Slice(offsets.x, offsets.y - offsets.x).CopyTo(outPos);
             if(outNorm != null)
@@ -101,7 +141,7 @@ namespace WaterSystem
                 WaveData = _waveData,
                 Position = _positions,
                 OffsetLength = new int2(0, _positions.Length),
-                Time = Time.time,
+                Time = Application.isPlaying ? Time.time : Time.realtimeSinceStartup,
                 OutPosition = _wavePos,
                 OutNormal = _waveNormal
             };
@@ -196,5 +236,23 @@ namespace WaterSystem
                 OutNormal[i] = math.normalize(waveNorm.xzy);
             }
         }
+        
+        // Data
+        public class SampleData
+        {
+            public int guid;
+            public int2 offsets;
+            public string name;
+
+            public SampleData(int guid, int2 offsets)
+            {
+                this.guid = guid;
+                this.offsets = offsets;
+#if UNITY_EDITOR
+                name = UnityEditor.EditorUtility.InstanceIDToObject(guid).name;
+#endif
+            }
+        }
     }
+
 }

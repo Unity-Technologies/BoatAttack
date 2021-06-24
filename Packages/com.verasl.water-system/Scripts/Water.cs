@@ -72,25 +72,25 @@ namespace WaterSystem
                 _useComputeBuffer = false;
             Init();
             RenderPipelineManager.beginCameraRendering += BeginCameraRendering;
+            RenderPipelineManager.endFrameRendering += EndFrameRendering;
 
             if(resources == null)
             {
                 resources = Resources.Load("WaterResources") as WaterResources;
             }
+            GerstnerWavesJobs.OnEnabled();
         }
 
-        private void OnDisable() {
-            Cleanup();
-        }
-
-        private void OnApplicationQuit()
+        private void OnDisable()
         {
-            GerstnerWavesJobs.Cleanup();
+            Cleanup();
+            GerstnerWavesJobs.OnDisabled();
         }
 
         void Cleanup()
         {
             RenderPipelineManager.beginCameraRendering -= BeginCameraRendering;
+            RenderPipelineManager.endFrameRendering -= EndFrameRendering;
             if (_depthCam)
             {
                 _depthCam.targetTexture = null;
@@ -102,6 +102,11 @@ namespace WaterSystem
             }
 
             waveBuffer?.Dispose();
+        }
+
+        private void EndFrameRendering(ScriptableRenderContext context, Camera[] cameras)
+        {
+            GerstnerWavesJobs.UpdateHeights();
         }
 
         private void BeginCameraRendering(ScriptableRenderContext src, Camera cam)
@@ -177,7 +182,7 @@ namespace WaterSystem
 
         private void LateUpdate()
         {
-            GerstnerWavesJobs.UpdateHeights();
+            //GerstnerWavesJobs.UpdateHeights();
         }
 
         public void FragWaveNormals(bool toggle)
@@ -249,8 +254,8 @@ namespace WaterSystem
                 Shader.SetGlobalVectorArray(WaveData, GetWaveData());
             }
             //CPU side
-            if(GerstnerWavesJobs.Initialized == false && Application.isPlaying)
-                GerstnerWavesJobs.Init();
+            //if(GerstnerWavesJobs.Initialized == false && Application.isPlaying)
+            //    GerstnerWavesJobs.Init();
         }
 
         private Vector4[] GetWaveData()
