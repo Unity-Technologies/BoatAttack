@@ -40,7 +40,7 @@ public class DefaultVolume : MonoBehaviour
 
         if (Instance != null && Instance != this)
         {
-            if (UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
+            if (Debug.isDebugBuild)
                 Debug.Log($"Extra Volume Manager cleaned up. GUID:{gameObject.GetInstanceID()}");
             StopAllCoroutines();
             Utility.SafeDestroy(gameObject);
@@ -49,7 +49,7 @@ public class DefaultVolume : MonoBehaviour
         {
             Instance = this;
             gameObject.name = "[DefaultVolume]";
-            if (UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
+            if (Debug.isDebugBuild)
                 Debug.Log($"Default Volume is {gameObject.GetInstanceID()}");
             Utility.QualityLevelChange += UpdateVolume;
             UpdateVolume(0, Utility.GetTrueQualityLevel()); // First time set
@@ -90,7 +90,7 @@ public class DefaultVolume : MonoBehaviour
         volQualityComponent.sharedProfile = vol.OperationHandle.Result as VolumeProfile;
         _loading = false;
 
-        if (UniversalRenderPipeline.asset.debugLevel == PipelineDebugLevel.Disabled) yield break;
+        if (!Debug.isDebugBuild) yield break;
         Debug.Log(message: "Updated volumes:\n" +
                            $"    Base Volume : {(volBaseComponent.sharedProfile ? volBaseComponent.sharedProfile.name : "none")}\n" +
                            $"    Quality Volume : {(volQualityComponent.sharedProfile ? volQualityComponent.sharedProfile.name : "none")}\n" +
