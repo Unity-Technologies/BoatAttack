@@ -31,7 +31,7 @@ namespace WaterSystem
 
         public static void Init()
         {
-            if(Debug.isDebugBuild)
+            if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
                 Debug.Log("Initializing Gerstner Waves Jobs");
             //Wave data
             _waveCount = Water.Instance._waves.Length;
@@ -50,7 +50,7 @@ namespace WaterSystem
 
         public static void Cleanup()
         {
-            if(Debug.isDebugBuild)
+            if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
                 Debug.Log("Cleaning up Gerstner Wave Jobs");
             _waterHeightHandle.Complete();
 

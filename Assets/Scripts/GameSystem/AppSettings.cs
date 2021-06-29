@@ -62,7 +62,7 @@ namespace BoatAttack
         // Use this for initialization
         private void Awake()
         {
-            if(Debug.isDebugBuild)
+            if(UniversalRenderPipeline.asset.debugLevel == PipelineDebugLevel.Profiling)
                 Debug.Log("AppManager initializing");
             Initialize();
             CmdArgs();
@@ -120,7 +120,7 @@ namespace BoatAttack
             };
             var renderScale = Mathf.Clamp(res / Screen.width, 0.1f, 1.0f);
 
-            if(Debug.isDebugBuild)
+            if(UniversalRenderPipeline.asset.debugLevel == PipelineDebugLevel.Profiling)
                 Debug.Log($"Settings render scale to {renderScale * 100}% based on {maxRenderSize.ToString()}");
 
             maxScale = renderScale;

@@ -94,7 +94,7 @@ namespace BoatAttack
         
         private void Awake()
         {
-            if(Debug.isDebugBuild)
+            if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
                 Debug.Log("RaceManager Loaded");
             Instance = this;
         }

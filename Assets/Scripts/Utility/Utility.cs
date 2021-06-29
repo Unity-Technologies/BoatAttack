@@ -18,7 +18,7 @@ public static class Utility
         var curLevel = QualitySettings.GetQualityLevel();
         if (lastQualityLevel == curLevel) return;
 
-        if(Debug.isDebugBuild)
+        if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
             Debug.Log($"Quality level changed:{lastQualityLevel} to {curLevel}");
         var realIndex = GetTrueQualityLevel(curLevel);
         QualityLevelChange?.Invoke(curLevel, realIndex);
@@ -86,7 +86,7 @@ internal class UtilityScheduler
     static UtilityScheduler()
     {
         // setup the things
-        if(Debug.isDebugBuild)
+        if(UniversalRenderPipeline.asset.debugLevel != PipelineDebugLevel.Disabled)
             Debug.Log("Setting up some utilities");
         EditorApplication.update += Utility.CheckQualityLevel;
     }
