@@ -17,7 +17,11 @@ namespace BoatAttack
 
         void RandomizeHue()
         {
+#if STATIC_EVERYTHING
+            var hue = 0f;
+#else
             var hue = Random.Range(0f, 1f);
+#endif
 
             if (renderers == null || renderers.Length <= 0) return;
             

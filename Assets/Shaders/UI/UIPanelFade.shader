@@ -25,6 +25,7 @@
             #pragma fragment frag
             // make fog work
             #pragma multi_compile_fog
+            #pragma multi_compile _ _STATIC_SHADER
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
@@ -68,11 +69,18 @@
             real4 frag (Varyings input) : SV_Target
             {
                 // sample the texture
-                real4 color = input.color;;
+                real4 color = input.color;
+
+                // Time
+                half t = _Time.x;
+                #ifdef _STATIC_SHADER
+                t = 0;
+                #endif
+               
 
                 // Halftone
                 float2 centerScreenPos = float2((input.screenPos.x / input.screenPos.w * 2 - 1) * _ScreenParams.x / _ScreenParams.y, input.screenPos.y / input.screenPos.w * 2 - 1);
-                float halftone = distance(frac((centerScreenPos + half2(-_Time.x, 0)) * 10), 0.5);
+                float halftone = distance(frac((centerScreenPos + half2(-t, 0)) * 10), 0.5);
                 halftone = Remap(halftone, float2(0.5, 1), float2(1, 0));
 
                 // Gradient

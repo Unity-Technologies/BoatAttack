@@ -76,6 +76,13 @@ namespace BoatAttack
             ConsoleCanvas = Instantiate(consoleCanvas);
             DontDestroyOnLoad(ConsoleCanvas);
             MainCamera = Camera.main;
+            
+#if STATIC_EVERYTHING
+            // Set the static flag if enabled
+            Shader.EnableKeyword("_STATIC_SHADER");
+#else
+            Shader.DisableKeyword("_STATIC_SHADER");
+#endif
         }
 
         private void OnDisable()

@@ -21,7 +21,7 @@
 
             float4 vert (float4 vertex : POSITION) : SV_POSITION
             {
-                return TransformObjectToHClip(vertex);
+                return TransformObjectToHClip(vertex.xyz);
             }
 
             half4 frag () : SV_Target
