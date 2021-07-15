@@ -1,32 +1,41 @@
 ﻿using System.Collections;
 using NUnit.Framework;
+using UnityEditor.Compilation;
+#if UNITY_EDITOR
 using UnityEditor;
+using UnityEditor.TestTools.Graphics;
+#endif
 using UnityEngine;
 using UnityEngine.TestTools;
 using UnityEngine.TestTools.Graphics;
 using UnityEngine.SceneManagement;
 
-public class BoatAttackGraphicsTests
+public class BoatAttackGraphicsTests : IPrebuildSetup, IPostBuildCleanup
 {
+    const string defineKey = "BoatAttackKey";
     
-    [UnitySetUp]
-    public IEnumerator SetUp()
+    public void Setup()
     {
-        PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, "STATIC_EVERYTHING");
-        return null;
+        var defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
+        EditorPrefs.SetString(defineKey, defines);
+        PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, "STATIC_EVERYTHING;LWRP_DEBUG_STATIC_POSTFX");
+        SetupGraphicsTestCases.Setup();
     }
     
     
     [UnityTest, Category("BoatAttack")]
-    [PrebuildSetup("SetupGraphicsTestCases")]
+    //[PrebuildSetup("SetupGraphicsTestCases")]
     [UseGraphicsTestCases]
     public IEnumerator Run(GraphicsTestCase testCase)
     {
         SceneManager.LoadScene(testCase.ScenePath);
-
+        
         // Always wait one frame for scene load
         yield return null;
 
+        var ts = Time.timeScale;
+        Time.timeScale = 0f;
+        
         var camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         var settings = Object.FindObjectOfType<BoatAttackGraphicsTestsSettings>();
         if (!settings)
@@ -35,10 +44,11 @@ public class BoatAttackGraphicsTests
         settings.ImageComparisonSettings.UseHDR = true;
         settings.ImageComparisonSettings.UseBackBuffer = true;
         settings.ImageComparisonSettings.ActiveImageTests = ImageComparisonSettings.ImageTests.IncorrectPixelsCount;
-        settings.WaitFrames = 5;
+        settings.ImageComparisonSettings.IncorrectPixelsThreshold = 0.001f;
+        settings.WaitFrames = 10;
 
-        settings.ImageComparisonSettings.TargetWidth = 1280;
-        settings.ImageComparisonSettings.TargetWidth = 720;
+        settings.ImageComparisonSettings.TargetWidth = 1920;
+        settings.ImageComparisonSettings.TargetWidth = 1080;
 
 #if STATIC_EVERYTHING
         Debug.Log("hello, this worked");
@@ -48,6 +58,8 @@ public class BoatAttackGraphicsTests
             yield return new WaitForEndOfFrame();
 
         ImageAssert.AreEqual(testCase.ReferenceImage, camera, settings.ImageComparisonSettings);
+
+        Time.timeScale = ts;
     }
     
 
@@ -59,9 +71,13 @@ public class BoatAttackGraphicsTests
     }
 #endif
     
-/*    [TearDown]
-    public void TearDown()
+    public void Cleanup()
     {
-        
-    }*/
+        EditorApplication.delayCall += Call;
+    }
+
+    static void Call()
+    {
+        PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, EditorPrefs.GetString(defineKey));
+    }
 }

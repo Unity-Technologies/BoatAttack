@@ -27,7 +27,7 @@ struct WaveStruct
 WaveStruct GerstnerWave(half2 pos, float waveCountMulti, half amplitude, half direction, half wavelength, half omni, half2 omniPos)
 {
 	WaveStruct waveOut;
-#if defined(_STATIC_WATER)
+#if defined(_STATIC_SHADER)
 	float time = 0;
 #else
 	float time = _Time.y;

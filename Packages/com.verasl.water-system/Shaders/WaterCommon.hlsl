@@ -121,7 +121,7 @@ half4 AdditionalData(float3 postionWS, WaveStruct wave)
 
 WaterVertexOutput WaveVertexOperations(WaterVertexOutput input)
 {
-#if defined(_STATIC_WATER)
+#ifdef _STATIC_SHADER
 	float time = 0;
 #else
 	float time = _Time.y;
