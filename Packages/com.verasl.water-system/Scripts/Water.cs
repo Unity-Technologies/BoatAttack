@@ -178,6 +178,7 @@ namespace WaterSystem
         private void LateUpdate()
         {
             GerstnerWavesJobs.UpdateHeights();
+            CaptureDepthMap();
         }
 
         public void FragWaveNormals(bool toggle)

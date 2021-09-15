@@ -239,7 +239,7 @@ namespace UnityEngine.Rendering.Universal
         private void ExecutePlanarReflections(ScriptableRenderContext context, Camera camera)
         {
             // we dont want to render planar reflections in reflections or previews
-            if (camera.cameraType == CameraType.Reflection || camera.cameraType == CameraType.Preview)
+            if (camera.cameraType == CameraType.Reflection || camera.cameraType == CameraType.Preview || camera.targetTexture != null)
                 return;
 
             UpdateReflectionCamera(camera); // create reflected camera
