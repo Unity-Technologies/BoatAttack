@@ -172,7 +172,7 @@ namespace WaterSystem
                 resources = Resources.Load("WaterResources") as WaterResources;
             }
             if(Application.platform != RuntimePlatform.WebGLPlayer) // TODO - bug with Opengl depth
-                Invoke(nameof(CaptureDepthMap), 1.0f);
+                CaptureDepthMap();
         }
 
         private void LateUpdate()
