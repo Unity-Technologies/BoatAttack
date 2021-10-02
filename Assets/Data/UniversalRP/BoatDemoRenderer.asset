@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_RendererFeatures:
   - {fileID: 770174969183694509}
-  m_RendererFeatureMap: ad6e17cd0d36b00a
+  - {fileID: 1203680893676135655}
+  m_RendererFeatureMap: ad6e17cd0d36b00ae7a47d3a6555b410
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
@@ -63,3 +64,24 @@ MonoBehaviour:
     debug: 0
   causticShader: {fileID: 4800000, guid: 90939d2e4b62841d29c136c866715501, type: 3}
   causticTexture: {fileID: 2800000, guid: f395b7d64f44848c6a3cba1f1173fe90, type: 3}
+--- !u!114 &1203680893676135655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00cb8048fcc7dfc4c8c686452702bdd2, type: 3}
+  m_Name: NewGlobalVolumeFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  _baseProfile: {fileID: 11400000, guid: ad80f6934bc444a93bb29c1f6db70cf3, type: 2}
+  _qualityProfiles:
+  - {fileID: 11400000, guid: 200e02ce26d6c422db35ba0777d71a09, type: 2}
+  - {fileID: 11400000, guid: 4fe8789f8ee054ac49d9f7fe042e0918, type: 2}
+  - {fileID: 11400000, guid: dbf7710ff9a33440f8390ed8e04dbb77, type: 2}
