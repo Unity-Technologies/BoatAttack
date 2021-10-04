@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
+//[DisallowMultipleRendererFeature] // once not internal, this needs to be here
 public class GlobalVolumeFeature : ScriptableRendererFeature
 {
     class GlobalVolumePass : ScriptableRenderPass
@@ -41,10 +42,9 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
             {
                 var index = QualitySettings.GetQualityLevel();
 
-                if(_qualityProfiles.Count >= index)
-                    qualityVol.sharedProfile = _qualityProfiles?[QualitySettings.GetQualityLevel()];
+                if(_qualityProfiles.Count >= index && _qualityProfiles[index] != null)
+                    qualityVol.sharedProfile = _qualityProfiles?[index];
             }
-
         }
 
         // Here you can implement the rendering logic.
@@ -73,7 +73,7 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
         m_ScriptablePass = new GlobalVolumePass
         {
             // Configures where the render pass should be injected.
-            renderPassEvent = RenderPassEvent.BeforeRendering,
+            renderPassEvent = RenderPassEvent.AfterRenderingTransparents,
             _baseProfile = this._baseProfile,
             _layerMask = this._layerMask,
             _qualityProfiles = this._qualityProfiles,
