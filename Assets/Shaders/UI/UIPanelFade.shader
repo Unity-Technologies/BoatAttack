@@ -12,12 +12,13 @@
         Tags
         {
             "RenderPipeline"="UniversalPipeline"
-            "RenderType"="Transparent-10"
+            "Queue"="Overlay"
         }
 
         Pass
         {
             Blend SrcAlpha OneMinusSrcAlpha
+            ZWrite Off
             Cull Off
 
             HLSLPROGRAM
