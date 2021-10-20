@@ -13,7 +13,8 @@ public class BoatAttackGraphicsTests : IPrebuildSetup, IPostBuildCleanup
 {
     private const string DefineKey = "BoatAttack_Tests_ScriptingDefines";
     private static float _oldTimeScale = 1.0f; // give default of 1 just in case
-    
+
+#if UNITY_EDITOR
     public void Setup()
     {
         // save current scription defines and set both STATIC_EVERYTHING and LWRP_DEBUG_STATIC_POSTFX
@@ -26,7 +27,8 @@ public class BoatAttackGraphicsTests : IPrebuildSetup, IPostBuildCleanup
         // run base graphics test setup
         SetupGraphicsTestCases.Setup();
     }
-    
+#endif
+
     [UnityTest, Category("BoatAttack")]
     [UseGraphicsTestCases]
     public IEnumerator Run(GraphicsTestCase testCase)
@@ -73,7 +75,6 @@ public class BoatAttackGraphicsTests : IPrebuildSetup, IPostBuildCleanup
     {
         ResultsUtility.ExtractImagesFromTestProperties(TestContext.CurrentContext.Test);
     }
-#endif
     
     public void Cleanup()
     {
@@ -87,4 +88,5 @@ public class BoatAttackGraphicsTests : IPrebuildSetup, IPostBuildCleanup
         PlayerSettings.SetScriptingDefineSymbolsForGroup(EditorUserBuildSettings.selectedBuildTargetGroup, EditorPrefs.GetString(DefineKey));
         EditorPrefs.DeleteKey(DefineKey);
     }
+#endif
 }
