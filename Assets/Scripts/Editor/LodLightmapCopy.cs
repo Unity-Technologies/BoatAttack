@@ -4,7 +4,7 @@ using UnityEditor.Build.Reporting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
-
+/*
 [InitializeOnLoad]
 class LodLightmapCopy : IProcessSceneWithReport
 {
@@ -49,3 +49,4 @@ class LodLightmapCopy : IProcessSceneWithReport
         }
     }
 }
+*/
