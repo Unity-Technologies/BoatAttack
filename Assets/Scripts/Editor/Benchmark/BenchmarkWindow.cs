@@ -234,7 +234,6 @@ public class BenchmarkWindow : EditorWindow
         {
             EditorUserBuildSettings.SwitchActiveBuildTarget(options.targetGroup, options.target);
         }
-        AutoBuildAddressables.Popup();
         var report = BuildPipeline.BuildPlayer(options);
         var summary = report.summary;
 
