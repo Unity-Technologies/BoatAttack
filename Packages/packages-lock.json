@@ -7,11 +7,11 @@
       "dependencies": {}
     },
     "com.unity.addressables": {
-      "version": "1.17.15",
-      "depth": 1,
+      "version": "1.19.6",
+      "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.scriptablebuildpipeline": "1.17.0",
+        "com.unity.scriptablebuildpipeline": "1.19.2",
         "com.unity.modules.assetbundle": "1.0.0",
         "com.unity.modules.imageconversion": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0",
@@ -28,7 +28,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.burst": {
-      "version": "1.4.8",
+      "version": "1.4.11",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -37,7 +37,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.cinemachine": {
-      "version": "2.6.5",
+      "version": "2.6.10",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -52,7 +52,7 @@
     },
     "com.unity.ext.nunit": {
       "version": "1.0.6",
-      "depth": 2,
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -76,21 +76,23 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.inputsystem": {
-      "version": "1.1.0-preview.3",
+      "version": "1.1.1",
       "depth": 0,
       "source": "registry",
-      "dependencies": {},
+      "dependencies": {
+        "com.unity.modules.uielements": "1.0.0"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.mathematics": {
-      "version": "1.2.1",
+      "version": "1.2.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.memoryprofiler": {
-      "version": "0.2.9-preview.3",
+      "version": "0.4.1-preview.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -106,7 +108,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {
-      "version": "10.5.0",
+      "version": "10.6.0",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -115,19 +117,19 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.universal": {
-      "version": "10.5.0",
+      "version": "10.6.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.mathematics": "1.1.0",
-        "com.unity.render-pipelines.core": "10.5.0",
-        "com.unity.shadergraph": "10.5.0"
+        "com.unity.render-pipelines.core": "10.6.0",
+        "com.unity.shadergraph": "10.6.0"
       },
       "url": "https://packages.unity.com"
     },
     "com.unity.scriptablebuildpipeline": {
-      "version": "1.17.0",
-      "depth": 2,
+      "version": "1.19.2",
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -140,11 +142,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.shadergraph": {
-      "version": "10.5.0",
+      "version": "10.6.0",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.render-pipelines.core": "10.5.0",
+        "com.unity.render-pipelines.core": "10.6.0",
         "com.unity.searcher": "4.3.2"
       },
       "url": "https://packages.unity.com"
@@ -157,8 +159,8 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {
-      "version": "1.1.24",
-      "depth": 1,
+      "version": "1.1.29",
+      "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.ext.nunit": "1.0.6",
@@ -168,7 +170,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.testframework.graphics": {
-      "version": "7.8.12-preview",
+      "version": "7.8.16-preview",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -215,7 +217,7 @@
       }
     },
     "com.unity.xr.legacyinputhelpers": {
-      "version": "2.1.7",
+      "version": "2.1.8",
       "depth": 1,
       "source": "registry",
       "dependencies": {

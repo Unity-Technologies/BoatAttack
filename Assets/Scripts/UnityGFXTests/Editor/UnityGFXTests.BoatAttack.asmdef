@@ -1,5 +1,5 @@
 {
-    "name": "UnityGFXTests.BoatAttack",
+    "name": "UnityGFXTests.Editor.BoatAttack",
     "rootNamespace": "",
     "references": [
         "GUID:c081bc530f560634bb5c21d4b323a7f1",
@@ -7,7 +7,9 @@
         "GUID:27619889b8ba8c24980f49ee34dbb44a",
         "GUID:e18141520846dcc44b725b2f74e91229"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
@@ -15,9 +17,7 @@
         "nunit.framework.dll"
     ],
     "autoReferenced": true,
-    "defineConstraints": [
-        "UNITY_INCLUDE_TESTS"
-    ],
+    "defineConstraints": [],
     "versionDefines": [],
     "noEngineReferences": false
 }

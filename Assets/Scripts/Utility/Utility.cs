@@ -4,6 +4,7 @@ using UnityEditor;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Object = UnityEngine.Object;
@@ -77,6 +78,24 @@ public static class Utility
     }
 
     private static readonly List<string> QualityLevels = new List<string> {"Low", "Medium", "High"};
+
+    public static void StaticObjects()
+    {
+        // remove the noise on Cinemachine cameras
+        var cameras = GameObject.FindObjectsOfType<CinemachineVirtualCamera>();
+        foreach (var cam in cameras)
+        {
+            var comp = cam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+            if(comp)
+                comp.m_AmplitudeGain = 0.0f;
+        }
+        // make the cinemachine carts static
+        var carts = GameObject.FindObjectsOfType<CinemachineDollyCart>();
+        foreach (var cart in carts)
+        {
+            cart.m_Speed = 0.0f;
+        }
+    }
 }
 
 #if UNITY_EDITOR

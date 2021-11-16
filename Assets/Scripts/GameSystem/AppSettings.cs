@@ -69,20 +69,13 @@ namespace BoatAttack
             SetRenderScale();
             SceneManager.sceneLoaded += LevelWasLoaded;
         }
-
+        
         private void Initialize()
         {
             Instance = this;
             ConsoleCanvas = Instantiate(consoleCanvas);
             DontDestroyOnLoad(ConsoleCanvas);
             MainCamera = Camera.main;
-            
-#if STATIC_EVERYTHING
-            // Set the static flag if enabled
-            Shader.EnableKeyword("_STATIC_SHADER");
-#else
-            Shader.DisableKeyword("_STATIC_SHADER");
-#endif
         }
 
         private void OnDisable()
@@ -93,6 +86,9 @@ namespace BoatAttack
         private static void LevelWasLoaded(Scene scene, LoadSceneMode mode)
         {
             CleanupCameras();
+#if STATIC_EVERYTHING
+            Utility.StaticObjects();
+#endif
             Instance.Invoke(nameof(CleanupLoadingScreen), 0.5f);
         }
 
