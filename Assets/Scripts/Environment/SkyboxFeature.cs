@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering.Universal;
+//using UnityEngine.Experimental.Rendering.Universal;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
@@ -54,47 +54,44 @@ public class SkyboxFeature : ScriptableRendererFeature
             DrawingSettings transparentDrawingSettings = CreateDrawingSettings(m_ShaderTagIdList, ref renderingData, SortingCriteria.CommonTransparent);
 
             CommandBuffer cmd = CommandBufferPool.Get(ProfilerTag);
-            using (new ProfilingScope(cmd, _profilingSampler))
+            // setup skybox cam
             {
-                // setup skybox cam
-                {
-                    var viewMatrix = cameraData.GetViewMatrix();
-                    var camPosition = viewMatrix.GetColumn(3);
-                    var camScale = camPosition * Scale;
-                    var cameraTranslation = new Vector4(camScale.x, camScale.y, camScale.z, camPosition.w);
-                    viewMatrix.SetColumn(3, cameraTranslation);
+                var viewMatrix = cameraData.GetViewMatrix();
+                var camPosition = viewMatrix.GetColumn(3);
+                var camScale = camPosition * Scale;
+                var cameraTranslation = new Vector4(camScale.x, camScale.y, camScale.z, camPosition.w);
+                viewMatrix.SetColumn(3, cameraTranslation);
 
-                    RenderingUtils.SetViewAndProjectionMatrices(cmd, viewMatrix, cameraData.GetGPUProjectionMatrix(), true);
-                    //cmd.SetGlobalVector("_WorldSpaceCameraPos", cameraPosition * Scale + cameraPosition);
-                    cmd.SetGlobalVector("_WorldSpaceCameraPos", cameraPosition * Scale);
+                RenderingUtils.SetViewAndProjectionMatrices(cmd, viewMatrix, cameraData.GetGPUProjectionMatrix(), true);
+                //cmd.SetGlobalVector("_WorldSpaceCameraPos", cameraPosition * Scale + cameraPosition);
+                cmd.SetGlobalVector("_WorldSpaceCameraPos", cameraPosition * Scale);
+            }
+
+            context.ExecuteCommandBuffer(cmd);
+            cmd.Clear();
+
+            //draw system
+            /*if (system)
+            {
+                foreach (var renderer in system.renderList)
+                {
+                    var index = renderer.sharedMaterial.FindPass("ForwardLit");
+                    cmd.DrawRenderer(renderer, renderer.sharedMaterial, 0, index);
                 }
+            }*/
 
-                context.ExecuteCommandBuffer(cmd);
-                cmd.Clear();
+            //draw opaque skybox
+            //context.DrawRenderers(renderingData.cullResults, ref opaqueDrawingSettings, ref m_OpaqueFilteringSettings,
+                //ref m_RenderStateBlock);
 
-                //draw system
-                /*if (system)
-                {
-                    foreach (var renderer in system.renderList)
-                    {
-                        var index = renderer.sharedMaterial.FindPass("ForwardLit");
-                        cmd.DrawRenderer(renderer, renderer.sharedMaterial, 0, index);
-                    }
-                }*/
+            //draw transparent skybox
+            context.DrawRenderers(renderingData.cullResults, ref transparentDrawingSettings, ref m_TransparentFilteringSettings,
+                ref m_RenderStateBlock);
 
-                //draw opaque skybox
-                //context.DrawRenderers(renderingData.cullResults, ref opaqueDrawingSettings, ref m_OpaqueFilteringSettings,
-                    //ref m_RenderStateBlock);
-
-                //draw transparent skybox
-                context.DrawRenderers(renderingData.cullResults, ref transparentDrawingSettings, ref m_TransparentFilteringSettings,
-                    ref m_RenderStateBlock);
-
-                //return normal cam
-                {
-                    RenderingUtils.SetViewAndProjectionMatrices(cmd, cameraData.GetViewMatrix(), cameraData.GetGPUProjectionMatrix(), true);
-                    cmd.SetGlobalVector("_WorldSpaceCameraPos", cameraPosition);
-                }
+            //return normal cam
+            {
+                RenderingUtils.SetViewAndProjectionMatrices(cmd, cameraData.GetViewMatrix(), cameraData.GetGPUProjectionMatrix(), true);
+                cmd.SetGlobalVector("_WorldSpaceCameraPos", cameraPosition);
             }
             context.ExecuteCommandBuffer(cmd);
             CommandBufferPool.Release(cmd);
@@ -109,7 +106,7 @@ public class SkyboxFeature : ScriptableRendererFeature
     }
 
     SkyboxPass m_ScriptablePass;
-    private RenderObjectsPass opaquePass;
+    //private RenderObjectsPass opaquePass;
     public RenderPassEvent injectionPoint;
     public LayerMask mask;
     public int ratioScale = 64;
