@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f62c9c65cf3354c93be831c8bc075510, type: 3}
-  m_Name: NewScreenSpaceAmbientOcclusion
+  m_Name: SSAO
   m_EditorClassIdentifier: 
   m_Active: 0
   m_Shader: {fileID: 4800000, guid: 0849e84e3d62649e8882e9d6f056a017, type: 3}
@@ -74,10 +74,11 @@ MonoBehaviour:
   m_Name: BoatDemoRenderer
   m_EditorClassIdentifier: 
   m_RendererFeatures:
-  - {fileID: 770174969183694509}
+  - {fileID: 5126615458422300752}
   - {fileID: -8193634041390225171}
   - {fileID: -509393295192694670}
-  m_RendererFeatureMap: ad6e17cd0d36b00aed286347405d4a8e72e012357f45eef8
+  - {fileID: 770174969183694509}
+  m_RendererFeatureMap: 50a049f398652547ed286347405d4a8e72e012357f45eef8ad6e17cd0d36b00a
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
@@ -142,6 +143,27 @@ MonoBehaviour:
   _layerMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  _baseProfile: {fileID: 11400000, guid: ad80f6934bc444a93bb29c1f6db70cf3, type: 2}
+  _qualityProfiles:
+  - {fileID: 11400000, guid: 200e02ce26d6c422db35ba0777d71a09, type: 2}
+  - {fileID: 11400000, guid: 4fe8789f8ee054ac49d9f7fe042e0918, type: 2}
+  - {fileID: 11400000, guid: dbf7710ff9a33440f8390ed8e04dbb77, type: 2}
+--- !u!114 &5126615458422300752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00cb8048fcc7dfc4c8c686452702bdd2, type: 3}
+  m_Name: Volumes
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 0
   _baseProfile: {fileID: 11400000, guid: ad80f6934bc444a93bb29c1f6db70cf3, type: 2}
   _qualityProfiles:
   - {fileID: 11400000, guid: 200e02ce26d6c422db35ba0777d71a09, type: 2}
