@@ -13,25 +13,23 @@ public class SpriteMeshGenerator : ScriptableObject
     [SerializeField] private string hash;
     private void OnValidate()
     {
-        if (sprites != null && sprites.Length > 0)
+        if (sprites == null || sprites.Length <= 0) return;
+        
+        var curHash = "";
+        foreach (var sprite in sprites)
         {
-            Debug.Log("doing things");
-            var curHash = "";
-            foreach (var sprite in sprites)
+            if (AssetDatabase.TryGetGUIDAndLocalFileIdentifier(sprite, out var guid, out long _))
             {
-                if (AssetDatabase.TryGetGUIDAndLocalFileIdentifier(sprite, out var guid, out long _))
-                {
-                    curHash += guid;
-                }
+                curHash += guid;
             }
-
-            if (hash == curHash) return;
-            GenerateAndSaveMesh();
-            hash = curHash;
         }
+
+        if (hash == curHash) return;
+        GenerateAndSaveMesh();
+        hash = curHash;
     }
 
-    void GenerateAndSaveMesh()
+    private void GenerateAndSaveMesh()
     {
         try
         {
@@ -52,8 +50,6 @@ public class SpriteMeshGenerator : ScriptableObject
 
     public static Mesh GenerateMeshFromSprite(Sprite sprite)
     {
-        Vector2 pivot = sprite.pivot / sprite.rect.size;
-
         // verts
         var verts = new List<Vector3>();
         sprite.vertices.ToList().ForEach(x => verts.Add(new Vector3(x.x, x.y, 0.0f)));
@@ -80,7 +76,7 @@ public class SpriteMeshGenerator : ScriptableObject
         return mesh;
     }
 
-    void CleanSubassets()
+    private void CleanSubassets()
     {
         var subassets = AssetDatabase.LoadAllAssetsAtPath(AssetDatabase.GetAssetPath(this));
 

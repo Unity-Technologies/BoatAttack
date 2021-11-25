@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Unity.Collections;
 using UnityEngine;
@@ -14,14 +13,11 @@ public class CloudRenderer : MonoBehaviour
     public ParticleSystem ps;
 
     private NativeArray<ParticleSystem.Particle> particles;
-    //private
     private ParticleSystem.Particle[] parts;
     
     private void OnEnable()
     {
         RenderPipelineManager.beginCameraRendering += RenderPipelineManagerOnbeginCameraRendering;
-        //RenderPipelineManager.beginFrameRendering += RenderPipelineManagerOnbeginFrameRendering;
-
         PlanarReflections.BeginPlanarReflections += RenderPipelineManagerOnbeginCameraRendering;
         
         var main = ps.main;
@@ -32,15 +28,10 @@ public class CloudRenderer : MonoBehaviour
     private void OnDisable()
     {
         RenderPipelineManager.beginCameraRendering -= RenderPipelineManagerOnbeginCameraRendering;
-        //RenderPipelineManager.beginFrameRendering -= RenderPipelineManagerOnbeginFrameRendering;
         PlanarReflections.BeginPlanarReflections -= RenderPipelineManagerOnbeginCameraRendering;
 
         particles.Dispose();
     }
-
-    //private void RenderPipelineManagerOnbeginFrameRendering(ScriptableRenderContext arg1, Camera[] arg2)
-    //    
-    //}
 
     private void RenderPipelineManagerOnbeginCameraRendering(ScriptableRenderContext context, Camera camera)
     {
