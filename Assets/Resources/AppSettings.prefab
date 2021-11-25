@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7312333174115242941}
   - component: {fileID: 5054393478131282040}
   m_Layer: 0
-  m_Name: AppManager
+  m_Name: AppSettings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,18 +46,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6de62f03c3364421389a6c95485ec756, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxRenderSize: 3
+  maxRenderSize: 0
   variableResolution: 0
   axisBias: 0.5
   minScale: 0.5
-  targetFramerate: 0
+  targetFramerate: 1
   speedFormat: 0
   loadingScreen:
     m_AssetGUID: 179a2376fe443449d9046bc913164c8b
     m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
   volumeManager:
     m_AssetGUID: d4548d51034644d21971f134c82b6a9a
     m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
   consoleCanvas: {fileID: 3861368940710368685, guid: eaccf287ac783bc4485d674d5998d3ab,
     type: 3}
 --- !u!114 &8490184438857729681
@@ -80,34 +84,42 @@ MonoBehaviour:
     laps: 3
     reversed: 0
     boats:
-    - boatName: Player 1
+    - boatName: Felipe
       boatPrefab:
         m_AssetGUID: 405c4bc591de844a3a100e1538790229
         m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
       livery:
         primaryColor: {r: 0.8773585, g: 0.09518514, b: 0.09518514, a: 0}
         trimColor: {r: 0.8679245, g: 0.8679245, b: 0.8679245, a: 0}
-      human: 0
-    - boatName: Player 2
+      human: 1
+    - boatName: Jonas
       boatPrefab:
         m_AssetGUID: 70d78230a0527e74dabc4f14906eef98
         m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
       livery:
         primaryColor: {r: 0.11053756, g: 0.8679245, b: 0.17524286, a: 0}
         trimColor: {r: 0.7354654, g: 0.122774996, b: 0.8396226, a: 0}
       human: 0
-    - boatName: Player 3
+    - boatName: Tim
       boatPrefab:
         m_AssetGUID: 405c4bc591de844a3a100e1538790229
         m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
       livery:
         primaryColor: {r: 0.098039225, g: 0.8980392, b: 0.8708881, a: 0}
         trimColor: {r: 0.14150941, g: 0.14150941, b: 0.14150941, a: 0}
       human: 0
-    - boatName: Player 4
+    - boatName: Florin
       boatPrefab:
         m_AssetGUID: 70d78230a0527e74dabc4f14906eef98
         m_SubObjectName: 
+        m_SubObjectType: 
+        m_EditorAssetChanged: 0
       livery:
         primaryColor: {r: 0.1481844, g: 0.2092964, b: 0.8490566, a: 0}
         trimColor: {r: 0.9339623, g: 0.7163166, b: 0.074893214, a: 0}
@@ -115,14 +127,22 @@ MonoBehaviour:
   boats:
   - m_AssetGUID: 405c4bc591de844a3a100e1538790229
     m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
   - m_AssetGUID: 70d78230a0527e74dabc4f14906eef98
     m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
   raceUiPrefab:
     m_AssetGUID: 0482dcbdb79ee4d7eb43a774a90bda4e
     m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
   raceUiTouchPrefab:
     m_AssetGUID: c080ffd98277d4e3f97f96dedf2ec960
     m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
 --- !u!114 &7312333174115242941
 MonoBehaviour:
   m_ObjectHideFlags: 0
