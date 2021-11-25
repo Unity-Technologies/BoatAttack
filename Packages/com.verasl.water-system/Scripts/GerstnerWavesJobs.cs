@@ -95,13 +95,19 @@ namespace WaterSystem
             
             _processing = true;
 
+#if STATIC_EVERYTHING
+            var t = 0.0f;
+#else
+            var t = Time.time;
+#endif
+
             // Buoyant Object Job
             var waterHeight = new HeightJob()
             {
                 WaveData = _waveData,
                 Position = _positions,
                 OffsetLength = new int2(0, _positions.Length),
-                Time = Time.time,
+                Time = t,
                 OutPosition = _wavePos,
                 OutNormal = _waveNormal
             };

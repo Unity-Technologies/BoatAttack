@@ -69,7 +69,7 @@ namespace BoatAttack
             SetRenderScale();
             SceneManager.sceneLoaded += LevelWasLoaded;
         }
-
+        
         private void Initialize()
         {
             Instance = this;
@@ -86,6 +86,9 @@ namespace BoatAttack
         private static void LevelWasLoaded(Scene scene, LoadSceneMode mode)
         {
             CleanupCameras();
+#if STATIC_EVERYTHING
+            Utility.StaticObjects();
+#endif
             Instance.Invoke(nameof(CleanupLoadingScreen), 0.5f);
         }
 

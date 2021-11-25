@@ -119,6 +119,11 @@ namespace WaterSystem
 
         private void Update()
         {
+#if STATIC_EVERYTHING
+            var dt = 0.0f;
+#else
+            var dt = Time.deltaTime;
+#endif
             switch (_buoyancyType)
             {
                 case BuoyancyType.NonPhysical:
@@ -127,7 +132,7 @@ namespace WaterSystem
                     var vec  = t.position;
                     vec.y = Heights[0].y + waterLevelOffset;
                     t.position = vec;
-                    t.up = Vector3.Slerp(t.up, _normals[0], Time.deltaTime);
+                    t.up = Vector3.Slerp(t.up, _normals[0], dt);
                     break;
                 }
                 case BuoyancyType.NonPhysicalVoxel:

@@ -27,6 +27,7 @@
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
             #pragma multi_compile _ _DEBUG
+            #pragma multi_compile _ _STATIC_SHADER
 
             #pragma vertex vert
             #pragma fragment frag
@@ -100,14 +101,20 @@
                 // Get light direction and use it to rotate the world position
                 float3 LightUVs = mul(WorldPos, _MainLightDir).xyz;
 
+#if defined(_STATIC_SHADER)
+	            float time = 0;
+#else
+	            float time = _Time.x;
+#endif
+
                 // Read wave texture for noise to offset cautics UVs
-                float2 uv = WorldPos.xz * 0.025 + _Time.x * 0.25;
+                float2 uv = WorldPos.xz * 0.025 + time * 0.25;
                 float waveOffset = SAMPLE_TEXTURE2D(_CausticMap, sampler_CausticMap, uv).w - 0.5;
 
                 float2 causticUV = CausticUVs(LightUVs.xy, waveOffset);
 
                 float LodLevel = abs(WorldPos.y - _WaterLevel) * 4 / _BlendDistance;
-                float4 A = SAMPLE_TEXTURE2D_LOD(_CausticMap, sampler_CausticMap, causticUV + _Time.x, LodLevel);
+                float4 A = SAMPLE_TEXTURE2D_LOD(_CausticMap, sampler_CausticMap, causticUV + time, LodLevel);
                 float4 B = SAMPLE_TEXTURE2D_LOD(_CausticMap, sampler_CausticMap, causticUV * 2.0, LodLevel);
                 
                 float CausticsDriver = (A.z * B.z) * 10 + A.z + B.z;
