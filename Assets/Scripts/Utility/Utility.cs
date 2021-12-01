@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using Console = BoatAttack.Console;
 using Object = UnityEngine.Object;
 
 public static class Utility
@@ -14,6 +15,17 @@ public static class Utility
     public static event Action<int, int> QualityLevelChange;
     private static int lastQualityLevel = -1;
 
+    [Console.ConsoleCmd]
+    public static void SetRenderer(int index)
+    {
+        var cam = Camera.main;
+        if (cam)
+        {
+            var data = cam.GetUniversalAdditionalCameraData();
+            data.SetRenderer(index);
+        }
+    }
+    
     public static void CheckQualityLevel()
     {
         var curLevel = QualitySettings.GetQualityLevel();
@@ -24,6 +36,12 @@ public static class Utility
         var realIndex = GetTrueQualityLevel(curLevel);
         QualityLevelChange?.Invoke(curLevel, realIndex);
         lastQualityLevel = curLevel;
+    }
+
+    [Console.ConsoleCmd]
+    public static void SetQualityLevel(int level)
+    {
+        QualitySettings.SetQualityLevel(level);
     }
 
     public static int GetTrueQualityLevel()

@@ -174,6 +174,7 @@ namespace BoatAttack
             UniversalRenderPipeline.asset.useSRPBatcher = enabled;
         }
 
+        [Console.ConsoleCmd]
         public static void LoadScene(int buildIndex, LoadSceneMode mode = LoadSceneMode.Single)
         {
             LoadScene(SceneUtility.GetScenePathByBuildIndex(buildIndex), mode);
