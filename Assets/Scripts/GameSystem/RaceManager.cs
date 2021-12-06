@@ -102,7 +102,7 @@ namespace BoatAttack
         private void Reset()
         {
             RaceStarted = false;
-            RaceData.boats.Clear();
+            //RaceData.boats.Clear(); // TODO check this
             RaceTime = 0f;
             _boatTimes.Clear();
             raceStarted = null;
