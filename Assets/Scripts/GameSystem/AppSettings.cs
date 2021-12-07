@@ -54,7 +54,6 @@ namespace BoatAttack
 
         [Header("Asset References")]
         public AssetReference loadingScreen;
-        public AssetReference volumeManager;
         [Header("Prefabs")]
         public GameObject consoleCanvas;
         public static GameObject ConsoleCanvas;
@@ -201,7 +200,7 @@ namespace BoatAttack
             var loadingScreenLoading = Instance.loadingScreen.InstantiateAsync();
             yield return loadingScreenLoading;
             Instance.loadingScreenObject = loadingScreenLoading.Result;
-            Instance.loadingScreenObject.SendMessage("SetLoad", 0.0001f);
+            //Instance.loadingScreenObject.SendMessage("SetLoad", 0.0001f);
             DontDestroyOnLoad(Instance.loadingScreenObject);
 
             var buildIndex = SceneUtility.GetBuildIndexByScenePath(scenePath);
@@ -217,7 +216,7 @@ namespace BoatAttack
             var unload = SceneManager.UnloadSceneAsync(currentScene, UnloadSceneOptions.None);
             while (!unload.isDone)
             {
-                Instance.loadingScreenObject.SendMessage("SetLoad", unload.progress * 0.5f);
+                //Instance.loadingScreenObject.SendMessage("SetLoad", unload.progress * 0.5f);
                 yield return null;
             }
 
@@ -242,7 +241,7 @@ namespace BoatAttack
 #endif
             while (!load.isDone)
             {
-                Instance.loadingScreenObject.SendMessage("SetLoad", load.progress * 0.5f + 0.5f);
+                //Instance.loadingScreenObject.SendMessage("SetLoad", load.progress * 0.5f + 0.5f);
                 yield return null;
             }
         }

@@ -10,12 +10,11 @@ Material:
   m_Name: Clouds
   m_Shader: {fileID: -6465566751694194690, guid: db0b334ed7edc2149a5c784f34eefeba,
     type: 3}
-  m_ShaderKeywords: BOOLEAN_3A4FA4CB1FE54F0D8BDC5D502F6ADCB0_ON BOOLEAN_68600FB702FC441CA4969E5B54503936_ON
-    BOOLEAN_9A9F210EF4D44680B8F0CB7ACD99DFBB_ON ETC1_EXTERNAL_ALPHA
+  m_ShaderKeywords: BOOLEAN_9A9F210EF4D44680B8F0CB7ACD99DFBB_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3600
+  m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
@@ -62,13 +61,13 @@ Material:
     - BOOLEAN_EAB072D9159A48C685623C0E39EA73B0: 0
     - Boolean_1ab69d72f127409aaadd7d85df4d1ee5: 0
     - Cloud_Fade: 1
-    - Vector1_10DA9AB3: 50
+    - Vector1_10DA9AB3: 20
     - Vector1_2D8DD598: 1.8
     - Vector1_2a375228e8d3437382814520b0cd8644: 2
-    - Vector1_2d1f70e8efb04843b1f8184ae06925e0: 119.23
-    - Vector1_33982692: 150
+    - Vector1_2d1f70e8efb04843b1f8184ae06925e0: 120
+    - Vector1_33982692: 200
     - Vector1_5f4b185241524942830132fc71554a33: 1
-    - _QueueControl: 1
+    - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
     - Color_7eff2e7fc27440719d0a871a39dabdd3: {r: 1, g: 1, b: 1, a: 0}

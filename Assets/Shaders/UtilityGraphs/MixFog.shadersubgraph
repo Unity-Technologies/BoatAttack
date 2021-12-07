@@ -1,5 +1,5 @@
 {
-    "m_SGVersion": 2,
+    "m_SGVersion": 3,
     "m_Type": "UnityEditor.ShaderGraph.GraphData",
     "m_ObjectId": "fe704c7ef998485fbf7fd46c7dd4915c",
     "m_Properties": [
@@ -20,6 +20,12 @@
         }
     ],
     "m_Keywords": [],
+    "m_Dropdowns": [],
+    "m_CategoryData": [
+        {
+            "m_Id": "8582e96a14ed48678bdc77739fc4664c"
+        }
+    ],
     "m_Nodes": [
         {
             "m_Id": "5f7a9e11eff6411498186ce4d6fec045"
@@ -197,10 +203,11 @@
         "serializedMesh": {
             "m_SerializedMesh": "{\"mesh\":{\"instanceID\":0}}",
             "m_Guid": ""
-        }
+        },
+        "preventRotation": false
     },
     "m_Path": "Sub Graphs",
-    "m_ConcretePrecision": 0,
+    "m_GraphPrecision": 0,
     "m_PreviewMode": 2,
     "m_OutputNode": {
         "m_Id": "5f7a9e11eff6411498186ce4d6fec045"
@@ -374,9 +381,13 @@
         "m_GuidSerialized": "70a37b48-68f8-460a-9ce0-d6b8c7810888"
     },
     "m_Name": "Matrix4x4",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Matrix4_5f3038a237414f29a1174d7598403333",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": false,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -442,9 +453,13 @@
         "m_GuidSerialized": "da5d325c-d8f6-4ca2-9860-b7e29d3405cb"
     },
     "m_Name": "Height Fog Offset",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_65f4d0dc61ee403db0f9bfa041bed070",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -681,6 +696,30 @@
         "e32": 0.0,
         "e33": 1.0
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "8582e96a14ed48678bdc77739fc4664c",
+    "m_Name": "",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "f69a590ed6c84f36b0fee2268ca8fc03"
+        },
+        {
+            "m_Id": "dcd94c39cc78471aa6a3a1b27833bba1"
+        },
+        {
+            "m_Id": "65f4d0dc61ee403db0f9bfa041bed070"
+        },
+        {
+            "m_Id": "5f3038a237414f29a1174d7598403333"
+        },
+        {
+            "m_Id": "eebb9e601111455e9605b88f3456f319"
+        }
+    ]
 }
 
 {
@@ -937,9 +976,13 @@
         "m_GuidSerialized": "9d662a71-f473-4434-a976-4b221d267d21"
     },
     "m_Name": "Height Fog Distance",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_dcd94c39cc78471aa6a3a1b27833bba1",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -995,9 +1038,13 @@
         "m_GuidSerialized": "fe82f744-8f6d-4d8b-824a-f0eab203466b"
     },
     "m_Name": "Scale Ratio",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_eebb9e601111455e9605b88f3456f319",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -1018,9 +1065,13 @@
         "m_GuidSerialized": "13f83361-c6ad-421e-b54b-c96fd6456f75"
     },
     "m_Name": "Input",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector3_f69a590ed6c84f36b0fee2268ca8fc03",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -1047,8 +1098,8 @@
             "serializedVersion": "2",
             "x": -434.0,
             "y": -65.0,
-            "width": 157.5,
-            "height": 118.0
+            "width": 208.5,
+            "height": 166.0
         }
     },
     "m_Slots": [
@@ -1094,6 +1145,8 @@
         -488071750,
         1725449755,
         842107895
-    ]
+    ],
+    "m_Dropdowns": [],
+    "m_DropdownSelectedEntries": []
 }
 

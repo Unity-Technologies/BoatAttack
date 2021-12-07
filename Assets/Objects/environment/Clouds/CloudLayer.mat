@@ -16,8 +16,7 @@ Material:
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 3300
   stringTagMap: {}
-  disabledShaderPasses:
-  - SHADOWCASTER
+  disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -101,6 +100,7 @@ Material:
     - _Metallic: 0.547
     - _OcclusionStrength: 1
     - _Parallax: 0.005
+    - _QueueControl: 1
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Smoothness: 0.635
