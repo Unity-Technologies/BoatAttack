@@ -27,15 +27,8 @@
       },
       "url": "https://packages.unity.com"
     },
-    "com.unity.build-report-inspector": {
-      "version": "0.2.2-preview",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
     "com.unity.burst": {
-      "version": "1.6.3",
+      "version": "1.4.11",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -44,7 +37,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.cinemachine": {
-      "version": "2.8.3",
+      "version": "2.6.11",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -74,16 +67,16 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.7",
+      "version": "2.0.7",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.ext.nunit": "1.0.6"
+        "com.unity.test-framework": "1.1.1"
       },
       "url": "https://packages.unity.com"
     },
     "com.unity.inputsystem": {
-      "version": "1.2.0",
+      "version": "1.1.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -99,7 +92,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.memoryprofiler": {
-      "version": "0.4.2-preview.1",
+      "version": "0.4.4-preview.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -108,32 +101,33 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.newtonsoft-json": {
-      "version": "2.0.0",
+      "version": "2.0.0-preview",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {
-      "version": "12.1.2",
+      "version": "10.8.1",
       "depth": 1,
-      "source": "builtin",
+      "source": "registry",
       "dependencies": {
         "com.unity.ugui": "1.0.0",
         "com.unity.modules.physics": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0"
-      }
+      },
+      "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.universal": {
-      "version": "12.1.2",
+      "version": "10.8.1",
       "depth": 0,
-      "source": "builtin",
+      "source": "registry",
       "dependencies": {
-        "com.unity.mathematics": "1.2.1",
-        "com.unity.burst": "1.5.0",
-        "com.unity.render-pipelines.core": "12.1.2",
-        "com.unity.shadergraph": "12.1.2"
-      }
+        "com.unity.mathematics": "1.1.0",
+        "com.unity.render-pipelines.core": "10.8.1",
+        "com.unity.shadergraph": "10.8.1"
+      },
+      "url": "https://packages.unity.com"
     },
     "com.unity.scriptablebuildpipeline": {
       "version": "1.19.3",
@@ -143,28 +137,27 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.searcher": {
-      "version": "4.9.1",
+      "version": "4.3.2",
       "depth": 2,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.shadergraph": {
-      "version": "12.1.2",
-      "depth": 1,
-      "source": "builtin",
-      "dependencies": {
-        "com.unity.render-pipelines.core": "12.1.2",
-        "com.unity.searcher": "4.9.1"
-      }
-    },
-    "com.unity.subsystemregistration": {
-      "version": "1.1.0",
+      "version": "10.8.1",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.modules.subsystems": "1.0.0"
+        "com.unity.render-pipelines.core": "10.8.1",
+        "com.unity.searcher": "4.3.2"
       },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.subsystemregistration": {
+      "version": "1.0.6",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {
@@ -205,7 +198,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.timeline": {
-      "version": "1.6.3",
+      "version": "1.4.8",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -246,7 +239,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.management": {
-      "version": "4.2.0",
+      "version": "4.0.5",
       "depth": 1,
       "source": "registry",
       "dependencies": {
