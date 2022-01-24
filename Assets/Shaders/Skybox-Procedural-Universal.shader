@@ -336,7 +336,7 @@ SubShader {
         // Calculates the Mie phase function
         half getMiePhase(half eyeCos, half eyeCos2)
         {
-            half temp = 1.0 + MIE_G2 - 2.0 * MIE_G * eyeCos;
+            float temp = 1.0 + MIE_G2 - 2.0 * MIE_G * eyeCos;
             temp = pow(temp, pow(_SunSize,0.65) * 10);
             temp = max(temp,1.0e-4); // prevent division by zero, esp. in half precision
             temp = 1.5 * ((1.0 - MIE_G2) / (2.0 + MIE_G2)) * (1.0 + eyeCos2) / temp;
@@ -347,15 +347,15 @@ SubShader {
         }
 
         // Calculates the sun shape
-        half calcSunAttenuation(half3 lightPos, half3 ray)
+        half calcSunAttenuation(half3 lightPos, float3 ray)
         {
         #if SKYBOX_SUNDISK == SKYBOX_SUNDISK_SIMPLE
-            half3 delta = lightPos - ray;
-            half dist = length(delta);
-            half spot = 1.0 - smoothstep(0.0, _SunSize, dist);
+            float3 delta = lightPos - ray;
+            float dist = length(delta);
+            float spot = 1.0 - smoothstep(0.0, _SunSize, dist);
             return spot * spot;
         #else // SKYBOX_SUNDISK_HQ
-            half focusedEyeCos = pow(saturate(dot(lightPos, ray)), _SunSizeConvergence);
+            float focusedEyeCos = pow(saturate(dot(lightPos, ray)), _SunSizeConvergence);
             return getMiePhase(-focusedEyeCos, focusedEyeCos * focusedEyeCos);
         #endif
         }
@@ -370,11 +370,11 @@ SubShader {
         // if y >= 0 and < 1 [eyeRay.y <= 0 and > -SKY_GROUND_THRESHOLD] - horizon
         // if y < 0 [eyeRay.y > 0] - sky
         #if SKYBOX_SUNDISK == SKYBOX_SUNDISK_HQ
-            half3 ray = normalize(mul((float3x3)unity_ObjectToWorld, IN.vertex));
-            half y = ray.y / SKY_GROUND_THRESHOLD;
+            float3 ray = normalize(mul((float3x3)unity_ObjectToWorld, IN.vertex));
+            float y = ray.y / SKY_GROUND_THRESHOLD;
         #elif SKYBOX_SUNDISK == SKYBOX_SUNDISK_SIMPLE
-            half3 ray = IN.rayDir.xyz;
-            half y = ray.y / SKY_GROUND_THRESHOLD;
+            float3 ray = IN.rayDir.xyz;
+            float y = ray.y / SKY_GROUND_THRESHOLD;
         #else
             half y = IN.skyGroundFactor;
         #endif

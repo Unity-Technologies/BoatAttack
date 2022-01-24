@@ -55,7 +55,6 @@ MonoBehaviour:
   m_Shader: {fileID: 4800000, guid: 0849e84e3d62649e8882e9d6f056a017, type: 3}
   m_Settings:
     Downsample: 0
-    AfterOpaque: 0
     Source: 0
     NormalSamples: 1
     Intensity: 0.5
@@ -74,15 +73,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de640fe3d0db1804a85f9fc8f5cadab6, type: 3}
   m_Name: BoatDemoRenderer
   m_EditorClassIdentifier: 
-  debugShaders:
-    debugReplacementPS: {fileID: 4800000, guid: cf852408f2e174538bcd9b7fda1c5ae7,
-      type: 3}
   m_RendererFeatures:
   - {fileID: 5126615458422300752}
   - {fileID: -8193634041390225171}
   - {fileID: -509393295192694670}
-  m_RendererFeatureMap: 50a049f398652547ed286347405d4a8e72e012357f45eef8
-  m_UseNativeRenderPass: 0
+  - {fileID: 6321362856087945974}
+  m_RendererFeatureMap: 50a049f398652547ed286347405d4a8e72e012357f45eef8f682788d06feb957
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
@@ -91,17 +87,11 @@ MonoBehaviour:
     screenSpaceShadowPS: {fileID: 4800000, guid: 0f854b35a0cf61a429bd5dcfea30eddd,
       type: 3}
     samplingPS: {fileID: 4800000, guid: 04c410c9937594faa893a11dceb85f7e, type: 3}
+    tileDepthInfoPS: {fileID: 0}
+    tileDeferredPS: {fileID: 0}
     stencilDeferredPS: {fileID: 4800000, guid: e9155b26e1bc55942a41e518703fe304, type: 3}
     fallbackErrorPS: {fileID: 4800000, guid: e6e9a19c3678ded42a3bc431ebef7dbd, type: 3}
     materialErrorPS: {fileID: 4800000, guid: 5fd9a8feb75a4b5894c241777f519d4e, type: 3}
-    coreBlitPS: {fileID: 4800000, guid: 93446b5c5339d4f00b85c159e1159b7c, type: 3}
-    coreBlitColorAndDepthPS: {fileID: 4800000, guid: d104b2fc1ca6445babb8e90b0758136b,
-      type: 3}
-    cameraMotionVector: {fileID: 4800000, guid: c56b7e0d4c7cb484e959caeeedae9bbf,
-      type: 3}
-    objectMotionVector: {fileID: 4800000, guid: 7b3ede40266cd49a395def176e1bc486,
-      type: 3}
-  m_AssetVersion: 1
   m_OpaqueLayerMask:
     serializedVersion: 2
     m_Bits: 2147614327
@@ -117,11 +107,7 @@ MonoBehaviour:
     zFailOperation: 0
   m_ShadowTransparentReceive: 1
   m_RenderingMode: 0
-  m_DepthPrimingMode: 1
   m_AccurateGbufferNormals: 0
-  m_ClusteredRendering: 0
-  m_TileSize: 32
-  m_IntermediateTextureMode: 0
 --- !u!114 &1203680893676135655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -164,3 +150,23 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 200e02ce26d6c422db35ba0777d71a09, type: 2}
   - {fileID: 11400000, guid: 4fe8789f8ee054ac49d9f7fe042e0918, type: 2}
   - {fileID: 11400000, guid: dbf7710ff9a33440f8390ed8e04dbb77, type: 2}
+--- !u!114 &6321362856087945974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51674788ad3eb4156ac878853826cafc, type: 3}
+  m_Name: NewKawaseBlur
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    renderPassEvent: 550
+    blurMaterial: {fileID: 2100000, guid: 8f82498b79b394a4ba29faaf63c4c6d3, type: 2}
+    blurPasses: 7
+    downsample: 2
+    copyToFramebuffer: 1
+    targetName: _blurTexture

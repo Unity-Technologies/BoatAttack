@@ -353,11 +353,18 @@ namespace BoatAttack
 
         private static void SetupCamera(int player, bool remove = false)
         {
-            // Setup race camera
-            if(remove)
-                AppSettings.MainCamera.cullingMask &= ~(1 << LayerMask.NameToLayer($"Player{player + 1}")); // TODO - this needs more work for when adding splitscreen.
-            else
-                AppSettings.MainCamera.cullingMask |= 1 << LayerMask.NameToLayer($"Player{player + 1}"); // TODO - this needs more work for when adding splitscreen.
+            if (AppSettings.MainCamera)
+            {
+                // Setup race camera
+                if (remove)
+                    AppSettings.MainCamera.cullingMask &=
+                        ~(1 << LayerMask.NameToLayer(
+                            $"Player{player + 1}")); // TODO - this needs more work for when adding splitscreen.
+                else
+                    AppSettings.MainCamera.cullingMask |=
+                        1 << LayerMask.NameToLayer(
+                            $"Player{player + 1}"); // TODO - this needs more work for when adding splitscreen.
+            }
         }
         
         public static int GetLapCount()

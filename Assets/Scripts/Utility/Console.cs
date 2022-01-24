@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace BoatAttack
@@ -18,6 +19,8 @@ namespace BoatAttack
         private Dictionary<string, MethodInfo> methods = new Dictionary<string, MethodInfo>();
         private Dictionary<string, ParameterInfo[]> methodParams = new Dictionary<string, ParameterInfo[]>();
 
+        private GameObject previouslySelected;
+        
         private void Awake()
         {
             consoleOpen.performed += ConsoleOnPerformed;
@@ -89,10 +92,18 @@ namespace BoatAttack
 
         private void ConsoleOnPerformed(InputAction.CallbackContext obj)
         {
-            Debug.Log("Open Console");
             consoleObject.SetActive(!consoleObject.activeSelf);
             if (consoleObject.activeSelf)
+            {
+                Debug.Log("Open Console");
+                previouslySelected = EventSystem.current.currentSelectedGameObject;
                 inputField.ActivateInputField();
+            }
+            else
+            {
+                Debug.Log("Close Console");
+                EventSystem.current.SetSelectedGameObject(previouslySelected);
+            }
         }
 
         [ConsoleCmd]

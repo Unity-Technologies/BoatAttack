@@ -11,6 +11,7 @@ namespace BoatAttack.UI
     public class RaceUI : MonoBehaviour
     {
         private Boat _boat;
+        private Canvas _canvas;
         public TextMeshProUGUI lapCounter;
         public TextMeshProUGUI positionNumber;
         public TextMeshProUGUI timeTotal;
@@ -40,6 +41,7 @@ namespace BoatAttack.UI
         private void OnEnable()
         {
             RaceManager.raceStarted += SetGameplayUi;
+            TryGetComponent(out _canvas);
         }
 
         public void Setup(int player)
@@ -71,9 +73,19 @@ namespace BoatAttack.UI
         {
             gameObject.SetActive(false);
         }
+        
+        public void SetCanvas(bool enable)
+        {
+            if (_canvas && _canvas.enabled != enable)
+            {
+                _canvas.enabled = enable;
+            }
+        }
 
         public void SetGameplayUi(bool enable)
         {
+            if (gameplayUi.activeSelf == enable) return;
+            
             if (enable)
             {
                 foreach (var stat in _raceStats)
@@ -81,6 +93,7 @@ namespace BoatAttack.UI
                     stat.UpdateStats();
                 }
             }
+
             gameplayUi.SetActive(enable);
         }
 
@@ -161,7 +174,7 @@ namespace BoatAttack.UI
             }
 
             _smoothedSpeed = Mathf.SmoothDamp(_smoothedSpeed, speed, ref _smoothSpeedVel, 1f);
-            speedText.text = _smoothedSpeed.ToString("000");
+            speedText.text = $"{_smoothedSpeed:F1}";
         }
 
         public void FinishMatch()
@@ -176,6 +189,8 @@ namespace BoatAttack.UI
 
             var l = (_boat.SplitTimes.Count > 0) ? rawTime - _boat.SplitTimes[_boat.LapCount - 1] : 0f;
             timeLap.text = $"lap {FormatRaceTime(l)}";
+
+            SetCanvas(!FreeCam.Instance.active);
         }
 
         public static string FormatRaceTime(float seconds)

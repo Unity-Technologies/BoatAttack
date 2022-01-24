@@ -1,5 +1,5 @@
 {
-    "m_SGVersion": 2,
+    "m_SGVersion": 3,
     "m_Type": "UnityEditor.ShaderGraph.GraphData",
     "m_ObjectId": "7617107caf5c4f9b8fb676e9d8ba1e76",
     "m_Properties": [
@@ -14,6 +14,12 @@
         }
     ],
     "m_Keywords": [],
+    "m_Dropdowns": [],
+    "m_CategoryData": [
+        {
+            "m_Id": "d7abc98d0e5349819e21fb84a3512b00"
+        }
+    ],
     "m_Nodes": [
         {
             "m_Id": "85ff2d8c06bd49a6922501d29dfd6b0a"
@@ -113,20 +119,6 @@
     ],
     "m_StickyNoteDatas": [],
     "m_Edges": [
-        {
-            "m_OutputSlot": {
-                "m_Node": {
-                    "m_Id": "04d66487473642d79da224f4089554dd"
-                },
-                "m_SlotId": 0
-            },
-            "m_InputSlot": {
-                "m_Node": {
-                    "m_Id": "278d532c14154882bf1d47dde4d55ad3"
-                },
-                "m_SlotId": 0
-            }
-        },
         {
             "m_OutputSlot": {
                 "m_Node": {
@@ -622,10 +614,11 @@
         "serializedMesh": {
             "m_SerializedMesh": "{\"mesh\":{\"instanceID\":0}}",
             "m_Guid": ""
-        }
+        },
+        "preventRotation": false
     },
     "m_Path": "Sub Graphs",
-    "m_ConcretePrecision": 0,
+    "m_GraphPrecision": 0,
     "m_PreviewMode": 2,
     "m_OutputNode": {
         "m_Id": "85ff2d8c06bd49a6922501d29dfd6b0a"
@@ -1267,7 +1260,8 @@
         "m_SerializableColors": []
     },
     "m_TextureType": 0,
-    "m_NormalMapSpace": 0
+    "m_NormalMapSpace": 0,
+    "m_EnableGlobalMipBias": true
 }
 
 {
@@ -1451,9 +1445,13 @@
         "m_GuidSerialized": "b8d2c40f-da64-47b5-a8a8-437ac4898585"
     },
     "m_Name": "Seed",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector1_397d6d54d391448f841b568356acd9d5",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -3471,9 +3469,13 @@
         "m_GuidSerialized": "fa843027-d201-4b6b-98db-7036edc13b37"
     },
     "m_Name": "Dimensions",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Vector2_caefb2173a93413babdc548e42b92647",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -3533,9 +3535,13 @@
         "m_GuidSerialized": "d6424433-f11f-4c95-a4f7-f753e2ccf2d0"
     },
     "m_Name": "Animated",
+    "m_DefaultRefNameVersion": 0,
+    "m_RefNameGeneratedByDisplayName": "",
     "m_DefaultReferenceName": "Boolean_d17c4aa779b140eb89358932ea6663e5",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
     "m_Precision": 0,
     "overrideHLSLDeclaration": false,
     "hlslDeclarationOverride": 0,
@@ -3556,6 +3562,24 @@
     "m_Value": 0.0,
     "m_DefaultValue": 0.0,
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "d7abc98d0e5349819e21fb84a3512b00",
+    "m_Name": "",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "caefb2173a93413babdc548e42b92647"
+        },
+        {
+            "m_Id": "d17c4aa779b140eb89358932ea6663e5"
+        },
+        {
+            "m_Id": "397d6d54d391448f841b568356acd9d5"
+        }
+    ]
 }
 
 {

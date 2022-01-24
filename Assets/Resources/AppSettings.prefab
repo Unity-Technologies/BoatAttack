@@ -30,7 +30,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 108.12326, y: 11.028929, z: -31.28112}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -58,11 +57,6 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  volumeManager:
-    m_AssetGUID: d4548d51034644d21971f134c82b6a9a
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
   consoleCanvas: {fileID: 3861368940710368685, guid: eaccf287ac783bc4485d674d5998d3ab,
     type: 3}
 --- !u!114 &8490184438857729681
@@ -78,7 +72,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   demoRaceData:
-    game: 3
+    game: 0
     type: 0
     boatCount: 4
     level: 

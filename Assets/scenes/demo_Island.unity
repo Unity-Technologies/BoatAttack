@@ -354,13 +354,15 @@ GameObject:
   m_Component:
   - component: {fileID: 136724320}
   - component: {fileID: 136724319}
+  - component: {fileID: 136724322}
+  - component: {fileID: 136724321}
   m_Layer: 0
-  m_Name: CM vcam1
+  m_Name: FreeLookCam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &136724319
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,12 +379,12 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 1000
+  m_Priority: -9999
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 45.2
+    FieldOfView: 60
     OrthographicSize: 10
     NearClipPlane: 1
     FarClipPlane: 400
@@ -403,14 +405,118 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 136724318}
-  m_LocalRotation: {x: -0.002529255, y: 0.25814393, z: -0.0006758201, w: -0.9661029}
-  m_LocalPosition: {x: -49.8, y: 12.39, z: -101.7}
+  m_LocalRotation: {x: -0.0018511974, y: 0.7071043, z: -0.0018511974, w: -0.7071043}
+  m_LocalPosition: {x: 70, y: 4, z: 80}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1557068289}
   m_Father: {fileID: 0}
   m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0.3, y: 330.08, z: 0}
+  m_LocalEulerAnglesHint: {x: 0.3, y: 270, z: 0}
+--- !u!114 &136724321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 136724318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 216207ae924c39842b5b2ad515311cfa,
+    type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 591093b7-743c-42e6-b71e-bab02d178bd1
+    m_ActionName: BoatControls/Trottle[/Keyboard/downArrow,/Keyboard/s,/Keyboard/z,/Keyboard/upArrow,/Keyboard/w,/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 67e3403a-b3e8-43af-ab52-4575ba23afef
+    m_ActionName: BoatControls/Steering[/Keyboard/leftArrow,/Keyboard/a,/Keyboard/rightArrow,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 218640d2-e6dc-4136-842e-4621c0883e15
+    m_ActionName: BoatControls/Reset[/Keyboard/r]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 097a2ec8-8df3-4d48-96e5-fbf096270878
+    m_ActionName: BoatControls/Pause[/Keyboard/f]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c57759c4-f215-4fe9-bd6c-1c835c6074bd
+    m_ActionName: DebugControls/PauseTime[/Keyboard/f5]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: bfb079cd-5e64-4031-b061-eb65384dacba
+    m_ActionName: DebugControls/TimeOfDay[/Keyboard/1,/Keyboard/2]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 136724322}
+        m_TargetAssemblyTypeName: FreeCam, Assembly-CSharp
+        m_MethodName: OnFly
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: dcb52361-6b54-4b32-9f26-1113f408676a
+    m_ActionName: General/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d,/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 136724322}
+        m_TargetAssemblyTypeName: FreeCam, Assembly-CSharp
+        m_MethodName: OnLook
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: a3090ca0-73e4-41a1-8fbf-8bd73d07a424
+    m_ActionName: General/Look[/Mouse/delta,/Pen/delta]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: General
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
+--- !u!114 &136724322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 136724318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72b8fe19b70124c64859cdb3c3a4569b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cam: {fileID: 136724319}
+  speed: 2
+  accelleration: 25
+  sensitivity: {x: 150, y: 80}
+  invertY: 0
 --- !u!1 &141728620
 GameObject:
   m_ObjectHideFlags: 3
@@ -1889,6 +1995,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 248044853180731951, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 712472038069606523, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: m_Lens.m_SensorSize.x
@@ -1933,6 +2044,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: -0.21329314
+      objectReference: {fileID: 0}
+    - target: {fileID: 2415006786018098342, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3924426380732521610, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
@@ -2631,13 +2747,388 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: shadingDebug
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: waves.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
       propertyPath: settingsData._foamIntensity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: waves.Array.data[0].amplitude
+      value: 0.15568809
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: waves.Array.data[1].amplitude
+      value: 0.4050306
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: waves.Array.data[2].amplitude
+      value: 0.1033953
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: waves.Array.data[3].amplitude
+      value: 0.38591906
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: waves.Array.data[4].amplitude
+      value: 0.25119033
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: waves.Array.data[5].amplitude
+      value: 0.3055326
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: waves.Array.data[6].amplitude
+      value: 0.71860415
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: waves.Array.data[6].direction
+      value: 155.92067
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: waves.Array.data[7].amplitude
+      value: 0.5455522
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: waves.Array.data[7].direction
+      value: 243.50688
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: waves.Array.data[0].wavelength
+      value: 4.3886905
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: waves.Array.data[1].wavelength
+      value: 4.900219
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: waves.Array.data[2].wavelength
+      value: 4.3852715
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: waves.Array.data[3].wavelength
+      value: 7.2060027
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: waves.Array.data[4].wavelength
+      value: 10.806945
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: waves.Array.data[5].wavelength
+      value: 9.613432
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: waves.Array.data[6].wavelength
+      value: 6.8086696
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: waves.Array.data[7].wavelength
+      value: 7.9988804
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._microWaveIntensity
       value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._basicWaveSettings.amplitude
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._basicWaveSettings.waveCount
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._basicWaveSettings.wavelength
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: settingsData.planarSettings.m_ResolutionMode
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveFoamProfile.m_Curve.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._shoreFoamProfile.m_Curve.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveDepthProfile.m_Curve.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveFoamProfile.m_Curve.Array.data[0].time
+      value: 0.29876786
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveFoamProfile.m_Curve.Array.data[1].time
+      value: 0.6948398
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveFoamProfile.m_Curve.Array.data[2].time
+      value: 0.75341797
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._shoreFoamProfile.m_Curve.Array.data[0].time
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._shoreFoamProfile.m_Curve.Array.data[1].time
+      value: 0.24174531
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._shoreFoamProfile.m_Curve.Array.data[2].time
+      value: 0.53964376
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveDepthProfile.m_Curve.Array.data[0].time
+      value: 0.4668579
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveDepthProfile.m_Curve.Array.data[1].time
+      value: 0.77778864
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveDepthProfile.m_Curve.Array.data[2].time
+      value: 0.98
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveFoamProfile.m_Curve.Array.data[0].value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveFoamProfile.m_Curve.Array.data[1].value
+      value: 0.35330465
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveFoamProfile.m_Curve.Array.data[2].value
+      value: 0.6074997
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._shoreFoamProfile.m_Curve.Array.data[0].value
+      value: 0.960435
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._shoreFoamProfile.m_Curve.Array.data[1].value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._shoreFoamProfile.m_Curve.Array.data[2].value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveDepthProfile.m_Curve.Array.data[0].value
+      value: 0.99811935
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveDepthProfile.m_Curve.Array.data[1].value
+      value: 0.4199575
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveDepthProfile.m_Curve.Array.data[2].value
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveFoamProfile.m_Curve.Array.data[0].inSlope
+      value: 0.06475836
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveFoamProfile.m_Curve.Array.data[1].inSlope
+      value: 3.4522214
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveFoamProfile.m_Curve.Array.data[2].inSlope
+      value: 0.81137407
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._shoreFoamProfile.m_Curve.Array.data[0].inSlope
+      value: -10.023852
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._shoreFoamProfile.m_Curve.Array.data[1].inSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._shoreFoamProfile.m_Curve.Array.data[2].inSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveDepthProfile.m_Curve.Array.data[1].inSlope
+      value: -4.4902053
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveDepthProfile.m_Curve.Array.data[2].inSlope
+      value: -0.04357293
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveFoamProfile.m_Curve.Array.data[0].outSlope
+      value: 0.06475836
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveFoamProfile.m_Curve.Array.data[1].inWeight
+      value: 0.108597614
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveFoamProfile.m_Curve.Array.data[1].outSlope
+      value: 3.4522214
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveFoamProfile.m_Curve.Array.data[2].inWeight
+      value: 0.4139635
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveFoamProfile.m_Curve.Array.data[2].outSlope
+      value: 0.81137407
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._shoreFoamProfile.m_Curve.Array.data[0].inWeight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._shoreFoamProfile.m_Curve.Array.data[0].outSlope
+      value: -10.023852
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._shoreFoamProfile.m_Curve.Array.data[1].inWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._shoreFoamProfile.m_Curve.Array.data[1].outSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._shoreFoamProfile.m_Curve.Array.data[2].inWeight
+      value: 0.09435319
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._shoreFoamProfile.m_Curve.Array.data[2].outSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveDepthProfile.m_Curve.Array.data[0].outSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveDepthProfile.m_Curve.Array.data[1].inWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveDepthProfile.m_Curve.Array.data[1].outSlope
+      value: -4.4902053
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveDepthProfile.m_Curve.Array.data[2].inWeight
+      value: 0.3610565
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveDepthProfile.m_Curve.Array.data[2].outSlope
+      value: -0.04357293
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveFoamProfile.m_Curve.Array.data[0].outWeight
+      value: 0.14009932
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveFoamProfile.m_Curve.Array.data[1].outWeight
+      value: 0.463654
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._shoreFoamProfile.m_Curve.Array.data[0].outWeight
+      value: 0.121825054
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._shoreFoamProfile.m_Curve.Array.data[1].outWeight
+      value: 0.12955745
+      objectReference: {fileID: 0}
+    - target: {fileID: 7121332023826027706, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: settingsData._waveDepthProfile.m_Curve.Array.data[1].outWeight
+      value: 0.12287019
       objectReference: {fileID: 0}
     - target: {fileID: 7478133644825754170, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
@@ -2664,6 +3155,16 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0.073744975
       objectReference: {fileID: 0}
+    - target: {fileID: 7918928364420327965, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: depthTile
+      value: 
+      objectReference: {fileID: 2800000, guid: 37a375190af9a41f1b65c35d5829ad23, type: 3}
+    - target: {fileID: 7918928364420327965, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8343899349063975409, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: m_Lens.m_SensorSize.x
@@ -2673,6 +3174,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ChildCameras.Array.size
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8412588744993800169, guid: e70416e3bc35d4004a9981d0ac102ba5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8445635489220039792, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
@@ -2741,37 +3247,37 @@ PrefabInstance:
     - target: {fileID: 7003470173341666312, guid: 530da10d6c4d9442e9e8d5eeb77a25d8,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 13
+      value: -88
       objectReference: {fileID: 0}
     - target: {fileID: 7003470173341666312, guid: 530da10d6c4d9442e9e8d5eeb77a25d8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.4
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7003470173341666312, guid: 530da10d6c4d9442e9e8d5eeb77a25d8,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.5
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7003470173341666312, guid: 530da10d6c4d9442e9e8d5eeb77a25d8,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.98674834
+      value: 0.14904708
       objectReference: {fileID: 0}
     - target: {fileID: 7003470173341666312, guid: 530da10d6c4d9442e9e8d5eeb77a25d8,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.04308238
+      value: 0.011147387
       objectReference: {fileID: 0}
     - target: {fileID: 7003470173341666312, guid: 530da10d6c4d9442e9e8d5eeb77a25d8,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.15628563
+      value: 0.9860134
       objectReference: {fileID: 0}
     - target: {fileID: 7003470173341666312, guid: 530da10d6c4d9442e9e8d5eeb77a25d8,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.00682358
+      value: -0.073744975
       objectReference: {fileID: 0}
     - target: {fileID: 7003470173341666312, guid: 530da10d6c4d9442e9e8d5eeb77a25d8,
         type: 3}
@@ -2796,7 +3302,7 @@ PrefabInstance:
     - target: {fileID: 7003470173341666315, guid: 530da10d6c4d9442e9e8d5eeb77a25d8,
         type: 3}
       propertyPath: field of view
-      value: 40
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 7003470173341666315, guid: 530da10d6c4d9442e9e8d5eeb77a25d8,
         type: 3}

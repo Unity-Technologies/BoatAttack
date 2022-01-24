@@ -9,6 +9,10 @@ namespace BoatAttack.UI
         public EnumSelector lapSelector;
         public EnumSelector reverseSelector;
 
+        public LevelData[] levels;
+        public LevelSelectOption[] levelUI;
+        private int currentLevel = 0;
+
         [Header("Boat Selection")] public GameObject[] boatMeshes;
         public TextMeshProUGUI boatName;
         public EnumSelector boatHullSelector;
@@ -25,6 +29,37 @@ namespace BoatAttack.UI
             boatHullSelector.updateVal += UpdateBoat;
             boatPrimaryColorSelector.updateVal += UpdatePrimaryColor;
             boatTrimColorSelector.updateVal += UpdateTrimColor;
+            
+            
+            //New code
+            PopulateLevelUI();
+        }
+
+        private void PopulateLevelUI()
+        {
+            var maxLevel = levels.Length;
+            // make sure current level is within level count
+            currentLevel = (int)Mathf.Repeat(currentLevel, maxLevel);
+            
+            for (int i = 0; i < 5; i++)
+            {
+                var level = (int)Mathf.Repeat(currentLevel + (i - 2), maxLevel);
+                levelUI[i].PopulateData(levels[level]);
+            }
+            
+            Canvas.ForceUpdateCanvases();
+        }
+
+        public void NextLevel()
+        {
+            currentLevel++;
+            PopulateLevelUI();
+        }
+        
+        public void PrevLevel()
+        {
+            currentLevel--;
+            PopulateLevelUI();
         }
 
         private void SetupDefaults()
