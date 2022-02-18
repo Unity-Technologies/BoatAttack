@@ -5,11 +5,11 @@ uniform uint 	_WaveCount; // how many waves, set via the water component
 
 struct Wave
 {
-	half amplitude;
-	half direction;
-	half wavelength;
-	half2 origin;
-	half omni;
+	float amplitude;
+	float direction;
+	float wavelength;
+	float2 origin;
+	float omni;
 };
 
 #if defined(USE_STRUCTURED_BUFFER)
