@@ -4,7 +4,7 @@
 QualitySettings:
   m_ObjectHideFlags: 0
   serializedVersion: 5
-  m_CurrentQuality: 2
+  m_CurrentQuality: 3
   m_QualitySettings:
   - serializedVersion: 2
     name: Low
@@ -126,6 +126,47 @@ QualitySettings:
     - Nintendo Switch
     - WebGL
     - iPhone
+  - serializedVersion: 2
+    name: VeryHigh
+    pixelLightCount: 4
+    shadows: 2
+    shadowResolution: 2
+    shadowProjection: 1
+    shadowCascades: 4
+    shadowDistance: 150
+    shadowNearPlaneOffset: 3
+    shadowCascade2Split: 0.33333334
+    shadowCascade4Split: {x: 0.06666667, y: 0.2, z: 0.46666667}
+    shadowmaskMode: 0
+    skinWeights: 2
+    textureQuality: 0
+    anisotropicTextures: 2
+    antiAliasing: 4
+    softParticles: 1
+    softVegetation: 1
+    realtimeReflectionProbes: 1
+    billboardsFaceCameraPosition: 0
+    vSyncCount: 1
+    lodBias: 4
+    maximumLODLevel: 0
+    streamingMipmapsActive: 1
+    streamingMipmapsAddAllCameras: 1
+    streamingMipmapsMemoryBudget: 512
+    streamingMipmapsRenderersPerFrame: 64
+    streamingMipmapsMaxLevelReduction: 4
+    streamingMipmapsMaxFileIORequests: 1024
+    particleRaycastBudget: 1024
+    asyncUploadTimeSlice: 2
+    asyncUploadBufferSize: 4
+    asyncUploadPersistentBuffer: 1
+    resolutionScalingFixedDPIFactor: 1
+    customRenderPipeline: {fileID: 11400000, guid: 6a8c03c9bad5244efacbabc02cc14b52,
+      type: 2}
+    excludedTargetPlatforms:
+    - Nintendo Switch
+    - WebGL
+    - iPhone
+    - Android
   m_PerPlatformDefaultQuality:
     Android: 2
     Nintendo 3DS: 0
@@ -133,7 +174,7 @@ QualitySettings:
     PS4: 2
     PSP2: 0
     Server: 0
-    Standalone: 2
+    Standalone: 3
     Tizen: 0
     WebGL: 2
     WiiU: 0

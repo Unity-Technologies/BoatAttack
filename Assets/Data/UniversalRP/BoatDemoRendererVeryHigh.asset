@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de640fe3d0db1804a85f9fc8f5cadab6, type: 3}
-  m_Name: BoatDemoRenderer
+  m_Name: BoatDemoRendererVeryHigh
   m_EditorClassIdentifier: 
   debugShaders:
     debugReplacementPS: {fileID: 4800000, guid: cf852408f2e174538bcd9b7fda1c5ae7,
@@ -58,7 +58,8 @@ MonoBehaviour:
   - {fileID: 5126615458422300752}
   - {fileID: -8193634041390225171}
   - {fileID: 6321362856087945974}
-  m_RendererFeatureMap: 50a049f398652547ed286347405d4a8ef682788d06feb957
+  - {fileID: 8314164303123590289}
+  m_RendererFeatureMap: 50a049f398652547ed286347405d4a8ef682788d06feb957912cea2362d86173
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -141,6 +142,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 200e02ce26d6c422db35ba0777d71a09, type: 2}
   - {fileID: 11400000, guid: 4fe8789f8ee054ac49d9f7fe042e0918, type: 2}
   - {fileID: 11400000, guid: dbf7710ff9a33440f8390ed8e04dbb77, type: 2}
+  - {fileID: 0}
 --- !u!114 &6321362856087945974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,3 +163,26 @@ MonoBehaviour:
     downsample: 2
     copyToFramebuffer: 1
     targetName: _blurTexture
+--- !u!114 &8314164303123590289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f62c9c65cf3354c93be831c8bc075510, type: 3}
+  m_Name: ScreenSpaceAmbientOcclusion
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  m_Shader: {fileID: 4800000, guid: 0849e84e3d62649e8882e9d6f056a017, type: 3}
+  m_Settings:
+    Downsample: 0
+    AfterOpaque: 0
+    Source: 1
+    NormalSamples: 1
+    Intensity: 0.5
+    DirectLightingStrength: 0.25
+    Radius: 3
+    SampleCount: 14
