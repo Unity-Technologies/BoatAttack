@@ -81,12 +81,19 @@ public static class Utility
         tableTrans.offsetMin = tableTrans.offsetMax = Vector2.zero;
     }
 
-    public static void SafeDestroy(Object obj)
+    public static void SafeDestroy(Object obj, bool immediate = false)
     {
         if (obj != null)
         {
 #if UNITY_EDITOR
-            EditorApplication.delayCall += () => Object.DestroyImmediate(obj);
+            if (immediate)
+            {
+                Object.DestroyImmediate(obj);
+            }
+            else
+            {
+                EditorApplication.delayCall += () => Object.DestroyImmediate(obj);
+            }
             return;
 #else
             Object.Destroy(obj);
