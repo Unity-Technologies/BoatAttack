@@ -52,6 +52,7 @@ public class BuoyManager : MonoBehaviour
 
     private void OnEnable()
     {
+        if(buoyPoints == null || buoyPoints.Length == 0) return;
         SetupArrays();
         _guid = gameObject.GetInstanceID();
         RefreshArrows();
@@ -59,6 +60,7 @@ public class BuoyManager : MonoBehaviour
 
     private void OnDisable()
     {
+        if(buoyPoints == null || buoyPoints.Length == 0) return;
         GerstnerWavesJobs.RemoveSamplePoints(_guid);
         _samplePoints.Dispose();
         CleanupArrows();
@@ -66,6 +68,8 @@ public class BuoyManager : MonoBehaviour
     
     private void UpdateSystem()
     {
+        if(buoyPoints == null || buoyPoints.Length == 0) return;
+        
         GerstnerWavesJobs.RemoveSamplePoints(_guid);
         points = GeneratePoints(spacing, angleThreshold, cmPath);
         buoyPoints = SplitBuoys(points);
@@ -91,6 +95,8 @@ public class BuoyManager : MonoBehaviour
     // Update is called once per frame
     private void LateUpdate()
     {
+        if(buoyPoints == null || buoyPoints.Length == 0) return;
+        
         GerstnerWavesJobs.UpdateSamplePoints(ref _samplePoints, _guid);
         GerstnerWavesJobs.GetData(_guid, ref _heights, ref _normals);
         
@@ -149,7 +155,6 @@ public class BuoyManager : MonoBehaviour
 
     private void CleanupArrows()
     {
-        Debug.LogError("cleaning up arrows");
         foreach (var t in arrows)
         {
 #if UNITY_EDITOR

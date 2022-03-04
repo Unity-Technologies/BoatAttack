@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using WaterSystem;
 
+/*
 [ExecuteAlways]
 public class GenericDebugGUI : MonoBehaviour
 {
@@ -25,3 +26,4 @@ public class GenericDebugGUI : MonoBehaviour
         return output;
     }
 }
+*/

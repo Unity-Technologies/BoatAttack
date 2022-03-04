@@ -54,7 +54,7 @@ MonoBehaviour:
   offset: 4
   mask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
 --- !u!1 &6589000189934312664
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,7 +122,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2415006786018098342}
-  - component: {fileID: 2735462333026257300}
+  - component: {fileID: 8737045625349174020}
   m_Layer: 4
   m_Name: Water
   m_TagString: Untagged
@@ -146,7 +146,7 @@ Transform:
   m_Father: {fileID: 6589000189934312487}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2735462333026257300
+--- !u!114 &8737045625349174020
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -160,56 +160,56 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   computeOverride: 0
   waves:
-  - amplitude: 0.40245375
+  - amplitude: 0.19461012
     direction: 106.22566
-    wavelength: 5.376146
+    wavelength: 2.7429316
     origin:
       x: 0
       y: 0
     onmiDir: 0
-  - amplitude: 1.1168045
+  - amplitude: 0.54004085
     direction: 23.92044
-    wavelength: 6.402953
+    wavelength: 3.2668128
     origin:
       x: 0
       y: 0
     onmiDir: 0
-  - amplitude: 0.2969743
+  - amplitude: 0.14360458
     direction: 103.05429
-    wavelength: 5.968842
+    wavelength: 3.0453277
     origin:
       x: 0
       y: 0
     onmiDir: 0
-  - amplitude: 1.1401151
+  - amplitude: 0.5513129
     direction: 67.21166
-    wavelength: 10.088404
+    wavelength: 5.147145
     origin:
       x: 0
       y: 0
     onmiDir: 0
-  - amplitude: 0.7575483
+  - amplitude: 0.36631927
     direction: 18.688784
-    wavelength: 15.444926
+    wavelength: 7.880065
     origin:
       x: 0
       y: 0
     onmiDir: 0
-  - amplitude: 0.93606144
+  - amplitude: 0.4526409
     direction: -16.49971
-    wavelength: 13.95728
+    wavelength: 7.121061
     origin:
       x: 0
       y: 0
     onmiDir: 0
   settingsData:
-    rid: 6556427981527973888
+    rid: 6822551097165479937
   resources: {fileID: 11400000, guid: 40615c805d6e84ce7800418367985fe1, type: 2}
   shadingDebug: 0
   references:
     version: 2
     RefIds:
-    - rid: 6556427981527973888
+    - rid: 6822551097165479937
       type: {class: Data/OceanSettings, ns: WaterSystem, asm: WaterSystem}
       data:
         waterGeomType: 0
@@ -225,22 +225,23 @@ MonoBehaviour:
             serializedVersion: 2
             m_Bits: 4294967295
           m_Shadows: 0
+          m_ObliqueProjection: 1
           m_RendererMode: 0
           m_RendererIndex: 0
         isInfinite: 0
         distanceBlend: 100
         randomSeed: 3234
         cubemapRefType: {fileID: 0}
-        _waterMaxVisibility: 5
-        _absorptionColor: {r: 0.2, g: 0.8, b: 0.77550334, a: 1}
-        _scatteringColor: {r: 0.14929691, g: 0.5499368, b: 0.5754717, a: 1}
+        _waterMaxVisibility: 7.7
+        _absorptionColor: {r: 0.2, g: 0.8, b: 0.75893503, a: 1}
+        _scatteringColor: {r: 0.024474904, g: 0.4716981, b: 0.36214843, a: 1}
         _waves: []
         _customWaves: 0
         _basicWaveSettings:
           waveCount: 6
-          amplitude: 1.034
+          amplitude: 0.5
           direction: 45
-          wavelength: 9.8
+          wavelength: 5
         _waveFoamProfile:
           serializedVersion: 2
           m_Curve:
@@ -290,7 +291,7 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         _microWaveIntensity: 0.25
-        _foamIntensity: 0.66
+        _foamIntensity: 1
         _shoreFoamProfile:
           serializedVersion: 2
           m_Curve:
@@ -480,32 +481,32 @@ PrefabInstance:
     - target: {fileID: 5338938813024292203, guid: e4e9c6cc7bf6a59499cff03d98d0ffee,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.125
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5338938813024292203, guid: e4e9c6cc7bf6a59499cff03d98d0ffee,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.125
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5338938813024292203, guid: e4e9c6cc7bf6a59499cff03d98d0ffee,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.125
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5338938813024292203, guid: e4e9c6cc7bf6a59499cff03d98d0ffee,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -78.40631
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5338938813024292203, guid: e4e9c6cc7bf6a59499cff03d98d0ffee,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.257682
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5338938813024292203, guid: e4e9c6cc7bf6a59499cff03d98d0ffee,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -12.54014
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5338938813024292203, guid: e4e9c6cc7bf6a59499cff03d98d0ffee,
         type: 3}
@@ -875,17 +876,17 @@ PrefabInstance:
     - target: {fileID: 260768678613927326, guid: e8d3746aee68c468f86cbabb0b56502f,
         type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 2.0765028
+      value: 1.7778937
       objectReference: {fileID: 0}
     - target: {fileID: 398479823480385625, guid: e8d3746aee68c468f86cbabb0b56502f,
         type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 2.0765028
+      value: 1.7778937
       objectReference: {fileID: 0}
     - target: {fileID: 1883105363741038948, guid: e8d3746aee68c468f86cbabb0b56502f,
         type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 2.0765028
+      value: 1.7778937
       objectReference: {fileID: 0}
     - target: {fileID: 3027621729415438540, guid: e8d3746aee68c468f86cbabb0b56502f,
         type: 3}
@@ -895,12 +896,12 @@ PrefabInstance:
     - target: {fileID: 3310089933708772932, guid: e8d3746aee68c468f86cbabb0b56502f,
         type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 2.0765028
+      value: 1.7778937
       objectReference: {fileID: 0}
     - target: {fileID: 4171208380525903247, guid: e8d3746aee68c468f86cbabb0b56502f,
         type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 2.0765028
+      value: 1.7778937
       objectReference: {fileID: 0}
     - target: {fileID: 5076232292041737950, guid: e8d3746aee68c468f86cbabb0b56502f,
         type: 3}
@@ -985,22 +986,22 @@ PrefabInstance:
     - target: {fileID: 6005287513089120983, guid: e8d3746aee68c468f86cbabb0b56502f,
         type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 2.0765028
+      value: 1.7778937
       objectReference: {fileID: 0}
     - target: {fileID: 6325169933702733774, guid: e8d3746aee68c468f86cbabb0b56502f,
         type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 2.0765028
+      value: 1.7778937
       objectReference: {fileID: 0}
     - target: {fileID: 6328882832758001489, guid: e8d3746aee68c468f86cbabb0b56502f,
         type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 2.0765028
+      value: 1.7778937
       objectReference: {fileID: 0}
     - target: {fileID: 7011785049636061889, guid: e8d3746aee68c468f86cbabb0b56502f,
         type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 2.0765028
+      value: 1.7778937
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e8d3746aee68c468f86cbabb0b56502f, type: 3}
@@ -1017,6 +1018,51 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6589000189934312487}
     m_Modifications:
+    - target: {fileID: 543646049902552566, guid: af7e3352382514479b91bf48c1e8f88e,
+        type: 3}
+      propertyPath: m_Cookie
+      value: 
+      objectReference: {fileID: 2800000, guid: c62de0135f4fb43a1a711d98b44ef695, type: 3}
+    - target: {fileID: 543646049902552566, guid: af7e3352382514479b91bf48c1e8f88e,
+        type: 3}
+      propertyPath: m_UseColorTemperature
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1536137165001182760, guid: af7e3352382514479b91bf48c1e8f88e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.4924039
+      objectReference: {fileID: 0}
+    - target: {fileID: 1536137165001182760, guid: af7e3352382514479b91bf48c1e8f88e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.41317588
+      objectReference: {fileID: 0}
+    - target: {fileID: 1536137165001182760, guid: af7e3352382514479b91bf48c1e8f88e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.5868242
+      objectReference: {fileID: 0}
+    - target: {fileID: 1536137165001182760, guid: af7e3352382514479b91bf48c1e8f88e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.4924039
+      objectReference: {fileID: 0}
+    - target: {fileID: 1536137165001182760, guid: af7e3352382514479b91bf48c1e8f88e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 2643960080299466289, guid: af7e3352382514479b91bf48c1e8f88e,
+        type: 3}
+      propertyPath: m_LightCookieOffset.x
+      value: 8.601931
+      objectReference: {fileID: 0}
+    - target: {fileID: 2643960080299466289, guid: af7e3352382514479b91bf48c1e8f88e,
+        type: 3}
+      propertyPath: m_LightCookieOffset.y
+      value: 499.4812
+      objectReference: {fileID: 0}
     - target: {fileID: 4503953258026586762, guid: af7e3352382514479b91bf48c1e8f88e,
         type: 3}
       propertyPath: m_Name
@@ -1079,32 +1125,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: af7e3352382514479b91bf48c1e8f88e, type: 3}
---- !u!1 &1185602264756993871 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8468332563005190509, guid: af7e3352382514479b91bf48c1e8f88e,
-    type: 3}
-  m_PrefabInstance: {fileID: 7345816720632778274}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1644014369259683766
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1185602264756993871}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Version: 1
-  m_UsePipelineSettings: 1
-  m_AdditionalLightsShadowResolutionTier: 2
-  m_LightLayerMask: 1
-  m_CustomShadowLayers: 0
-  m_ShadowLayerMask: 1
-  m_LightCookieSize: {x: 1, y: 1}
-  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!4 &6589000189763280055 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4503953258026586773, guid: af7e3352382514479b91bf48c1e8f88e,
