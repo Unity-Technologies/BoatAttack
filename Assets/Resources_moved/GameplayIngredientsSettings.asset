@@ -12,14 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b86121d23ed10e40bcfa3df03459c5c, type: 3}
   m_Name: GameplayIngredientsSettings
   m_EditorClassIdentifier: 
-  m_DisableWelcomeScreenAutoStart: 0
+  m_DisableWelcomeScreenAutoStart: 1
   m_ExcludedManagers:
+  - AppSettings
   - FullScreenFadeManager
+  - GameManager
   - GameSaveManager
+  - RandomManager
   - ScreenshotManager
   - UIEventManager
   - VirtualCameraManager
   - LevelStreamingManager
-  - GameManager
   m_VerboseCalls: 0
   m_AllowUpdateCalls: 0

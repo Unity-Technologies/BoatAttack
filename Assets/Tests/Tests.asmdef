@@ -1,18 +1,19 @@
 {
-    "name": "UnityGFXTests.BoatAttack",
+    "name": "Tests",
     "rootNamespace": "",
     "references": [
-        "GUID:c081bc530f560634bb5c21d4b323a7f1",
-        "GUID:27619889b8ba8c24980f49ee34dbb44a"
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Unity.Profiling.SystemMetrics.Mali"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
-    "allowUnsafeCode": false,
+    "allowUnsafeCode": true,
     "overrideReferences": true,
     "precompiledReferences": [
         "nunit.framework.dll"
     ],
-    "autoReferenced": false,
+    "autoReferenced": true,
     "defineConstraints": [
         "UNITY_INCLUDE_TESTS"
     ],
