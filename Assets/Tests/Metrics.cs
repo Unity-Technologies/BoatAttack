@@ -47,7 +47,7 @@ public class Metrics
         ProfilerRecorderHandle recorderHandle = (ProfilerRecorderHandle)maliFields.GetProperty(value).GetValue(SystemMetricsMali.Instance);
         profilerRecorder = new ProfilerRecorder(recorderHandle);
 
-        SceneManager.LoadScene(1, LoadSceneMode.Single);
+        SceneManager.LoadScene("TestScene", LoadSceneMode.Single);
 
         prepareTime = 5.0f;
         testRunTime = 30.0f;
