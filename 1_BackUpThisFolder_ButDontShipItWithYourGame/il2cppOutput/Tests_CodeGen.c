@@ -1,0 +1,77 @@
+﻿#include "pch-c.h"
+#ifndef _MSC_VER
+# include <alloca.h>
+#else
+# include <malloc.h>
+#endif
+
+
+#include "codegen/il2cpp-codegen-metadata.h"
+
+
+
+
+
+extern void Metrics_MaliMetrix_ReturnsNotNull_IfCalled_m4581C18DA8015299E03F42E6964573867D1AA465 (void);
+extern void Metrics__ctor_m8F766927792E41ABEAE1BD47330F7A7EA88B2B40 (void);
+extern void Metrics__cctor_mC1DD8CE08780B39C4A69C3D8DDADB8495A92D67A (void);
+extern void U3CMaliMetrix_ReturnsNotNull_IfCalledU3Ed__10__ctor_m2B9288548DD9740C92748B3DD5AD3A664B715DCA (void);
+extern void U3CMaliMetrix_ReturnsNotNull_IfCalledU3Ed__10_System_IDisposable_Dispose_mF5D83C87E1B68CBDBEBFA07B6A8C3D12CBADD9DB (void);
+extern void U3CMaliMetrix_ReturnsNotNull_IfCalledU3Ed__10_MoveNext_m4F11F60C3334BA3D0A888462C25EFED1443EB721 (void);
+extern void U3CMaliMetrix_ReturnsNotNull_IfCalledU3Ed__10_System_Collections_Generic_IEnumeratorU3CSystem_ObjectU3E_get_Current_m586B7E96AA17D616FBC5355C498E2CA8FCC4A17B (void);
+extern void U3CMaliMetrix_ReturnsNotNull_IfCalledU3Ed__10_System_Collections_IEnumerator_Reset_m9163D283A70F1BD6A2FEB36DDF770F8EE4917603 (void);
+extern void U3CMaliMetrix_ReturnsNotNull_IfCalledU3Ed__10_System_Collections_IEnumerator_get_Current_m6913F81B55FB79114461FC3A74C0A53EC4911524 (void);
+extern void UnitySourceGeneratedAssemblyMonoScriptTypes_IsEditorOnly_mB7BC2CD6FB3FD993CA0A8E07326DFD396C2EDB5C (void);
+extern void UnitySourceGeneratedAssemblyMonoScriptTypes_Get_m2FABE6F7212852365EDF05E2535BA7807ECD4932 (void);
+extern void UnitySourceGeneratedAssemblyMonoScriptTypes__ctor_m87A2B7CA07E948D1D7229B003E1D4EEC2BCC29A2 (void);
+static Il2CppMethodPointer s_methodPointers[12] = 
+{
+	Metrics_MaliMetrix_ReturnsNotNull_IfCalled_m4581C18DA8015299E03F42E6964573867D1AA465,
+	Metrics__ctor_m8F766927792E41ABEAE1BD47330F7A7EA88B2B40,
+	Metrics__cctor_mC1DD8CE08780B39C4A69C3D8DDADB8495A92D67A,
+	U3CMaliMetrix_ReturnsNotNull_IfCalledU3Ed__10__ctor_m2B9288548DD9740C92748B3DD5AD3A664B715DCA,
+	U3CMaliMetrix_ReturnsNotNull_IfCalledU3Ed__10_System_IDisposable_Dispose_mF5D83C87E1B68CBDBEBFA07B6A8C3D12CBADD9DB,
+	U3CMaliMetrix_ReturnsNotNull_IfCalledU3Ed__10_MoveNext_m4F11F60C3334BA3D0A888462C25EFED1443EB721,
+	U3CMaliMetrix_ReturnsNotNull_IfCalledU3Ed__10_System_Collections_Generic_IEnumeratorU3CSystem_ObjectU3E_get_Current_m586B7E96AA17D616FBC5355C498E2CA8FCC4A17B,
+	U3CMaliMetrix_ReturnsNotNull_IfCalledU3Ed__10_System_Collections_IEnumerator_Reset_m9163D283A70F1BD6A2FEB36DDF770F8EE4917603,
+	U3CMaliMetrix_ReturnsNotNull_IfCalledU3Ed__10_System_Collections_IEnumerator_get_Current_m6913F81B55FB79114461FC3A74C0A53EC4911524,
+	UnitySourceGeneratedAssemblyMonoScriptTypes_IsEditorOnly_mB7BC2CD6FB3FD993CA0A8E07326DFD396C2EDB5C,
+	UnitySourceGeneratedAssemblyMonoScriptTypes_Get_m2FABE6F7212852365EDF05E2535BA7807ECD4932,
+	UnitySourceGeneratedAssemblyMonoScriptTypes__ctor_m87A2B7CA07E948D1D7229B003E1D4EEC2BCC29A2,
+};
+static const int32_t s_InvokerIndices[12] = 
+{
+	6497,
+	9162,
+	15732,
+	7230,
+	9162,
+	8880,
+	9016,
+	9162,
+	9016,
+	15639,
+	15675,
+	9162,
+};
+IL2CPP_EXTERN_C const Il2CppCodeGenModule g_Tests_CodeGenModule;
+const Il2CppCodeGenModule g_Tests_CodeGenModule = 
+{
+	"Tests.dll",
+	12,
+	s_methodPointers,
+	0,
+	NULL,
+	s_InvokerIndices,
+	0,
+	NULL,
+	0,
+	NULL,
+	0,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+};
