@@ -19,8 +19,8 @@ public static class Utility
         var curLevel = QualitySettings.GetQualityLevel();
         if (lastQualityLevel == curLevel) return;
 
-        if(Debug.isDebugBuild)
-            Debug.Log($"Quality level changed:{lastQualityLevel} to {curLevel}");
+        //if(Debug.isDebugBuild)
+        //    Debug.Log($"Quality level changed:{lastQualityLevel} to {curLevel}");
         var realIndex = GetTrueQualityLevel(curLevel);
         QualityLevelChange?.Invoke(curLevel, realIndex);
         lastQualityLevel = curLevel;

@@ -62,8 +62,8 @@ namespace BoatAttack
         // Use this for initialization
         private void Awake()
         {
-            if(Debug.isDebugBuild)
-                Debug.Log("AppManager initializing");
+            //if(Debug.isDebugBuild)
+            //    Debug.Log("AppManager initializing");
             Initialize();
             CmdArgs();
             SetRenderScale();
@@ -123,8 +123,8 @@ namespace BoatAttack
             };
             var renderScale = Mathf.Clamp(res / Screen.width, 0.1f, 1.0f);
 
-            if(Debug.isDebugBuild)
-                Debug.Log($"Settings render scale to {renderScale * 100}% based on {maxRenderSize.ToString()}");
+            //if(Debug.isDebugBuild)
+            //    Debug.Log($"Settings render scale to {renderScale * 100}% based on {maxRenderSize.ToString()}");
 
             maxScale = renderScale;
 #if !UNITY_EDITOR
