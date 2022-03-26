@@ -27,8 +27,6 @@ namespace BoatAttack
 
             _controls.BoatControls.Reset.performed += ResetBoat;
             _controls.BoatControls.Freeze.performed += FreezeBoat;
-
-            _controls.BoatControls.Time.performed += SelectTime;
         }
 
         public override void OnEnable()

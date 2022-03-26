@@ -27,14 +27,6 @@ public class @InputControls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Time"",
-                    ""type"": ""Value"",
-                    ""id"": ""637a3778-b50e-41a0-8669-f7b1698fc4ca"",
-                    ""expectedControlType"": """",
-                    ""processors"": ""AxisDeadzone(min=0.1,max=1)"",
-                    ""interactions"": """"
-                },
-                {
                     ""name"": ""Steering"",
                     ""type"": ""Value"",
                     ""id"": ""67e3403a-b3e8-43af-ab52-4575ba23afef"",
@@ -400,94 +392,6 @@ public class @InputControls : IInputActionCollection, IDisposable
                     ""action"": ""Freeze"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""b7d3341c-7abe-48e6-a68e-b27eb3927b79"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Time"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""Dpad horizontal"",
-                    ""id"": ""3c94f068-2cc6-4d07-a76a-3835151e0b0e"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Time"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""aa687506-3f38-4cdc-8f14-f77ce23789d9"",
-                    ""path"": ""<Gamepad>/dpad/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Time"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""59cadf6b-f60d-4a7e-9b9c-a21ecfdfb51e"",
-                    ""path"": ""<Gamepad>/dpad/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Time"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""Keyboard"",
-                    ""id"": ""e8db53d1-5ded-40fe-965b-727f321a403a"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Time"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""d5357c68-6b8a-4c12-996c-801c5a015beb"",
-                    ""path"": ""<Keyboard>/1"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Time"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""9a495693-8098-4d83-b2d6-711526e83c37"",
-                    ""path"": ""<Keyboard>/2"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""Time"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""38dc845f-f219-4b56-947c-542a4cf33da6"",
-                    ""path"": ""<Touchscreen>/primaryTouch/tapCount"",
-                    ""interactions"": ""MultiTap"",
-                    ""processors"": """",
-                    ""groups"": ""TouchScreen"",
-                    ""action"": ""Time"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -536,7 +440,6 @@ public class @InputControls : IInputActionCollection, IDisposable
         // BoatControls
         m_BoatControls = asset.FindActionMap("BoatControls", throwIfNotFound: true);
         m_BoatControls_Trottle = m_BoatControls.FindAction("Trottle", throwIfNotFound: true);
-        m_BoatControls_Time = m_BoatControls.FindAction("Time", throwIfNotFound: true);
         m_BoatControls_Steering = m_BoatControls.FindAction("Steering", throwIfNotFound: true);
         m_BoatControls_Reset = m_BoatControls.FindAction("Reset", throwIfNotFound: true);
         m_BoatControls_Freeze = m_BoatControls.FindAction("Freeze", throwIfNotFound: true);
@@ -590,7 +493,6 @@ public class @InputControls : IInputActionCollection, IDisposable
     private readonly InputActionMap m_BoatControls;
     private IBoatControlsActions m_BoatControlsActionsCallbackInterface;
     private readonly InputAction m_BoatControls_Trottle;
-    private readonly InputAction m_BoatControls_Time;
     private readonly InputAction m_BoatControls_Steering;
     private readonly InputAction m_BoatControls_Reset;
     private readonly InputAction m_BoatControls_Freeze;
@@ -599,7 +501,6 @@ public class @InputControls : IInputActionCollection, IDisposable
         private @InputControls m_Wrapper;
         public BoatControlsActions(@InputControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Trottle => m_Wrapper.m_BoatControls_Trottle;
-        public InputAction @Time => m_Wrapper.m_BoatControls_Time;
         public InputAction @Steering => m_Wrapper.m_BoatControls_Steering;
         public InputAction @Reset => m_Wrapper.m_BoatControls_Reset;
         public InputAction @Freeze => m_Wrapper.m_BoatControls_Freeze;
@@ -615,9 +516,6 @@ public class @InputControls : IInputActionCollection, IDisposable
                 @Trottle.started -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnTrottle;
                 @Trottle.performed -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnTrottle;
                 @Trottle.canceled -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnTrottle;
-                @Time.started -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnTime;
-                @Time.performed -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnTime;
-                @Time.canceled -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnTime;
                 @Steering.started -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnSteering;
                 @Steering.performed -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnSteering;
                 @Steering.canceled -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnSteering;
@@ -634,9 +532,6 @@ public class @InputControls : IInputActionCollection, IDisposable
                 @Trottle.started += instance.OnTrottle;
                 @Trottle.performed += instance.OnTrottle;
                 @Trottle.canceled += instance.OnTrottle;
-                @Time.started += instance.OnTime;
-                @Time.performed += instance.OnTime;
-                @Time.canceled += instance.OnTime;
                 @Steering.started += instance.OnSteering;
                 @Steering.performed += instance.OnSteering;
                 @Steering.canceled += instance.OnSteering;
@@ -680,7 +575,6 @@ public class @InputControls : IInputActionCollection, IDisposable
     public interface IBoatControlsActions
     {
         void OnTrottle(InputAction.CallbackContext context);
-        void OnTime(InputAction.CallbackContext context);
         void OnSteering(InputAction.CallbackContext context);
         void OnReset(InputAction.CallbackContext context);
         void OnFreeze(InputAction.CallbackContext context);
