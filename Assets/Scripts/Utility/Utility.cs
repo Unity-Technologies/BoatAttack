@@ -107,7 +107,7 @@ internal class UtilityScheduler
         // setup the things
         if(Debug.isDebugBuild)
             Debug.Log("Setting up some utilities");
-        EditorApplication.update += Utility.CheckQualityLevel;
+        //EditorApplication.update += Utility.CheckQualityLevel;
     }
 }
 #endif

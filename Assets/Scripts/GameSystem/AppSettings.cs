@@ -114,59 +114,62 @@ namespace BoatAttack
 
         private void SetRenderScale()
         {
-            var res = maxRenderSize switch
-            {
-                RenderRes._720p => 1280f,
-                RenderRes._1080p => 1920f,
-                RenderRes._1440p => 2560f,
-                _ => Screen.width
-            };
-            var renderScale = Mathf.Clamp(res / Screen.width, 0.1f, 1.0f);
+//            return;
 
-            if(Debug.isDebugBuild)
-                Debug.Log($"Settings render scale to {renderScale * 100}% based on {maxRenderSize.ToString()}");
+//            var res = maxRenderSize switch
+//            {
+//                RenderRes._720p => 1280f,
+//                RenderRes._1080p => 1920f,
+//                RenderRes._1440p => 2560f,
+//                _ => Screen.width
+//            };
+//            var renderScale = Mathf.Clamp(res / Screen.width, 0.1f, 1.0f);
 
-            maxScale = renderScale;
-#if !UNITY_EDITOR
-            UniversalRenderPipeline.asset.renderScale = renderScale;
-#endif
+//            if(Debug.isDebugBuild)
+//                Debug.Log($"Settings render scale to {renderScale * 100}% based on {maxRenderSize.ToString()}");
+
+//            maxScale = renderScale;
+//#if !UNITY_EDITOR
+//            UniversalRenderPipeline.asset.renderScale = renderScale;
+//#endif
         }
 
         private void Update()
         {
-#if !UNITY_EDITOR
-            Utility.CheckQualityLevel(); //TODO - hoping to remove one day when we have a quality level callback
-#endif
+//            return;
+//#if !UNITY_EDITOR
+//            Utility.CheckQualityLevel(); //TODO - hoping to remove one day when we have a quality level callback
+//#endif
 
-            if (!MainCamera) return;
+//            if (!MainCamera) return;
 
-            if (variableResolution)
-            {
-                MainCamera.allowDynamicResolution = true;
+//            if (variableResolution)
+//            {
+//                MainCamera.allowDynamicResolution = true;
 
-                var offset = 0f;
-                var currentFrametime = Time.deltaTime;
-                const float rate = 0.1f;
+//                var offset = 0f;
+//                var currentFrametime = Time.deltaTime;
+//                const float rate = 0.1f;
 
-                offset = targetFramerate switch
-                {
-                    Framerate._30 => currentFrametime > (1000f / 30f) ? -rate : rate,
-                    Framerate._60 => currentFrametime > (1000f / 60f) ? -rate : rate,
-                    Framerate._120 => currentFrametime > (1000f / 120f) ? -rate : rate,
-                    _ => offset
-                };
+//                offset = targetFramerate switch
+//                {
+//                    Framerate._30 => currentFrametime > (1000f / 30f) ? -rate : rate,
+//                    Framerate._60 => currentFrametime > (1000f / 60f) ? -rate : rate,
+//                    Framerate._120 => currentFrametime > (1000f / 120f) ? -rate : rate,
+//                    _ => offset
+//                };
 
-                currentDynamicScale = Mathf.Clamp(currentDynamicScale + offset, minScale, 1f);
+//                currentDynamicScale = Mathf.Clamp(currentDynamicScale + offset, minScale, 1f);
 
-                var offsetVec = new Vector2(Mathf.Lerp(1, currentDynamicScale, Mathf.Clamp01((1 - axisBias) * 2f)),
-                    Mathf.Lerp(1, currentDynamicScale, Mathf.Clamp01(axisBias * 2f)));
+//                var offsetVec = new Vector2(Mathf.Lerp(1, currentDynamicScale, Mathf.Clamp01((1 - axisBias) * 2f)),
+//                    Mathf.Lerp(1, currentDynamicScale, Mathf.Clamp01(axisBias * 2f)));
 
-                ScalableBufferManager.ResizeBuffers(offsetVec.x, offsetVec.y);
-            }
-            else
-            {
-                MainCamera.allowDynamicResolution = false;
-            }
+//                ScalableBufferManager.ResizeBuffers(offsetVec.x, offsetVec.y);
+//            }
+//            else
+//            {
+//                MainCamera.allowDynamicResolution = false;
+//            }
         }
 
         public void ToggleSRPBatcher(bool enabled)
@@ -317,6 +320,7 @@ namespace BoatAttack
             "Hakeem",
             "Sophia",
             "Martin",
+            "db"
         };
 
         public static readonly int[] Laps =
