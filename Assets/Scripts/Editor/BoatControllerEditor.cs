@@ -67,41 +67,31 @@ namespace BoatAttack
         }
     }
 
-    [CustomPropertyDrawer(typeof(BoatData))]
+    //[CustomPropertyDrawer(typeof(BoatData))]
     public class BoatDataDrawer : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            EditorGUI.BeginProperty(position, label, property);
-            var singleHeight = EditorGUIUtility.singleLineHeight;
-            var singleSpace = EditorGUIUtility.standardVerticalSpacing;
-            var oldLabelWidth = EditorGUIUtility.labelWidth;
-            EditorGUI.indentLevel--;
-            EditorGUIUtility.labelWidth = 100;
-
-            var halfSize = new Vector2(position.width / 2, singleHeight);
-            var nameRect = new Rect(position.position + new Vector2(5, singleSpace), halfSize);
-            var prefabRect = new Rect(position.position + new Vector2(nameRect.width, 0), halfSize);
-            var humanRect = new Rect(position.position + new Vector2(5, singleHeight + singleSpace), halfSize);
-            var color1Rect = new Rect(position.position + new Vector2(humanRect.width, singleHeight + singleSpace), halfSize * new Vector2(0.5f, 1f));
-            var color2Rect = new Rect(position.position + new Vector2(humanRect.width + color1Rect.width, singleHeight + singleSpace), halfSize * new Vector2(0.5f, 1f));
-
-            Rect box = EditorGUI.IndentedRect(position);
-            GUI.Box(box, "", EditorStyles.helpBox);
-
-            var nameProp = property.FindPropertyRelative(nameof(BoatData.boatName));
+            // name
+            var nameProp = property.FindPropertyRelative(nameof(BoatData.name));
+            var nameRect = EditorGUILayout.GetControlRect();
             nameProp.stringValue = EditorGUI.TextField(nameRect, "Boat Name", nameProp.stringValue);
+            
+            // stats
+            
+            // runtime data
+            var humanRect = EditorGUILayout.GetControlRect();
+            EditorGUI.PropertyField(humanRect, property.FindPropertyRelative(nameof(BoatData.Human)));
+            var color1Rect = EditorGUILayout.GetControlRect();
+            EditorGUI.PropertyField(color1Rect, property.FindPropertyRelative(nameof(BoatData.Livery)).FindPropertyRelative(nameof(BoatLivery.primaryColor)));
+            var color2Rect = EditorGUILayout.GetControlRect();
+            EditorGUI.PropertyField(color2Rect, property.FindPropertyRelative(nameof(BoatData.Livery)).FindPropertyRelative(nameof(BoatLivery.trimColor)));
+
+            
+            // assets
             var prefabProp = property.FindPropertyRelative(nameof(BoatData.boatPrefab));
+            var prefabRect = EditorGUILayout.GetControlRect();
             EditorGUI.PropertyField(prefabRect, prefabProp, new GUIContent("Asset"));
-            EditorGUI.PropertyField(humanRect, property.FindPropertyRelative(nameof(BoatData.human)));
-
-            EditorGUIUtility.labelWidth = 70;
-            EditorGUI.PropertyField(color1Rect, property.FindPropertyRelative(nameof(BoatData.livery)).FindPropertyRelative(nameof(BoatLivery.primaryColor)));
-            EditorGUI.PropertyField(color2Rect, property.FindPropertyRelative(nameof(BoatData.livery)).FindPropertyRelative(nameof(BoatLivery.trimColor)));
-
-            EditorGUIUtility.labelWidth = oldLabelWidth;
-            EditorGUI.indentLevel++;
-            EditorGUI.EndProperty();
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)

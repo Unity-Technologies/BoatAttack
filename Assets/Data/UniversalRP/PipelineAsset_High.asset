@@ -27,7 +27,10 @@ MonoBehaviour:
   m_StoreActionsOptimization: 0
   m_SupportsHDR: 1
   m_MSAA: 4
-  m_RenderScale: 1
+  m_RenderScale: 0.9
+  m_UpscalingFilter: 3
+  m_FsrOverrideSharpness: 0
+  m_FsrSharpness: 0.92
   m_MainLightRenderingMode: 1
   m_MainLightShadowsSupported: 1
   m_MainLightShadowmapResolution: 4096
@@ -49,7 +52,7 @@ MonoBehaviour:
   m_ShadowDepthBias: 0.75
   m_ShadowNormalBias: 0.75
   m_SoftShadowsSupported: 1
-  m_ConservativeEnclosingSphere: 0
+  m_ConservativeEnclosingSphere: 1
   m_NumIterationsEnclosingSphere: 64
   m_AdditionalLightsCookieResolution: 2048
   m_AdditionalLightsCookieFormat: 3

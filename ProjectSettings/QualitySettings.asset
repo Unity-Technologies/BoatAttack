@@ -4,7 +4,7 @@
 QualitySettings:
   m_ObjectHideFlags: 0
   serializedVersion: 5
-  m_CurrentQuality: 3
+  m_CurrentQuality: 0
   m_QualitySettings:
   - serializedVersion: 2
     name: Low
@@ -19,8 +19,8 @@ QualitySettings:
     shadowCascade4Split: {x: 0.06666667, y: 0.2, z: 0.46666667}
     shadowmaskMode: 0
     skinWeights: 2
-    textureQuality: 1
-    anisotropicTextures: 0
+    textureQuality: 0
+    anisotropicTextures: 1
     antiAliasing: 0
     softParticles: 1
     softVegetation: 1
@@ -28,7 +28,7 @@ QualitySettings:
     billboardsFaceCameraPosition: 0
     vSyncCount: 1
     lodBias: 2
-    maximumLODLevel: 1
+    maximumLODLevel: 0
     streamingMipmapsActive: 1
     streamingMipmapsAddAllCameras: 1
     streamingMipmapsMemoryBudget: 512
@@ -57,7 +57,7 @@ QualitySettings:
     shadowNearPlaneOffset: 3
     shadowCascade2Split: 0.33333334
     shadowCascade4Split: {x: 0.06666667, y: 0.2, z: 0.46666667}
-    shadowmaskMode: 0
+    shadowmaskMode: 1
     skinWeights: 2
     textureQuality: 0
     anisotropicTextures: 1
@@ -126,6 +126,7 @@ QualitySettings:
     - Nintendo Switch
     - WebGL
     - iPhone
+    - Android
   - serializedVersion: 2
     name: VeryHigh
     pixelLightCount: 4
@@ -168,7 +169,7 @@ QualitySettings:
     - iPhone
     - Android
   m_PerPlatformDefaultQuality:
-    Android: 2
+    Android: 0
     Nintendo 3DS: 0
     Nintendo Switch: 1
     PS4: 2
