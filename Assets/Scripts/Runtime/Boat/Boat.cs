@@ -235,6 +235,7 @@ namespace BoatAttack
         public BoatStats stats;
         
         //runtime data
+        [NonSerialized] public string playerName;
         [NonSerialized] public BoatLivery Livery;
         [NonSerialized] public Boat Boat;
         [NonSerialized] public GameObject BoatObject;
@@ -244,6 +245,15 @@ namespace BoatAttack
         public AssetReference boatPrefab;
         public AssetReference boatMesh;
 
+        public BoatData(BoatData input)
+        {
+            if(input == null) return;
+            name = input.name;
+            stats = input.stats;
+            boatPrefab = input.boatPrefab;
+            boatMesh = input.boatMesh;
+        }
+        
         public void SetController(GameObject gameObject, Boat boat)
         {
             BoatObject = gameObject;

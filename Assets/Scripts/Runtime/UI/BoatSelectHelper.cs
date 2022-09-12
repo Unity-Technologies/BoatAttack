@@ -7,13 +7,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
 
 public class BoatSelectHelper : MonoBehaviour
 {
-    // general Data
-    public BoatDataSO[] BoatDataSos;
-
     public BoatSelectItem _selectedItem = BoatSelectItem.BoatType;
     private int _currentBoat;
     public int _colorA = 0;
@@ -44,9 +42,10 @@ public class BoatSelectHelper : MonoBehaviour
         if (Application.isPlaying)
         {
             // load boat meshes for menu
-            foreach (var so in BoatDataSos)
+            foreach (var so in AppSettings.Instance.boats)
             {
-                so._data.boatMesh.LoadAssetAsync<GameObject>();
+                if(so._data.boatMesh.Asset == null)
+                    so._data.boatMesh.LoadAssetAsync<GameObject>();
             }
         }
     }
@@ -183,13 +182,13 @@ public class BoatSelectHelper : MonoBehaviour
     
     private void NextBoat()
     {
-        _currentBoat = (int)Mathf.Repeat(_currentBoat + 1, BoatDataSos.Length);
+        _currentBoat = (int)Mathf.Repeat(_currentBoat + 1, AppSettings.Instance.boats.Length);
         UpdateBoat();
     }
     
     private void PrevBoat()
     {
-        _currentBoat = (int)Mathf.Repeat(_currentBoat - 1, BoatDataSos.Length);
+        _currentBoat = (int)Mathf.Repeat(_currentBoat - 1, AppSettings.Instance.boats.Length);
         UpdateBoat();
     }
 
@@ -200,7 +199,7 @@ public class BoatSelectHelper : MonoBehaviour
     
     private void UpdateBoat(int index)
     {
-        var data = BoatDataSos[index]._data;
+        var data = AppSettings.Instance.boats[index]._data;
         
         // boat name display
         title.text = titleB.text = data.name;

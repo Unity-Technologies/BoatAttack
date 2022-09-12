@@ -58,6 +58,9 @@ namespace BoatAttack
         
         public static GameObject ConsoleCanvas;
 
+        public BoatDataSO[] boats;
+        public LevelData[] levels;
+
         // Use this for initialization
         private void Awake()
         {

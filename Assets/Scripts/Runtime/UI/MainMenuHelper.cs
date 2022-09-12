@@ -7,7 +7,7 @@ namespace BoatAttack.UI
         [Header("Level Selection")] public LevelSelectHelper levelSelector;
         [Header("Boat Selection")] public BoatSelectHelper boatSelector;
         
-        private void OnEnable()
+        private void Start()
         {
             //New code
             boatSelector.Init();
@@ -22,6 +22,8 @@ namespace BoatAttack.UI
         public void SetupSpectatorGame()
         {
             RaceManager.SetGameType(RaceManager.GameType.Spectator);
+            RaceManager.SetLevel(Random.Range(0, 0));
+            StartRace();
         }
         
         public void StartRace() => RaceManager.LoadGame();

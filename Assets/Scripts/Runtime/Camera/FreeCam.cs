@@ -29,6 +29,7 @@ public class FreeCam : MonoBehaviour
     private void OnEnable()
     {
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     public void OnFly(InputAction.CallbackContext context)
@@ -57,13 +58,13 @@ public class FreeCam : MonoBehaviour
         // Fly
         var pos = transform.position;
         speedMulti = Mathf.SmoothDamp(speedMulti, 100f, ref vel, accelleration);
-        var realSpeed = speed * speedMulti * Time.deltaTime;
+        var realSpeed = speed * speedMulti * Time.unscaledDeltaTime;
         pos += transform.forward * flyVect.y * realSpeed;
         pos += transform.right * flyVect.x * realSpeed;
         
         // Move
         var rot = transform.localEulerAngles;
-        var lookSpeed = Time.deltaTime;
+        var lookSpeed = Time.unscaledDeltaTime;
         rot.x += (invertY ? lookVect.y : -lookVect.y) * sensitivity.y * lookSpeed;
         rot.y += lookVect.x * sensitivity.x * lookSpeed;
 

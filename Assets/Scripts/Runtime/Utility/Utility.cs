@@ -45,6 +45,12 @@ public static class Utility
         QualitySettings.SetQualityLevel(level);
     }
 
+    [Console.ConsoleCmd]
+    public static void SetTimeScale(float scale)
+    {
+        Time.timeScale = scale;
+    }
+
     public static int GetTrueQualityLevel()
     {
         return GetTrueQualityLevel(QualitySettings.GetQualityLevel());
@@ -134,12 +140,19 @@ internal class UtilityScheduler
         if(Debug.isDebugBuild)
             Debug.Log("Setting up some utilities");
         EditorApplication.update += Utility.CheckQualityLevel;
-        EditorApplication.playModeStateChanged += changed =>
-        {
-            if (changed != PlayModeStateChange.EnteredPlayMode || AppSettings.Instance != null) return;
-            var appSettings = Resources.Load<GameObject>("AppSettings");
-            GameObject.Instantiate(appSettings);
-        };
+        //EditorApplication.playModeStateChanged += changed =>
+        //{
+        //    if (changed != PlayModeStateChange.EnteredPlayMode || AppSettings.Instance != null) return;
+        //    var appSettings = Resources.Load<GameObject>("AppSettings");
+        //    GameObject.Instantiate(appSettings);
+        //};
+    }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    static void LoadAppSettigns()
+    {
+        var appSettings = Resources.Load<GameObject>("AppSettings");
+        GameObject.Instantiate(appSettings);
     }
 }
 #endif

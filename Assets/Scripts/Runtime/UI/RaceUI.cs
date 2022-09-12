@@ -131,7 +131,7 @@ namespace BoatAttack.UI
                 var markerLoading = playerMarker.InstantiateAsync(gameplayUi.transform);
                 yield return markerLoading; // wait for marker to load
 
-                markerLoading.Result.name += RaceManager.RaceData.boats[i].name;
+                markerLoading.Result.name += RaceManager.RaceData.boats[i].playerName;
                 if (markerLoading.Result.TryGetComponent<PlayerMarker>(out var pm))
                     pm.Setup(RaceManager.RaceData.boats[i]);
             }
@@ -174,7 +174,7 @@ namespace BoatAttack.UI
             }
 
             _smoothedSpeed = Mathf.SmoothDamp(_smoothedSpeed, speed, ref _smoothSpeedVel, 1f);
-            speedText.text = $"{_smoothedSpeed:F1}";
+            speedText.text = $"{_smoothedSpeed:F0}";
         }
 
         public void FinishMatch()

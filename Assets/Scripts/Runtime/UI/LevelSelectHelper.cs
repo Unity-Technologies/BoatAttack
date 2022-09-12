@@ -6,7 +6,6 @@ public class LevelSelectHelper : MonoBehaviour
 {
     [Header("Level Selection")]
     public Animator levelSelectAnimator;
-    public LevelData[] levels;
     public LevelSelectOption[] levelUI;
     private static int currentLevel = 0;
     
@@ -18,14 +17,14 @@ public class LevelSelectHelper : MonoBehaviour
 
     public void PopulateLevelUI()
     {
-        var maxLevel = levels.Length;
+        var maxLevel = AppSettings.Instance.levels.Length;
         // make sure current level is within level count
         currentLevel = (int)Mathf.Repeat(currentLevel, maxLevel);
             
         for (int i = 0; i < 5; i++)
         {
             var level = (int)Mathf.Repeat(currentLevel + (i - 2), maxLevel);
-            levelUI[i].PopulateData(levels[level]);
+            levelUI[i].PopulateData(AppSettings.Instance.levels[level]);
         }
             
         Canvas.ForceUpdateCanvases();

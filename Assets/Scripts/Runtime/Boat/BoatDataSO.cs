@@ -10,6 +10,6 @@ public class BoatDataSO : ScriptableObject
 
     public BoatDataSO()
     {
-        _data = new BoatData();
+        _data = new BoatData(null);
     }
 }

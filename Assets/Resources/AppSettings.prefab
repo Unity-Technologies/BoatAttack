@@ -60,6 +60,14 @@ MonoBehaviour:
     m_EditorAssetChanged: 0
   consoleCanvas: {fileID: 3861368940710368685, guid: eaccf287ac783bc4485d674d5998d3ab,
     type: 3}
+  boats:
+  - {fileID: 11400000, guid: 1e669bbf766d948ad890ce876bd7f584, type: 2}
+  - {fileID: 11400000, guid: 5ef2a7ddddaff4524bd9509c3a0a7e34, type: 2}
+  levels:
+  - {fileID: 11400000, guid: fe8f37770cdfc434a82f57968f574788, type: 2}
+  - {fileID: 11400000, guid: 2e5f7f7c8ba124e77b8776bdcd3a038d, type: 2}
+  - {fileID: 11400000, guid: cf64418f621034ab2a635ab6b9295f1f, type: 2}
+  - {fileID: 11400000, guid: 420d768da63c5403c9adb9d3fd631f23, type: 2}
 --- !u!114 &8490184438857729681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,80 +81,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   demoRaceData:
-    game: 0
+    game: 3
     type: 0
     boatCount: 4
     level: 
     laps: 3
     reversed: 0
-    boats:
-    - name: 
-      stats:
-        power: 0
-        engine: 0
-        weight: 0
-        cylinders: 0
-      boatPrefab:
-        m_AssetGUID: 405c4bc591de844a3a100e1538790229
-        m_SubObjectName: 
-        m_SubObjectType: 
-        m_EditorAssetChanged: 0
-      boatMesh:
-        m_AssetGUID: 
-        m_SubObjectName: 
-        m_SubObjectType: 
-        m_EditorAssetChanged: 0
-    - name: 
-      stats:
-        power: 0
-        engine: 0
-        weight: 0
-        cylinders: 0
-      boatPrefab:
-        m_AssetGUID: 70d78230a0527e74dabc4f14906eef98
-        m_SubObjectName: 
-        m_SubObjectType: 
-        m_EditorAssetChanged: 0
-      boatMesh:
-        m_AssetGUID: 
-        m_SubObjectName: 
-        m_SubObjectType: 
-        m_EditorAssetChanged: 0
-    - name: 
-      stats:
-        power: 0
-        engine: 0
-        weight: 0
-        cylinders: 0
-      boatPrefab:
-        m_AssetGUID: 405c4bc591de844a3a100e1538790229
-        m_SubObjectName: 
-        m_SubObjectType: 
-        m_EditorAssetChanged: 0
-      boatMesh:
-        m_AssetGUID: 
-        m_SubObjectName: 
-        m_SubObjectType: 
-        m_EditorAssetChanged: 0
-    - name: 
-      stats:
-        power: 0
-        engine: 0
-        weight: 0
-        cylinders: 0
-      boatPrefab:
-        m_AssetGUID: 70d78230a0527e74dabc4f14906eef98
-        m_SubObjectName: 
-        m_SubObjectType: 
-        m_EditorAssetChanged: 0
-      boatMesh:
-        m_AssetGUID: 
-        m_SubObjectName: 
-        m_SubObjectType: 
-        m_EditorAssetChanged: 0
-  boats:
-  - {fileID: 11400000, guid: 1e669bbf766d948ad890ce876bd7f584, type: 2}
-  - {fileID: 11400000, guid: 5ef2a7ddddaff4524bd9509c3a0a7e34, type: 2}
   raceUiPrefab:
     m_AssetGUID: 0482dcbdb79ee4d7eb43a774a90bda4e
     m_SubObjectName: 

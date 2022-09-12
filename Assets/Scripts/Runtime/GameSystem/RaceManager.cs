@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 using BoatAttack.UI;
 using UnityEngine.Playables;
 using UnityEngine.Rendering.Universal;
+using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 namespace BoatAttack
@@ -49,7 +50,7 @@ namespace BoatAttack
             public bool reversed;
 
             //Competitors
-            public List<BoatData> boats;
+            [NonSerialized] public List<BoatData> boats;
         }
                
         #endregion
@@ -123,7 +124,12 @@ namespace BoatAttack
 
         public static IEnumerator SetupRace()
         {
-            if(RaceData == null) RaceData = Instance.demoRaceData; // make sure we have the data, otherwise default to demo data
+            if(RaceData == null) // make sure we have the data, otherwise default to demo data
+            {
+                RaceData = Instance.demoRaceData;
+                RaceData.boats = new List<BoatData>();
+                GenerateRandomBoats(4);
+            }
             while (WaypointGroup.Instance == null) // TODO need to re-write whole game loading/race setup logic as it is dirty
             {
                 yield return null;
@@ -166,9 +172,11 @@ namespace BoatAttack
             switch (RaceData.game)
             {
                 case GameType.Singleplayer:
-                    var b = Boats[Random.Range(0, Boats.Length)];
-                    b.name = "Player 1";
-                    b.Human = true; // single player is human
+                    var b = new BoatData(Boats[Random.Range(0, Boats.Length)])
+                    {
+                        playerName = "Player 1",
+                        Human = true,
+                    };
                     RaceData.boats.Add(b); // add player boat
                     GenerateRandomBoats(RaceData.boatCount - 1); // add random AI
                     break;
@@ -296,7 +304,7 @@ namespace BoatAttack
             }
 
             Instance.Reset();
-            AppSettings.LoadScene(0, LoadSceneMode.Single);
+            AppSettings.LoadScene(1);
         }
         
         public static void SetHull(int player, BoatData data) => RaceData.boats[player] = data;
@@ -325,11 +333,16 @@ namespace BoatAttack
         
         private static void GenerateRandomBoats(int count, bool ai = true)
         {
+            var names = ConstantData.AiNames.ToList();
+            
             for (var i = 0; i < count; i++)
             {
-                var boat = Boats[Random.Range(0, Boats.Length)];
-                Random.InitState(ConstantData.SeedNow+i);
-                boat.name = ConstantData.AiNames[Random.Range(0, ConstantData.AiNames.Length)];
+                BoatData boat = new BoatData(Boats[Random.Range(0, Boats.Length)]);
+                // get player name
+                var n = Random.Range(0, names.Count);
+                boat.playerName = names[n];
+                names.RemoveAt(n);
+                // get colors
                 BoatLivery livery = new BoatLivery
                 {
                     primaryColor = ConstantData.GetRandomPaletteColor,
@@ -342,6 +355,7 @@ namespace BoatAttack
                     boat.Human = false;
 
                 RaceData.boats.Add(boat);
+                Random.InitState(ConstantData.SeedNow+i*10);
             }
         }
 
