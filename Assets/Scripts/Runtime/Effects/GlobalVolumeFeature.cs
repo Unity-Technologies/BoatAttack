@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.RenderGraphModule;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
@@ -8,9 +9,10 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
 {
     class GlobalVolumePass : ScriptableRenderPass
     {
+        private class PassData { }
+        
         public VolumeProfile _baseProfile;
         public List<VolumeProfile> _qualityProfiles;
-        public LayerMask _layerMask;
 
         private Volume vol;
         private Volume qualityVol;
@@ -22,6 +24,11 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
         // You should never call CommandBuffer.SetRenderTarget. Instead call <c>ConfigureTarget</c> and <c>ConfigureClear</c>.
         // The render pipeline will ensure target setup and clearing happens in a performant manner.
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
+        {
+            DoVolumes();
+        }
+
+        private void DoVolumes()
         {
             if(volumeHolder == null)
             {
@@ -38,13 +45,12 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
                 vol.sharedProfile = _baseProfile;
             }
 
-            if(qualityVol && _qualityProfiles != null)
-            {
-                var index = QualitySettings.GetQualityLevel();
+            if (!qualityVol || _qualityProfiles == null) return;
+            
+            var index = QualitySettings.GetQualityLevel();
 
-                if(_qualityProfiles.Count >= index && _qualityProfiles[index] != null)
-                    qualityVol.sharedProfile = _qualityProfiles?[index];
-            }
+            if(_qualityProfiles.Count >= index && _qualityProfiles[index] != null)
+                qualityVol.sharedProfile = _qualityProfiles?[index];
         }
 
         // Here you can implement the rendering logic.
@@ -55,15 +61,19 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
         {
         }
 
-        // Cleanup any allocated resources that were created during the execution of this render pass.
-        public override void OnCameraCleanup(CommandBuffer cmd)
+        public override void RecordRenderGraph(RenderGraph renderGraph, ref RenderingData renderingData)
         {
+            using (var builder = renderGraph.AddRenderPass<PassData>("Volume Feature", out _))
+            {
+                builder.AllowPassCulling(false);
+                DoVolumes();
+                builder.SetRenderFunc((PassData _, RenderGraphContext _) => { });
+            }
         }
     }
 
     GlobalVolumePass m_ScriptablePass;
 
-    public LayerMask _layerMask;
     public VolumeProfile _baseProfile;
     public List<VolumeProfile> _qualityProfiles = new List<VolumeProfile>();
 
@@ -75,7 +85,6 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
             // Configures where the render pass should be injected.
             renderPassEvent = RenderPassEvent.AfterRenderingTransparents,
             _baseProfile = this._baseProfile,
-            _layerMask = this._layerMask,
             _qualityProfiles = this._qualityProfiles,
         };
     }

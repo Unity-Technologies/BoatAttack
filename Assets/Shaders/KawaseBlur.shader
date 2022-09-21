@@ -1,70 +1,47 @@
 ﻿Shader "Custom/RenderFeature/KawaseBlur"
 {
-    Properties
-    {
-        _MainTex ("Texture", 2D) = "white" {}
-      //   _offset ("Offset", float) = 0.5
-    }
-
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { "RenderType"="Opaque" "RenderPipeline" = "UniversalPipeline"}
         LOD 100
-
+        ZWrite Off Cull Off
         Pass
         {
-            CGPROGRAM
-            #pragma vertex vert
+            Name "ColorBlitPass"
+
+            HLSLPROGRAM
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            // The Blit.hlsl file provides the vertex shader (Vert),
+            // input structure (Attributes) and output strucutre (Varyings)
+            #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
+
+            #pragma vertex Vert
             #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
 
-            #include "UnityCG.cginc"
+            //TEXTURE2D_X(_CameraOpaqueTexture);
+            SAMPLER(sampler_BlitTexture);
 
-            struct appdata
-            {
-                float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
-            };
-
-            struct v2f
-            {
-                float2 uv : TEXCOORD0;
-                UNITY_FOG_COORDS(1)
-                float4 vertex : SV_POSITION;
-            };
-
-            sampler2D _MainTex;
-            // sampler2D _CameraOpaqueTexture;
-            float4 _MainTex_TexelSize;
-            float4 _MainTex_ST;
-            
+            float4 _BlitTexture_TexelSize;
             float _offset;
 
-            v2f vert (appdata v)
+            half4 frag (Varyings input) : SV_Target
             {
-                v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                return o;
-            }
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
-            fixed4 frag (v2f input) : SV_Target
-            {
-                float2 res = _MainTex_TexelSize.xy;
+                float2 res = _BlitTexture_TexelSize.xy;
                 float i = _offset;
     
-                fixed4 col;                
-                col.rgb = tex2D( _MainTex, input.uv ).rgb;
-                col.rgb += tex2D( _MainTex, input.uv + float2( i, i ) * res ).rgb;
-                col.rgb += tex2D( _MainTex, input.uv + float2( i, -i ) * res ).rgb;
-                col.rgb += tex2D( _MainTex, input.uv + float2( -i, i ) * res ).rgb;
-                col.rgb += tex2D( _MainTex, input.uv + float2( -i, -i ) * res ).rgb;
+                float4 col = 0;
+                col.rgb = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, input.texcoord);
+                col.rgb += SAMPLE_TEXTURE2D_X( _BlitTexture, sampler_LinearClamp, input.texcoord + float2( i, i ) * res ).rgb;
+                col.rgb += SAMPLE_TEXTURE2D_X( _BlitTexture, sampler_LinearClamp, input.texcoord + float2( i, -i ) * res ).rgb;
+                col.rgb += SAMPLE_TEXTURE2D_X( _BlitTexture, sampler_LinearClamp, input.texcoord + float2( -i, i ) * res ).rgb;
+                col.rgb += SAMPLE_TEXTURE2D_X( _BlitTexture, sampler_LinearClamp, input.texcoord + float2( -i, -i ) * res ).rgb;
                 col.rgb /= 5.0f;
                 
                 return col;
             }
-            ENDCG
+            ENDHLSL
         }
     }
 }
