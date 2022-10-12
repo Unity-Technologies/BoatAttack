@@ -3,26 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace BoatAttack.UI
 {
     public class RaceStatsPlayer : MonoBehaviour
     {
-
+        [Header("Player Highlighting")] 
+        public Image face;
+        public Image outline;
+        public Color playerFace;
+        public Color otherFace;
+        
+        [Header("References")]
         public TextMeshProUGUI place;
+        public PlayerMapMarker pmm;
         public TextMeshProUGUI playerName;
         public TextMeshProUGUI boatType;
         public TextMeshProUGUI bestLap;
         public TextMeshProUGUI time;
-        private Boat _boat;
+        
+        private BoatData _boatData;
         private int _place = -1;
         private bool _update = true;
 
-        public void Setup(Boat boat)
+        public void Setup(BoatData boat, bool owner = false)
         {
-            _boat = boat;
-            playerName.text = _boat.name;
-            boatType.text = "TODO"; // TODO - need to implement
+            _boatData = boat;
+            playerName.text = _boatData.playerName;
+            boatType.text = boat.name;
+            face.color = owner ? playerFace : otherFace;
+            outline.color = owner ? Color.white : Color.black;
+            pmm.Setup(boat);
         }
 
         private void Update()
@@ -33,19 +45,19 @@ namespace BoatAttack.UI
 
         private void LateUpdate()
         {
-            _update = !_boat.MatchComplete;
+            _update = !_boatData.Boat.MatchComplete;
         }
 
         public void UpdateStats()
         {
-            _place = _boat.Place;
-            transform.SetSiblingIndex(_place + 1);
-            place.text = RaceUI.OrdinalNumber(_boat.Place);
+            _place = _boatData.Boat.Place;
+            transform.SetSiblingIndex(_place - 1);
+            place.text = RaceUI.OrdinalNumber(_boatData.Boat.Place);
 
-            var bestLapTime = RaceUI.BestLapFromSplitTimes(_boat.SplitTimes);
+            var bestLapTime = RaceUI.BestLapFromSplitTimes(_boatData.Boat.SplitTimes);
             bestLap.text = bestLapTime > 0 ? RaceUI.FormatRaceTime(bestLapTime) : "N/A";
 
-            var totalTime = _boat.MatchComplete ? _boat.SplitTimes.Last() : RaceManager.RaceTime;
+            var totalTime = _boatData.Boat.MatchComplete ? _boatData.Boat.SplitTimes.Last() : RaceManager.RaceTime;
             time.text = RaceUI.FormatRaceTime(totalTime);
         }
     }

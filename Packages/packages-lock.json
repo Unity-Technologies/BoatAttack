@@ -1,15 +1,8 @@
 {
   "dependencies": {
     "com.coffee.softmask-for-ugui": {
-      "version": "1.0.0",
+      "version": "1.0.2",
       "depth": 0,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://package.openupm.com"
-    },
-    "com.dbrizov.naughtyattributes": {
-      "version": "2.0.8",
-      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://package.openupm.com"
@@ -21,11 +14,11 @@
       "dependencies": {}
     },
     "com.unity.addressables": {
-      "version": "1.19.17",
+      "version": "1.19.19",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.scriptablebuildpipeline": "1.19.5",
+        "com.unity.scriptablebuildpipeline": "1.19.6",
         "com.unity.modules.assetbundle": "1.0.0",
         "com.unity.modules.imageconversion": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0",
@@ -34,8 +27,15 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.build-report-inspector": {
+      "version": "0.3.0-preview",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.burst": {
-      "version": "1.6.4",
+      "version": "1.6.6",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -44,7 +44,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.cinemachine": {
-      "version": "2.8.4",
+      "version": "2.9.0-pre.6",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -74,7 +74,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.12",
+      "version": "3.0.15",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -92,14 +92,14 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.mathematics": {
-      "version": "1.2.5",
+      "version": "1.2.6",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.memoryprofiler": {
-      "version": "0.4.4-preview.2",
+      "version": "0.7.0-preview.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -108,14 +108,14 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.newtonsoft-json": {
-      "version": "2.0.0",
+      "version": "3.0.2",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {
-      "version": "12.1.4",
+      "version": "12.1.7",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
@@ -125,18 +125,18 @@
       }
     },
     "com.unity.render-pipelines.universal": {
-      "version": "12.1.4",
+      "version": "12.1.7",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
         "com.unity.mathematics": "1.2.1",
         "com.unity.burst": "1.5.0",
-        "com.unity.render-pipelines.core": "12.1.4",
-        "com.unity.shadergraph": "12.1.4"
+        "com.unity.render-pipelines.core": "12.1.7",
+        "com.unity.shadergraph": "12.1.7"
       }
     },
     "com.unity.scriptablebuildpipeline": {
-      "version": "1.19.5",
+      "version": "1.20.1",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
@@ -150,11 +150,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.shadergraph": {
-      "version": "12.1.4",
+      "version": "12.1.7",
       "depth": 1,
       "source": "builtin",
       "dependencies": {
-        "com.unity.render-pipelines.core": "12.1.4",
+        "com.unity.render-pipelines.core": "12.1.7",
         "com.unity.searcher": "4.9.1"
       }
     },
@@ -168,7 +168,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {
-      "version": "1.1.30",
+      "version": "1.1.31",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -179,15 +179,15 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.testframework.graphics": {
-      "version": "7.8.17-exp.1",
+      "version": "7.9.0-exp.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
         "com.unity.xr.management": "4.0.5",
         "com.unity.external.test-protocol": "1.0.0-preview",
-        "com.unity.nuget.newtonsoft-json": "2.0.0-preview",
+        "com.unity.nuget.newtonsoft-json": "2.0.0",
         "com.unity.subsystemregistration": "1.0.6",
-        "com.unity.xr.legacyinputhelpers": "2.1.6",
+        "com.unity.xr.legacyinputhelpers": "2.1.8",
         "com.unity.modules.xr": "1.0.0",
         "com.unity.modules.vr": "1.0.0",
         "com.unity.addressables": "1.17.15",
@@ -205,7 +205,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.timeline": {
-      "version": "1.6.3",
+      "version": "1.6.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -226,18 +226,17 @@
       }
     },
     "com.unity.urp-water-system": {
-      "version": "git@github.com:Unity-Technologies/boat-attack-water.git",
+      "version": "file:boat-attack-water-link",
       "depth": 0,
-      "source": "git",
+      "source": "embedded",
       "dependencies": {
         "com.unity.mathematics": "1.1.0",
         "com.unity.burst": "1.2.3",
         "com.unity.render-pipelines.universal": "10.5.0"
-      },
-      "hash": "670d4437f63a1505612db27c6b52518fff860edf"
+      }
     },
     "com.unity.xr.legacyinputhelpers": {
-      "version": "2.1.8",
+      "version": "2.1.9",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -258,17 +257,6 @@
         "com.unity.subsystemregistration": "1.0.6"
       },
       "url": "https://packages.unity.com"
-    },
-    "net.peeweek.gameplay-ingredients": {
-      "version": "2020.2.10",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.cinemachine": "2.6.3",
-        "com.unity.timeline": "1.4.5",
-        "com.dbrizov.naughtyattributes": "2.0.8"
-      },
-      "url": "https://package.openupm.com"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

@@ -7,9 +7,8 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
 using BoatAttack.UI;
+using JetBrains.Annotations;
 using UnityEngine.Playables;
-using UnityEngine.Rendering.Universal;
-using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 namespace BoatAttack
@@ -45,28 +44,48 @@ namespace BoatAttack
             public int boatCount = 4; // currently hardcoded to 4
 
             //Level options
-            public string level;
+            public LevelData level;
             public int laps = 3;
             public bool reversed;
 
             //Competitors
             [NonSerialized] public List<BoatData> boats;
         }
+        
+        public enum RaceState
+        {
+            None,
+            RaceLoaded,
+            RaceStarted,
+            RaceEnded,
+        }
                
         #endregion
-
+        
         public static RaceManager Instance;
-        [NonSerialized] public static bool RaceStarted;
+
+        private static RaceState _state;
+        public static RaceState State
+        {
+            get => _state;
+            set
+            {
+                _state = value;
+                StateChange?.Invoke(value);
+            }
+        }
+        public static Action<RaceState> StateChange;
+
         [NonSerialized] public static Race RaceData;
         public Race demoRaceData = new Race();
         [NonSerialized] public static float RaceTime;
         private readonly Dictionary<int, float> _boatTimes = new Dictionary<int, float>();
 
-        public static Action<bool> raceStarted;
 
-        [Header("Assets")] public static BoatData[] Boats;
+        [Header("Assets")] private static BoatData[] Boats;
         public AssetReference raceUiPrefab;
         public AssetReference raceUiTouchPrefab;
+        public AssetReference pauseMenuUiPrefab;
         
         public static void BoatFinished(int player)
         {
@@ -106,15 +125,22 @@ namespace BoatAttack
             {
                 Boats[index] = boatSOs[index]._data;
             }
+            
+            AppSettings.Instance.input.BoatControl.Pause.performed += _ =>  TogglePauseState();
         }
 
         private void Reset()
         {
-            RaceStarted = false;
-            //RaceData.boats.Clear(); // TODO check this
+            State = RaceState.None;
             RaceTime = 0f;
-            _boatTimes.Clear();
-            raceStarted = null;
+            
+            Utility.UnloadAssetReference(raceUiPrefab);
+            Utility.UnloadAssetReference(raceUiTouchPrefab);
+            Utility.UnloadAssetReference(pauseMenuUiPrefab);
+            
+            Instance._boatTimes?.Clear();
+            CleanupBoats();
+            //RaceData.boats.Clear(); // TODO check this
         }
 
         public static void Setup(Scene scene, LoadSceneMode mode)
@@ -122,14 +148,25 @@ namespace BoatAttack
             Instance.StartCoroutine(SetupRace());
         }
 
+        // ReSharper disable Unity.PerformanceAnalysis
         public static IEnumerator SetupRace()
         {
+            State = RaceState.RaceLoaded;
+            
+            Instance.StartCoroutine(LoadPauseMenu());
+
             if(RaceData == null) // make sure we have the data, otherwise default to demo data
             {
                 RaceData = Instance.demoRaceData;
                 RaceData.boats = new List<BoatData>();
                 GenerateRandomBoats(4);
             }
+            
+            Debug.Log($"Setting up race:\n" +
+                      $"{RaceData.game}:{RaceData.type}\n" +
+                      $"{RaceData.level.levelName}:{RaceData.laps} Laps:Reversed {RaceData.reversed}\n" +
+                      $"{RaceData.boats.Count} Boats");
+            
             while (WaypointGroup.Instance == null) // TODO need to re-write whole game loading/race setup logic as it is dirty
             {
                 yield return null;
@@ -158,13 +195,30 @@ namespace BoatAttack
             
             Instance.StartCoroutine(BeginRace());
         }
+
+        private static IEnumerator LoadPauseMenu()
+        {
+            if(!Instance.pauseMenuUiPrefab.OperationHandle.IsValid())
+                Instance.pauseMenuUiPrefab.LoadAssetAsync<GameObject>();
+            
+            if (!Instance.pauseMenuUiPrefab.OperationHandle.IsDone) 
+                yield return Instance.pauseMenuUiPrefab.OperationHandle;
+
+            if (Instance.pauseMenuUiPrefab.OperationHandle.Status == AsyncOperationStatus.Succeeded)
+            {
+                var pauseObj = Instantiate((GameObject) Instance.pauseMenuUiPrefab.OperationHandle.Result);
+                PauseMenuHelper.Instance = pauseObj.GetComponent<PauseMenuHelper>();
+            }
+            else
+            {
+                Debug.LogError("Pause menu failed to load.");
+            }
+        }
         
         public static void SetGameType(GameType gameType)
         {
             RaceData = new Race {game = gameType,
                 boats = new List<BoatData>(),
-                boatCount = 4,
-                laps = 3,
                 type = RaceType.Race
             };
 
@@ -197,10 +251,17 @@ namespace BoatAttack
             }
         }
 
-        public static void SetLevel(int levelIndex)
+        public static void SetLevel(ref LevelData level)
         {
-            RaceData.level = ConstantData.GetLevelName(levelIndex);
-            Debug.Log($"Level set to:{levelIndex} with path:{RaceData.level}");
+            RaceData.level = level;
+            Debug.Log($"Level set to:{level.levelName}");
+        }
+
+        public static bool TryGetLevel(int index, [CanBeNull] ref LevelData level)
+        {
+            if (AppSettings.Instance.levels.Length <= index) return false;
+            level = AppSettings.Instance.levels[index];
+            return true;
         }
 
         /// <summary>
@@ -223,8 +284,7 @@ namespace BoatAttack
 
             yield return new WaitForSeconds(3f); // countdown 3..2..1..
             
-            RaceStarted = true;
-            raceStarted?.Invoke(RaceStarted);
+            State = RaceState.RaceStarted;
             
             SceneManager.sceneLoaded -= Setup;
         }
@@ -234,7 +294,7 @@ namespace BoatAttack
         /// </summary>
         private static void EndRace()
         {
-            RaceStarted = false;
+            State = RaceState.RaceEnded;
             switch (RaceData.game)
             {
                 case GameType.Spectator:
@@ -256,23 +316,23 @@ namespace BoatAttack
         
         private void LateUpdate()
         {
-            if (!RaceStarted) return;
+            if (State != RaceState.RaceStarted) return;
 
-            int finished = RaceData.boatCount;
+            var finished = 0;
             for (var i = 0; i < RaceData.boats.Count; i++)
             {
                 var boat = RaceData.boats[i].Boat;
                 if (boat.MatchComplete)
                 {
                     _boatTimes[i] = Mathf.Infinity; // completed the race so no need to update
-                    --finished;
+                    finished++;
                 }
                 else
                 {
                     _boatTimes[i] = boat.LapPercentage + boat.LapCount;
                 }
             }
-            if(RaceStarted && finished == 0)
+            if(finished == RaceData.boatCount)
                 EndRace();
 
             var mySortedList = _boatTimes.OrderBy(d => d.Value).ToList();
@@ -291,22 +351,47 @@ namespace BoatAttack
         public static void LoadGame()
         {
             Debug.Log($"Loading Game level:{RaceData.level}");
-            AppSettings.LoadScene(RaceData.level);
+            if(Instance) Instance.Reset();
+            AppSettings.LoadLevel(RaceData.level);
             SceneManager.sceneLoaded += Setup;
         }
 
         public static void UnloadRace()
         {
             Debug.LogWarning("Unloading Race");
-            if(Instance.raceUiPrefab != null && Instance.raceUiPrefab.IsValid())
-            {
-                Instance.raceUiPrefab.ReleaseAsset();
-            }
-
+            Paused = false;
             Instance.Reset();
             AppSettings.LoadScene(1);
         }
-        
+
+        public static void TogglePauseState()
+        {
+            Paused = !Paused;
+        }
+
+        [NonSerialized]
+        private static bool _paused;
+        public static bool Paused
+        {
+            get => _paused;
+            set
+            {
+                _paused = value;
+                if (State == RaceState.RaceStarted)
+                {
+                    foreach (var bd in RaceData.boats.Where(bd =>
+                                 bd.Boat != null && bd.Boat.RaceUi != null))
+                    {
+                        bd.Boat.RaceUi.SetGameplayUi(!value);
+                    }
+                }
+
+                Time.timeScale = _paused ? 0f : 1f;
+                KawaseBlur.KawasePass.Enabled = _paused;
+                PauseMenuHelper.Instance.gameObject.SetActive(_paused);
+            }
+        }
+
         public static void SetHull(int player, BoatData data) => RaceData.boats[player] = data;
         
         private static IEnumerator CreateBoats()
@@ -317,18 +402,27 @@ namespace BoatAttack
 
                 // Load prefab
                 var startingPosition = WaypointGroup.Instance.StartingPositions[i];
-                AsyncOperationHandle<GameObject> boatLoading = Addressables.InstantiateAsync(boat.boatPrefab, startingPosition.GetColumn(3),
+                var opHandle = Addressables.InstantiateAsync(boat.boatPrefab, startingPosition.GetColumn(3),
                     Quaternion.LookRotation(startingPosition.GetColumn(2)));
 
-                yield return boatLoading; // wait for boat asset to load
+                if(!opHandle.IsDone)
+                    yield return opHandle; // wait for boat asset to load
 
-                boatLoading.Result.name = boat.name; // set the name of the boat
-                boatLoading.Result.TryGetComponent<Boat>(out var boatController);
-                boat.SetController(boatLoading.Result, boatController);
+                var go = opHandle.Result;
+                go.name = boat.playerName; // set the name of the boat
+                go.TryGetComponent<Boat>(out var boatController);
+                boat.SetController(go, boatController);
                 boatController.Setup(i + 1, boat.Human, boat.Livery);
                 Instance._boatTimes.Add(i, 0f);
             }
+        }
 
+        private static void CleanupBoats()
+        {
+            foreach (var data in FindObjectsOfType<Boat>())
+            {
+                Destroy(data.gameObject);
+            }
         }
         
         private static void GenerateRandomBoats(int count, bool ai = true)
@@ -361,13 +455,16 @@ namespace BoatAttack
 
         private static IEnumerator CreatePlayerUi(int player)
         {
-            var touch = Input.touchSupported && Input.multiTouchEnabled &&
-                        (Application.platform == RuntimePlatform.Android ||
-                         Application.platform == RuntimePlatform.IPhonePlayer);
+            var touch = Input.touchSupported && 
+                        Input.multiTouchEnabled &&
+                        Application.platform is RuntimePlatform.Android or RuntimePlatform.IPhonePlayer;
             var uiAsset = touch ? Instance.raceUiTouchPrefab : Instance.raceUiPrefab;
-            var uiLoading = uiAsset.InstantiateAsync();
-            yield return uiLoading;
-            if (uiLoading.Result.TryGetComponent(out RaceUI uiComponent))
+            var opHandle = uiAsset.InstantiateAsync();
+            
+            if(!opHandle.IsDone)
+                yield return opHandle;
+            
+            if (opHandle.Result.TryGetComponent(out RaceUI uiComponent))
             {
                 var boatData = RaceData.boats[player];
                 boatData.Boat.RaceUi = uiComponent;

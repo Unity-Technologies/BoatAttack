@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering.Universal;
 using Console = BoatAttack.Console;
 using Object = UnityEngine.Object;
@@ -51,6 +52,12 @@ public static class Utility
         Time.timeScale = scale;
     }
 
+    [Console.ConsoleCmd]
+    public static void WaterDebug(int mode)
+    {
+        WaterSystem.Ocean.SetDebugMode((WaterSystem.Ocean.DebugShading)mode);
+    }
+
     public static int GetTrueQualityLevel()
     {
         return GetTrueQualityLevel(QualitySettings.GetQualityLevel());
@@ -76,6 +83,14 @@ public static class Utility
         foreach (Transform child in obj)
         {
             SafeDestroy(child.gameObject);
+        }
+    }
+
+    public static void UnloadAssetReference(AssetReference asset)
+    {
+        if(asset != null && asset.IsValid())
+        {
+            asset.ReleaseAsset();
         }
     }
 
@@ -114,7 +129,7 @@ public static class Utility
     public static void StaticObjects()
     {
         // remove the noise on Cinemachine cameras
-        var cameras = GameObject.FindObjectsOfType<CinemachineVirtualCamera>();
+        var cameras = Object.FindObjectsOfType<CinemachineVirtualCamera>();
         foreach (var cam in cameras)
         {
             var comp = cam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
@@ -138,21 +153,15 @@ internal class UtilityScheduler
     {
         // setup the things
         if(Debug.isDebugBuild)
-            Debug.Log("Setting up some utilities");
+            Debug.Log("Setting up utilities");
         EditorApplication.update += Utility.CheckQualityLevel;
-        //EditorApplication.playModeStateChanged += changed =>
-        //{
-        //    if (changed != PlayModeStateChange.EnteredPlayMode || AppSettings.Instance != null) return;
-        //    var appSettings = Resources.Load<GameObject>("AppSettings");
-        //    GameObject.Instantiate(appSettings);
-        //};
     }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    static void LoadAppSettigns()
+    private static void LoadAppSettings()
     {
         var appSettings = Resources.Load<GameObject>("AppSettings");
-        GameObject.Instantiate(appSettings);
+        Object.Instantiate(appSettings);
     }
 }
 #endif

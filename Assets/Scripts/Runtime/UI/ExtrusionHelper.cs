@@ -34,6 +34,7 @@ public class ExtrusionHelper : MonoBehaviour
         if (baseMaterial && img && !mat)
         {
             mat = new Material(baseMaterial);
+            mat.hideFlags = HideFlags.DontSave;
             mat.name += $"-temp-{gameObject.GetInstanceID()}";
             img.material = mat;
         }
@@ -68,7 +69,13 @@ public class ExtrusionHelper : MonoBehaviour
     {
         if (self.anchoredPosition != targetOffset && Application.isPlaying)
         {
-            self.anchoredPosition = Vector2.SmoothDamp(self.anchoredPosition, targetOffset, ref offsetVel, 0.05f);
+            self.anchoredPosition = Vector2.SmoothDamp(
+                self.anchoredPosition, 
+                targetOffset, 
+                ref offsetVel, 
+                0.05f,
+                Single.PositiveInfinity,
+                Time.unscaledDeltaTime);
         }
     }
 

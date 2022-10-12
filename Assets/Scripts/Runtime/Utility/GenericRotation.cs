@@ -6,6 +6,6 @@ public class GenericRotation : MonoBehaviour
 	
 	private void Update () 
 	{
-		transform.localEulerAngles += rotationVector * Time.deltaTime;
+		transform.localEulerAngles += rotationVector * Time.unscaledDeltaTime;
 	}
 }

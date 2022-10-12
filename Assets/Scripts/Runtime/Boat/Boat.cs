@@ -80,13 +80,12 @@ namespace BoatAttack
 
         private void Update()
         {
-            if (RaceManager.RaceStarted)
+            if (RaceManager.State == RaceManager.RaceState.RaceStarted)
             {
                 UpdateLaps();
 
                 if (RaceUi)
                 {
-                    RaceUi.UpdatePlaceCounter(Place);
                     RaceUi.UpdateSpeed(engine.VelocityMag);
                 }
             }
@@ -103,7 +102,7 @@ namespace BoatAttack
 
         private void FixedUpdate()
         {
-            if (!RaceManager.RaceStarted)
+            if (RaceManager.State != RaceManager.RaceState.RaceStarted)
             {
                 if(WaypointGroup.Instance) AlignBoatWithStartingLine();
             }
@@ -128,14 +127,9 @@ namespace BoatAttack
         private void UpdateLaps()
         {
             LapPercentage = WaypointGroup.Instance.GetPercentageAroundTrack(transform.position);
-            var lowPercentage = _lastCheckpoint?.normalizedDistance ?? 0f;
-            var highPercentage = _nextCheckpoint?.normalizedDistance ?? 1f;
+            var lowPercentage = _lastCheckpoint?.NormalizedDistance ?? 0f;
+            var highPercentage = _nextCheckpoint?.NormalizedDistance ?? 1f;
             LapPercentage = Mathf.Clamp(LapPercentage, lowPercentage, highPercentage <= 0.001f ? 1f : highPercentage);
-
-            if (RaceUi)
-            {
-                RaceUi.UpdateLapCounter(LapCount);
-            }
         }
 
         private void OnTriggerEnter(Collider other)
@@ -164,6 +158,8 @@ namespace BoatAttack
             if (index != 0) return;
             LapCount++;
             SplitTimes.Add(RaceManager.RaceTime);
+            if(RaceUi)
+                RaceUi.UpdateLapCounter(LapCount);
 
             if (LapCount <= RaceManager.GetLapCount()) return;
             

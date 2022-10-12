@@ -22,7 +22,8 @@ namespace BoatAttack.UI
         public void SetupSpectatorGame()
         {
             RaceManager.SetGameType(RaceManager.GameType.Spectator);
-            RaceManager.SetLevel(Random.Range(0, 0));
+            var max = AppSettings.Instance.levels.Length;
+            RaceManager.SetLevel(ref AppSettings.Instance.levels[0]);
             StartRace();
         }
         

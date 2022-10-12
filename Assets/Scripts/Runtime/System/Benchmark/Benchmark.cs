@@ -34,7 +34,6 @@ namespace BoatAttack.Benchmark
         public static int CurrentRunIndex;
         public static int CurrentRunFrame;
         private int _totalRunFrames;
-        private bool _running = false;
 
         // Bench results
         private readonly List<PerfBasic> _perfData = new List<PerfBasic>();
@@ -94,7 +93,8 @@ namespace BoatAttack.Benchmark
 
         private void LoadBenchmark()
         {
-            AppSettings.LoadScene(Current.scene);
+            Debug.LogError("Benchmark is unavailable");
+            //AppSettings.LoadScene(Current.scene); // TODO benchmark disabled for scene loading issues
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)

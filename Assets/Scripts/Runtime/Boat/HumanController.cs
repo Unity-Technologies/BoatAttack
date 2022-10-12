@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace BoatAttack
@@ -12,34 +13,39 @@ namespace BoatAttack
 
         private float _throttle;
         private float _steering;
-
-        private bool _paused;
         
         private void Awake()
         {
-            _controls = new InputControls();
             
-            _controls.BoatControls.Trottle.performed += context => _throttle = context.ReadValue<float>();
-            _controls.BoatControls.Trottle.canceled += context => _throttle = 0f;
-            
-            _controls.BoatControls.Steering.performed += context => _steering = context.ReadValue<float>();
-            _controls.BoatControls.Steering.canceled += context => _steering = 0f;
-
-            _controls.BoatControls.Reset.performed += ResetBoat;
-            _controls.BoatControls.Pause.performed += FreezeBoat;
-
-            _controls.DebugControls.TimeOfDay.performed += SelectTime;
         }
 
         public override void OnEnable()
         {
+            if (_controls == null)
+            {
+                _controls = new InputControls();
+            
+                _controls.BoatControl.Trottle.performed += context => _throttle = context.ReadValue<float>();
+                _controls.BoatControl.Trottle.canceled += _ => _throttle = 0f;
+            
+                _controls.BoatControl.Steering.performed += context => _steering = context.ReadValue<float>();
+                _controls.BoatControl.Steering.canceled += _ => _steering = 0f;
+
+                _controls.BoatControl.Reset.performed += ResetBoat;
+            }
+            
             base.OnEnable();
-            _controls.BoatControls.Enable();
+            _controls.BoatControl.Enable();
         }
 
         private void OnDisable()
         {
-            _controls.BoatControls.Disable();
+            _controls.BoatControl.Disable();
+        }
+
+        private void OnDestroy()
+        {
+            _controls.Dispose();
         }
 
         private void ResetBoat(InputAction.CallbackContext context)
@@ -47,30 +53,13 @@ namespace BoatAttack
             controller.ResetPosition();
         }
 
-        private void FreezeBoat(InputAction.CallbackContext context)
-        {
-            _paused = !_paused;
-            if(_paused)
-            {
-                Time.timeScale = 0f;
-            }
-            else
-            {
-                Time.timeScale = 1f;
-            }
-        }
-
-        private void SelectTime(InputAction.CallbackContext context)
-        {
-            var value = context.ReadValue<float>();
-            Debug.Log($"changing day time, input:{value}");
-            DayNightController.SelectPreset(value);
-        }
-
         void FixedUpdate()
         {
-            engine.Accelerate(_throttle);
-            engine.Turn(_steering);
+            if (RaceManager.State is RaceManager.RaceState.RaceStarted or RaceManager.RaceState.RaceEnded)
+            {
+                engine.Accelerate(_throttle);
+                engine.Turn(_steering);
+            }
         }
     }
 }

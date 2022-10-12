@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
+using UnityEngine.InputSystem.Utilities;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
@@ -37,9 +42,13 @@ namespace BoatAttack
         }
 
         public static AppSettings Instance;
+
+        public InputControls input;
+        public static GameObject LastSelectedObject;
         
         private GameObject loadingScreenObject;
         public static Camera MainCamera;
+        
         [Header("Resolution Settings")]
         public RenderRes maxRenderSize = RenderRes._720p;
         public bool variableResolution;
@@ -87,6 +96,16 @@ namespace BoatAttack
             {
                 Destroy(gameObject);
             }
+
+            input = new InputControls();
+            input.BoatAttackUI.Move.performed += _ =>
+            {
+                if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject == null)
+                {
+                    PointerSelection.SetSelection(LastSelectedObject);
+                }
+            };
+            input.Enable();
 
             ConsoleCanvas = Instantiate(consoleCanvas);
             DontDestroyOnLoad(ConsoleCanvas);
@@ -153,6 +172,11 @@ namespace BoatAttack
             Utility.CheckQualityLevel(); //TODO - hoping to remove one day when we have a quality level callback
 #endif
 
+            if (EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject != LastSelectedObject)
+            {
+                LastSelectedObject = EventSystem.current.currentSelectedGameObject;
+            }
+            
             if (!MainCamera) return;
 
             if (variableResolution)
@@ -160,7 +184,7 @@ namespace BoatAttack
                 MainCamera.allowDynamicResolution = true;
 
                 var offset = 0f;
-                var currentFrametime = Time.deltaTime;
+                var currentFrametime = Time.unscaledDeltaTime;
                 const float rate = 0.1f;
 
                 offset = targetFramerate switch
@@ -183,85 +207,94 @@ namespace BoatAttack
                 MainCamera.allowDynamicResolution = false;
             }
         }
-
+        
         public void ToggleSRPBatcher(bool enabled)
         {
             UniversalRenderPipeline.asset.useSRPBatcher = enabled;
         }
-
+        
         [Console.ConsoleCmd]
         public static void LoadScene(int buildIndex, LoadSceneMode mode = LoadSceneMode.Single)
-        {
-            LoadScene(SceneUtility.GetScenePathByBuildIndex(buildIndex), mode);
-        }
-
-        public static void LoadScene(string scenePath, LoadSceneMode mode = LoadSceneMode.Single)
         {
             Application.backgroundLoadingPriority = ThreadPriority.Low;
             switch (mode)
             {
                 case LoadSceneMode.Single:
-                    Instance.StartCoroutine(LoadSceneInternal(scenePath));
+                    Instance.StartCoroutine(LoadSceneInternal(buildIndex));
                     break;
                 case LoadSceneMode.Additive:
-                    SceneManager.LoadSceneAsync(scenePath, LoadSceneMode.Additive);
+                    SceneManager.LoadSceneAsync(buildIndex, LoadSceneMode.Additive);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
             }
         }
 
-        private static IEnumerator LoadSceneInternal(string scenePath)
+        public static void LoadLevel(LevelData level)
         {
-            var loadingScreenLoading = Instance.loadingScreen.InstantiateAsync();
-            yield return loadingScreenLoading;
-            Instance.loadingScreenObject = loadingScreenLoading.Result;
-            //Instance.loadingScreenObject.SendMessage("SetLoad", 0.0001f);
-            DontDestroyOnLoad(Instance.loadingScreenObject);
-
-            var buildIndex = SceneUtility.GetBuildIndexByScenePath(scenePath);
-            if(Debug.isDebugBuild)
-                Debug.Log($"loading scene {scenePath} at build index {buildIndex}");
-
-            // get current scene and set a loading scene as active
-            var currentScene = SceneManager.GetActiveScene();
-            var loadingScene = SceneManager.CreateScene("Loading");
-            SceneManager.SetActiveScene(loadingScene);
-
-            // unload last scene
-            var unload = SceneManager.UnloadSceneAsync(currentScene, UnloadSceneOptions.None);
-            while (!unload.isDone)
-            {
-                //Instance.loadingScreenObject.SendMessage("SetLoad", unload.progress * 0.5f);
-                yield return null;
-            }
-
-            // clean up
-            var clean = Resources.UnloadUnusedAssets();
-            while (!clean.isDone) { yield return null; }
-
+            Instance.StartCoroutine(LoadSceneInternal(level.masterScene, level.supportScenes));
+        }
+        
+        private static IEnumerator LoadSceneInternal(AssetReference scene, AssetReference[] support = null)
+        {
+            yield return InvokeLoadingScreen();
+            
+            if(support != null && support.Length > 0)
+                Debug.LogError("Support scenes are not supported yet.");
+            
             // load new scene
-            var load = new AsyncOperation();
-#if UNITY_EDITOR
-            if (buildIndex == -1)
+            var load = scene.LoadSceneAsync();
+            while (!load.IsDone)
             {
-                load = EditorSceneManager.LoadSceneAsyncInPlayMode(scenePath,
-                    new LoadSceneParameters(LoadSceneMode.Single));
-            }
-            else
-            {
-                load = SceneManager.LoadSceneAsync(buildIndex);
-            }
-#else
-            load = SceneManager.LoadSceneAsync(scenePath);
-#endif
-            while (!load.isDone)
-            {
-                //Instance.loadingScreenObject.SendMessage("SetLoad", load.progress * 0.5f + 0.5f);
+                LoadingScreen.SetProgress(Mathf.SmoothStep(0.5f, 1.0f, load.PercentComplete));
                 yield return null;
             }
         }
-
+        
+        private static IEnumerator LoadSceneInternal(int buildIndex)
+        {
+            yield return InvokeLoadingScreen();
+            
+            // load new scene
+            var load = SceneManager.LoadSceneAsync(buildIndex);
+            while (!load.isDone)
+            {
+                LoadingScreen.SetProgress(Mathf.SmoothStep(0.5f, 1.0f, load.progress));
+                yield return null;
+            }
+        }
+        
+        private static IEnumerator InvokeLoadingScreen()
+        {
+            var openSceneCount = SceneManager.sceneCount;
+            // load loading screen
+            var loadingScreenLoading = Instance.loadingScreen.InstantiateAsync();
+            yield return loadingScreenLoading;
+            Instance.loadingScreenObject = loadingScreenLoading.Result;
+            DontDestroyOnLoad(Instance.loadingScreenObject);
+            
+            // create and set a loading scene as active
+            var loadingScene = SceneManager.CreateScene("Loading");
+            SceneManager.SetActiveScene(loadingScene);
+            
+            // unload all other scenes
+            var operations = new AsyncOperation[openSceneCount];
+            for (var i = openSceneCount - 1; i >= 0; i--)
+            {
+                var s = SceneManager.GetSceneAt(i);
+                if(s != SceneManager.GetActiveScene()) 
+                    operations[i] = SceneManager.UnloadSceneAsync(s, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
+            }
+            // wait for unloading to complete
+            while (true)
+            {
+                var unloadCount = operations.Count(asyncOperation => asyncOperation.isDone);
+                LoadingScreen.SetProgress(Mathf.SmoothStep(0.0f, 0.5f, (float)operations.Length / unloadCount));
+                if(unloadCount == operations.Length) break;
+                yield return null;
+            }
+        }
+        
         private static IEnumerator LoadPrefab<T>(AssetReference assetRef, AsyncOperationHandle assetLoading, Transform parent = null)
         {
             if (typeof(T) == typeof(GameObject))
@@ -298,10 +331,10 @@ namespace BoatAttack
                 switch (arg[0])
                 {
                     case "-loadlevel":
-                        LoadScene(arg[1]);
+                        if(int.TryParse(arg[1], out var i)) LoadScene(i);
                         break;
                     case "-benchmarkFlythrough":
-                        LoadScene("benchmark_island-flythrough");
+                        //TODO load benchmark
                         break;
                 }
             }
@@ -310,14 +343,14 @@ namespace BoatAttack
 
     public static class ConstantData
     {
-        private static readonly string[] Levels =
-        {
-            "Island",
-        };
-
         public static string GetLevelName(int level)
         {
-            return $"scenes/_levels/level_{Levels[level]}";
+            if (AppSettings.Instance.levels.Length < level)
+            {
+                return AppSettings.Instance.levels[level].levelName;
+            }
+            Debug.LogError($"No level at index:{level}");
+            return "null";
         }
 
         public static readonly string[] AiNames =

@@ -24,11 +24,11 @@ public class WaypointTest : MonoBehaviour
             wpGroup.GetClosestPointOnPath(position, out Tuple<WaypointGroup.Waypoint, WaypointGroup.Waypoint> wps);
         Gizmos.DrawLine(position, closestPoint);
 
-        var loop = wps.Item2.normalizedDistance <= 0;
+        var loop = wps.Item2.NormalizedDistance <= 0;
 
-        segmentPercentage = (loop ? 1f : wps.Item2.normalizedDistance) - wps.Item1.normalizedDistance;
+        segmentPercentage = (loop ? 1f : wps.Item2.NormalizedDistance) - wps.Item1.NormalizedDistance;
         var segmentDistance = wpGroup.length * segmentPercentage;
         var positionSegmentPercentage = Vector3.Distance(closestPoint, wps.Item1.point) / segmentDistance;
-        trackPercentage = Mathf.Lerp(wps.Item1.normalizedDistance, (loop ? 1f : wps.Item2.normalizedDistance), positionSegmentPercentage);
+        trackPercentage = Mathf.Lerp(wps.Item1.NormalizedDistance, (loop ? 1f : wps.Item2.NormalizedDistance), positionSegmentPercentage);
     }
 }

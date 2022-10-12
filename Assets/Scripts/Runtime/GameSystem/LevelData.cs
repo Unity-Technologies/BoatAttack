@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.AddressableAssets;
 
 [CreateAssetMenu(fileName = "New LevelData", menuName = "Boat Attack/Level Data", order = 8)]

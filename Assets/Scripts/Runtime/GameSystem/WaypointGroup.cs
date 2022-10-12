@@ -12,11 +12,8 @@ namespace BoatAttack
 {
 	public class WaypointGroup : MonoBehaviour
 	{
-		public int waypointGroupId = 0;
 		public Color waypointColour = Color.yellow;
 		public bool loop = true;
-
-		public bool raceStarted = false;
 
 		[NonSerialized]
 		public bool Reverse = false;
@@ -24,23 +21,39 @@ namespace BoatAttack
 		[NonSerialized]
 		public Matrix4x4[] StartingPositions = new Matrix4x4[4];
 
-		[SerializeField] public List<Waypoint> WPs = new List<Waypoint>();
+		[SerializeField] public List<Waypoint> WPs = new ();
 		public float length;
-		private readonly Dictionary<BoxCollider, Waypoint> _triggerPairs = new Dictionary<BoxCollider, Waypoint>();
-		private readonly SortedDictionary<int, Waypoint> _checkpointPairs = new SortedDictionary<int, Waypoint>();
+		private readonly Dictionary<BoxCollider, Waypoint> _triggerPairs = new ();
+		private readonly SortedDictionary<int, Waypoint> _checkpointPairs = new ();
 		private int _curWpId;
 
 		public AssetReference checkpoint;
 
 		public static WaypointGroup Instance { get; private set; }
 
-		private BoxCollider[] _triggers;
-
 		// Use this for initialization
 		private void Awake()
 		{
 			Instance = this;
 			CalculateTrackDistance();
+		}
+
+		private void OnDestroy()
+		{
+			Cleanup();
+		}
+		
+		private void Cleanup()
+		{
+			Instance = null;
+			
+			foreach (var o in GameObject.FindGameObjectsWithTag(gameObject.tag))
+			{
+				Destroy(o);
+			}
+			
+			_triggerPairs.Clear();
+			_checkpointPairs.Clear();
 		}
 
 		public void Setup(bool reversed)
@@ -55,35 +68,35 @@ namespace BoatAttack
 			}
 
 			var i = 0;
-			_triggers = new BoxCollider[WPs.Count];
+			var triggers = new BoxCollider[WPs.Count];
 			foreach (var wp in WPs)
 			{
 				var obj = new GameObject($"wp{i}_trigger", typeof(BoxCollider))
 				{
-					hideFlags = HideFlags.HideInHierarchy, tag = gameObject.tag
+					tag = gameObject.tag
 				};
 				obj.transform.SetPositionAndRotation(wp.point, wp.rotation);
-				obj.TryGetComponent(out _triggers[i]);
-				_triggers[i].isTrigger = true;
-				_triggers[i].size = new Vector3(wp.width * 2f, 50f, 0.5f);
-				_triggerPairs.Add(_triggers[i], wp);
-				wp.Trigger = _triggers[i];
+				obj.TryGetComponent(out triggers[i]);
+				triggers[i].isTrigger = true;
+				triggers[i].size = new Vector3(wp.width * 2f, 50f, 0.5f);
+				_triggerPairs.Add(triggers[i], wp);
+				wp.Trigger = triggers[i];
 				if (wp.isCheckpoint || i == 0)
 				{
 					_checkpointPairs.Add(i, wp);
 					StartCoroutine(CreateCheckpoint(wp, i == 0));
 				}
-
 				i++;
 			}
-
 			GetStartPositions();
 		}
-
+		
 		IEnumerator CreateCheckpoint(Waypoint wp, bool start)
 		{
 			var checkpointLoading = checkpoint.InstantiateAsync(wp.point, wp.rotation);
 			yield return checkpointLoading;
+			wp.Checkpoint = checkpointLoading.Result;
+			checkpointLoading.Result.tag = gameObject.tag;
 			checkpointLoading.Result.transform.localScale = Vector3.one * ((wp.width + 1) / 6);
 
 			if (!start) yield break;
@@ -101,7 +114,8 @@ namespace BoatAttack
 			public int index;
 			public bool isCheckpoint;
 			[NonSerialized] public BoxCollider Trigger;
-			public float normalizedDistance;
+			[NonSerialized] public GameObject Checkpoint;
+			[NonSerialized] public float NormalizedDistance;
 
 			public Waypoint(Vector3 position, float radius)
 			{
@@ -154,11 +168,11 @@ namespace BoatAttack
 		public float GetPercentageAroundTrack(Vector3 point)
 		{
 			var closestPoint = GetClosestPointOnPath(point, out Tuple<WaypointGroup.Waypoint, WaypointGroup.Waypoint> wps);
-			var looped = wps.Item2.normalizedDistance <= 0;
-			var segmentPercentage = (looped ? 1f : wps.Item2.normalizedDistance) - wps.Item1.normalizedDistance;
+			var looped = wps.Item2.NormalizedDistance <= 0;
+			var segmentPercentage = (looped ? 1f : wps.Item2.NormalizedDistance) - wps.Item1.NormalizedDistance;
 			var segmentDistance = length * segmentPercentage;
 			var positionSegmentPercentage = Vector3.Distance(closestPoint, wps.Item1.point) / segmentDistance;
-			return Mathf.Lerp(wps.Item1.normalizedDistance, (looped ? 1f : wps.Item2.normalizedDistance), positionSegmentPercentage);
+			return Mathf.Lerp(wps.Item1.NormalizedDistance, (looped ? 1f : wps.Item2.NormalizedDistance), positionSegmentPercentage);
 		}
 
 		public Vector3 GetClosestPointOnPath(Vector3 point, out Tuple<Waypoint, Waypoint> wpIndices)
@@ -248,7 +262,7 @@ namespace BoatAttack
 			{
 				var segment = Vector3.Distance(WPs[i - 1].point, WPs[i].point);
 				percentage += segment / distance;
-				WPs[i].normalizedDistance = percentage;
+				WPs[i].NormalizedDistance = percentage;
 			}
 
 			return distance;

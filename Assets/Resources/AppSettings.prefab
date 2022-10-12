@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 8490184438857729681}
   - component: {fileID: 7312333174115242941}
   - component: {fileID: 5054393478131282040}
+  - component: {fileID: 6219998646609057815}
+  - component: {fileID: 8457944295164934991}
   m_Layer: 0
   m_Name: AppSettings
   m_TagString: Untagged
@@ -84,7 +86,7 @@ MonoBehaviour:
     game: 3
     type: 0
     boatCount: 4
-    level: 
+    level: {fileID: 0}
     laps: 3
     reversed: 0
   raceUiPrefab:
@@ -94,6 +96,11 @@ MonoBehaviour:
     m_EditorAssetChanged: 0
   raceUiTouchPrefab:
     m_AssetGUID: c080ffd98277d4e3f97f96dedf2ec960
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  pauseMenuUiPrefab:
+    m_AssetGUID: b0ab7a450cebd4c71b0e7333e2a46ede
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
@@ -205,3 +212,52 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6219998646609057815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3829577903138488069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!114 &8457944295164934991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3829577903138488069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: 216207ae924c39842b5b2ad515311cfa,
+    type: 3}
+  m_PointAction: {fileID: 8955386520629926045, guid: 216207ae924c39842b5b2ad515311cfa,
+    type: 3}
+  m_MoveAction: {fileID: 3647799839476394486, guid: 216207ae924c39842b5b2ad515311cfa,
+    type: 3}
+  m_SubmitAction: {fileID: 4677889254595086923, guid: 216207ae924c39842b5b2ad515311cfa,
+    type: 3}
+  m_CancelAction: {fileID: -3949105477238278242, guid: 216207ae924c39842b5b2ad515311cfa,
+    type: 3}
+  m_LeftClickAction: {fileID: 0}
+  m_MiddleClickAction: {fileID: 0}
+  m_RightClickAction: {fileID: 0}
+  m_ScrollWheelAction: {fileID: 0}
+  m_TrackedDevicePositionAction: {fileID: 0}
+  m_TrackedDeviceOrientationAction: {fileID: 0}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0

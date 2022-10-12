@@ -9,12 +9,11 @@ public class MenuVideo : MonoBehaviour
 {
     private bool blurred;
 
+    public VideoPlayer video;
+    
     private void OnEnable()
     {
-        if (!TryGetComponent(out VideoPlayer video)) return;
-        
-        //if(video.targetCamera == null)
-            video.targetCamera = Camera.main;
+        video.targetCamera = Camera.main;
     }
 
     public void ToggleBlurred()

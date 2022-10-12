@@ -101,6 +101,31 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8247320481306587565, guid: 97ad03fc42a849a41a183025cc835e80,
         type: 3}
+    - target: {fileID: 114135153223430406, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
+        type: 3}
+      propertyPath: wakes.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114135153223430406, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
+        type: 3}
+      propertyPath: wakes.Array.data[0].origin.x
+      value: 0.71
+      objectReference: {fileID: 0}
+    - target: {fileID: 114135153223430406, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
+        type: 3}
+      propertyPath: wakes.Array.data[0].origin.z
+      value: 0.71
+      objectReference: {fileID: 0}
+    - target: {fileID: 114135153223430406, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
+        type: 3}
+      propertyPath: wakes.Array.data[1].origin.x
+      value: 0.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 114135153223430406, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
+        type: 3}
+      propertyPath: wakes.Array.data[1].origin.z
+      value: -3.46
+      objectReference: {fileID: 0}
     - target: {fileID: 114571606569623246, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
       propertyPath: volume
@@ -4332,11 +4357,6 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 437f011fedad9694dba179244c6f6f12, type: 2}
-    - target: {fileID: 4301521246144889673, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
-        type: 3}
-      propertyPath: horsePower
-      value: 28
-      objectReference: {fileID: 0}
     - target: {fileID: 4301521246144889673, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
       propertyPath: enginePosition.y

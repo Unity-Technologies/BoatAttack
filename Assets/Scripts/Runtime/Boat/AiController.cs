@@ -28,19 +28,20 @@ namespace BoatAttack
 
         private void Start ()
         {
-            RaceManager.raceStarted += StartRace;
-        }
-
-        private void StartRace(bool start)
-        {
-            AssignWp(WaypointGroup.Instance.GetWaypoint(0));
-            InvokeRepeating(nameof(CalculatePath), 1f, 1f);
+            RaceManager.StateChange += StartRace;
         }
 
         private void OnDisable()
         {
             StopAllCoroutines();
-            RaceManager.raceStarted -= StartRace;
+            RaceManager.StateChange -= StartRace;
+        }
+        
+        private void StartRace(RaceManager.RaceState raceState)
+        {
+            if (raceState != RaceManager.RaceState.RaceStarted) return;
+            AssignWp(WaypointGroup.Instance.GetWaypoint(0));
+            InvokeRepeating(nameof(CalculatePath), 1f, 1f);
         }
 
         private void LateUpdate()
@@ -59,7 +60,7 @@ namespace BoatAttack
                 }
             }
 
-            if(RaceManager.RaceStarted)
+            if(RaceManager.State == RaceManager.RaceState.RaceStarted)
             {
                 if (_idleTime > 3f) // if been idle for 3 seconds assume AI is stuck
                 {
@@ -127,7 +128,7 @@ namespace BoatAttack
 
             c = Color.red;
             Gizmos.color = c;
-            if (_pathPoint[_curPoint] != Vector3.zero)
+            if (_pathPoint != null && _pathPoint.Length > _curPoint && _pathPoint[_curPoint] != Vector3.zero)
                 Gizmos.DrawLine(transform.position + (Vector3.up * 0.1f), _pathPoint[_curPoint]);
         }
 
@@ -136,10 +137,10 @@ namespace BoatAttack
             var c = Color.yellow;
             Gizmos.color = c;
 
-            for (var i = 0; i < _pathPoint.Length - 1; i++)
+            for (var i = 0; i < _pathPoint?.Length - 1; i++)
             {
                 if (i == _pathPoint.Length - 1)
-                    Gizmos.DrawLine(_pathPoint[_pathPoint.Length - 1], _pathPoint[i]);
+                    Gizmos.DrawLine(_pathPoint[^1], _pathPoint[i]);
                 else
                     Gizmos.DrawLine(_pathPoint[i], _pathPoint[i + 1]);
             }

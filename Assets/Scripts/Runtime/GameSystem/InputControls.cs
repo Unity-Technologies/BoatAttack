@@ -24,7 +24,7 @@ public partial class @InputControls : IInputActionCollection2, IDisposable
     ""name"": ""InputControls"",
     ""maps"": [
         {
-            ""name"": ""BoatControls"",
+            ""name"": ""BoatControl"",
             ""id"": ""ef127e39-c6d2-4d6f-8edc-46296d5de0cb"",
             ""actions"": [
                 {
@@ -343,6 +343,270 @@ public partial class @InputControls : IInputActionCollection2, IDisposable
             ]
         },
         {
+            ""name"": ""BoatAttackUI"",
+            ""id"": ""9da75e8a-b102-4b37-80ba-0f913ab7bbad"",
+            ""actions"": [
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""c3c13725-28c7-4388-8740-fd69f1ab7b2f"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Point"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""203d7fa3-9c8f-4889-95ae-20cc938baa5e"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Submit"",
+                    ""type"": ""Button"",
+                    ""id"": ""a52bfc7b-0d72-4cd5-822c-50a61de5b99d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Cancel"",
+                    ""type"": ""Button"",
+                    ""id"": ""7298fc78-230e-43f8-a4c7-b27ddafdb0a3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""95333337-cb61-4a2e-9419-58b4a295069c"",
+                    ""path"": ""<Gamepad>/dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3c20eb97-c6b4-40fc-b7ca-a45aa00c9171"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""UpDownLeftRight"",
+                    ""id"": ""fd9657fa-69a0-4e89-8fc4-4ba523d7598b"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""578f9282-c1f2-4d46-9796-c4a6743d0a58"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""c26ec41d-240e-4cc1-a711-916f70434c31"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""3c00a58f-e990-46bc-833d-7f9078498744"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""c26e8acb-5f1b-44e4-90b4-ed8d94978435"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""WSAD"",
+                    ""id"": ""98fdcb4f-8d30-4152-998a-8c37b717c02d"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""ebf06eac-5246-4903-827a-206e940e5c02"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""6ced7327-5e70-4f6d-8706-19a2aecedaf7"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""3f2c9a16-dfe7-4e2d-b6d8-605509150ba4"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""4962ee94-483a-4234-a691-bde9249d9763"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4db24548-925b-438f-a002-e082c5d619f8"",
+                    ""path"": ""<Pointer>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Point"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3c0a6c16-2b37-4ec4-82aa-62d3bd160d63"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7e671547-9537-4559-a8b0-a2c86a1ca240"",
+                    ""path"": ""<Pointer>/press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""80a0c927-984b-4335-b44e-348c2bf62d33"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bfb97953-ff8a-4ae9-84b6-016e0010e90e"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""71e4f47b-a1e0-4380-9802-8dc11cbf1ce9"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7ec1a700-af2b-4aec-b046-91a3618ec150"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""de6a6d23-b723-45cc-97b3-594207ece93f"",
+                    ""path"": ""<Keyboard>/backspace"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
             ""name"": ""DebugControls"",
             ""id"": ""625f8e9a-b2de-4422-89d6-ca2dcf289a8d"",
             ""actions"": [
@@ -635,270 +899,6 @@ public partial class @InputControls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
-        },
-        {
-            ""name"": ""BoatAttackUI"",
-            ""id"": ""9da75e8a-b102-4b37-80ba-0f913ab7bbad"",
-            ""actions"": [
-                {
-                    ""name"": ""Move"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""c3c13725-28c7-4388-8740-fd69f1ab7b2f"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Point"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""203d7fa3-9c8f-4889-95ae-20cc938baa5e"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Submit"",
-                    ""type"": ""Button"",
-                    ""id"": ""a52bfc7b-0d72-4cd5-822c-50a61de5b99d"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Cancel"",
-                    ""type"": ""Button"",
-                    ""id"": ""7298fc78-230e-43f8-a4c7-b27ddafdb0a3"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""95333337-cb61-4a2e-9419-58b4a295069c"",
-                    ""path"": ""<Gamepad>/dpad"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3c20eb97-c6b4-40fc-b7ca-a45aa00c9171"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""UpDownLeftRight"",
-                    ""id"": ""fd9657fa-69a0-4e89-8fc4-4ba523d7598b"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""578f9282-c1f2-4d46-9796-c4a6743d0a58"",
-                    ""path"": ""<Keyboard>/upArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""c26ec41d-240e-4cc1-a711-916f70434c31"",
-                    ""path"": ""<Keyboard>/downArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""3c00a58f-e990-46bc-833d-7f9078498744"",
-                    ""path"": ""<Keyboard>/leftArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""c26e8acb-5f1b-44e4-90b4-ed8d94978435"",
-                    ""path"": ""<Keyboard>/rightArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""WSAD"",
-                    ""id"": ""98fdcb4f-8d30-4152-998a-8c37b717c02d"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""ebf06eac-5246-4903-827a-206e940e5c02"",
-                    ""path"": ""<Keyboard>/w"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""6ced7327-5e70-4f6d-8706-19a2aecedaf7"",
-                    ""path"": ""<Keyboard>/s"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""3f2c9a16-dfe7-4e2d-b6d8-605509150ba4"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""4962ee94-483a-4234-a691-bde9249d9763"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""4db24548-925b-438f-a002-e082c5d619f8"",
-                    ""path"": ""<Pointer>/position"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Point"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3c0a6c16-2b37-4ec4-82aa-62d3bd160d63"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Submit"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7e671547-9537-4559-a8b0-a2c86a1ca240"",
-                    ""path"": ""<Pointer>/press"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Submit"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""80a0c927-984b-4335-b44e-348c2bf62d33"",
-                    ""path"": ""<Keyboard>/enter"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Submit"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""bfb97953-ff8a-4ae9-84b6-016e0010e90e"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Submit"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""71e4f47b-a1e0-4380-9802-8dc11cbf1ce9"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Cancel"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7ec1a700-af2b-4aec-b046-91a3618ec150"",
-                    ""path"": ""<Keyboard>/escape"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Cancel"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""de6a6d23-b723-45cc-97b3-594207ece93f"",
-                    ""path"": ""<Keyboard>/backspace"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Cancel"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
         }
     ],
     ""controlSchemes"": [
@@ -942,12 +942,18 @@ public partial class @InputControls : IInputActionCollection2, IDisposable
         }
     ]
 }");
-        // BoatControls
-        m_BoatControls = asset.FindActionMap("BoatControls", throwIfNotFound: true);
-        m_BoatControls_Trottle = m_BoatControls.FindAction("Trottle", throwIfNotFound: true);
-        m_BoatControls_Steering = m_BoatControls.FindAction("Steering", throwIfNotFound: true);
-        m_BoatControls_Reset = m_BoatControls.FindAction("Reset", throwIfNotFound: true);
-        m_BoatControls_Pause = m_BoatControls.FindAction("Pause", throwIfNotFound: true);
+        // BoatControl
+        m_BoatControl = asset.FindActionMap("BoatControl", throwIfNotFound: true);
+        m_BoatControl_Trottle = m_BoatControl.FindAction("Trottle", throwIfNotFound: true);
+        m_BoatControl_Steering = m_BoatControl.FindAction("Steering", throwIfNotFound: true);
+        m_BoatControl_Reset = m_BoatControl.FindAction("Reset", throwIfNotFound: true);
+        m_BoatControl_Pause = m_BoatControl.FindAction("Pause", throwIfNotFound: true);
+        // BoatAttackUI
+        m_BoatAttackUI = asset.FindActionMap("BoatAttackUI", throwIfNotFound: true);
+        m_BoatAttackUI_Move = m_BoatAttackUI.FindAction("Move", throwIfNotFound: true);
+        m_BoatAttackUI_Point = m_BoatAttackUI.FindAction("Point", throwIfNotFound: true);
+        m_BoatAttackUI_Submit = m_BoatAttackUI.FindAction("Submit", throwIfNotFound: true);
+        m_BoatAttackUI_Cancel = m_BoatAttackUI.FindAction("Cancel", throwIfNotFound: true);
         // DebugControls
         m_DebugControls = asset.FindActionMap("DebugControls", throwIfNotFound: true);
         m_DebugControls_PauseTime = m_DebugControls.FindAction("PauseTime", throwIfNotFound: true);
@@ -956,12 +962,6 @@ public partial class @InputControls : IInputActionCollection2, IDisposable
         m_General = asset.FindActionMap("General", throwIfNotFound: true);
         m_General_Move = m_General.FindAction("Move", throwIfNotFound: true);
         m_General_Look = m_General.FindAction("Look", throwIfNotFound: true);
-        // BoatAttackUI
-        m_BoatAttackUI = asset.FindActionMap("BoatAttackUI", throwIfNotFound: true);
-        m_BoatAttackUI_Move = m_BoatAttackUI.FindAction("Move", throwIfNotFound: true);
-        m_BoatAttackUI_Point = m_BoatAttackUI.FindAction("Point", throwIfNotFound: true);
-        m_BoatAttackUI_Submit = m_BoatAttackUI.FindAction("Submit", throwIfNotFound: true);
-        m_BoatAttackUI_Cancel = m_BoatAttackUI.FindAction("Cancel", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1018,44 +1018,44 @@ public partial class @InputControls : IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // BoatControls
-    private readonly InputActionMap m_BoatControls;
-    private IBoatControlsActions m_BoatControlsActionsCallbackInterface;
-    private readonly InputAction m_BoatControls_Trottle;
-    private readonly InputAction m_BoatControls_Steering;
-    private readonly InputAction m_BoatControls_Reset;
-    private readonly InputAction m_BoatControls_Pause;
-    public struct BoatControlsActions
+    // BoatControl
+    private readonly InputActionMap m_BoatControl;
+    private IBoatControlActions m_BoatControlActionsCallbackInterface;
+    private readonly InputAction m_BoatControl_Trottle;
+    private readonly InputAction m_BoatControl_Steering;
+    private readonly InputAction m_BoatControl_Reset;
+    private readonly InputAction m_BoatControl_Pause;
+    public struct BoatControlActions
     {
         private @InputControls m_Wrapper;
-        public BoatControlsActions(@InputControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Trottle => m_Wrapper.m_BoatControls_Trottle;
-        public InputAction @Steering => m_Wrapper.m_BoatControls_Steering;
-        public InputAction @Reset => m_Wrapper.m_BoatControls_Reset;
-        public InputAction @Pause => m_Wrapper.m_BoatControls_Pause;
-        public InputActionMap Get() { return m_Wrapper.m_BoatControls; }
+        public BoatControlActions(@InputControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Trottle => m_Wrapper.m_BoatControl_Trottle;
+        public InputAction @Steering => m_Wrapper.m_BoatControl_Steering;
+        public InputAction @Reset => m_Wrapper.m_BoatControl_Reset;
+        public InputAction @Pause => m_Wrapper.m_BoatControl_Pause;
+        public InputActionMap Get() { return m_Wrapper.m_BoatControl; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(BoatControlsActions set) { return set.Get(); }
-        public void SetCallbacks(IBoatControlsActions instance)
+        public static implicit operator InputActionMap(BoatControlActions set) { return set.Get(); }
+        public void SetCallbacks(IBoatControlActions instance)
         {
-            if (m_Wrapper.m_BoatControlsActionsCallbackInterface != null)
+            if (m_Wrapper.m_BoatControlActionsCallbackInterface != null)
             {
-                @Trottle.started -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnTrottle;
-                @Trottle.performed -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnTrottle;
-                @Trottle.canceled -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnTrottle;
-                @Steering.started -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnSteering;
-                @Steering.performed -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnSteering;
-                @Steering.canceled -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnSteering;
-                @Reset.started -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnReset;
-                @Reset.performed -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnReset;
-                @Reset.canceled -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnReset;
-                @Pause.started -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnPause;
-                @Pause.performed -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnPause;
-                @Pause.canceled -= m_Wrapper.m_BoatControlsActionsCallbackInterface.OnPause;
+                @Trottle.started -= m_Wrapper.m_BoatControlActionsCallbackInterface.OnTrottle;
+                @Trottle.performed -= m_Wrapper.m_BoatControlActionsCallbackInterface.OnTrottle;
+                @Trottle.canceled -= m_Wrapper.m_BoatControlActionsCallbackInterface.OnTrottle;
+                @Steering.started -= m_Wrapper.m_BoatControlActionsCallbackInterface.OnSteering;
+                @Steering.performed -= m_Wrapper.m_BoatControlActionsCallbackInterface.OnSteering;
+                @Steering.canceled -= m_Wrapper.m_BoatControlActionsCallbackInterface.OnSteering;
+                @Reset.started -= m_Wrapper.m_BoatControlActionsCallbackInterface.OnReset;
+                @Reset.performed -= m_Wrapper.m_BoatControlActionsCallbackInterface.OnReset;
+                @Reset.canceled -= m_Wrapper.m_BoatControlActionsCallbackInterface.OnReset;
+                @Pause.started -= m_Wrapper.m_BoatControlActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_BoatControlActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_BoatControlActionsCallbackInterface.OnPause;
             }
-            m_Wrapper.m_BoatControlsActionsCallbackInterface = instance;
+            m_Wrapper.m_BoatControlActionsCallbackInterface = instance;
             if (instance != null)
             {
                 @Trottle.started += instance.OnTrottle;
@@ -1073,7 +1073,64 @@ public partial class @InputControls : IInputActionCollection2, IDisposable
             }
         }
     }
-    public BoatControlsActions @BoatControls => new BoatControlsActions(this);
+    public BoatControlActions @BoatControl => new BoatControlActions(this);
+
+    // BoatAttackUI
+    private readonly InputActionMap m_BoatAttackUI;
+    private IBoatAttackUIActions m_BoatAttackUIActionsCallbackInterface;
+    private readonly InputAction m_BoatAttackUI_Move;
+    private readonly InputAction m_BoatAttackUI_Point;
+    private readonly InputAction m_BoatAttackUI_Submit;
+    private readonly InputAction m_BoatAttackUI_Cancel;
+    public struct BoatAttackUIActions
+    {
+        private @InputControls m_Wrapper;
+        public BoatAttackUIActions(@InputControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Move => m_Wrapper.m_BoatAttackUI_Move;
+        public InputAction @Point => m_Wrapper.m_BoatAttackUI_Point;
+        public InputAction @Submit => m_Wrapper.m_BoatAttackUI_Submit;
+        public InputAction @Cancel => m_Wrapper.m_BoatAttackUI_Cancel;
+        public InputActionMap Get() { return m_Wrapper.m_BoatAttackUI; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(BoatAttackUIActions set) { return set.Get(); }
+        public void SetCallbacks(IBoatAttackUIActions instance)
+        {
+            if (m_Wrapper.m_BoatAttackUIActionsCallbackInterface != null)
+            {
+                @Move.started -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnMove;
+                @Move.performed -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnMove;
+                @Move.canceled -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnMove;
+                @Point.started -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnPoint;
+                @Point.performed -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnPoint;
+                @Point.canceled -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnPoint;
+                @Submit.started -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnSubmit;
+                @Submit.performed -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnSubmit;
+                @Submit.canceled -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnSubmit;
+                @Cancel.started -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnCancel;
+                @Cancel.performed -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnCancel;
+                @Cancel.canceled -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnCancel;
+            }
+            m_Wrapper.m_BoatAttackUIActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Move.started += instance.OnMove;
+                @Move.performed += instance.OnMove;
+                @Move.canceled += instance.OnMove;
+                @Point.started += instance.OnPoint;
+                @Point.performed += instance.OnPoint;
+                @Point.canceled += instance.OnPoint;
+                @Submit.started += instance.OnSubmit;
+                @Submit.performed += instance.OnSubmit;
+                @Submit.canceled += instance.OnSubmit;
+                @Cancel.started += instance.OnCancel;
+                @Cancel.performed += instance.OnCancel;
+                @Cancel.canceled += instance.OnCancel;
+            }
+        }
+    }
+    public BoatAttackUIActions @BoatAttackUI => new BoatAttackUIActions(this);
 
     // DebugControls
     private readonly InputActionMap m_DebugControls;
@@ -1156,63 +1213,6 @@ public partial class @InputControls : IInputActionCollection2, IDisposable
         }
     }
     public GeneralActions @General => new GeneralActions(this);
-
-    // BoatAttackUI
-    private readonly InputActionMap m_BoatAttackUI;
-    private IBoatAttackUIActions m_BoatAttackUIActionsCallbackInterface;
-    private readonly InputAction m_BoatAttackUI_Move;
-    private readonly InputAction m_BoatAttackUI_Point;
-    private readonly InputAction m_BoatAttackUI_Submit;
-    private readonly InputAction m_BoatAttackUI_Cancel;
-    public struct BoatAttackUIActions
-    {
-        private @InputControls m_Wrapper;
-        public BoatAttackUIActions(@InputControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Move => m_Wrapper.m_BoatAttackUI_Move;
-        public InputAction @Point => m_Wrapper.m_BoatAttackUI_Point;
-        public InputAction @Submit => m_Wrapper.m_BoatAttackUI_Submit;
-        public InputAction @Cancel => m_Wrapper.m_BoatAttackUI_Cancel;
-        public InputActionMap Get() { return m_Wrapper.m_BoatAttackUI; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(BoatAttackUIActions set) { return set.Get(); }
-        public void SetCallbacks(IBoatAttackUIActions instance)
-        {
-            if (m_Wrapper.m_BoatAttackUIActionsCallbackInterface != null)
-            {
-                @Move.started -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnMove;
-                @Move.performed -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnMove;
-                @Move.canceled -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnMove;
-                @Point.started -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnPoint;
-                @Point.performed -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnPoint;
-                @Point.canceled -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnPoint;
-                @Submit.started -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnSubmit;
-                @Submit.performed -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnSubmit;
-                @Submit.canceled -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnSubmit;
-                @Cancel.started -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnCancel;
-                @Cancel.performed -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnCancel;
-                @Cancel.canceled -= m_Wrapper.m_BoatAttackUIActionsCallbackInterface.OnCancel;
-            }
-            m_Wrapper.m_BoatAttackUIActionsCallbackInterface = instance;
-            if (instance != null)
-            {
-                @Move.started += instance.OnMove;
-                @Move.performed += instance.OnMove;
-                @Move.canceled += instance.OnMove;
-                @Point.started += instance.OnPoint;
-                @Point.performed += instance.OnPoint;
-                @Point.canceled += instance.OnPoint;
-                @Submit.started += instance.OnSubmit;
-                @Submit.performed += instance.OnSubmit;
-                @Submit.canceled += instance.OnSubmit;
-                @Cancel.started += instance.OnCancel;
-                @Cancel.performed += instance.OnCancel;
-                @Cancel.canceled += instance.OnCancel;
-            }
-        }
-    }
-    public BoatAttackUIActions @BoatAttackUI => new BoatAttackUIActions(this);
     private int m_GamepadSchemeIndex = -1;
     public InputControlScheme GamepadScheme
     {
@@ -1240,12 +1240,19 @@ public partial class @InputControls : IInputActionCollection2, IDisposable
             return asset.controlSchemes[m_TouchScreenSchemeIndex];
         }
     }
-    public interface IBoatControlsActions
+    public interface IBoatControlActions
     {
         void OnTrottle(InputAction.CallbackContext context);
         void OnSteering(InputAction.CallbackContext context);
         void OnReset(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
+    }
+    public interface IBoatAttackUIActions
+    {
+        void OnMove(InputAction.CallbackContext context);
+        void OnPoint(InputAction.CallbackContext context);
+        void OnSubmit(InputAction.CallbackContext context);
+        void OnCancel(InputAction.CallbackContext context);
     }
     public interface IDebugControlsActions
     {
@@ -1256,12 +1263,5 @@ public partial class @InputControls : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
-    }
-    public interface IBoatAttackUIActions
-    {
-        void OnMove(InputAction.CallbackContext context);
-        void OnPoint(InputAction.CallbackContext context);
-        void OnSubmit(InputAction.CallbackContext context);
-        void OnCancel(InputAction.CallbackContext context);
     }
 }

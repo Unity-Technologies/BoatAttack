@@ -29,9 +29,4 @@ public class SkewedImage : Image
         }
  
     }
-
-    protected override void UpdateMaterial()
-    {
-        base.UpdateMaterial();
-    }
 }

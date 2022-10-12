@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
@@ -10,38 +12,52 @@ namespace BoatAttack.UI
 {
     public class RaceUI : MonoBehaviour
     {
-        private Boat _boat;
-        private Canvas _canvas;
+        [Header("Gameplay")]
         public TextMeshProUGUI lapCounter;
-        public TextMeshProUGUI positionNumber;
         public TextMeshProUGUI timeTotal;
         public TextMeshProUGUI timeLap;
+        public TextMeshProUGUI timeLapText;
         public TextMeshProUGUI speedText;
-        public TextMeshProUGUI speedFormatText;
 
+        public RectTransform playerList;
         public RectTransform map;
         public GameObject gameplayUi;
+        
+        [Header("Match End Screen")]
         public GameObject raceStat;
+        public RectTransform statsContainer;
         public GameObject matchEnd;
 
         [Header("Assets")]
         public AssetReference playerMarker;
         public AssetReference playerMapMarker;
         public AssetReference raceStatsPlayer;
-
+        public AssetReference playerPlace;
+        
+        private Boat _boat;
+        private Canvas _canvas;
         private int _playerIndex;
         private int _totalLaps;
-        private int _totalPlayers;
         private float _timeOffset;
         private float _smoothedSpeed;
         private float _smoothSpeedVel;
         private AppSettings.SpeedFormat _speedFormat;
         private RaceStatsPlayer[] _raceStats;
 
-        private void OnEnable()
+        private void Start()
         {
-            RaceManager.raceStarted += SetGameplayUi;
+            RaceManager.StateChange += RaceStateChange;
             TryGetComponent(out _canvas);
+        }
+
+        private void OnDestroy()
+        {
+            RaceManager.StateChange -= RaceStateChange;
+        }
+
+        private void RaceStateChange(RaceManager.RaceState state)
+        {
+            SetGameplayUi(state == RaceManager.RaceState.RaceStarted);
         }
 
         public void Setup(int player)
@@ -49,29 +65,12 @@ namespace BoatAttack.UI
             _playerIndex = player;
             _boat = RaceManager.RaceData.boats[_playerIndex].Boat;
             _totalLaps = RaceManager.GetLapCount();
-            _totalPlayers = RaceManager.RaceData.boats.Count;
             _timeOffset = Time.time;
-
-            switch (AppSettings.Instance.speedFormat)
-            {
-                case AppSettings.SpeedFormat._Kph:
-                    _speedFormat = AppSettings.SpeedFormat._Kph;
-                    speedFormatText.text = "kph";
-                    break;
-                case AppSettings.SpeedFormat._Mph:
-                    _speedFormat = AppSettings.SpeedFormat._Mph;
-                    speedFormatText.text = "mph";
-                    break;
-            }
-
+            
             StartCoroutine(SetupPlayerMarkers(player));
-            StartCoroutine(SetupPlayerMapMarkers());
-            StartCoroutine(CreateGameStats());
-        }
-
-        public void Disable()
-        {
-            gameObject.SetActive(false);
+            StartCoroutine(SetupPlayerMapMarkers(player));
+            StartCoroutine(CreateGameStats(player));
+            StartCoroutine(SetupPlayerList(player));
         }
         
         public void SetCanvas(bool enable)
@@ -82,43 +81,40 @@ namespace BoatAttack.UI
             }
         }
 
-        public void SetGameplayUi(bool enable)
+        public void SetGameplayUi(bool state)
         {
-            if (gameplayUi.activeSelf == enable) return;
+            gameplayUi.SetActive(state);
+
+            if (!state) return;
             
-            if (enable)
+            foreach (var stat in _raceStats)
             {
-                foreach (var stat in _raceStats)
-                {
-                    stat.UpdateStats();
-                }
+                stat.UpdateStats();
             }
-
-            gameplayUi.SetActive(enable);
         }
-
-        public void SetGameStats(bool enable)
-        {
-            raceStat.SetActive(enable);
-        }
-
+        
         public void MatchEnd()
         {
             matchEnd.SetActive(true);
             SetGameStats(true);
             SetGameplayUi(false);
         }
+        
+        public void SetGameStats(bool enable)
+        {
+            raceStat.SetActive(enable);
+        }
 
-        private IEnumerator CreateGameStats()
+        private IEnumerator CreateGameStats(int player)
         {
             _raceStats = new RaceStatsPlayer[RaceManager.RaceData.boatCount];
             for(var i = 0; i < RaceManager.RaceData.boatCount; i++)
             {
-                var raceStatLoading = raceStatsPlayer.InstantiateAsync(raceStat.transform);
+                var raceStatLoading = raceStatsPlayer.InstantiateAsync(statsContainer);
                 yield return raceStatLoading;
                 raceStatLoading.Result.name += RaceManager.RaceData.boats[i].name;
                 raceStatLoading.Result.TryGetComponent(out _raceStats[i]);
-                _raceStats[i].Setup(RaceManager.RaceData.boats[i].Boat);
+                _raceStats[i].Setup(RaceManager.RaceData.boats[i], i == player);
             }
         }
 
@@ -131,13 +127,12 @@ namespace BoatAttack.UI
                 var markerLoading = playerMarker.InstantiateAsync(gameplayUi.transform);
                 yield return markerLoading; // wait for marker to load
 
-                markerLoading.Result.name += RaceManager.RaceData.boats[i].playerName;
                 if (markerLoading.Result.TryGetComponent<PlayerMarker>(out var pm))
                     pm.Setup(RaceManager.RaceData.boats[i]);
             }
         }
 
-        private IEnumerator SetupPlayerMapMarkers()
+        private IEnumerator SetupPlayerMapMarkers(int player)
         {
             foreach (var boatData in RaceManager.RaceData.boats)
             {
@@ -148,33 +143,54 @@ namespace BoatAttack.UI
                     pm.Setup(boatData);
             }
         }
+        
+        private IEnumerator SetupPlayerList(int player)
+        {
+            for(var i = 0; i < RaceManager.RaceData.boatCount; i++)
+            {
+                var playerPlaceLoader = playerPlace.InstantiateAsync(playerList);
+                yield return playerPlaceLoader; // wait for marker to load
+
+                if (playerPlaceLoader.Result.TryGetComponent<PlayerListEntry>(out var ple))
+                    ple.Setup(RaceManager.RaceData.boats[i], i == player);
+            }
+        }
 
         public void UpdateLapCounter(int lap)
         {
-            lapCounter.text = $"{lap}/{_totalLaps}";
-        }
+            lapCounter.text = $"Lap {lap}/{_totalLaps}";
 
-        public void UpdatePlaceCounter(int place)
-        {
-            positionNumber.text = $"{place}/{_totalPlayers}";
+            if (lap == 1) return;
+            
+            if (_boat.SplitTimes.Count > 1)
+            {
+                if (_boat.SplitTimes[lap - 1] <= BestLapFromSplitTimes(_boat.SplitTimes) + float.Epsilon)
+                    timeLapText.color = Color.white;
+            }
+            
+            timeLap.text = $"Split {FormatRaceTime(_boat.SplitTimes[lap - 1])}";
+            timeLap.color = Color.white;
         }
 
         public void UpdateSpeed(float velocity)
         {
             var speed = 0f;
+            var speedExt = "n/a";
 
             switch (_speedFormat)
             {
                 case AppSettings.SpeedFormat._Kph:
                     speed = velocity * 3.6f;
+                    speedExt = "kph";
                     break;
                 case AppSettings.SpeedFormat._Mph:
                     speed = velocity * 2.23694f;
+                    speedExt = "mph";
                     break;
             }
 
             _smoothedSpeed = Mathf.SmoothDamp(_smoothedSpeed, speed, ref _smoothSpeedVel, 1f);
-            speedText.text = $"{_smoothedSpeed:F0}";
+            speedText.text = $"Speed: {_smoothedSpeed:F0}{speedExt}";
         }
 
         public void FinishMatch()
@@ -185,19 +201,39 @@ namespace BoatAttack.UI
         public void LateUpdate()
         {
             var rawTime = RaceManager.RaceTime;
-            timeTotal.text = $"time {FormatRaceTime(rawTime)}";
+            timeTotal.text = $"Time: {FormatRaceTime(rawTime, false)}";
 
-            var l = (_boat.SplitTimes.Count > 0) ? rawTime - _boat.SplitTimes[_boat.LapCount - 1] : 0f;
-            timeLap.text = $"lap {FormatRaceTime(l)}";
-
+            if (timeLap.color.a > 0f)
+            {
+                var col = timeLap.color;
+                col.a -= Time.deltaTime * 0.25f;
+                timeLap.color = col;
+            }
+            
+            if (timeLapText.color.a > 0f)
+            {
+                var col = timeLapText.color;
+                col.a -= Time.deltaTime * 0.25f;
+                timeLapText.color = col;
+            }
+            
             if(FreeCam.Instance)
                 SetCanvas(!FreeCam.Instance.active);
         }
 
-        public static string FormatRaceTime(float seconds)
+        public static string FormatRaceTime(float seconds, bool fine = true)
         {
             var t = TimeSpan.FromSeconds(seconds);
-            return $"{t.Minutes:D2}:{t.Seconds:D2}.{t.Milliseconds:D3}";
+
+            if (fine)
+            {
+                return $"{t.Minutes:D2}:{t.Seconds:D2}.{t.Milliseconds:D3}";
+            }
+            else
+            {
+                var ms = Mathf.Floor(t.Milliseconds / 100.0f);
+                return $"{t.Minutes:D2}:{t.Seconds:D2}.{ms}";
+            }
         }
 
         public static string OrdinalNumber(int num)

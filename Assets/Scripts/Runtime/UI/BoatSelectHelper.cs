@@ -89,7 +89,7 @@ public class BoatSelectHelper : MonoBehaviour
             _swatches.Add(CreateSwatch(color, 0, index));
             _swatches.Add(CreateSwatch(color, 1, index));
         }
-        Invoke(nameof(UpdateLayout), Time.deltaTime);
+        Invoke(nameof(UpdateLayout), Time.unscaledDeltaTime);
     }
 
     private void UpdateLayout()

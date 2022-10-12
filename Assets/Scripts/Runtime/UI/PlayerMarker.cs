@@ -28,7 +28,8 @@ namespace BoatAttack.UI
         {
             _boatData = boat;
             _boat = boat.Boat;
-            nameText.text = boat.name;
+            nameText.text = boat.playerName;
+            gameObject.name += boat.playerName;
             _rect = transform as RectTransform;
         }
 
