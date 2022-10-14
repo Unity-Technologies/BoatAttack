@@ -55,7 +55,7 @@ public static class Utility
     [Console.ConsoleCmd]
     public static void WaterDebug(int mode)
     {
-        WaterSystem.Ocean.SetDebugMode((WaterSystem.Ocean.DebugShading)mode);
+        // WaterSystem.Ocean.SetDebugMode((WaterSystem.Ocean.DebugShading)mode);
     }
 
     public static int GetTrueQualityLevel()
