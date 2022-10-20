@@ -29,6 +29,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -2.7274246, y: -37.07448, z: 39.362007}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 571479311832868573}
   m_RootOrder: 0
@@ -118,6 +119,7 @@ Transform:
   m_LocalRotation: {x: 0.3307133, y: 0.65137696, z: -0.37939095, w: 0.5678022}
   m_LocalPosition: {x: 4.409273, y: 38.868496, z: 72.38463}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7496210737525571426}
   m_Father: {fileID: 4573194999906529360}
@@ -149,7 +151,10 @@ MonoBehaviour:
     NearClipPlane: 2
     FarClipPlane: 2000
     Dutch: 0
+    ModeOverride: 0
     LensShift: {x: 0, y: 0}
+    GateFit: 2
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -220,6 +225,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4316322254182148815}
   - {fileID: 4573194999906529360}
@@ -239,6 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clearShot: {fileID: 776099557020744923}
+  droneCam: {fileID: 4724235160255684310}
 --- !u!1 &3664626529338384677
 GameObject:
   m_ObjectHideFlags: 0
@@ -267,6 +274,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5564347434838206976}
   - {fileID: 571479311832868573}
@@ -292,7 +300,7 @@ MonoBehaviour:
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
   m_Priority: 0
-  m_StandbyUpdate: 0
+  m_StandbyUpdate: 1
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_ShowDebugText: 0
@@ -302,7 +310,7 @@ MonoBehaviour:
   - {fileID: 8328869504314803904}
   - {fileID: 8580961361257517894}
   m_ActivateAfter: 0
-  m_MinDuration: 1
+  m_MinDuration: 2
   m_RandomizeChoice: 1
   m_DefaultBlend:
     m_Style: 0
@@ -343,7 +351,7 @@ MonoBehaviour:
   m_SmoothingTime: 0
   m_Damping: 0
   m_DampingWhenOccluded: 0
-  m_OptimalTargetDistance: 0
+  m_OptimalTargetDistance: 100
 --- !u!1 &4182869515040554683
 GameObject:
   m_ObjectHideFlags: 0
@@ -371,6 +379,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -38.55, y: 2.01, z: 21.84}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8404867229143526628}
   m_Father: {fileID: 4573194999906529360}
@@ -393,7 +402,7 @@ MonoBehaviour:
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
   m_Priority: 10
-  m_StandbyUpdate: 2
+  m_StandbyUpdate: 1
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
@@ -402,7 +411,10 @@ MonoBehaviour:
     NearClipPlane: 1
     FarClipPlane: 2000
     Dutch: 0
+    ModeOverride: 0
     LensShift: {x: 0, y: 0}
+    GateFit: 2
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -440,6 +452,7 @@ Transform:
   m_LocalRotation: {x: 0.16921982, y: -0.81662846, z: 0.32738495, w: 0.44418666}
   m_LocalPosition: {x: -77.74759, y: 8.297212, z: -21.408878}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5529485174150996548}
   m_Father: {fileID: 4573194999906529360}
@@ -462,7 +475,7 @@ MonoBehaviour:
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
   m_Priority: 10
-  m_StandbyUpdate: 2
+  m_StandbyUpdate: 1
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
@@ -471,7 +484,10 @@ MonoBehaviour:
     NearClipPlane: 0.1
     FarClipPlane: 1500
     Dutch: 0
+    ModeOverride: 0
     LensShift: {x: 0, y: 0}
+    GateFit: 2
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -492,7 +508,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isGlobal: 0
+  m_IsGlobal: 0
   priority: 0
   blendDistance: 0
   weight: 1
@@ -538,6 +554,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 53.250652, y: -3.9351444, z: 47.90117}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4864335904854606694}
   m_RootOrder: 0
@@ -611,6 +628,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5564347434838206976}
   m_RootOrder: 0
@@ -688,7 +706,7 @@ MonoBehaviour:
   m_PositionUnits: 0
   m_PathOffset: {x: 0, y: 0, z: 0}
   m_XDamping: 1
-  m_YDamping: 3
+  m_YDamping: 1
   m_ZDamping: 1
   m_CameraUp: 1
   m_PitchDamping: 3
@@ -697,8 +715,8 @@ MonoBehaviour:
   m_AutoDolly:
     m_Enabled: 1
     m_PositionOffset: 0
-    m_SearchRadius: 1
-    m_SearchResolution: 5
+    m_SearchRadius: 0
+    m_SearchResolution: 3
 --- !u!1 &8101696878127187775
 GameObject:
   m_ObjectHideFlags: 0
@@ -726,6 +744,7 @@ Transform:
   m_LocalRotation: {x: 0.09235915, y: 0.2953173, z: -0.028695947, w: 0.95049155}
   m_LocalPosition: {x: 89.3, y: 3.6, z: -66.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6762570200046604378}
   m_Father: {fileID: 4573194999906529360}
@@ -748,7 +767,7 @@ MonoBehaviour:
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
   m_Priority: 10
-  m_StandbyUpdate: 2
+  m_StandbyUpdate: 1
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
@@ -757,7 +776,10 @@ MonoBehaviour:
     NearClipPlane: 0.3
     FarClipPlane: 2000
     Dutch: 0
+    ModeOverride: 0
     LensShift: {x: 0, y: 0}
+    GateFit: 2
+    m_SensorSize: {x: 1.7777778, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -794,6 +816,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 38.66, y: -3.9351444, z: -22.08}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8772121759599154040}
   m_RootOrder: 0
@@ -864,6 +887,7 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -43.55, y: 2.95, z: -53.1}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 297009973342671820}
   m_RootOrder: 0

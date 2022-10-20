@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using WaterSystem;
+using WaterSystem.Settings;
 
 public class settingsTest : MonoBehaviour
 {

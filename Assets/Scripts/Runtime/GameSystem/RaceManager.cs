@@ -275,7 +275,7 @@ namespace BoatAttack
 
             if (introDirector)
             {
-                while (introDirector.state == PlayState.Playing)
+                while (introDirector && introDirector.state == PlayState.Playing)
                 {
                     yield return null;
                 }

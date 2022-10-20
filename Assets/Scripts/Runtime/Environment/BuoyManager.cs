@@ -41,6 +41,7 @@ public class BuoyManager : MonoBehaviour
 
     private int _guid;
     
+    /*
     // Validate, updates when changed in the editor
     private void OnValidate()
     {
@@ -49,6 +50,7 @@ public class BuoyManager : MonoBehaviour
             UpdateSystem();
         }
     }
+    */ 
 
     private void OnEnable()
     {

@@ -12,6 +12,9 @@ namespace BoatAttack
         private static BoatData _focusedBoat;
         private Transform _focusPoint;
         public CinemachineClearShot clearShot;
+        public CinemachineVirtualCamera droneCam;
+        private CinemachineTrackedDolly droneDolly;
+        private CinemachinePathBase droneTrack;
         private ICinemachineCamera currentCam;
         private float timeSinceCut;
 
@@ -19,6 +22,11 @@ namespace BoatAttack
         {
             Instance = this;
             currentCam = clearShot.LiveChild;
+            if (droneCam)
+            {
+                droneDolly = droneCam.GetCinemachineComponent<CinemachineTrackedDolly>();
+                droneTrack = droneDolly.m_Path;
+            }
         }
 
         private void LateUpdate()

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using BoatAttack;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,6 +10,9 @@ public class DemoRun : MonoBehaviour
     public bool autoRun = true;
     public bool timedRun = false;
     public int idleTime = 30;
+    private int waitTime;
+
+    private IDisposable m_EventListener;
     
     private void Start()
     {
@@ -22,23 +26,35 @@ public class DemoRun : MonoBehaviour
             StartCoroutine(DemoCountdown());
         }
     }
-    
+
+    private void OnDisable()
+    {
+        m_EventListener?.Dispose();
+    }
+
     public IEnumerator DemoCountdown()
     {
-        var waitTime = idleTime;
+        waitTime = idleTime;
             
-        var listener = InputSystem.onEvent.Call(_ => waitTime = idleTime);
+        m_EventListener = InputSystem.onAnyButtonPress.Call(ResetWaitTime);
 
         while (waitTime > 0)
         {
             Debug.Log($"demo countdown {waitTime}");
+            if (Pointer.current.delta.EvaluateMagnitude() > 0.1f)
+                waitTime = idleTime;
             waitTime--;
             yield return new WaitForSeconds(1f);
         }
-        listener.Dispose();
+        m_EventListener.Dispose();
             
         RaceManager.SetGameType(RaceManager.GameType.Spectator);
         RaceManager.SetLevel(ref AppSettings.Instance.levels[0]);
         RaceManager.LoadGame();
+    }
+
+    private void ResetWaitTime(InputControl _)
+    {
+        waitTime = idleTime;
     }
 }
