@@ -78,6 +78,7 @@ namespace BoatAttack
         {
             if (!clearShot && target) return;
             clearShot.Priority = 100;
+            clearShot.PreviousStateIsValid = false;
             clearShot.Follow = clearShot.LookAt = _focusPoint = target;
         }
     }
