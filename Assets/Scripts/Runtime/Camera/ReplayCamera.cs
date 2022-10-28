@@ -55,21 +55,27 @@ namespace BoatAttack
         {
             _spectatorEnabled = true;
             SetRandomTarget();
-            //droneCamera.Priority = 100;
         }
 
         public void DisableSpectatorMode()
         {
-            //droneCamera.Priority = -100;
+            _spectatorEnabled = false;
         }
 
         void SetRandomTarget() => SetTarget(Random.Range(0, RaceManager.RaceData.boatCount));
 
-        public void SetTarget(int boatIndex)
+        private void SetTarget(int boatIndex)
         {
             _focusedBoat = RaceManager.RaceData.boats[boatIndex];
-            _focusPoint = _focusedBoat.BoatObject.transform;
-            SetReplayTarget(_focusPoint);
+            if (_focusedBoat != null)
+            {
+                _focusPoint = _focusedBoat.BoatObject.transform;
+                SetReplayTarget(_focusPoint);
+            }
+            else
+            {
+                DisableSpectatorMode();
+            }
         }
 
         private void SetReplayTarget(GameObject go) => SetReplayTarget(go.transform);
