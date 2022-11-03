@@ -64,7 +64,7 @@ namespace BoatAttack
 
         void SetRandomTarget() => SetTarget(Random.Range(0, RaceManager.RaceData.boatCount));
 
-        private void SetTarget(int boatIndex)
+        public void SetTarget(int boatIndex)
         {
             _focusedBoat = RaceManager.RaceData.boats[boatIndex];
             if (_focusedBoat != null)
