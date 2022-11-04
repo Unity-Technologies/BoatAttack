@@ -240,7 +240,12 @@ namespace BoatAttack
         // assets
         public AssetReference boatPrefab;
         public AssetReference boatMesh;
-
+        
+        public BoatData()
+        {
+            
+        }
+        
         public BoatData(BoatData input)
         {
             if(input == null) return;
