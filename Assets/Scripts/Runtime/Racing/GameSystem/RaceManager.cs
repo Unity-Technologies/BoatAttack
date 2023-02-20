@@ -57,6 +57,7 @@ namespace BoatAttack
             None,
             RaceLoaded,
             RaceStarted,
+            RacePaused,
             RaceEnded,
         }
                
@@ -151,8 +152,6 @@ namespace BoatAttack
         // ReSharper disable Unity.PerformanceAnalysis
         public static IEnumerator SetupRace()
         {
-            State = RaceState.RaceLoaded;
-            
             Instance.StartCoroutine(LoadPauseMenu());
 
             if(RaceData == null) // make sure we have the data, otherwise default to demo data
@@ -275,6 +274,7 @@ namespace BoatAttack
             var introCams = GameObject.FindWithTag("introCameras");
             introCams.TryGetComponent<PlayableDirector>(out var introDirector);
 
+            //play track intro
             if (introDirector)
             {
                 while (introDirector && introDirector.state == PlayState.Playing)
@@ -283,9 +283,12 @@ namespace BoatAttack
                 }
                 introCams.SetActive(false);
             }
-
-            yield return new WaitForSeconds(3f); // countdown 3..2..1..
             
+            State = RaceState.RaceLoaded;
+
+            //countdown 3..2..1..
+            yield return new WaitForSeconds(3f);
+
             State = RaceState.RaceStarted;
             
             SceneManager.sceneLoaded -= Setup;
@@ -381,11 +384,16 @@ namespace BoatAttack
                 _paused = value;
                 if (State == RaceState.RaceStarted)
                 {
-                    foreach (var bd in RaceData.boats.Where(bd =>
-                                 bd.Boat != null && bd.Boat.RaceUi != null))
-                    {
-                        bd.Boat.RaceUi.SetGameplayUi(!value);
-                    }
+                    State = RaceState.RacePaused;
+                    //foreach (var bd in RaceData.boats.Where(bd =>
+                    //             bd.Boat != null && bd.Boat.RaceUi != null))
+                    //{
+                    //    bd.Boat.RaceUi.SetGameplayUi(!value);
+                    //}
+                }
+                else if (State == RaceState.RacePaused)
+                {
+                    State = RaceState.RaceStarted;
                 }
 
                 Time.timeScale = _paused ? 0f : 1f;

@@ -31,11 +31,16 @@ namespace BoatAttack.UI
                 RenderPipelineManager.beginFrameRendering -= UpdatePosition;
         }
 
-        public void Setup(BoatData boat, float scale = 0.0028f) // TODO magic number for mini map size
+        
+        //map size 480
+        // -240
+        
+        
+        public void Setup(BoatData boat) // TODO magic number for mini map size
         {
             _boatData = boat;
             _boatTransform = boat.Boat.transform;
-            _scale = scale;
+            _scale = 480f / 400f;
 
             var p = _boatData.Livery.primaryColor;
             p.a = 1f;
@@ -52,7 +57,8 @@ namespace BoatAttack.UI
             if (_boatData == null || Camera.main == null) return; // if no boat or camera, the player marker cannot work
 
             var position = _boatTransform.position;
-            ((RectTransform)transform).anchorMin = ((RectTransform)transform).anchorMax = 1f * 0.5f + ((float3)position).xz * _scale;
+            ((RectTransform) transform).anchoredPosition = ((float3)position).xz * _scale;
+            //((RectTransform)transform).anchorMin = ((RectTransform)transform).anchorMax = 1f * 0.5f + ((float3)position).xz * _scale;
             _boatTransform.SetSiblingIndex(_playerCount - _boatData.Boat.Place + 1);
         }
     }

@@ -1,29 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
-using BoatAttack;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-[ExecuteAlways]
-[RequireComponent(typeof(Light))]
-public class CloudShadowCookie : MonoBehaviour
+namespace BoatAttack
 {
-    public UniversalAdditionalLightData lightData;
-    public Vector2 shadowVelocity;
-    
-    // Update is called once per frame
-    void Update()
+    [ExecuteAlways]
+    [RequireComponent(typeof(Light))]
+    public class CloudShadowCookie : MonoBehaviour
     {
-        if (lightData == null) return;
+        private UniversalAdditionalLightData _lightData;
 
-        var offset = lightData.lightCookieOffset;
+        private void OnEnable()
+        {
+            TryGetComponent(out _lightData);
+        }
 
-        var dir = transform.InverseTransformDirection(GlobalWind.WindVector.x, 0f, GlobalWind.WindVector.y);
-        
-        offset += new Vector2(dir.x, dir.y) * Time.deltaTime;
-        offset.x = Mathf.Repeat(offset.x, lightData.lightCookieSize.x);
-        offset.y = Mathf.Repeat(offset.y, lightData.lightCookieSize.y);
+        // Update is called once per frame
+        void Update()
+        {
+            if (_lightData == null) return;
 
-        lightData.lightCookieOffset = offset;
+            var offset = _lightData.lightCookieOffset;
+
+            var dir = transform.InverseTransformDirection(GlobalWind.WindVector.x, 0f, GlobalWind.WindVector.y);
+
+            offset += new Vector2(dir.x, dir.y) * Time.deltaTime;
+            offset.x = Mathf.Repeat(offset.x, _lightData.lightCookieSize.x);
+            offset.y = Mathf.Repeat(offset.y, _lightData.lightCookieSize.y);
+
+            _lightData.lightCookieOffset = offset;
+        }
     }
 }

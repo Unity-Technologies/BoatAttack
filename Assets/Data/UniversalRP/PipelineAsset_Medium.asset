@@ -22,13 +22,13 @@ MonoBehaviour:
   m_DefaultRendererIndex: 0
   m_RequireDepthTexture: 1
   m_RequireOpaqueTexture: 1
-  m_OpaqueDownsampling: 1
+  m_OpaqueDownsampling: 0
   m_SupportsTerrainHoles: 0
   m_StoreActionsOptimization: 0
   m_SupportsHDR: 1
-  m_MSAA: 2
-  m_RenderScale: 0.8
-  m_UpscalingFilter: 3
+  m_MSAA: 1
+  m_RenderScale: 1
+  m_UpscalingFilter: 0
   m_FsrOverrideSharpness: 0
   m_FsrSharpness: 0.92
   m_MainLightRenderingMode: 1
@@ -51,6 +51,7 @@ MonoBehaviour:
   m_CascadeBorder: 0.1
   m_ShadowDepthBias: 0.75
   m_ShadowNormalBias: 0.75
+  m_AnyShadowsSupported: 1
   m_SoftShadowsSupported: 1
   m_ConservativeEnclosingSphere: 1
   m_NumIterationsEnclosingSphere: 64

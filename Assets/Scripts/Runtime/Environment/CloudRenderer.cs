@@ -54,6 +54,7 @@ public class CloudRenderer : MonoBehaviour
         particles.OrderByDescending(x => Vector3.Distance(x.position, camPos));
         
         var scale = Vector3.zero;
+        var data = Vector4.zero;
 
         for (var index = 0; index < aliveCount; index++)
         {
@@ -68,8 +69,11 @@ public class CloudRenderer : MonoBehaviour
 
             scale = particle.startSize3D;
             scale.x *= Random.value > 0.5f ? 1f : -1f;
+
+            data.x = scale.x;
+            data.w = particle.GetCurrentColor(ps).a / 255f;
             
-            mpbs[index].SetVector("_BA_CloudData", new Vector4(scale.x, 0f, 0f, particle.GetCurrentColor(ps).a / 255f));
+            mpbs[index].SetVector("_BA_CloudData", data);
             
             Graphics.DrawMesh(mesh, Matrix4x4.TRS(pos, q, scale * SkyboxSystem.SkyboxScale),
                 cloudMaterial, LayerMask.NameToLayer("3DSkybox"), camera, 0, mpbs[index], false, false, false);

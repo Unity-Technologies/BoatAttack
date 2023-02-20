@@ -1,4 +1,6 @@
+using System.Collections;
 using BoatAttack;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -8,6 +10,10 @@ public class LevelSelectHelper : MonoBehaviour
     [Header("Level Selection")]
     public Animator levelSelectAnimator;
     public LevelSelectOption[] levelUI;
+    
+    public TextMeshProUGUI lapsText;
+    public TextMeshProUGUI directionText;
+    public TextMeshProUGUI descriptionText;
 
     private static int currentLevel = 0;
 
@@ -28,6 +34,7 @@ public class LevelSelectHelper : MonoBehaviour
     public void Init()
     {
         PopulateLevelUI();
+        UpdateInfoBox();
     }
 
     public void PopulateLevelUI()
@@ -57,11 +64,33 @@ public class LevelSelectHelper : MonoBehaviour
         }
     }
 
+    private IEnumerator UpdateInfoBox()
+    {
+        var c = descriptionText.color;
+        
+        while (c.a > 0.001f)
+        {
+            c.a = Mathf.Clamp01(c.a - Time.deltaTime * 4f);
+            descriptionText.color = c;
+            yield return null;
+        }
+        
+        descriptionText.text = AppSettings.Instance.levels[currentLevel].description;
+
+        while (c.a < 0.999f)
+        {
+            c.a = Mathf.Clamp01(c.a + Time.deltaTime * 4f);
+            descriptionText.color = c;
+            yield return null;
+        }
+    }
+
     public void NextLevel()
     {
         if (!levelSelectAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) return;
         levelIndex++;
         CheckLevelAvailability();
+        StartCoroutine(nameof(UpdateInfoBox));
         levelSelectAnimator.SetTrigger("Next");
     }
         
@@ -70,6 +99,7 @@ public class LevelSelectHelper : MonoBehaviour
         if (!levelSelectAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) return;
         levelIndex--;
         CheckLevelAvailability();
+        StartCoroutine(nameof(UpdateInfoBox));
         levelSelectAnimator.SetTrigger("Prev");
     }
 

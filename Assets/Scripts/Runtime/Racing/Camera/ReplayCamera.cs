@@ -27,11 +27,15 @@ namespace BoatAttack
                 droneDolly = droneCam.GetCinemachineComponent<CinemachineTrackedDolly>();
                 droneTrack = droneDolly.m_Path;
             }
+
+            _spectatorEnabled = false;
         }
 
         private void LateUpdate()
         {
-            if (_spectatorEnabled && _focusedBoat == null)
+            if (!_spectatorEnabled) return;
+            
+            if (_focusedBoat == null)
             {
                 SetTarget(0);
             }
@@ -54,12 +58,14 @@ namespace BoatAttack
         public void EnableSpectatorMode()
         {
             _spectatorEnabled = true;
+            clearShot.Priority = 100;
             SetRandomTarget();
         }
 
         public void DisableSpectatorMode()
         {
             _spectatorEnabled = false;
+            clearShot.Priority = -100;
         }
 
         void SetRandomTarget() => SetTarget(Random.Range(0, RaceManager.RaceData.boatCount));
@@ -67,7 +73,7 @@ namespace BoatAttack
         public void SetTarget(int boatIndex)
         {
             _focusedBoat = RaceManager.RaceData.boats[boatIndex];
-            if (_focusedBoat != null)
+            if (_focusedBoat != null && _focusedBoat.BoatObject != null)
             {
                 _focusPoint = _focusedBoat.BoatObject.transform;
                 SetReplayTarget(_focusPoint);
@@ -83,7 +89,6 @@ namespace BoatAttack
         private void SetReplayTarget(Transform target)
         {
             if (!clearShot && target) return;
-            clearShot.Priority = 100;
             clearShot.PreviousStateIsValid = false;
             clearShot.Follow = clearShot.LookAt = _focusPoint = target;
         }

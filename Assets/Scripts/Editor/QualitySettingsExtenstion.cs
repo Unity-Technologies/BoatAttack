@@ -13,7 +13,6 @@ static class UniversalSettings
         public static GUIStyle frameBox = new GUIStyle(EditorStyles.helpBox);
         public static GUIStyle header = new GUIStyle(EditorStyles.boldLabel);
         public static GUIContent menuIcon = new GUIContent((EditorGUIUtility.Load("pane options") as Texture2D));
-        public static GUIContent menuItems = new GUIContent("Hello");
     }
 
     private static int qualityAssetIndex = QualitySettings.GetQualityLevel();

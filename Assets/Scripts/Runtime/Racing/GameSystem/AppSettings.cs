@@ -74,7 +74,7 @@ namespace BoatAttack
                 Debug.Log("AppManager initializing");
             Initialize();
             CmdArgs();
-            SetRenderScale();
+            //SetRenderScale();
             SceneManager.sceneLoaded += LevelWasLoaded;
             if (SceneManager.GetActiveScene().name == "loader")
             {

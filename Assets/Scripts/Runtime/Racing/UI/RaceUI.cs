@@ -57,7 +57,7 @@ namespace BoatAttack.UI
 
         private void RaceStateChange(RaceManager.RaceState state)
         {
-            SetGameplayUi(state == RaceManager.RaceState.RaceStarted);
+            SetGameplayUi(state is RaceManager.RaceState.RaceStarted or RaceManager.RaceState.RaceLoaded);
         }
 
         public void Setup(int player)
