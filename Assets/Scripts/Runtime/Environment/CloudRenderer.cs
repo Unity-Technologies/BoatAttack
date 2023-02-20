@@ -2,9 +2,7 @@ using System.Linq;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 using WaterSystem.Rendering;
-using Random = UnityEngine.Random;
 
 [ExecuteAlways]
 public class CloudRenderer : MonoBehaviour
@@ -24,7 +22,6 @@ public class CloudRenderer : MonoBehaviour
         
         var main = ps.main;
         particles = new NativeArray<ParticleSystem.Particle>(main.maxParticles, Allocator.Persistent);
-        //parts = new ParticleSystem.Particle[main.maxParticles];
         mpbs = new MaterialPropertyBlock[main.maxParticles];
         for (var index = 0; index < mpbs.Length; index++)
         {

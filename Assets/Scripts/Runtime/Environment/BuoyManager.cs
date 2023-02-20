@@ -4,27 +4,22 @@ using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Unity.Collections;
 using Unity.Mathematics;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using WaterSystem;
-using Object = UnityEngine.Object;
 
 [ExecuteAlways]
 public class BuoyManager : MonoBehaviour
 {
-    [FormerlySerializedAs("particleSystem")] public ParticleSystem ps;
-    private ParticleSystem.ShapeModule _particleShape;
-    private Mesh _mesh;
     private Vector3[] _vertices;
     private Transform[] _buoys;
     private NativeArray<float3> _samplePoints; // sample points for height calc
     private float3[] _heights; // water height array(only size of 1 when simple or non-physical)
     private float3[] _normals; // water normal array(only used when non-physical and size of 1 also when simple)
 
-    [SerializeField, HideInInspector] private BuoyPoint[] points;
+    [SerializeField, HideInInspector] private List<BuoyPoint> points = new List<BuoyPoint>();
     [SerializeField] private Vector3[] buoyPoints;
     
     // User Controls
@@ -32,7 +27,8 @@ public class BuoyManager : MonoBehaviour
     public float angleThreshold = 25.0f;
     
     // Objects
-    public CinemachinePath cmPath;
+    public CinemachinePath[] paths;
+    [SerializeField]private float[] pathLengths;
     public Mesh buoyMesh;
     public Material buoyMaterial;
     public AssetReference arrow;
@@ -41,16 +37,29 @@ public class BuoyManager : MonoBehaviour
 
     private int _guid;
     
-    /*
     // Validate, updates when changed in the editor
     private void OnValidate()
     {
-        if (cmPath && spacing > 0.1f)
+        if (paths?.Length > 0 && spacing > 0.1f)
         {
-            UpdateSystem();
+            var updated = false;
+            if (pathLengths.Length != paths.Length)
+                pathLengths = new float[paths.Length];
+
+            for (var i = 0; i < paths.Length; i++)
+            {
+                if(paths[i] == null) continue;
+                var l = paths[i].PathLength;
+                if (Math.Abs(l - pathLengths[i]) > 0.05f)
+                {
+                    updated = true;
+                    pathLengths[i] = l;
+                }
+            }
+            if(updated)
+                UpdateSystem();
         }
     }
-    */ 
 
     private void OnEnable()
     {
@@ -73,8 +82,12 @@ public class BuoyManager : MonoBehaviour
         if(buoyPoints == null || buoyPoints.Length == 0) return;
         
         GerstnerWavesJobs.RemoveSamplePoints(_guid);
-        points = GeneratePoints(spacing, angleThreshold, cmPath);
-        buoyPoints = SplitBuoys(points);
+        points.Clear();
+        foreach (var path in paths)
+        {
+            points.AddRange(GeneratePoints(spacing, angleThreshold, path));
+        }
+        buoyPoints = SplitBuoys(ref points);
         SetupArrays();
         RefreshArrows();
     }
@@ -117,7 +130,7 @@ public class BuoyManager : MonoBehaviour
         }
     }
 
-    static Vector3[] SplitBuoys(BuoyPoint[] buoys)
+    static Vector3[] SplitBuoys(ref List<BuoyPoint> buoys)
     {
         return (from point in buoys where !point.Arrow select point.position).Select(dummy => (Vector3)dummy).ToArray();
     }
@@ -132,24 +145,29 @@ public class BuoyManager : MonoBehaviour
         for (var i = 0; i < pointCount; i++)
         {
             BuoyPoint bp = new BuoyPoint();
-            var dir = path.EvaluateOrientationAtUnit(i / pointCount, CinemachinePathBase.PositionUnits.Normalized);
+            var dir = path.EvaluateTangent(i / pointCount);
             
-            var pos = path.EvaluatePositionAtUnit(i / pointCount, CinemachinePathBase.PositionUnits.Normalized);
+            var pos = path.EvaluatePosition(i / pointCount);
+            pos.y = 0f;
 
             if (i > 0 && i < pointCount)
             {
-                var posA = path.EvaluatePositionAtUnit(i / (pointCount - 1), CinemachinePathBase.PositionUnits.Normalized);
-                var posB = path.EvaluatePositionAtUnit(i / (pointCount + 1), CinemachinePathBase.PositionUnits.Normalized);
+                //var posA = path.EvaluatePositionAtUnit(i / (pointCount - 1), CinemachinePathBase.PositionUnits.Normalized);
+                var posA = path.EvaluatePosition(i / (pointCount - 1));
+                //var posB = path.EvaluatePositionAtUnit(i / (pointCount + 1), CinemachinePathBase.PositionUnits.Normalized);
+                var posB = path.EvaluatePosition(i / (pointCount + 1));
 
-                var v1 = pos - posA;
-                var v2 = pos - posB;
+                var v1 = math.normalizesafe(pos - posA);
+                v1.y = 0f;
+                var v2 = math.normalizesafe(pos - posB);
+                v2.y = 0f;
 
-                var angle = Vector3.Angle(v1.normalized, v2.normalized);
+                var angle = Vector3.Angle(v1, v2);
 
                 bp.Arrow = angle < 180f - angleThreshold;
             }
             bp.position = pos;
-            bp.rotation = dir;
+            bp.rotation = Quaternion.LookRotation(dir, Vector3.up);
             points.Add(bp);
         }
         return points.ToArray();
@@ -220,7 +238,6 @@ public class BuoyManager : MonoBehaviour
     [Serializable]
     private class BuoyPoint
     {
-        //public Matrix4x4 Tranform;
         public Vector3 position;
         public Quaternion rotation;
         public bool Arrow;
@@ -228,7 +245,7 @@ public class BuoyManager : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if (points != null && points.Length > 0)
+        if (points != null && points.Count > 0)
         {
             foreach (var point in points)
             {
