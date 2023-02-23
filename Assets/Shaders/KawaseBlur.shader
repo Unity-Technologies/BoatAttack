@@ -2,8 +2,7 @@
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
-      //   _offset ("Offset", float) = 0.5
+        [MainTexture]_BlitTexture ("Texture", 2D) = "white" {}
     }
 
     SubShader
@@ -13,58 +12,34 @@
 
         Pass
         {
-            CGPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
-            // make fog work
-            #pragma multi_compile_fog
+            HLSLPROGRAM
+            #pragma vertex Vert
+            #pragma fragment Frag
 
-            #include "UnityCG.cginc"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
 
-            struct appdata
-            {
-                float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
-            };
-
-            struct v2f
-            {
-                float2 uv : TEXCOORD0;
-                UNITY_FOG_COORDS(1)
-                float4 vertex : SV_POSITION;
-            };
-
-            sampler2D _MainTex;
-            // sampler2D _CameraOpaqueTexture;
-            float4 _MainTex_TexelSize;
-            float4 _MainTex_ST;
+            float4 _BlitTexture_TexelSize;
+            float4 _BlitTexture_ST;
             
             float _offset;
-
-            v2f vert (appdata v)
+            
+            half4 Frag (Varyings Input) : SV_Target
             {
-                v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                return o;
-            }
-
-            fixed4 frag (v2f input) : SV_Target
-            {
-                float2 res = _MainTex_TexelSize.xy;
+                float2 res = _BlitTexture_TexelSize.xy;
                 float i = _offset;
     
-                fixed4 col;                
-                col.rgb = tex2D( _MainTex, input.uv ).rgb;
-                col.rgb += tex2D( _MainTex, input.uv + float2( i, i ) * res ).rgb;
-                col.rgb += tex2D( _MainTex, input.uv + float2( i, -i ) * res ).rgb;
-                col.rgb += tex2D( _MainTex, input.uv + float2( -i, i ) * res ).rgb;
-                col.rgb += tex2D( _MainTex, input.uv + float2( -i, -i ) * res ).rgb;
+                half4 col = 1;                
+                col.rgb = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, Input.texcoord ).rgb;
+                col.rgb += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, Input.texcoord + float2( i, i ) * res ).rgb;
+                col.rgb += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, Input.texcoord + float2( i, -i ) * res ).rgb;
+                col.rgb += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, Input.texcoord + float2( -i, i ) * res ).rgb;
+                col.rgb += SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, Input.texcoord + float2( -i, -i ) * res ).rgb;
                 col.rgb /= 5.0f;
                 
                 return col;
             }
-            ENDCG
+            ENDHLSL
         }
     }
 }
