@@ -23,6 +23,7 @@ SAMPLER(sampler_CubemapTexture);
 #endif
 TEXTURE2D(_WaterFXMap);
 TEXTURE2D(_CameraDepthTexture);
+SAMPLER(sampler_CameraDepthTexture);
 TEXTURE2D(_CameraOpaqueTexture); SAMPLER(sampler_CameraOpaqueTexture_linear_clamp);
 
 TEXTURE2D(_WaterDepthMap); SAMPLER(sampler_WaterDepthMap_linear_clamp);
