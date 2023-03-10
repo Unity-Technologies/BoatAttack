@@ -102,7 +102,8 @@ namespace BoatAttack
         private void Reset()
         {
             RaceStarted = false;
-            RaceData.boats.Clear();
+            // RaceData.boats.Clear();
+            RaceData = null;
             RaceTime = 0f;
             _boatTimes.Clear();
             raceStarted = null;
@@ -287,6 +288,7 @@ namespace BoatAttack
 
             Instance.Reset();
             AppSettings.LoadScene(0, LoadSceneMode.Single);
+            // Instance.StartCoroutine(SetupRace());
         }
         
         public static void SetHull(int player, int hull) => RaceData.boats[player].boatPrefab = Instance.boats[hull];
@@ -296,19 +298,30 @@ namespace BoatAttack
             for (int i = 0; i < RaceData.boats.Count; i++)
             {
                 var boat = RaceData.boats[i]; // boat to setup
-
+                
                 // Load prefab
                 var startingPosition = WaypointGroup.Instance.StartingPositions[i];
-                AsyncOperationHandle<GameObject> boatLoading = Addressables.InstantiateAsync(boat.boatPrefab, startingPosition.GetColumn(3),
-                    Quaternion.LookRotation(startingPosition.GetColumn(2)));
 
-                yield return boatLoading; // wait for boat asset to load
+                AsyncOperationHandle<GameObject> boatLoadingPrefab = Addressables.LoadAssetAsync<GameObject>(boat.boatPrefab);
+                
+                yield return boatLoadingPrefab;
 
-                boatLoading.Result.name = boat.boatName; // set the name of the boat
-                boatLoading.Result.TryGetComponent<Boat>(out var boatController);
-                boat.SetController(boatLoading.Result, boatController);
-                boatController.Setup(i + 1, boat.human, boat.livery);
-                Instance._boatTimes.Add(i, 0f);
+                if (boatLoadingPrefab.Status == AsyncOperationStatus.Succeeded)
+                {
+                    AsyncOperationHandle<GameObject> boatLoading = Addressables.InstantiateAsync(boat.boatPrefab, startingPosition.GetColumn(3), Quaternion.LookRotation(startingPosition.GetColumn(2)));
+
+                    yield return boatLoading;
+
+                    if (boatLoading.IsDone)
+                    {
+                        boatLoading.Result.name = boat.boatName; // set the name of the boat
+                        boatLoading.Result.TryGetComponent<Boat>(out Boat boatController);
+                        boat.SetController(boatLoading.Result, boatController);
+                        boatController.Setup(i + 1, boat.human, boat.livery);
+                        Instance._boatTimes.Add(i, 0f);
+                    }
+                }
+
             }
 
         }
