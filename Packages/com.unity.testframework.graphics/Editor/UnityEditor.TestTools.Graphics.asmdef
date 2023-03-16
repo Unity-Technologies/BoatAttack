@@ -1,0 +1,38 @@
+{
+    "name": "UnityEditor.TestTools.Graphics",
+    "rootNamespace": "",
+    "references": [
+        "GUID:c081bc530f560634bb5c21d4b323a7f1",
+        "GUID:27619889b8ba8c24980f49ee34dbb44a",
+        "GUID:0acc523941302664db1f4e527237feb3",
+        "GUID:f9fe0089ec81f4079af78eb2287a6163",
+        "GUID:e40ba710768534012815d3193fa296cb",
+        "GUID:37180d43aa4b85c4b9076e2ef48a3b2a"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_TESTS_FRAMEWORK"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.unity.test-framework",
+            "expression": "2.0",
+            "define": "TEST_FRAMEWORK_2_0_0_OR_NEWER"
+        },
+        {
+            "name": "com.unity.testframework.graphics",
+            "expression": "",
+            "define": "UNITY_TESTS_FRAMEWORK"
+        }
+    ],
+    "noEngineReferences": false
+}
