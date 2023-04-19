@@ -66,7 +66,7 @@ half3 Absorption(half depth)
 
 float2 AdjustedDepth(half2 uvs, half4 additionalData)
 {
-	float rawD = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, uvs);
+	float rawD = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_point_clamp, uvs);
 	float d = LinearEyeDepth(rawD, _ZBufferParams);
 
 	// TODO: Changing the usage of UNITY_REVERSED_Z this way to fix testing, but I'm not sure the original code is correct anyway.
@@ -82,7 +82,7 @@ float2 AdjustedDepth(half2 uvs, half4 additionalData)
 
 float WaterTextureDepth(float3 posWS)
 {
-    return (1 - SAMPLE_TEXTURE2D_LOD(_WaterDepthMap, sampler_WaterDepthMap_linear_clamp, posWS.xz * 0.002 + 0.5, 1).r) * (_MaxDepth + _VeraslWater_DepthCamParams.x) - _VeraslWater_DepthCamParams.x;
+    return (1 - SAMPLE_TEXTURE2D_LOD(_WaterDepthMap, sampler_point_clamp, posWS.xz * 0.002 + 0.5, 1).r) * (_MaxDepth + _VeraslWater_DepthCamParams.x) - _VeraslWater_DepthCamParams.x;
 }
 
 float3 WaterDepth(float3 posWS, half4 additionalData, half2 screenUVs)// x = seafloor depth, y = water depth

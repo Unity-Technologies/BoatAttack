@@ -23,10 +23,10 @@ SAMPLER(sampler_CubemapTexture);
 #endif
 TEXTURE2D(_WaterFXMap);
 TEXTURE2D(_CameraDepthTexture);
-SAMPLER(sampler_CameraDepthTexture);
+SAMPLER(sampler_point_clamp);
 TEXTURE2D(_CameraOpaqueTexture); SAMPLER(sampler_CameraOpaqueTexture_linear_clamp);
 
-TEXTURE2D(_WaterDepthMap); SAMPLER(sampler_WaterDepthMap_linear_clamp);
+TEXTURE2D(_WaterDepthMap); // uses the sampler_point_clamp sampler
 
 // Surface textures
 TEXTURE2D(_AbsorptionScatteringRamp); SAMPLER(sampler_AbsorptionScatteringRamp);
