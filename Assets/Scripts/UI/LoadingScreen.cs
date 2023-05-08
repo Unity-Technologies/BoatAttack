@@ -10,7 +10,7 @@ public class LoadingScreen : MonoBehaviour
 
     private void OnEnable()
     {
-        Application.backgroundLoadingPriority = ThreadPriority.Low;
+        Application.backgroundLoadingPriority = ThreadPriority.High;
     }
 
     private void OnDestroy()
