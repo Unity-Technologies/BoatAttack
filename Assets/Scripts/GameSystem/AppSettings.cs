@@ -229,7 +229,7 @@ namespace BoatAttack
 #if UNITY_EDITOR
             if (buildIndex == -1)
             {
-                load = EditorSceneManager.LoadSceneAsyncInPlayMode(scenePath,
+                load = EditorSceneManager.LoadSceneAsyncInPlayMode($"{Application.dataPath}/{scenePath}.unity",
                     new LoadSceneParameters(LoadSceneMode.Single));
             }
             else
