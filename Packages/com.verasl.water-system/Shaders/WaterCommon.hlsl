@@ -252,7 +252,12 @@ half4 WaterFragment(WaterVertexOutput IN) : SV_Target
     BRDFData brdfData;
     half alpha = 1;
     InitializeBRDFData(half3(0, 0, 0), 0, half3(1, 1, 1), 0.95, alpha, brdfData);
+#if UNITY_VERSION >= 202110
+	half3 spec = DirectBDRF(brdfData, IN.normal, mainLight.direction, IN.viewDir,false) * shadow * mainLight.color;
+#else
 	half3 spec = DirectBDRF(brdfData, IN.normal, mainLight.direction, IN.viewDir) * shadow * mainLight.color;
+#endif
+
 #ifdef _ADDITIONAL_LIGHTS
     uint pixelLightCount = GetAdditionalLightsCount();
     for (uint lightIndex = 0u; lightIndex < pixelLightCount; ++lightIndex)
