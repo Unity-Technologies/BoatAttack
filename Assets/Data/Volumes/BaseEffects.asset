@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Bloom
   m_EditorClassIdentifier: 
   active: 1
+  skipIterations:
+    m_OverrideState: 1
+    m_Value: 3
   threshold:
     m_OverrideState: 1
     m_Value: 0.8
@@ -31,12 +34,16 @@ MonoBehaviour:
   highQualityFiltering:
     m_OverrideState: 0
     m_Value: 0
-  skipIterations:
-    m_OverrideState: 1
-    m_Value: 3
+  downscale:
+    m_OverrideState: 0
+    m_Value: 0
+  maxIterations:
+    m_OverrideState: 0
+    m_Value: 6
   dirtTexture:
     m_OverrideState: 0
     m_Value: {fileID: 0}
+    dimension: 1
   dirtIntensity:
     m_OverrideState: 0
     m_Value: 0
@@ -77,7 +84,7 @@ MonoBehaviour:
   active: 1
   postExposure:
     m_OverrideState: 1
-    m_Value: -0.3
+    m_Value: -1.15
   contrast:
     m_OverrideState: 1
     m_Value: -3.3
@@ -174,7 +181,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5485954d14dfb9a4c8ead8edb0ded5b1, type: 3}
   m_Name: LiftGammaGain
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   lift:
     m_OverrideState: 1
     m_Value: {x: 1, y: 0.9238049, z: 0.9156409, w: -0.023853112}
@@ -199,4 +206,28 @@ MonoBehaviour:
   active: 1
   mode:
     m_OverrideState: 1
+    m_Value: 2
+  neutralHDRRangeReductionMode:
+    m_OverrideState: 0
+    m_Value: 2
+  acesPreset:
+    m_OverrideState: 0
+    m_Value: 3
+  hueShiftAmount:
+    m_OverrideState: 0
+    m_Value: 0
+  detectPaperWhite:
+    m_OverrideState: 1
     m_Value: 1
+  paperWhite:
+    m_OverrideState: 0
+    m_Value: 300
+  detectBrightnessLimits:
+    m_OverrideState: 0
+    m_Value: 1
+  minNits:
+    m_OverrideState: 0
+    m_Value: 0.005
+  maxNits:
+    m_OverrideState: 0
+    m_Value: 1000

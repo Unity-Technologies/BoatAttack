@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.RenderGraphModule;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
@@ -42,6 +43,19 @@ public class KawaseBlur : ScriptableRendererFeature
         {
             this.profilerTag = profilerTag;
         }
+/*
+        public override void RecordRenderGraph(RenderGraph renderGraph, FrameResources frameResources, ref RenderingData renderingData)
+        {
+            using (var builder =
+                   renderGraph.AddRasterRenderPass<KawaseBlurSettings>(PassName, out var passData, m_InfiniteWater_Profile))
+            {
+                builder.SetRenderFunc((KawaseBlurSettings data, RasterGraphContext context) =>
+                {
+                    
+                });
+            }
+        }
+        */
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
@@ -100,7 +114,7 @@ public class KawaseBlur : ScriptableRendererFeature
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
-        renderer.EnqueuePass(scriptablePass);
+        //renderer.EnqueuePass(scriptablePass);
     }
 }
 

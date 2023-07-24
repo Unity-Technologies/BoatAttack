@@ -7,15 +7,15 @@ Shader "TextMeshPro/Mobile/Distance Field (Surface)" {
 
 Properties {
 	_FaceTex			("Fill Texture", 2D) = "white" {}
-	_FaceColor			("Fill Color", Color) = (1,1,1,1)
+	_FaceColor		    ("Fill Color", Color) = (1,1,1,1)
 	_FaceDilate			("Face Dilate", Range(-1,1)) = 0
 
-	_OutlineColor		("Outline Color", Color) = (0,0,0,1)
+	_OutlineColor	    ("Outline Color", Color) = (0,0,0,1)
 	_OutlineTex			("Outline Texture", 2D) = "white" {}
 	_OutlineWidth		("Outline Thickness", Range(0, 1)) = 0
-	_OutlineSoftness		("Outline Softness", Range(0,1)) = 0
+	_OutlineSoftness	("Outline Softness", Range(0,1)) = 0
 
-	_GlowColor			("Color", Color) = (0, 1, 0, 0.5)
+	_GlowColor		    ("Color", Color) = (0, 1, 0, 0.5)
 	_GlowOffset			("Offset", Range(-1,1)) = 0
 	_GlowInner			("Inner", Range(0,1)) = 0.05
 	_GlowOuter			("Outer", Range(0,1)) = 0.05
@@ -41,7 +41,8 @@ Properties {
 
 	_VertexOffsetX		("Vertex OffsetX", float) = 0
 	_VertexOffsetY		("Vertex OffsetY", float) = 0
-	
+
+	_CullMode			("Cull Mode", Float) = 0
 	//_MaskCoord		("Mask Coords", vector) = (0,0,0,0)
 	//_MaskSoftness		("Mask Softness", float) = 0
 }
@@ -75,7 +76,7 @@ SubShader {
 		float2	uv2_FaceTex;
 		float2  uv2_OutlineTex;
 		float2	param;					// Weight, Scale
-		float3	viewDirEnv;		
+		float3	viewDirEnv;
 	};
 
 	#include "TMPro_Surface.cginc"
@@ -98,7 +99,8 @@ SubShader {
 		#pragma multi_compile_shadowcaster
 		#include "UnityCG.cginc"
 
-		struct v2f {
+		struct v2f
+		{
 			V2F_SHADOW_CASTER;
 			float2	uv			: TEXCOORD1;
 			float2	uv2			: TEXCOORD3;

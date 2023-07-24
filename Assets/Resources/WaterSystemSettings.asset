@@ -19,11 +19,28 @@ MonoBehaviour:
   - rid: 7001098996185301007
   - rid: 7001098608065380362
   - rid: 7001098608065380362
-  resources:
-    rid: 7001098608065380363
+  _resources:
+    rid: 5189157774347206656
   references:
     version: 2
     RefIds:
+    - rid: 5189157774347206656
+      type: {class: Resources, ns: WaterSystem.Settings, asm: WaterSystem}
+      data:
+        foamMap: {fileID: 2800000, guid: ca439406e806ecf44a9586510be9477d, type: 3}
+        surfaceMap: {fileID: 2800000, guid: f395b7d64f44848c6a3cba1f1173fe90, type: 3}
+        detailNormalMap: {fileID: 2800000, guid: 074f5e6848de04823b7c06eefe431174,
+          type: 3}
+        waterFX: {fileID: 2800000, guid: 05de703039d02492d821b79a341cea43, type: 3}
+        ditherNoise: {fileID: 2800000, guid: a3a4b6bb5de0e450a94cbc1dd9599aa0, type: 3}
+        infiniteWaterMesh: {fileID: 4300000, guid: 0694fda6617df4cd6a3d240f5eeb580b,
+          type: 3}
+        waterTile: {fileID: -7011862500387574168, guid: 7d355ab669ff84d8a93506b907236469,
+          type: 3}
+        waterShader: {fileID: 4800000, guid: a94edd303261140cf9e6ce8c90d7a99a, type: 3}
+        causticShader: {fileID: 4800000, guid: 90939d2e4b62841d29c136c866715501, type: 3}
+        infiniteWaterShader: {fileID: 4800000, guid: 5f51d4f8f480441339ead24ab495af7d,
+          type: 3}
     - rid: 7001098608065380362
       type: {class: WaterQualitySettings, ns: WaterSystem.Settings, asm: WaterSystem}
       data:
@@ -45,7 +62,7 @@ MonoBehaviour:
             m_RendererMode: 1
             m_RendererIndex: 1
         ssrSettings:
-          steps: 8
+          steps: 16
           stepSize: 0.1
           thickness: 2
         lightingSettings:
@@ -56,23 +73,6 @@ MonoBehaviour:
           Mode: 1
           Dispersion: 0
         BuoyancySamples: 4096
-    - rid: 7001098608065380363
-      type: {class: WaterResources, ns: WaterSystem.Settings, asm: WaterSystem}
-      data:
-        foamMap: {fileID: 2800000, guid: ca439406e806ecf44a9586510be9477d, type: 3}
-        surfaceMap: {fileID: 2800000, guid: f395b7d64f44848c6a3cba1f1173fe90, type: 3}
-        detailNormalMap: {fileID: 2800000, guid: 074f5e6848de04823b7c06eefe431174,
-          type: 3}
-        waterFX: {fileID: 2800000, guid: 05de703039d02492d821b79a341cea43, type: 3}
-        ditherNoise: {fileID: 2800000, guid: a3a4b6bb5de0e450a94cbc1dd9599aa0, type: 3}
-        infiniteWaterMesh: {fileID: 4300000, guid: 0694fda6617df4cd6a3d240f5eeb580b,
-          type: 3}
-        waterTile: {fileID: -7011862500387574168, guid: 7d355ab669ff84d8a93506b907236469,
-          type: 3}
-        waterShader: {fileID: 4800000, guid: a94edd303261140cf9e6ce8c90d7a99a, type: 3}
-        causticShader: {fileID: 4800000, guid: 90939d2e4b62841d29c136c866715501, type: 3}
-        infiniteWaterShader: {fileID: 4800000, guid: 5f51d4f8f480441339ead24ab495af7d,
-          type: 3}
     - rid: 7001098996185301005
       type: {class: WaterQualitySettings, ns: WaterSystem.Settings, asm: WaterSystem}
       data:

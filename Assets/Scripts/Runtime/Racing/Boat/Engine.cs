@@ -86,7 +86,7 @@ namespace BoatAttack
             if (_yHeight > -0.1f) // if the engine is deeper than 0.1
             {
                 modifier = Mathf.Clamp(modifier, -1f, 1f); // clamp for reasonable values
-                RB.AddRelativeTorque(new Vector3(0f, steeringTorque, -steeringTorque * 0.5f) * modifier, ForceMode.Acceleration); // add torque based on input and torque amount
+                RB.AddRelativeTorque(new Vector3(steeringTorque * 0.1f, steeringTorque, -steeringTorque * 0.25f) * modifier, ForceMode.Acceleration); // add torque based on input and torque amount
             }
 
             _currentAngle = Mathf.SmoothDampAngle(_currentAngle, 

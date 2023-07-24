@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.RenderGraphModule;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
@@ -23,6 +24,11 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
         // The render pipeline will ensure target setup and clearing happens in a performant manner.
         public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
         {
+            DoVolume();
+        }
+
+        private void DoVolume()
+        {
             if(volumeHolder == null)
             {
                 volumeHolder = new GameObject("[DefaultVolume]");
@@ -45,6 +51,11 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
                 if(_qualityProfiles.Count >= index && _qualityProfiles[index] != null)
                     qualityVol.sharedProfile = _qualityProfiles?[index];
             }
+        }
+
+        public override void RecordRenderGraph(RenderGraph renderGraph, FrameResources frameResources, ref RenderingData renderingData)
+        {
+            DoVolume();
         }
 
         // Here you can implement the rendering logic.
