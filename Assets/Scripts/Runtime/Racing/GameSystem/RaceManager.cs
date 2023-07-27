@@ -275,7 +275,7 @@ namespace BoatAttack
             introCams.TryGetComponent<PlayableDirector>(out var introDirector);
 
             //play track intro
-            if (introDirector)
+            if (introDirector && introCams)
             {
                 while (introDirector && introDirector.state == PlayState.Playing)
                 {

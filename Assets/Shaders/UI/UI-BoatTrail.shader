@@ -1,4 +1,4 @@
-Shader "Boat Attack/UI/Splash"
+Shader "Boat Attack/UI/BoatTrail"
 {
     Properties
     {
@@ -9,9 +9,7 @@ Shader "Boat Attack/UI/Splash"
     }
     SubShader
     {
-        Tags{"Queue"="Transparent" "RenderPipeline" = "Universal"}
-        LOD 100
-        
+        Tags{"Queue"="Transparent" "RenderPipeline" = "UniversalPipeline"}        
         Cull Off
         ZWrite Off
         Blend SrcAlpha OneMinusSrcAlpha
@@ -67,23 +65,18 @@ Shader "Boat Attack/UI/Splash"
                 half4 output = input.color;
 
                 half2 uv = input.uv;
-                half accel = pow(uv.x * 1.6, 0.6);
+                const half accel = pow(abs(uv.x) * 1.6, 0.6);
                 input.animUV.xz = frac(input.animUV.xz) - accel * 0.25;
                 
-                //input.animUV.xz = frac(input.animUV.xz);
                 half a = 1 - SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, input.animUV.xy).x;
-                
-                half frontFade = saturate((1-uv.x) * 3 + 0.5);
-                half rearFade = pow(saturate(uv.x * 0.8 + 0.2), 0.6) + 0.15;
+
+                const half frontFade = saturate((1-uv.x) * 3 + 0.5);
+                const half rearFade = pow(saturate(uv.x * 0.8 + 0.2), 0.6) + 0.15;
                 
                 a *= min(frontFade, rearFade - 0.2);
-                
                 output.a *= smoothstep(_Threshold, _Threshold + 0.01, pow(a, 4));
                 
-                half frame = smoothstep(0.97, 0.98, max(abs(uv.x * 2 - 1),abs(uv.y * 2 - 1)));
-                
-                return output;// + frame;
-                return half4(input.animUV.xy, 0, 1) + frame;
+                return output;
             }
             ENDHLSL
         }

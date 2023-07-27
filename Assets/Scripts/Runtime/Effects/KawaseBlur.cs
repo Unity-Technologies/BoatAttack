@@ -43,7 +43,8 @@ public class KawaseBlur : ScriptableRendererFeature
         {
             this.profilerTag = profilerTag;
         }
-/*
+
+        /*
         public override void RecordRenderGraph(RenderGraph renderGraph, FrameResources frameResources, ref RenderingData renderingData)
         {
             using (var builder =
@@ -114,7 +115,7 @@ public class KawaseBlur : ScriptableRendererFeature
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
-        //renderer.EnqueuePass(scriptablePass);
+        renderer.EnqueuePass(scriptablePass);
     }
 }
 

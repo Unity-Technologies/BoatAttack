@@ -19,8 +19,6 @@
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
 
-            float4 _BlitTexture_TexelSize;
-            float4 _BlitTexture_ST;
             
             float _offset;
             
