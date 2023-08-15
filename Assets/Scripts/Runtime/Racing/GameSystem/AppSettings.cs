@@ -197,7 +197,14 @@ namespace BoatAttack
                 var offsetVec = new Vector2(Mathf.Lerp(1, currentDynamicScale, Mathf.Clamp01((1 - axisBias) * 2f)),
                     Mathf.Lerp(1, currentDynamicScale, Mathf.Clamp01(axisBias * 2f)));
 
-                ScalableBufferManager.ResizeBuffers(offsetVec.x, offsetVec.y);
+                ScalableBufferManager.ResizeBuffers(0.5f, 0.5f);
+                
+                // debug log a warning with the current framerate and offsetvec
+                if (Debug.isDebugBuild)
+                {
+                    Debug.Log($"Framerate: {1f / currentFrametime}fps, OffsetVec: {offsetVec}, Offset: {offset}");
+                }
+                
             }
             else
             {

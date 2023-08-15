@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections.Generic;
+using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -22,13 +23,13 @@ namespace BoatAttack.UI
         {
             //_rect = transform as RectTransform;
             if(forMap)
-                RenderPipelineManager.beginFrameRendering += UpdatePosition;
+                RenderPipelineManager.beginContextRendering += UpdatePosition;
         }
 
         private void OnDisable()
         {
             if(forMap)
-                RenderPipelineManager.beginFrameRendering -= UpdatePosition;
+                RenderPipelineManager.beginContextRendering -= UpdatePosition;
         }
 
         
@@ -52,7 +53,7 @@ namespace BoatAttack.UI
             _playerCount = RaceManager.RaceData.boatCount;
         }
 
-        private void UpdatePosition(ScriptableRenderContext context, Camera[] cameras)
+        private void UpdatePosition(ScriptableRenderContext context, List<Camera> cameras)
         {
             if (_boatData == null || Camera.main == null) return; // if no boat or camera, the player marker cannot work
 
