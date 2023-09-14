@@ -3,10 +3,11 @@ using UnityEngine;
 using Unity.Collections;
 using Unity.Mathematics;
 using WaterSystem;
+using WaterSystem.New;
 
 namespace BoatAttack
 {
-    public class Engine : MonoBehaviour
+    public class Engine : WaterQuery
     {
         [NonSerialized] public Rigidbody RB; // The rigid body attatched to the boat
         [NonSerialized] public float VelocityMag; // Boats velocity
@@ -17,11 +18,8 @@ namespace BoatAttack
         //engine stats
         public float steeringTorque = 5f;
         public float horsePower = 18f;
-        private NativeArray<float3> _point; // engine submerged check
-        private float3[] _heights = new float3[1]; // engine submerged check
-        private float3[] _normals = new float3[1]; // engine submerged check
-        private int _guid;
-        private float _yHeight;
+        private NativeArray<Data.WaterSample> _point; // engine submerged check
+        private NativeArray<Data.WaterSurface> _results; // engine submerged check
 
         public Vector3 enginePosition;
         private Vector3 _engineDir;
@@ -35,9 +33,9 @@ namespace BoatAttack
 
 			if(waterSound)
 				waterSound.time = UnityEngine.Random.Range(0f, waterSound.clip.length); // randomly start the water sound
-
-            _guid = GetInstanceID(); // Get the engines GUID for the buoyancy system
-            _point = new NativeArray<float3>(1, Allocator.Persistent);
+            
+            QueryCount = 1; // set the query count to 1
+            _point = new NativeArray<Data.WaterSample>(1, Allocator.Persistent);
         }
 
         private void Update()
@@ -49,24 +47,33 @@ namespace BoatAttack
         private void FixedUpdate()
         {
             // Get the water level from the engines position and store it
-            _point[0] = transform.TransformPoint(enginePosition);
-            GerstnerWavesJobs.UpdateSamplePoints(ref _point, _guid);
-            GerstnerWavesJobs.GetData(_guid, ref _heights, ref _normals);
-            _yHeight = _heights[0].y - _point[0].y;
+            var point = _point[0];
+            point.Position = transform.TransformPoint(enginePosition);
+            _point[0] = point;
         }
 
         private void OnDisable()
         {
             _point.Dispose();
         }
-        
+
+        public override void SetQueryPositions(ref NativeSlice<Data.WaterSample> samplePositions)
+        {
+            samplePositions[0] = _point[0];
+        }
+
+        public override void GetQueryResults(NativeSlice<Data.WaterSurface> surfaceResults)
+        {
+            _results[0] = surfaceResults[0];
+        }
+
         /// <summary>
         /// Controls the acceleration of the boat
         /// </summary>
         /// <param name="modifier">Acceleration modifier, adds force in the 0-1 range</param>
         public void Accelerate(float modifier)
         {
-            if (_yHeight > -0.1f) // if the engine is deeper than 0.1
+            if (transform.position.y - _point[0].Position.y > -0.1f) // if the engine is deeper than 0.1
             {
                 modifier = Mathf.Clamp(modifier, 0f, 1f); // clamp for reasonable values
                 var forward = RB.transform.forward;
@@ -83,7 +90,7 @@ namespace BoatAttack
         /// <param name="modifier">Steering modifier, positive for right, negative for negative</param>
         public void Turn(float modifier)
         {
-            if (_yHeight > -0.1f) // if the engine is deeper than 0.1
+            if (transform.position.y - _point[0].Position.y > -0.1f) // if the engine is deeper than 0.1
             {
                 modifier = Mathf.Clamp(modifier, -1f, 1f); // clamp for reasonable values
                 RB.AddRelativeTorque(new Vector3(steeringTorque * 0.1f, steeringTorque, -steeringTorque * 0.25f) * modifier, ForceMode.Acceleration); // add torque based on input and torque amount

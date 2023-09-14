@@ -302,6 +302,7 @@ SubShader {
 
 		float _UIMaskSoftnessX;
         float _UIMaskSoftnessY;
+        int _UIVertexColorAlwaysGammaSpace;
 
 
 		pixel_t VertShader(vertex_t input)
@@ -333,6 +334,10 @@ SubShader {
 			scale /= 1 + (_OutlineSoftness * _ScaleRatioA * scale);
 			float bias = (0.5 - weight) * scale - 0.5;
 
+            if (_UIVertexColorAlwaysGammaSpace && !IsGammaSpace())
+            {
+                input.color.rgb = UIGammaToLinear(input.color.rgb);
+            }
 			float opacity = input.color.a;
 
 			fixed4 faceColor = fixed4(input.color.rgb, opacity) * _FaceColor;

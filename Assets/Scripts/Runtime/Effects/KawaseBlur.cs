@@ -60,6 +60,8 @@ public class KawaseBlur : ScriptableRendererFeature
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
+            return;
+            
             var cam = renderingData.cameraData.camera;
             if (cam.cameraType != CameraType.Game || !Enabled) return;
             
@@ -73,7 +75,7 @@ public class KawaseBlur : ScriptableRendererFeature
 
             RenderingUtils.ReAllocateIfNeeded(ref RT1, opaqueDesc, name:"RT1");
             RenderingUtils.ReAllocateIfNeeded(ref RT2, opaqueDesc, name:"RT2");
-            
+
             cmd.SetGlobalFloat("_offset", 1.5f);
             Blitter.BlitCameraTexture(cmd, renderingData.cameraData.renderer.cameraColorTargetHandle, RT1, blurMaterial, 0);
             for (var i=1; i<passes-1; i++) {

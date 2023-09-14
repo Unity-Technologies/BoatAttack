@@ -52,11 +52,11 @@ public static class Utility
         Time.timeScale = scale;
     }
 
-    [Console.ConsoleCmd]
-    public static void WaterDebug(int mode)
-    {
-        WaterSystem.Ocean.SetDebugMode((WaterSystem.Ocean.DebugShading)mode);
-    }
+    //[Console.ConsoleCmd]
+    //public static void WaterDebug(int mode)
+    //{
+    //    WaterSystem.Ocean.SetDebugMode((WaterSystem.Ocean.DebugShading)mode);
+    //}
 
     public static int GetTrueQualityLevel()
     {

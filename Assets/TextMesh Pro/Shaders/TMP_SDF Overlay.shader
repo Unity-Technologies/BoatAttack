@@ -1,4 +1,4 @@
-Shader "TextMeshPro/Distance Field" {
+Shader "TextMeshPro/Distance Field Overlay" {
 
 Properties {
 	_FaceTex			("Face Texture", 2D) = "white" {}
@@ -87,8 +87,8 @@ Properties {
 SubShader {
 
 	Tags
-	{
-		"Queue"="Transparent"
+  {
+		"Queue"="Overlay"
 		"IgnoreProjector"="True"
 		"RenderType"="Transparent"
 	}
@@ -106,7 +106,7 @@ SubShader {
 	ZWrite Off
 	Lighting Off
 	Fog { Mode Off }
-	ZTest [unity_GUIZTestMode]
+	ZTest Always
 	Blend One OneMinusSrcAlpha
 	ColorMask [_ColorMask]
 
@@ -153,14 +153,15 @@ SubShader {
 			fixed4	underlayColor	: COLOR1;
 		    #endif
 
-		    float4 textures			: TEXCOORD5;
+			float4 textures			: TEXCOORD5;
 		};
 
 		// Used by Unity internally to handle Texture Tiling and Offset.
-		float4 _FaceTex_ST;
-		float4 _OutlineTex_ST;
-		float _UIMaskSoftnessX;
-        float _UIMaskSoftnessY;
+		uniform float4	_FaceTex_ST;
+		uniform float4	_OutlineTex_ST;
+		uniform float	_UIMaskSoftnessX;
+        uniform float	_UIMaskSoftnessY;
+        uniform int     _UIVertexColorAlwaysGammaSpace;
 
 		pixel_t VertShader(vertex_t input)
 		{
@@ -190,7 +191,7 @@ SubShader {
 
 			float bias =(.5 - weight) + (.5 / scale);
 
-			float alphaClip = (1.0 - _OutlineWidth * _ScaleRatioA - _OutlineSoftness * _ScaleRatioA);
+			float alphaClip = (1.0 - _OutlineWidth*_ScaleRatioA - _OutlineSoftness*_ScaleRatioA);
 
 		    #if GLOW_ON
 			alphaClip = min(alphaClip, 1.0 - _GlowOffset * _ScaleRatioB - _GlowOuter * _ScaleRatioB);
@@ -221,6 +222,10 @@ SubShader {
 			float2 outlineUV = TRANSFORM_TEX(textureUV, _OutlineTex);
 
 
+            if (_UIVertexColorAlwaysGammaSpace && !IsGammaSpace())
+            {
+                input.color.rgb = UIGammaToLinear(input.color.rgb);
+            }
 			output.position = vPosition;
 			output.color = input.color;
 			output.atlas =	input.texcoord0;
@@ -300,7 +305,7 @@ SubShader {
 			faceColor.rgb += glowColor.rgb * glowColor.a;
 		    #endif
 
-		// Alternative implementation to UnityGet2DClipping with support for softness.
+		    // Alternative implementation to UnityGet2DClipping with support for softness.
 		    #if UNITY_UI_CLIP_RECT
 			half2 m = saturate((_ClipRect.zw - _ClipRect.xy - abs(input.mask.xy)) * input.mask.zw);
 			faceColor *= m.x * m.y;
@@ -310,7 +315,7 @@ SubShader {
 			clip(faceColor.a - 0.001);
 		    #endif
 
-  		    return faceColor * input.color.a;
+			return faceColor * input.color.a;
 		}
 		ENDCG
 	}

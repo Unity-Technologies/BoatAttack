@@ -9,15 +9,15 @@ using Unity.Mathematics;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using WaterSystem;
+using WaterSystem.New;
 
 [ExecuteAlways]
-public class BuoyManager : MonoBehaviour
+public class BuoyManager : WaterQuery
 {
     private Vector3[] _vertices;
     private Transform[] _buoys;
-    private NativeArray<float3> _samplePoints; // sample points for height calc
-    private float3[] _heights; // water height array(only size of 1 when simple or non-physical)
-    private float3[] _normals; // water normal array(only used when non-physical and size of 1 also when simple)
+    private NativeArray<Data.WaterSample> _samplePoints; // sample points for height calc
+    private Data.WaterSurface[] _results; // water height array(only size of 1 when simple or non-physical)
 
     [SerializeField, HideInInspector] private List<BuoyPoint> points = new List<BuoyPoint>();
     [SerializeField] private Vector3[] buoyPoints;
@@ -72,22 +72,31 @@ public class BuoyManager : MonoBehaviour
     private void OnDisable()
     {
         if(buoyPoints == null || buoyPoints.Length == 0) return;
-        GerstnerWavesJobs.RemoveSamplePoints(_guid);
         _samplePoints.Dispose();
         CleanupArrows();
     }
-    
+
+    public override void SetQueryPositions(ref NativeSlice<Data.WaterSample> samplePositions)
+    {
+       samplePositions = _samplePoints;
+    }
+
+    public override void GetQueryResults(NativeSlice<Data.WaterSurface> surfaceResults)
+    {
+        _results = surfaceResults.ToArray();
+    }
+
     private void UpdateSystem()
     {
         if(buoyPoints == null || buoyPoints.Length == 0) return;
         
-        GerstnerWavesJobs.RemoveSamplePoints(_guid);
         points.Clear();
         foreach (var path in paths)
         {
             points.AddRange(GeneratePoints(spacing, angleThreshold, path));
         }
         buoyPoints = SplitBuoys(ref points);
+        QueryCount = buoyPoints.Length;
         SetupArrays();
         RefreshArrows();
     }
@@ -96,13 +105,14 @@ public class BuoyManager : MonoBehaviour
     {
         if(_samplePoints.IsCreated)
             _samplePoints.Dispose();
-        _samplePoints = new NativeArray<float3>(buoyPoints.Length, Allocator.Persistent);
-        _heights = new float3[buoyPoints.Length];
-        _normals = new float3[buoyPoints.Length];
+        _samplePoints = new NativeArray<Data.WaterSample>(buoyPoints.Length, Allocator.Persistent);
+        _results = new Data.WaterSurface[buoyPoints.Length];
         
         for (var i = 0; i < buoyPoints.Length; i++)
         {
-            _samplePoints[i] = buoyPoints[i];
+            var samplePoint = new Data.WaterSample();
+            samplePoint.Position = buoyPoints[i];
+            _samplePoints[i] = samplePoint;
         }
     }
     
@@ -112,16 +122,14 @@ public class BuoyManager : MonoBehaviour
     {
         if(buoyPoints == null || buoyPoints.Length == 0) return;
         
-        GerstnerWavesJobs.UpdateSamplePoints(ref _samplePoints, _guid);
-        GerstnerWavesJobs.GetData(_guid, ref _heights, ref _normals);
         
         var buoys = new Matrix4x4[buoyPoints.Length];
 
         for (var i = 0; i < buoyPoints.Length; i++)
         {
             var pos = buoyPoints[i];
-            pos.y = _heights[i].y - 0.25f;
-            buoys[i] = Matrix4x4.TRS(pos, Quaternion.LookRotation(Vector3.forward, -_normals[i]), Vector3.one);
+            pos.y = _results[i].Position.y - 0.25f;
+            buoys[i] = Matrix4x4.TRS(pos, Quaternion.LookRotation(Vector3.forward, -_results[i].Normal), Vector3.one);
         }
 
         if (buoyMesh && buoyMaterial)

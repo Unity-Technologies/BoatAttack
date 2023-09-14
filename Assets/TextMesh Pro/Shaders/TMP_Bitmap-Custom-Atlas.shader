@@ -1,4 +1,4 @@
-Shader "TextMeshPro/Bitmap" {
+Shader "TextMeshPro/Bitmap Custom Atlas" {
 
 Properties {
 	_MainTex		    ("Font Atlas", 2D) = "white" {}
@@ -10,7 +10,8 @@ Properties {
 	_MaskSoftnessX	    ("Mask SoftnessX", float) = 0
 	_MaskSoftnessY	    ("Mask SoftnessY", float) = 0
 
-	_ClipRect           ("Clip Rect", vector) = (-32767, -32767, 32767, 32767)
+	_ClipRect		    ("Clip Rect", vector) = (-32767, -32767, 32767, 32767)
+	_Padding		    ("Padding", float) = 0
 
 	_StencilComp        ("Stencil Comparison", Float) = 8
 	_Stencil            ("Stencil ID", Float) = 0
@@ -54,6 +55,7 @@ SubShader{
 
 
 		#include "UnityCG.cginc"
+		#include "UnityUI.cginc"
 
 		struct appdata_t
 		{
@@ -84,6 +86,7 @@ SubShader{
 		uniform float		_MaskSoftnessY;
 		uniform float		_UIMaskSoftnessX;
         uniform float		_UIMaskSoftnessY;
+        uniform int _UIVertexColorAlwaysGammaSpace;
 
 		v2f vert (appdata_t v)
 		{
@@ -95,6 +98,10 @@ SubShader{
 
 			float4 vPosition = UnityPixelSnap(UnityObjectToClipPos(vert));
 
+            if (_UIVertexColorAlwaysGammaSpace && !IsGammaSpace())
+            {
+                v.color.rgb = UIGammaToLinear(v.color.rgb);
+            }
 			fixed4 faceColor = v.color;
 			faceColor *= _FaceColor;
 
@@ -116,8 +123,7 @@ SubShader{
 
 		fixed4 frag (v2f IN) : SV_Target
 		{
-			fixed4 color = tex2D(_MainTex, IN.texcoord0);
-			color = fixed4 (tex2D(_FaceTex, IN.texcoord1).rgb * IN.color.rgb, IN.color.a * color.a);
+			fixed4 color = tex2D(_MainTex, IN.texcoord0) * tex2D(_FaceTex, IN.texcoord1) * IN.color;
 
 			// Alternative implementation to UnityGet2DClipping with support for softness.
 			#if UNITY_UI_CLIP_RECT

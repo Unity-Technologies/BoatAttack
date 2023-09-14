@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf2edee5c58d82540a51f03df9d42094, type: 3}
   m_Name: PipelineAsset_Low
   m_EditorClassIdentifier: 
-  k_AssetVersion: 11
-  k_AssetPreviousVersion: 11
+  k_AssetVersion: 12
+  k_AssetPreviousVersion: 12
   m_RendererType: 0
   m_RendererData: {fileID: 11400000, guid: fa301df1a78cf4a9ebe2a3139dc8be8f, type: 2}
   m_RendererDataList:
@@ -28,7 +28,7 @@ MonoBehaviour:
   m_HDRColorBufferPrecision: 0
   m_MSAA: 1
   m_RenderScale: 0.7
-  m_UpscalingFilter: 3
+  m_UpscalingFilter: 0
   m_FsrOverrideSharpness: 0
   m_FsrSharpness: 0.92
   m_EnableLODCrossFade: 1
@@ -38,6 +38,7 @@ MonoBehaviour:
   m_ProbeVolumeMemoryBudget: 1024
   m_ProbeVolumeBlendingMemoryBudget: 128
   m_SupportProbeVolumeStreaming: 0
+  m_SupportProbeVolumeScenarios: 0
   m_ProbeVolumeSHBands: 1
   m_MainLightRenderingMode: 1
   m_MainLightShadowsSupported: 1
@@ -124,6 +125,10 @@ MonoBehaviour:
   m_PrefilterDBufferMRT1: 1
   m_PrefilterDBufferMRT2: 1
   m_PrefilterDBufferMRT3: 1
+  m_PrefilterSoftShadowsQualityLow: 0
+  m_PrefilterSoftShadowsQualityMedium: 0
+  m_PrefilterSoftShadowsQualityHigh: 0
+  m_PrefilterSoftShadows: 0
   m_PrefilterScreenCoord: 1
   m_PrefilterNativeRenderPass: 1
   m_ShaderVariantLogLevel: 2

@@ -89,9 +89,9 @@ QualitySettings:
     realtimeGICPUUsage: 25
     adaptiveVsyncExtraA: 0
     adaptiveVsyncExtraB: 0
-    lodBias: 3
-    maximumLODLevel: 0
-    enableLODCrossFade: 1
+    lodBias: 0.01
+    maximumLODLevel: 1
+    enableLODCrossFade: 0
     streamingMipmapsActive: 1
     streamingMipmapsAddAllCameras: 1
     streamingMipmapsMemoryBudget: 128
@@ -202,8 +202,8 @@ QualitySettings:
     realtimeGICPUUsage: 50
     adaptiveVsyncExtraA: 0
     adaptiveVsyncExtraB: 0
-    lodBias: 4
-    maximumLODLevel: 0
+    lodBias: 0.01
+    maximumLODLevel: 1
     enableLODCrossFade: 1
     streamingMipmapsActive: 1
     streamingMipmapsAddAllCameras: 1
