@@ -48,7 +48,7 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
             {
                 var index = QualitySettings.GetQualityLevel();
 
-                if(_qualityProfiles.Count >= index && _qualityProfiles[index] != null)
+                if(_qualityProfiles.Count > index && _qualityProfiles[index] != null)
                     qualityVol.sharedProfile = _qualityProfiles?[index];
             }
         }
