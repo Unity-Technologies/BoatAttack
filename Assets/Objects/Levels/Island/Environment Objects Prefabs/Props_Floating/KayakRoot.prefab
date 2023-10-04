@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6401600782625215994}
-  - component: {fileID: 6401600782625215995}
+  - component: {fileID: 4362828198904065921}
   m_Layer: 0
   m_Name: KayakRoot
   m_TagString: Untagged
@@ -24,15 +24,16 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6401600782625215993}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6396971548786091290}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6401600782625215995
+--- !u!114 &4362828198904065921
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,27 +42,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 6401600782625215993}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d5ac9593b59d4847815e4528b52a6d2, type: 3}
+  m_Script: {fileID: 11500000, guid: 6915cd045e15f4ab7a5366eb4f2966e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _buoyancyType: 0
-  density: 0
-  volume: 1
-  voxelResolution: 1
-  centerOfMass: {x: 0, y: 0, z: 0}
-  waterLevelOffset: 0
-  voxels:
-  - {x: 0, y: 0, z: 0}
-  colliders:
-  - {fileID: 0}
-  percentSubmerged: 0
+  sampleOffset: {x: 0, y: 0, z: 0}
 --- !u!1001 &6401600783272712156
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 6401600782625215994}
     m_Modifications:
+    - target: {fileID: 1034065356363976, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
+      propertyPath: m_Name
+      value: Geo_Props_Kayak (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1034065356363976, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4950301651628742, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4950301651628742, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -73,6 +77,10 @@ PrefabInstance:
     - target: {fileID: 4950301651628742, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4950301651628742, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4950301651628742, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
       propertyPath: m_LocalRotation.x
@@ -87,14 +95,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4950301651628742, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4950301651628742, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4950301651628742, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
@@ -106,15 +106,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1034065356363976, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
-      propertyPath: m_Name
-      value: Geo_Props_Kayak (4)
-      objectReference: {fileID: 0}
-    - target: {fileID: 1034065356363976, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
 --- !u!4 &6396971548786091290 stripped
 Transform:

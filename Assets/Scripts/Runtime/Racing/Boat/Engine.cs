@@ -3,7 +3,7 @@ using UnityEngine;
 using Unity.Collections;
 using Unity.Mathematics;
 using WaterSystem;
-using WaterSystem.New;
+using WaterSystem.Physics;
 
 namespace BoatAttack
 {
@@ -18,8 +18,8 @@ namespace BoatAttack
         //engine stats
         public float steeringTorque = 5f;
         public float horsePower = 18f;
-        private NativeArray<Data.WaterSample> _point; // engine submerged check
-        private NativeArray<Data.WaterSurface> _results; // engine submerged check
+        private Data.WaterSample _point; // engine submerged check
+        private Data.WaterSurface _result; // engine submerged check
 
         public Vector3 enginePosition;
         private Vector3 _engineDir;
@@ -35,7 +35,7 @@ namespace BoatAttack
 				waterSound.time = UnityEngine.Random.Range(0f, waterSound.clip.length); // randomly start the water sound
             
             QueryCount = 1; // set the query count to 1
-            _point = new NativeArray<Data.WaterSample>(1, Allocator.Persistent);
+            _point = new Data.WaterSample(); // create a new water sample
         }
 
         private void Update()
@@ -46,25 +46,17 @@ namespace BoatAttack
 
         private void FixedUpdate()
         {
-            // Get the water level from the engines position and store it
-            var point = _point[0];
-            point.Position = transform.TransformPoint(enginePosition);
-            _point[0] = point;
-        }
-
-        private void OnDisable()
-        {
-            _point.Dispose();
+            _point.Position = transform.TransformPoint(enginePosition);
         }
 
         public override void SetQueryPositions(ref NativeSlice<Data.WaterSample> samplePositions)
         {
-            samplePositions[0] = _point[0];
+            samplePositions[0] = _point;
         }
 
         public override void GetQueryResults(NativeSlice<Data.WaterSurface> surfaceResults)
         {
-            _results[0] = surfaceResults[0];
+            _result = surfaceResults[0];
         }
 
         /// <summary>
@@ -73,7 +65,7 @@ namespace BoatAttack
         /// <param name="modifier">Acceleration modifier, adds force in the 0-1 range</param>
         public void Accelerate(float modifier)
         {
-            if (transform.position.y - _point[0].Position.y > -0.1f) // if the engine is deeper than 0.1
+            if (IsSubmerged()) // if the engine is deeper than 0.1
             {
                 modifier = Mathf.Clamp(modifier, 0f, 1f); // clamp for reasonable values
                 var forward = RB.transform.forward;
@@ -90,10 +82,10 @@ namespace BoatAttack
         /// <param name="modifier">Steering modifier, positive for right, negative for negative</param>
         public void Turn(float modifier)
         {
-            if (transform.position.y - _point[0].Position.y > -0.1f) // if the engine is deeper than 0.1
+            if (IsSubmerged()) // if the engine is deeper than 0.1
             {
                 modifier = Mathf.Clamp(modifier, -1f, 1f); // clamp for reasonable values
-                RB.AddRelativeTorque(new Vector3(steeringTorque * 0.1f, steeringTorque, -steeringTorque * 0.25f) * modifier, ForceMode.Acceleration); // add torque based on input and torque amount
+                RB.AddRelativeTorque(new Vector3(0, steeringTorque, 0) * modifier, ForceMode.Acceleration); // add torque based on input and torque amount
             }
 
             _currentAngle = Mathf.SmoothDampAngle(_currentAngle, 
@@ -103,6 +95,12 @@ namespace BoatAttack
                 10f,
                 Time.fixedTime);
             transform.localEulerAngles = new Vector3(0f, _currentAngle, 0f);
+        }
+        
+        // engine submerged check
+        public bool IsSubmerged()
+        {
+            return true;// _point.Position.y < _result.Position.y;
         }
 
         // Draw some helper gizmos

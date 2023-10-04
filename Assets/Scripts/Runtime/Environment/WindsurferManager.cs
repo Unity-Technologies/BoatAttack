@@ -3,7 +3,7 @@ using UnityEngine;
 using WaterSystem;
 using Unity.Mathematics;
 using Unity.Collections;
-using WaterSystem.New;
+using WaterSystem.Physics;
 
 namespace BoatAttack
 {

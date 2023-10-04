@@ -12,6 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ec995e51a6e251468d2a3fd8a686257, type: 3}
   m_Name: UniversalRenderPipelineGlobalSettings
   m_EditorClassIdentifier: 
+  m_Settings:
+    m_SettingsList:
+      m_List: []
+    m_RuntimeSettings:
+      m_List: []
   m_AssetVersion: 5
   m_DefaultVolumeProfile: {fileID: 11400000, guid: 59262a590bfb3462189f045d13653e4b,
     type: 2}
@@ -25,6 +30,7 @@ MonoBehaviour:
   - Light Layer 6
   - Light Layer 7
   m_ValidRenderingLayers: 255
+  m_EnableRenderGraph: 1
   lightLayerName0: Light Layer default
   lightLayerName1: Light Layer 1
   lightLayerName2: Light Layer 2
@@ -33,6 +39,20 @@ MonoBehaviour:
   lightLayerName5: Light Layer 5
   lightLayerName6: Light Layer 6
   lightLayerName7: Light Layer 7
+  apvScenesData:
+    m_ObsoleteSerializedBakingSets: []
+    sceneToBakingSet:
+      m_Keys: []
+      m_Values: []
+    bakingSets: []
+    sceneBounds:
+      m_Keys: []
+      m_Values: []
+    hasProbeVolumes:
+      m_Keys: []
+      m_Values: 
+  m_GPUResidentDrawerResources: {fileID: 11400000, guid: 0393c27fa7a52694f9e231193061b433,
+    type: 2}
   m_ShaderStrippingSetting:
     m_Version: 0
     m_ExportShaderVariants: 1
@@ -50,3 +70,6 @@ MonoBehaviour:
   m_StripUnusedVariants: 1
   m_StripScreenCoordOverrideVariants: 1
   supportRuntimeDebugDisplay: 0
+  references:
+    version: 2
+    RefIds: []

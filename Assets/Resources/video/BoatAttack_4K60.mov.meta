@@ -2,7 +2,7 @@ fileFormatVersion: 2
 guid: e0369046511fe4ae5ae7fa13641f3388
 VideoClipImporter:
   externalObjects: {}
-  serializedVersion: 2
+  serializedVersion: 3
   frameRange: 0
   startFrame: -1
   endFrame: -1
@@ -13,7 +13,7 @@ VideoClipImporter:
   flipHorizontal: 0
   importAudio: 0
   targetSettings:
-    0:
+    :
       enableTranscoding: 1
       codec: 0
       resizeFormat: 0
@@ -22,16 +22,7 @@ VideoClipImporter:
       customHeight: 2160
       bitrateMode: 2
       spatialQuality: 2
-    4:
-      enableTranscoding: 1
-      codec: 3
-      resizeFormat: 2
-      aspectRatio: 0
-      customWidth: 3840
-      customHeight: 2160
-      bitrateMode: 2
-      spatialQuality: 2
-    7:
+    Android:
       enableTranscoding: 1
       codec: 0
       resizeFormat: 2
@@ -40,7 +31,7 @@ VideoClipImporter:
       customHeight: 2160
       bitrateMode: 2
       spatialQuality: 2
-    13:
+    WebGL:
       enableTranscoding: 1
       codec: 0
       resizeFormat: 2
@@ -48,6 +39,15 @@ VideoClipImporter:
       customWidth: 3840
       customHeight: 2160
       bitrateMode: 1
+      spatialQuality: 2
+    iPhone:
+      enableTranscoding: 1
+      codec: 3
+      resizeFormat: 2
+      aspectRatio: 0
+      customWidth: 3840
+      customHeight: 2160
+      bitrateMode: 2
       spatialQuality: 2
   userData: 
   assetBundleName: 

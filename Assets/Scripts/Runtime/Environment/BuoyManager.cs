@@ -9,7 +9,7 @@ using Unity.Mathematics;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using WaterSystem;
-using WaterSystem.New;
+using WaterSystem.Physics;
 
 [ExecuteAlways]
 public class BuoyManager : WaterQuery
