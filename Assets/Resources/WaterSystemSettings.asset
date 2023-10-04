@@ -32,8 +32,8 @@ MonoBehaviour:
           m_Bits: 4294967295
         m_Shadows: 0
         m_ObliqueProjection: 1
-        m_RendererMode: 0
-        m_RendererIndex: 0
+        m_RendererMode: 1
+        m_RendererIndex: 1
       ssrSettings:
         steps: 16
         stepSize: 0.1
@@ -60,4 +60,4 @@ MonoBehaviour:
     causticShader: {fileID: 4800000, guid: 90939d2e4b62841d29c136c866715501, type: 3}
     infiniteWaterShader: {fileID: 4800000, guid: 5f51d4f8f480441339ead24ab495af7d,
       type: 3}
-    waterDepthShader: {fileID: 0}
+    waterDepthShader: {fileID: 4800000, guid: c4574d3ff5344431f8a764cf43fd0bbb, type: 3}
