@@ -42,8 +42,8 @@ namespace BoatAttack
 
         private void FixedUpdate()
         {
-            VelocityMag = RB.velocity.sqrMagnitude; // get the sqr mag
-            engineSound.pitch = Mathf.Max(VelocityMag * 0.01f, 0.3f); // use some magice numbers to control the pitch of the engine sound
+            VelocityMag = RB.velocity.magnitude;
+            engineSound.pitch = Mathf.Max(VelocityMag * 0.1f, 0.3f); // use some magic numbers to control the pitch of the engine sound
 
             // Get the water level from the engines position and store it
             _point[0] = transform.TransformPoint(enginePosition);
@@ -63,6 +63,8 @@ namespace BoatAttack
         /// <param name="modifier">Acceleration modifier, adds force in the 0-1 range</param>
         public void Accelerate(float modifier)
         {
+            if (RaceManager.RaceState == RaceManager.RaceStatus.PreRace) return;
+            
             if (_yHeight > -0.1f) // if the engine is deeper than 0.1
             {
                 modifier = Mathf.Clamp(modifier, 0f, 1f); // clamp for reasonable values
@@ -80,6 +82,8 @@ namespace BoatAttack
         /// <param name="modifier">Steering modifier, positive for right, negative for negative</param>
         public void Turn(float modifier)
         {
+            if (RaceManager.RaceState == RaceManager.RaceStatus.PreRace) return;
+            
             if (_yHeight > -0.1f) // if the engine is deeper than 0.1
             {
                 modifier = Mathf.Clamp(modifier, -1f, 1f); // clamp for reasonable values
