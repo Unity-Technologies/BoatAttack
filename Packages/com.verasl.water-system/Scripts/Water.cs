@@ -370,7 +370,7 @@ namespace WaterSystem
             //Generate RT
             if (!_depthTex)
                 _depthTex = new RenderTexture(1024, 1024, 24, RenderTextureFormat.Depth, RenderTextureReadWrite.Linear);
-            if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.OpenGLES2 || SystemInfo.graphicsDeviceType == GraphicsDeviceType.OpenGLES3)
+            if (SystemInfo.graphicsDeviceType == GraphicsDeviceType.OpenGLES3)
             {
                 _depthTex.filterMode = FilterMode.Point;
             }
