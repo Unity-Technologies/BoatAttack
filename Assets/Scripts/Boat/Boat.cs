@@ -18,16 +18,15 @@ namespace BoatAttack
         public Renderer boatRenderer; // The renderer for the boat mesh
         public Renderer engineRenderer; // The renderer for the boat mesh
         public Engine engine;
-        private Matrix4x4 _spawnPosition;
+        private float _spawnHeight = 0f;
 
         // RaceStats
         [NonSerialized] public int Place = 0;
         [NonSerialized] public float LapPercentage;
         [NonSerialized] public int LapCount;
         [NonSerialized] public bool MatchComplete;
-        private int _wpCount = -1;
-        private WaypointGroup.Waypoint _lastCheckpoint;
-        private WaypointGroup.Waypoint _nextCheckpoint;
+        [NonSerialized] private SortedSet<int> _completedCheckpointsThisLap;
+        [NonSerialized] private SortedSet<int> _allCheckPoints;
 
         [NonSerialized] public readonly List<float> SplitTimes = new List<float>();
 
@@ -50,7 +49,7 @@ namespace BoatAttack
             {
                 Setup(1, true, RandomLivery());
             }
-            _spawnPosition = transform.localToWorldMatrix;
+            _spawnHeight = transform.position.y;
             TryGetComponent(out engine.RB);
         }
 
@@ -60,6 +59,8 @@ namespace BoatAttack
             cam.gameObject.layer = LayerMask.NameToLayer("Player" + player); // assign player layer
             SetupController(isHuman); // create or change controller
             Colorize(livery);
+            _completedCheckpointsThisLap = new SortedSet<int>();
+            _allCheckPoints = WaypointGroup.Instance.GetCheckpointIndices();
         }
 
         void SetupController(bool isHuman)
@@ -128,10 +129,6 @@ namespace BoatAttack
         private void UpdateLaps()
         {
             LapPercentage = WaypointGroup.Instance.GetPercentageAroundTrack(transform.position);
-            var lowPercentage = _lastCheckpoint?.normalizedDistance ?? 0f;
-            var highPercentage = _nextCheckpoint?.normalizedDistance ?? 1f;
-            LapPercentage = Mathf.Clamp(LapPercentage, lowPercentage, highPercentage <= 0.001f ? 1f : highPercentage);
-
             if (RaceUi)
             {
                 RaceUi.UpdateLapCounter(LapCount);
@@ -143,34 +140,36 @@ namespace BoatAttack
             if (!other.CompareTag("waypoint") || MatchComplete) return;
 
             var wp = WaypointGroup.Instance.GetTriggersWaypoint(other as BoxCollider);
-            var wpIndex = WaypointGroup.Instance.GetWaypointIndex(wp);
-            if (wp.isCheckpoint || wpIndex == 0)
-            {
-                _lastCheckpoint = wp;
-                _nextCheckpoint = WaypointGroup.Instance.GetNextCheckpoint(wpIndex);
-            }
-
-            EnteredWaypoint(wpIndex, wp.isCheckpoint);
+            EnteredWaypoint(wp);
         }
 
-        private void EnteredWaypoint(int index, bool checkpoint)
+        private void EnteredWaypoint(WaypointGroup.Waypoint wp)
         {
-            var count = WaypointGroup.Instance.WPs.Count;
-            var nextWp = (int) Mathf.Repeat(_wpCount + 1, count);
+            var wpIndex = WaypointGroup.Instance.GetWaypointIndex(wp);
+            bool atStartLine = wpIndex == 0;
+            bool lapZero = LapCount == 0;
 
-            if (nextWp != index) return;
-            _wpCount = nextWp;
+            if (wp.isCheckpoint)
+                _completedCheckpointsThisLap.Add(wpIndex);
 
-            if (index != 0) return;
-            LapCount++;
-            SplitTimes.Add(RaceManager.RaceTime);
+            // Did lap finish ?
+            if (atStartLine)
+            {
+                bool succesfulLap = _completedCheckpointsThisLap.SetEquals(_allCheckPoints) || (lapZero);
+                _completedCheckpointsThisLap.Clear();
+                if (!succesfulLap)
+                    return;
+                
+                LapCount++;
+                SplitTimes.Add(RaceManager.RaceTime);
 
-            if (LapCount <= RaceManager.GetLapCount()) return;
-            
-            Debug.Log($"Boat {name} finished {RaceUI.OrdinalNumber(Place)} with time:{RaceUI.FormatRaceTime(SplitTimes.Last())}");
-            RaceManager.BoatFinished(_playerIndex);
-            MatchComplete = true;
+                if (LapCount <= RaceManager.GetLapCount()) return;
 
+                Debug.Log(
+                    $"Boat {name} finished {RaceUI.OrdinalNumber(Place)} with time:{RaceUI.FormatRaceTime(SplitTimes.Last())}");
+                RaceManager.BoatFinished(_playerIndex);
+                MatchComplete = true;
+            }
         }
 
         [ContextMenu("Randomize")]
@@ -205,8 +204,8 @@ namespace BoatAttack
             if (WaypointGroup.Instance)
             {
                 var resetMatrix = WaypointGroup.Instance.GetClosestPointOnWaypoint(transform.position);
-                var resetPoint = resetMatrix.GetColumn(3);
-                resetPoint.y = _spawnPosition.GetColumn(3).y;
+                var resetPoint = resetMatrix.GetPosition();
+                resetPoint.y = _spawnHeight;
                 engine.RB.velocity = Vector3.zero;
                 engine.RB.angularVelocity = Vector3.zero;
                 engine.RB.position = resetPoint;

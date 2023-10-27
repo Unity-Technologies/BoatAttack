@@ -98,7 +98,6 @@ namespace BoatAttack
 			public Vector3 point;
 			[FormerlySerializedAs("WPwidth")] public float width;
 			public Quaternion rotation = Quaternion.identity;
-			public int index;
 			public bool isCheckpoint;
 			[NonSerialized] public BoxCollider Trigger;
 			public float normalizedDistance;
@@ -183,16 +182,20 @@ namespace BoatAttack
 
 			var wpA = sortedWPs[0];
 			var wpB = sortedWPs[1];
+			var wpAIndex = GetWaypointIndex(wpA);
+			var wpBIndex = GetWaypointIndex(wpB);
 
-
-			if (Mathf.Abs(wpA.index - wpB.index) > 1)
-				wpB = WPs[(int)Mathf.Repeat(wpA.index + 2, WPs.Count)];
+			if (Mathf.Abs(wpAIndex - wpBIndex) > 1)
+			{
+				wpB = WPs[(int)Mathf.Repeat(wpAIndex + 2, WPs.Count)];
+				wpBIndex = GetWaypointIndex(wpB);
+			}
 
 			var respawnPoint = FindNearestPointOnLine(wpA.point, wpB.point, point);
 			respawnPoint.y = 0f;
 
 			Vector3 lookVec;
-			if (wpA.index > wpB.index)
+			if (wpAIndex > wpBIndex)
 			{
 				lookVec = wpA.point - wpB.point;
 			}
@@ -201,7 +204,7 @@ namespace BoatAttack
 				lookVec = wpB.point - wpA.point;
 			}
 
-			if ((wpA.index == 0 && wpB.index == WPs.Count - 1) || (wpB.index == 0 && wpA.index == WPs.Count - 1)) // if at the loop point we need to reverse the lookVec
+			if ((wpAIndex == 0 && wpBIndex == WPs.Count - 1) || (wpBIndex == 0 && wpAIndex == WPs.Count - 1)) // if at the loop point we need to reverse the lookVec
 				lookVec = -lookVec;
 
 			Quaternion facing = Quaternion.LookRotation(Vector3.Normalize(lookVec * (Reverse ? -1f : 1f)), Vector3.up);
@@ -283,6 +286,19 @@ namespace BoatAttack
 				Gizmos.DrawWireCube(Vector3.zero, startBox);
 			}
 
+		}
+
+		public SortedSet<int> GetCheckpointIndices()
+		{
+			SortedSet<int> result = new SortedSet<int>();
+			foreach (var wp in WPs)
+			{
+				if (wp.isCheckpoint)
+				{
+					result.Add(GetWaypointIndex(wp));
+				}
+			}
+			return result;
 		}
 	}
 }
