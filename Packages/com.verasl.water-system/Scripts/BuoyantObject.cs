@@ -248,13 +248,6 @@ namespace WaterSystem
 
         private void SliceIntoVoxels()
         {
-            var t = transform;
-            var rot = t.rotation;
-            var pos = t.position;
-            var size = t.localScale;
-            t.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
-            t.localScale = Vector3.one;
-
             _voxels = null;
             var points = new List<Vector3>();
 
@@ -288,8 +281,6 @@ namespace WaterSystem
             }
 
             _voxels = points.ToArray();
-			t.SetPositionAndRotation(pos, rot);
-            t.localScale = size;
             var voxelVolume = Mathf.Pow(voxelResolution, 3f) * _voxels.Length;
             var rawVolume = rawBounds.size.x * rawBounds.size.y * rawBounds.size.z;
             volume = Mathf.Min(rawVolume, voxelVolume);
