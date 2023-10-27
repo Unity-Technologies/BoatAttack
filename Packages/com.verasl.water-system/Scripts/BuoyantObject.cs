@@ -301,7 +301,9 @@ namespace WaterSystem
             var bounds = new Bounds();
             foreach (var nextCollider in colliders)
             {
-                bounds.Encapsulate(nextCollider.bounds);
+                var b = nextCollider.bounds;
+                b.center = Vector3.zero;
+                bounds.Encapsulate(b);
             }
             return bounds;
 		}
