@@ -292,6 +292,7 @@ namespace BoatAttack
 
         public static void UnloadRace()
         {
+            ReplayCamera.Instance.DisableSpectatorMode();
             Debug.LogWarning("Unloading Race");
             if(Instance.raceUiPrefab != null && Instance.raceUiPrefab.IsValid())
             {
@@ -311,9 +312,10 @@ namespace BoatAttack
                 var boat = RaceData.boats[i]; // boat to setup
 
                 // Load prefab
-                var startingPosition = WaypointGroup.Instance.StartingPositions[i];
-                AsyncOperationHandle<GameObject> boatLoading = Addressables.InstantiateAsync(boat.boatPrefab, startingPosition.GetColumn(3),
-                    Quaternion.LookRotation(startingPosition.GetColumn(2)));
+                var startingTransform = WaypointGroup.Instance.StartingPositions[i];
+                var startingPosition = startingTransform.GetPosition();
+                var startingRotation = Quaternion.LookRotation(startingTransform.GetColumn(2));
+                AsyncOperationHandle<GameObject> boatLoading = Addressables.InstantiateAsync(boat.boatPrefab, startingPosition, startingRotation);
 
                 yield return boatLoading; // wait for boat asset to load
 
