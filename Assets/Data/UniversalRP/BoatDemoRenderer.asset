@@ -73,6 +73,8 @@ MonoBehaviour:
       type: 3}
     probeSamplingDebugTexture: {fileID: 2800000, guid: 24ec0e140fb444a44ab96ee80844e18e,
       type: 3}
+    probeVolumeBlendStatesCS: {fileID: 7200000, guid: b9a23f869c4fd45f19c5ada54dd82176,
+      type: 3}
   m_RendererFeatures:
   - {fileID: 5126615458422300752}
   - {fileID: -8193634041390225171}
@@ -156,7 +158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
   m_Name: 3D UI After Post
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     passTag: 3D UI After Post
     Event: 600
@@ -205,6 +207,9 @@ MonoBehaviour:
   _baseProfile: {fileID: 11400000, guid: ad80f6934bc444a93bb29c1f6db70cf3, type: 2}
   _qualityProfiles:
   - {fileID: 11400000, guid: 200e02ce26d6c422db35ba0777d71a09, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &6321362856087945974
 MonoBehaviour:
   m_ObjectHideFlags: 0
