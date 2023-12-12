@@ -206,7 +206,7 @@ namespace BoatAttack
                 var resetMatrix = WaypointGroup.Instance.GetClosestPointOnWaypoint(transform.position);
                 var resetPoint = resetMatrix.GetPosition();
                 resetPoint.y = _spawnHeight;
-                engine.RB.velocity = Vector3.zero;
+                engine.RB.linearVelocity = Vector3.zero;
                 engine.RB.angularVelocity = Vector3.zero;
                 engine.RB.position = resetPoint;
                 engine.RB.rotation = resetMatrix.rotation;

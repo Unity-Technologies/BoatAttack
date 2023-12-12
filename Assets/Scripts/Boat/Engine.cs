@@ -42,7 +42,7 @@ namespace BoatAttack
 
         private void FixedUpdate()
         {
-            VelocityMag = RB.velocity.magnitude;
+            VelocityMag = RB.linearVelocity.magnitude;
             engineSound.pitch = Mathf.Max(VelocityMag * 0.1f, 0.3f); // use some magic numbers to control the pitch of the engine sound
 
             // Get the water level from the engines position and store it
