@@ -23,8 +23,9 @@ MonoBehaviour:
     m_Url: https://packages.unity.com
     m_Scopes: []
     m_IsDefault: 1
-    m_Capabilities: 0
-  - m_Id: scoped:OpenUPM
+    m_Capabilities: 7
+    m_ConfigSource: 0
+  - m_Id: scoped:project:OpenUPM
     m_Name: OpenUPM
     m_Url: https://package.openupm.com
     m_Scopes:
@@ -32,12 +33,13 @@ MonoBehaviour:
     - net.peeweek
     m_IsDefault: 0
     m_Capabilities: 0
+    m_ConfigSource: 4
   m_UserSelectedRegistryName: OpenUPM
   m_UserAddingNewScopedRegistry: 0
   m_RegistryInfoDraft:
     m_ErrorMessage: 
     m_Original:
-      m_Id: scoped:OpenUPM
+      m_Id: scoped:project:OpenUPM
       m_Name: OpenUPM
       m_Url: https://package.openupm.com
       m_Scopes:
@@ -45,6 +47,7 @@ MonoBehaviour:
       - net.peeweek
       m_IsDefault: 0
       m_Capabilities: 0
+      m_ConfigSource: 4
     m_Modified: 0
     m_Name: OpenUPM
     m_Url: https://package.openupm.com
