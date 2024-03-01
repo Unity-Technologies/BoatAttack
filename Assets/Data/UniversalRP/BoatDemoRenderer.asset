@@ -79,31 +79,10 @@ MonoBehaviour:
   - {fileID: 5126615458422300752}
   - {fileID: -8193634041390225171}
   - {fileID: 1463289209067677555}
-  - {fileID: 6321362856087945974}
-  m_RendererFeatureMap: 50a049f398652547ed286347405d4a8e73272466c8a54e14f682788d06feb957
+  m_RendererFeatureMap: 50a049f398652547ed286347405d4a8e73272466c8a54e14
   m_UseNativeRenderPass: 0
-  postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
-  shaders:
-    blitPS: {fileID: 4800000, guid: c17132b1f77d20942aa75f8429c0f8bc, type: 3}
-    copyDepthPS: {fileID: 4800000, guid: d6dae50ee9e1bfa4db75f19f99355220, type: 3}
-    screenSpaceShadowPS: {fileID: 4800000, guid: 0f854b35a0cf61a429bd5dcfea30eddd,
-      type: 3}
-    samplingPS: {fileID: 4800000, guid: 04c410c9937594faa893a11dceb85f7e, type: 3}
-    stencilDeferredPS: {fileID: 4800000, guid: e9155b26e1bc55942a41e518703fe304, type: 3}
-    fallbackErrorPS: {fileID: 4800000, guid: e6e9a19c3678ded42a3bc431ebef7dbd, type: 3}
-    fallbackLoadingPS: {fileID: 4800000, guid: 7f888aff2ac86494babad1c2c5daeee2, type: 3}
-    materialErrorPS: {fileID: 4800000, guid: 5fd9a8feb75a4b5894c241777f519d4e, type: 3}
-    coreBlitPS: {fileID: 4800000, guid: 93446b5c5339d4f00b85c159e1159b7c, type: 3}
-    coreBlitColorAndDepthPS: {fileID: 4800000, guid: d104b2fc1ca6445babb8e90b0758136b,
-      type: 3}
-    blitHDROverlay: {fileID: 4800000, guid: a89bee29cffa951418fc1e2da94d1959, type: 3}
-    cameraMotionVector: {fileID: 4800000, guid: c56b7e0d4c7cb484e959caeeedae9bbf,
-      type: 3}
-    screenSpaceLensFlare: {fileID: 4800000, guid: 701880fecb344ea4c9cd0db3407ab287,
-      type: 3}
-    dataDrivenLensFlare: {fileID: 4800000, guid: 6cda457ac28612740adb23da5d39ea92,
-      type: 3}
+  postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   m_AssetVersion: 2
   m_OpaqueLayerMask:
     serializedVersion: 2
@@ -137,9 +116,6 @@ MonoBehaviour:
   m_Name: NewGlobalVolumeFeature
   m_EditorClassIdentifier: 
   m_Active: 1
-  _layerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
   _baseProfile: {fileID: 11400000, guid: ad80f6934bc444a93bb29c1f6db70cf3, type: 2}
   _qualityProfiles:
   - {fileID: 11400000, guid: 200e02ce26d6c422db35ba0777d71a09, type: 2}
@@ -201,32 +177,9 @@ MonoBehaviour:
   m_Name: Volumes
   m_EditorClassIdentifier: 
   m_Active: 1
-  _layerMask:
-    serializedVersion: 2
-    m_Bits: 0
   _baseProfile: {fileID: 11400000, guid: ad80f6934bc444a93bb29c1f6db70cf3, type: 2}
   _qualityProfiles:
   - {fileID: 11400000, guid: 200e02ce26d6c422db35ba0777d71a09, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
---- !u!114 &6321362856087945974
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51674788ad3eb4156ac878853826cafc, type: 3}
-  m_Name: BG Blur
-  m_EditorClassIdentifier: 
-  m_Active: 0
-  settings:
-    renderPassEvent: 600
-    blurMaterial: {fileID: 2100000, guid: 8f82498b79b394a4ba29faaf63c4c6d3, type: 2}
-    blurPasses: 7
-    downsample: 2
-    copyToFramebuffer: 1
-    targetName: _blurTexture
+  - {fileID: 11400000, guid: 4fe8789f8ee054ac49d9f7fe042e0918, type: 2}
+  - {fileID: 11400000, guid: dbf7710ff9a33440f8390ed8e04dbb77, type: 2}
+  - {fileID: 11400000, guid: 2cd4b5639375b434da40f6ea0f81a13a, type: 2}
