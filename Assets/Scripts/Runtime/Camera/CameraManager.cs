@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.UI;
-using Cinemachine;
+using Unity.Cinemachine;
 
 namespace BoatAttack
 {
@@ -14,17 +14,12 @@ namespace BoatAttack
         public GameObject UI;
         public CameraModes _camModes;
         public PlayableDirector _cutsceneDirector;
-        public List<CinemachineVirtualCamera> _cutsceneCameras = new List<CinemachineVirtualCamera>();
-        public CinemachineVirtualCamera _droneCamera;
-        public CinemachineVirtualCamera _raceCamera;
+        public List<CinemachineCamera> _cutsceneCameras = new List<CinemachineCamera>();
+        public CinemachineCamera _droneCamera;
+        public CinemachineCamera _raceCamera;
         public CinemachineClearShot _replayShots;
         public Text _staticCamText;
         private int _curStaticCam = 0;
-
-        private void Start()
-        {
-            
-        }
 
         private void Update()
         {
@@ -41,17 +36,17 @@ namespace BoatAttack
 
             if (Input.GetKeyDown(KeyCode.RightArrow))
                 PrevStaticCam();
-
-            if (Input.GetKeyDown(KeyCode.H) || (Input.touchCount > 0 && Input.touches[0].tapCount == 2))
+            
+            if (Input.GetKeyDown(KeyCode.H) || (Input.touchCount > 0 && Input.GetTouch(0).tapCount == 2))
                 UI.SetActive(!UI.activeSelf);
         }
         public void PlayCutscene()
         {
             _camModes = CameraModes.Cutscene;
             // Lower other camera priorities
-            _droneCamera.Priority = 5;
-            _raceCamera.Priority = 5;
-            _replayShots.Priority = 5;
+            _droneCamera.Priority.Value = 5;
+            _raceCamera.Priority.Value = 5;
+            _replayShots.Priority.Value = 5;
             // activate cutscene
             _cutsceneDirector.enabled = true;
             _cutsceneDirector.Stop();
@@ -69,10 +64,10 @@ namespace BoatAttack
             _camModes = CameraModes.Drone;
             // Lower other camera priorities
             DisableCutscene();
-            _raceCamera.Priority = 5;
-            _replayShots.Priority = 5;
+            _raceCamera.Priority.Value = 5;
+            _replayShots.Priority.Value = 5;
             // activate drone
-            _droneCamera.Priority = 15;
+            _droneCamera.Priority.Value = 15;
         }
 
         public void RaceCam()
@@ -80,10 +75,10 @@ namespace BoatAttack
             _camModes = CameraModes.Race;
             // Lower other camera priorities
             DisableCutscene();
-            _droneCamera.Priority = 5;
-            _replayShots.Priority = 5;
+            _droneCamera.Priority.Value = 5;
+            _replayShots.Priority.Value = 5;
             // activate drone
-            _raceCamera.Priority = 15;
+            _raceCamera.Priority.Value = 15;
         }
 
         public void ReplayCam()
@@ -91,10 +86,10 @@ namespace BoatAttack
             _camModes = CameraModes.Replay;
             // Lower other camera priorities
             DisableCutscene();
-            _droneCamera.Priority = 5;
-            _raceCamera.Priority = 5;
+            _droneCamera.Priority.Value = 5;
+            _raceCamera.Priority.Value = 5;
             // activate drone
-            _replayShots.Priority = 15;
+            _replayShots.Priority.Value = 15;
         }
 
         public void StaticCams()
@@ -102,9 +97,9 @@ namespace BoatAttack
             _camModes = CameraModes.Static;
             // Lower other camera priorities
             DisableCutscene();
-            _droneCamera.Priority = 5;
-            _raceCamera.Priority = 5;
-            _replayShots.Priority = 5;
+            _droneCamera.Priority.Value = 5;
+            _raceCamera.Priority.Value = 5;
+            _replayShots.Priority.Value = 5;
             SetStaticCam(_curStaticCam);
         }
 
@@ -130,11 +125,11 @@ namespace BoatAttack
             {
                 if (i != cameraIndex)
                 {
-                    _cutsceneCameras[i].Priority = 5;
+                    _cutsceneCameras[i].Priority.Value = 5;
                 }
                 else
                 {
-                    _cutsceneCameras[i].Priority = 11;
+                    _cutsceneCameras[i].Priority.Value = 11;
                     _staticCamText.text = _cutsceneCameras[i].gameObject.name.Substring(9);
                 }
             }

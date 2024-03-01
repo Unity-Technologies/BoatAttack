@@ -1,5 +1,4 @@
-﻿using System;
-using Cinemachine;
+﻿using Unity.Cinemachine;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -58,14 +57,16 @@ namespace BoatAttack
         public void EnableSpectatorMode()
         {
             _spectatorEnabled = true;
-            clearShot.Priority = 100;
+            clearShot.Priority.Enabled = true;
+            clearShot.Priority.Value = 100;
             SetRandomTarget();
         }
 
         public void DisableSpectatorMode()
         {
             _spectatorEnabled = false;
-            clearShot.Priority = -100;
+            clearShot.Priority.Enabled = false;
+            clearShot.Priority.Value = -100;
         }
 
         void SetRandomTarget() => SetTarget(Random.Range(0, RaceManager.RaceData.boatCount));

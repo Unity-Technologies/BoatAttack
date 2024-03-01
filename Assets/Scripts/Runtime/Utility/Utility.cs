@@ -1,11 +1,10 @@
 #if UNITY_EDITOR
-using BoatAttack;
 using UnityEditor;
 #endif
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Cinemachine;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering.Universal;
@@ -134,7 +133,7 @@ public static class Utility
         {
             var comp = cam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
             if(comp)
-                comp.m_AmplitudeGain = 0.0f;
+                comp.AmplitudeGain = 0.0f;
         }
         // make the cinemachine carts static
         var carts = GameObject.FindObjectsOfType<CinemachineDollyCart>();

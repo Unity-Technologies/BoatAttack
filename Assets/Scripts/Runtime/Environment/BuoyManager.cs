@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Cinemachine;
+using Unity.Cinemachine;
 using UnityEngine;
 using Unity.Collections;
 using Unity.Mathematics;
@@ -34,8 +33,6 @@ public class BuoyManager : WaterQuery
     public AssetReference arrow;
     private AsyncOperationHandle arrowHandle;
     private List<GameObject> arrows = new List<GameObject>();
-
-    private int _guid;
     
     // Validate, updates when changed in the editor
     private void OnValidate()
@@ -61,11 +58,10 @@ public class BuoyManager : WaterQuery
         }
     }
 
-    private void OnEnable()
+    private new void OnEnable()
     {
         if(buoyPoints == null || buoyPoints.Length == 0) return;
         SetupArrays();
-        _guid = gameObject.GetInstanceID();
         RefreshArrows();
     }
 
@@ -140,7 +136,7 @@ public class BuoyManager : WaterQuery
 
     static Vector3[] SplitBuoys(ref List<BuoyPoint> buoys)
     {
-        return (from point in buoys where !point.Arrow select point.position).Select(dummy => (Vector3)dummy).ToArray();
+        return (from point in buoys where !point.Arrow select point.position).ToArray();
     }
 
     static BuoyPoint[] GeneratePoints(float spacing, float angleThreshold, CinemachinePath path)
@@ -195,7 +191,7 @@ public class BuoyManager : WaterQuery
         arrows.Clear();
     }
     
-    private IEnumerator RefreshArrows()
+    private void RefreshArrows()
     {
         if (!arrowHandle.IsValid())
         {
@@ -205,7 +201,7 @@ public class BuoyManager : WaterQuery
         {
             while (!arrowHandle.IsDone)
             {
-                return null;
+                return;
             }
         }
         
@@ -239,8 +235,6 @@ public class BuoyManager : WaterQuery
             }
             arrows.RemoveRange(isolatedArrows.Count, currentCount - isolatedArrows.Count);
         }
-
-        return null;
     }
 
     [Serializable]

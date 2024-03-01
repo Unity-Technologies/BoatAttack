@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Cinemachine;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Console = BoatAttack.Console;
@@ -25,10 +23,11 @@ public class FreeCam : MonoBehaviour
     
     private Vector2 flyVect;
     private Vector2 lookVect;
-
+    private Transform _transform;
     private void OnEnable()
     {
         Instance = this;
+        _transform = transform;
         DontDestroyOnLoad(gameObject);
     }
 
@@ -56,36 +55,36 @@ public class FreeCam : MonoBehaviour
     {
         if (!active) return;
         // Fly
-        var pos = transform.position;
+        var pos = _transform.position;
         speedMulti = Mathf.SmoothDamp(speedMulti, 100f, ref vel, accelleration);
         var realSpeed = speed * speedMulti * Time.unscaledDeltaTime;
-        pos += transform.forward * flyVect.y * realSpeed;
-        pos += transform.right * flyVect.x * realSpeed;
+        pos += _transform.forward * flyVect.y * realSpeed;
+        pos += _transform.right * flyVect.x * realSpeed;
         
         // Move
-        var rot = transform.localEulerAngles;
+        var rot = _transform.localEulerAngles;
         var lookSpeed = Time.unscaledDeltaTime;
         rot.x += (invertY ? lookVect.y : -lookVect.y) * sensitivity.y * lookSpeed;
         rot.y += lookVect.x * sensitivity.x * lookSpeed;
 
-        transform.SetPositionAndRotation(pos, Quaternion.Euler(rot));
+        _transform.SetPositionAndRotation(pos, Quaternion.Euler(rot));
 
-        var fwd = transform.forward;
+        var fwd = _transform.forward;
         fwd.y = Mathf.Clamp(fwd.y, -0.8f, 0.8f );
-        transform.forward = fwd;
+        _transform.forward = fwd;
     }
     
     [Console.ConsoleCmd]
     public static void NoClipOn()
     {
-        Instance.cam.Priority = 9999;
+        Instance.cam.Priority.Value = 9999;
         Instance.active = true;
     }
     
     [Console.ConsoleCmd]
     public static void NoClipOff()
     {
-        Instance.cam.Priority = -9999;
+        Instance.cam.Priority.Value = -9999;
         Instance.active = false;
     }
 }
