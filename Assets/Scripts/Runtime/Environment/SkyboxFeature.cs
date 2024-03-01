@@ -1,70 +1,90 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.RendererUtils;
+using UnityEngine.Rendering.RenderGraphModule;
 using UnityEngine.Rendering.Universal;
 
 public class SkyboxFeature : ScriptableRendererFeature
 {
     class SkyboxPass : ScriptableRenderPass
     {
-        private const string ProfilerTag = "3D Skybox Pass";
-        FilteringSettings m_TransparentFilteringSettings;
-        RenderStateBlock m_RenderStateBlock;
-        List<ShaderTagId> m_ShaderTagIdList = new List<ShaderTagId>{new ShaderTagId("SRPDefaultUnlit"),
-            new ShaderTagId("UniversalForward"),
-            new ShaderTagId("LightweightForward")};
+        private const string ProfilerTag = "Skybox Pass 3D";
+        
+        ShaderTagId[] m_ShaderTagIdList = {
+            new("SRPDefaultUnlit"),
+            new("UniversalForward"),
+            new("LightweightForward")
+        };
 
         public float Scale;
         private static SkyboxSystem system;
         public LayerMask mask;
-        
-        public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
-        {
-            if (system == null)
-                system = FindObjectOfType<SkyboxSystem>();
-            m_RenderStateBlock.mask = RenderStateMask.Stencil | RenderStateMask.Depth;
-            StencilState stencilState = StencilState.defaultValue;
-            stencilState.SetCompareFunction(CompareFunction.Equal);
-            m_RenderStateBlock.stencilReference = 0;
-            m_RenderStateBlock.stencilState = stencilState;
 
-            m_TransparentFilteringSettings = new FilteringSettings(RenderQueueRange.transparent, mask);
+        class PassData
+        {
+            internal RenderStateBlock m_RenderStateBlock;
+            internal float scale;
+            internal UniversalCameraData cameraData;
+            internal RendererListHandle renderList;
+            internal TextureHandle dst;
+            internal TextureHandle dstDepth;
         }
         
-        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+        public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
         {
-            var cameraData = renderingData.cameraData;
-            var cameraPosition = cameraData.camera.transform.position;
-            DrawingSettings transparentDrawingSettings = CreateDrawingSettings(m_ShaderTagIdList, ref renderingData, SortingCriteria.CommonTransparent);
-
-            CommandBuffer cmd = CommandBufferPool.Get(ProfilerTag);
-            // setup skybox cam
+            if (system == null) system = FindAnyObjectByType<SkyboxSystem>();
+            
+            using (var builder = renderGraph.AddRasterRenderPass<PassData>(ProfilerTag, out var passData, profilingSampler))
             {
-                var viewMatrix = cameraData.GetViewMatrix();
-                var camPosition = viewMatrix.GetColumn(3);
-                var camScale = camPosition * Scale;
-                var cameraTranslation = new Vector4(camScale.x, camScale.y, camScale.z, camPosition.w);
-                viewMatrix.SetColumn(3, cameraTranslation);
+                UniversalCameraData cameraData = frameData.Get<UniversalCameraData>();
+                UniversalRenderingData renderingData = frameData.Get<UniversalRenderingData>();
+                UniversalResourceData resourceData = frameData.Get<UniversalResourceData>();
 
-                RenderingUtils.SetViewAndProjectionMatrices(cmd, viewMatrix, cameraData.GetGPUProjectionMatrix(), true);
-                cmd.SetGlobalVector("_WorldSpaceCameraPos", cameraPosition * Scale);
+                passData.cameraData = cameraData;
+                
+                passData.m_RenderStateBlock.mask = RenderStateMask.Stencil | RenderStateMask.Depth;
+                var stencilState = StencilState.defaultValue;
+                stencilState.SetCompareFunction(CompareFunction.Equal);
+                passData.m_RenderStateBlock.stencilReference = 0;
+                passData.m_RenderStateBlock.stencilState = stencilState;
+                passData.scale = Scale;
+                passData.dst = resourceData.activeColorTexture;
+                passData.dstDepth = resourceData.activeDepthTexture;
+                passData.renderList = renderGraph.CreateRendererList(
+                    new RendererListDesc(m_ShaderTagIdList, renderingData.cullResults, cameraData.camera)
+                    {
+                        sortingCriteria = SortingCriteria.CommonTransparent,
+                        renderQueueRange = RenderQueueRange.transparent,
+                        layerMask = mask
+                    });
+                builder.AllowPassCulling(false);
+                builder.SetRenderAttachment(resourceData.activeColorTexture,0);
+                builder.UseRendererList(passData.renderList);
+                builder.SetRenderFunc(static (PassData passData,RasterGraphContext context) => RenderFn(passData,context));
             }
+        }
 
-            context.ExecuteCommandBuffer(cmd);
-            cmd.Clear();
-
-            //draw transparent skybox
-            context.DrawRenderers(renderingData.cullResults, ref transparentDrawingSettings, ref m_TransparentFilteringSettings,
-                ref m_RenderStateBlock);
-
+        static void RenderFn(PassData data, RasterGraphContext context)
+        {
+            // var cmd = context.cmd;
+            // // setup skybox cam
+            // var worldSpaceCameraPos = data.cameraData.worldSpaceCameraPos;
+            // var viewMatrix = data.cameraData.GetViewMatrix();
+            // var projMatrix = data.cameraData.GetGPUProjectionMatrix();
+            //
+            // var camPosition = viewMatrix.GetColumn(3);
+            // var camScale = camPosition * data.scale;
+            // var cameraTranslation = new Vector4(camScale.x, camScale.y, camScale.z, camPosition.w);
+            // viewMatrix.SetColumn(3, cameraTranslation);
+            // cmd.SetViewProjectionMatrices(viewMatrix, projMatrix);
+            // cmd.SetGlobalVector("_WorldSpaceCameraPos", worldSpaceCameraPos * data.scale);
+            // //draw transparent skybox
+            //
+            context.cmd.DrawRendererList(data.renderList);
             //return normal cam
-            {
-                RenderingUtils.SetViewAndProjectionMatrices(cmd, cameraData.GetViewMatrix(), cameraData.GetGPUProjectionMatrix(), true);
-                cmd.SetGlobalVector("_WorldSpaceCameraPos", cameraPosition);
-            }
-            context.ExecuteCommandBuffer(cmd);
-            CommandBufferPool.Release(cmd);
-
+            // cmd.SetViewProjectionMatrices(data.cameraData.GetViewMatrix(), projMatrix);
+            // cmd.SetGlobalVector("_WorldSpaceCameraPos", worldSpaceCameraPos);
         }
     }
 
@@ -75,7 +95,12 @@ public class SkyboxFeature : ScriptableRendererFeature
 
     public override void Create()
     {
-        m_ScriptablePass = new SkyboxPass {renderPassEvent = injectionPoint, Scale = 1.0f / ratioScale, mask = mask};
+        m_ScriptablePass = new SkyboxPass
+        {
+            renderPassEvent = injectionPoint, 
+            Scale = 1.0f / ratioScale, 
+            mask = mask
+        };
     }
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)

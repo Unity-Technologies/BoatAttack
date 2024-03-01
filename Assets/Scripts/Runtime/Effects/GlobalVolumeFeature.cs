@@ -2,41 +2,73 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.Rendering.RenderGraphModule;
-
-//[DisallowMultipleRendererFeature] // once not internal, this needs to be here
+/// <summary>
+/// This feature adds a global volume to scene and chooses volume depending on the quality settings; 
+/// </summary>
+[DisallowMultipleRendererFeature]
 public class GlobalVolumeFeature : ScriptableRendererFeature
 {
-    class GlobalVolumePass : ScriptableRenderPass
+    [SerializeField] public VolumeProfile _baseProfile;
+    [SerializeField] public List<VolumeProfile> _qualityProfiles = new List<VolumeProfile>();
+    
+    private static string k_DefaultVolume = "[DefaultVolume]";
+    private static GameObject volumeHolder;
+    private Volume vol;
+    private Volume qualityVol;
+
+    public override void Create()
     {
-        public VolumeProfile _baseProfile;
-        public List<VolumeProfile> _qualityProfiles;
-        public LayerMask _layerMask;
+        QualitySettings.activeQualityLevelChanged += OnQualitySettingsChange;
+        DoVolumeUpdate();
+    }
 
-        private Volume vol;
-        private Volume qualityVol;
-        public static GameObject volumeHolder;
-
-        // This method is called before executing the render pass.
-        // It can be used to configure render targets and their clear state. Also to create temporary render target textures.
-        // When empty this render pass will render to the active camera render target.
-        // You should never call CommandBuffer.SetRenderTarget. Instead call <c>ConfigureTarget</c> and <c>ConfigureClear</c>.
-        // The render pipeline will ensure target setup and clearing happens in a performant manner.
-        public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
+    protected override void Dispose(bool disposing)
+    {
+        Debug.Log("[GlobalVolumePass] Disposing");
+        if (volumeHolder != null)
         {
-            DoVolume();
+            if (Application.isPlaying)
+            {
+                Destroy(volumeHolder);
+            }
+            else
+            {
+                DestroyImmediate(volumeHolder);
+            }
         }
+        QualitySettings.activeQualityLevelChanged -= OnQualitySettingsChange;
+        base.Dispose(disposing);
+    }
 
-        private void DoVolume()
+    private void OnQualitySettingsChange(int prev, int curr)
+    {
+        Debug.Log("quality changed from " + prev + " to " + curr);
+        DoVolumeUpdate();
+    }
+        private void DoVolumeUpdate()
         {
             if(volumeHolder == null)
             {
-                volumeHolder = new GameObject("[DefaultVolume]");
+                //TODO: rm Find once better lifecycle management is in place;
+                //cleanup 
+                var old = GameObject.Find(k_DefaultVolume);
+                if (old)
+                {
+                    if (Application.isPlaying)
+                    {
+                        Destroy(old);
+                    }
+                    else
+                    {
+                        DestroyImmediate(old);
+                    }
+                }
+                //init
+                volumeHolder = new GameObject(k_DefaultVolume);
                 vol = volumeHolder.AddComponent<Volume>();
                 vol.isGlobal = true;
                 qualityVol = volumeHolder.AddComponent<Volume>();
                 qualityVol.isGlobal = true;
-                volumeHolder.hideFlags = HideFlags.HideAndDontSave;
             }
 
             if (vol && _baseProfile)
@@ -47,68 +79,13 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
             if(qualityVol && _qualityProfiles != null)
             {
                 var index = QualitySettings.GetQualityLevel();
-
                 if(_qualityProfiles.Count > index && _qualityProfiles[index] != null)
                     qualityVol.sharedProfile = _qualityProfiles?[index];
             }
         }
 
-        public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
-        {
-            DoVolume();
-        }
-
-        // Here you can implement the rendering logic.
-        // Use <c>ScriptableRenderContext</c> to issue drawing commands or execute command buffers
-        // https://docs.unity3d.com/ScriptReference/Rendering.ScriptableRenderContext.html
-        // You don't have to call ScriptableRenderContext.submit, the render pipeline will call it at specific points in the pipeline.
-        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
-        {
-        }
-
-        // Cleanup any allocated resources that were created during the execution of this render pass.
-        public override void OnCameraCleanup(CommandBuffer cmd)
-        {
-        }
-    }
-
-    GlobalVolumePass m_ScriptablePass;
-
-    public LayerMask _layerMask;
-    public VolumeProfile _baseProfile;
-    public List<VolumeProfile> _qualityProfiles = new List<VolumeProfile>();
-
-    /// <inheritdoc/>
-    public override void Create()
-    {
-        m_ScriptablePass = new GlobalVolumePass
-        {
-            // Configures where the render pass should be injected.
-            renderPassEvent = RenderPassEvent.AfterRenderingTransparents,
-            _baseProfile = this._baseProfile,
-            _layerMask = this._layerMask,
-            _qualityProfiles = this._qualityProfiles,
-        };
-    }
-
-    // Here you can inject one or multiple render passes in the renderer.
-    // This method is called when setting up the renderer once per-camera.
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
-        if(GlobalVolumePass.volumeHolder == null)
-        {
-            var old = GameObject.Find("[DefaultVolume]");
-            if (Application.isPlaying)
-            {
-                Destroy(old);
-            }
-            else
-            {
-                DestroyImmediate(old);
-            }
-        }
-        renderer.EnqueuePass(m_ScriptablePass);
+        //It's not an actual Renderer Pass driven feature; 
     }
 }
-
-
