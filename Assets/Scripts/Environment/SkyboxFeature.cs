@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using System;
 
 public class SkyboxFeature : ScriptableRendererFeature
 {
@@ -18,7 +19,7 @@ public class SkyboxFeature : ScriptableRendererFeature
         private static SkyboxSystem system;
         public LayerMask mask;
         
-        public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
+        [ObsoleteAttribute] public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
             if (system == null)
                 system = FindObjectOfType<SkyboxSystem>();
@@ -31,7 +32,7 @@ public class SkyboxFeature : ScriptableRendererFeature
             m_TransparentFilteringSettings = new FilteringSettings(RenderQueueRange.transparent, mask);
         }
         
-        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+        [ObsoleteAttribute] public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
             var cameraData = renderingData.cameraData;
             var cameraPosition = cameraData.camera.transform.position;

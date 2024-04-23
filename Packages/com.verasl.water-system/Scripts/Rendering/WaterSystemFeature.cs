@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using System;
 
 namespace WaterSystem
 {
@@ -26,7 +27,7 @@ namespace WaterSystem
             }
 
             // Calling Configure since we are wanting to render into a RenderTexture and control cleat
-            public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
+            [ObsoleteAttribute] public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
             {
                 // no need for a depth buffer
                 cameraTextureDescriptor.depthBufferBits = 0;
@@ -42,7 +43,7 @@ namespace WaterSystem
                 ConfigureClear(ClearFlag.Color, m_ClearColor);
             }
 
-            public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+            [ObsoleteAttribute] public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
             {
                 CommandBuffer cmd = CommandBufferPool.Get();
                 using (new ProfilingScope(cmd, m_WaterFX_Profile)) // makes sure we have profiling ability
@@ -79,7 +80,7 @@ namespace WaterSystem
             public Material WaterCausticMaterial;
             private static Mesh m_mesh;
 
-            public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+            [ObsoleteAttribute] public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
             {
                 var cam = renderingData.cameraData.camera;
                 // Stop the pass rendering in the preview or material missing

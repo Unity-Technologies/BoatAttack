@@ -19,7 +19,7 @@ namespace WaterSystem
             get
             {
                 if (_instance == null)
-                    _instance = (Water)FindObjectOfType(typeof(Water));
+                    _instance = Object.FindFirstObjectByType<Water>();
                 return _instance;
             }
         }

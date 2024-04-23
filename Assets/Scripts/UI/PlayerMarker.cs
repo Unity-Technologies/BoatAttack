@@ -1,6 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
+using System.Collections.Generic;
 
 namespace BoatAttack.UI
 {
@@ -16,12 +17,12 @@ namespace BoatAttack.UI
 
         private void OnEnable()
         {
-            RenderPipelineManager.beginFrameRendering += UpdatePosition;
+            RenderPipelineManager.beginContextRendering += UpdatePosition;
         }
 
         private void OnDisable()
         {
-            RenderPipelineManager.beginFrameRendering -= UpdatePosition;
+            RenderPipelineManager.beginContextRendering -= UpdatePosition;
         }
 
         public void Setup(BoatData boat)
@@ -44,7 +45,7 @@ namespace BoatAttack.UI
             placeText.text = _curPlace.ToString();
         }
 
-        private void UpdatePosition(ScriptableRenderContext context, Camera[] cameras)
+        private void UpdatePosition(ScriptableRenderContext context, List<Camera> cameras)
         {
             if (_boatData == null || Camera.main == null) return; // if no boat or camera, the player marker cannot work
             

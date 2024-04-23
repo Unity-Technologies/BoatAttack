@@ -82,7 +82,7 @@ public static class Utility
     public static void StaticObjects()
     {
         // remove the noise on Cinemachine cameras
-        var cameras = GameObject.FindObjectsOfType<CinemachineVirtualCamera>();
+        var cameras = GameObject.FindObjectsByType<CinemachineVirtualCamera>(FindObjectsSortMode.None);
         foreach (var cam in cameras)
         {
             var comp = cam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
@@ -90,7 +90,7 @@ public static class Utility
                 comp.m_AmplitudeGain = 0.0f;
         }
         // make the cinemachine carts static
-        var carts = GameObject.FindObjectsOfType<CinemachineDollyCart>();
+        var carts = GameObject.FindObjectsByType<CinemachineDollyCart>(FindObjectsSortMode.None);
         foreach (var cart in carts)
         {
             cart.m_Speed = 0.0f;

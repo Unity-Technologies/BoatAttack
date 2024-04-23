@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace BoatAttack.UI
 {
@@ -19,12 +20,12 @@ namespace BoatAttack.UI
 
         private void OnEnable()
         {
-            RenderPipelineManager.beginFrameRendering += UpdatePosition;
+            RenderPipelineManager.beginContextRendering += UpdatePosition;
         }
 
         private void OnDisable()
         {
-            RenderPipelineManager.beginFrameRendering -= UpdatePosition;
+            RenderPipelineManager.beginContextRendering -= UpdatePosition;
         }
 
         public void Setup(BoatData boat, float scale = 0.0028f) // TODO magic number for mini map size
@@ -45,7 +46,7 @@ namespace BoatAttack.UI
             _playerCount = RaceManager.RaceData.boatCount;
         }
 
-        private void UpdatePosition(ScriptableRenderContext context, Camera[] cameras)
+        private void UpdatePosition(ScriptableRenderContext context, List<Camera> cameras)
         {
             if (_boatData == null || Camera.main == null) return; // if no boat or camera, the player marker cannot work
 
