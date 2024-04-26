@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.RenderGraphModule;
 using UnityEngine.Rendering.Universal;
 using System;
 
@@ -80,36 +81,57 @@ namespace WaterSystem
             public Material WaterCausticMaterial;
             private static Mesh m_mesh;
 
-            [ObsoleteAttribute] public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+            private class PassData
             {
-                var cam = renderingData.cameraData.camera;
-                // Stop the pass rendering in the preview or material missing
-                if (cam.cameraType == CameraType.Preview || !WaterCausticMaterial)
-                    return;
+                public Vector3 cameraPosition;
+            }
 
-                CommandBuffer cmd = CommandBufferPool.Get();
-                using (new ProfilingScope(cmd, m_WaterCaustics_Profile))
+            public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer contextContainer)
+            {
+                UniversalCameraData cameraData = contextContainer.Get<UniversalCameraData>();
+                UniversalResourceData resourceData = contextContainer.Get<UniversalResourceData>();
+
+                using (var builder = renderGraph.AddRasterRenderPass<PassData>(nameof(WaterCausticsPass), out var passData, profilingSampler))
                 {
+                    passData = new PassData
+                    {
+                        cameraPosition = cameraData.worldSpaceCameraPos
+                    };
+
+                    // Stop the pass rendering in the preview and if material is missing
+                    //if (!ExecutionCheck(camera, passData.data.WaterCausticMaterial)) return;
+
+                    builder.AllowPassCulling(false);
+
+                    // set buffers
+                    //builder.SetRenderAttachment(resourceData.activeColorTexture, 0); // This causes errors, why ?
+                    builder.SetRenderAttachmentDepth(resourceData.activeDepthTexture, AccessFlags.Read);
+
+                    // set depthtexture read for the shader
+                    builder.UseTexture(resourceData.cameraDepthTexture);
+
                     var sunMatrix = RenderSettings.sun != null
                         ? RenderSettings.sun.transform.localToWorldMatrix
                         : Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(-45f, 45f, 0f), Vector3.one);
-                    WaterCausticMaterial.SetMatrix("_MainLightDir", sunMatrix);
-                
-                
-                    // Create mesh if needed
-                    if (!m_mesh)
-                        m_mesh = GenerateCausticsMesh(1000f);
+                        WaterCausticMaterial.SetMatrix("_MainLightDir", sunMatrix);
 
-                    // Create the matrix to position the caustics mesh.
-                    var position = cam.transform.position;
-                    position.y = 0; // TODO should read a global 'water height' variable.
-                    var matrix = Matrix4x4.TRS(position, Quaternion.identity, Vector3.one);
-                    // Setup the CommandBuffer and draw the mesh with the caustic material and matrix
-                    cmd.DrawMesh(m_mesh, matrix, WaterCausticMaterial, 0, 0);
+                    builder.SetRenderFunc((PassData data, RasterGraphContext context) =>
+                    {
+                        // Create mesh if needed
+                        if (!m_mesh)
+                            m_mesh = GenerateCausticsMesh(1000f);
+
+                        if (m_mesh != null || WaterCausticMaterial != null)
+                        {
+                            // Create the matrix to position the caustics mesh.
+                            var position = data.cameraPosition;
+                            position.y = 0; // TODO should read a global 'water height' variable.
+                            var matrix = Matrix4x4.TRS(position, Quaternion.identity, Vector3.one);
+
+                            context.cmd.DrawMesh(m_mesh, matrix, WaterCausticMaterial, 0, 0);
+                        }
+                    });
                 }
-
-                context.ExecuteCommandBuffer(cmd);
-                CommandBufferPool.Release(cmd);
             }
         }
 
