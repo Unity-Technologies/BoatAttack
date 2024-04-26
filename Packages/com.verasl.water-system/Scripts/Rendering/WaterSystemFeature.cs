@@ -113,7 +113,7 @@ namespace WaterSystem
                     var sunMatrix = RenderSettings.sun != null
                         ? RenderSettings.sun.transform.localToWorldMatrix
                         : Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(-45f, 45f, 0f), Vector3.one);
-                        WaterCausticMaterial.SetMatrix("_MainLightDir", sunMatrix);
+                    WaterCausticMaterial.SetMatrix("_MainLightDir", sunMatrix);
 
                     builder.SetRenderFunc((PassData data, RasterGraphContext context) =>
                     {
