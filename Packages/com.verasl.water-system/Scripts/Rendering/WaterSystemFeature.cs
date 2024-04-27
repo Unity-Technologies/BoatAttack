@@ -113,6 +113,39 @@ namespace WaterSystem
             public Material WaterCausticMaterial;
             private static Mesh m_mesh;
 
+            [ObsoleteAttribute]
+            public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+            {
+                var cam = renderingData.cameraData.camera;
+                // Stop the pass rendering in the preview or material missing
+                if (cam.cameraType == CameraType.Preview || !WaterCausticMaterial)
+                    return;
+
+                CommandBuffer cmd = CommandBufferPool.Get();
+                using (new ProfilingScope(cmd, m_WaterCaustics_Profile))
+                {
+                    var sunMatrix = RenderSettings.sun != null
+                         ? RenderSettings.sun.transform.localToWorldMatrix
+                         : Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(-45f, 45f, 0f), Vector3.one);
+                    WaterCausticMaterial.SetMatrix("_MainLightDir", sunMatrix);
+
+                    // Create mesh if needed
+                    if (!m_mesh)
+                        m_mesh = GenerateCausticsMesh(1000f);
+
+                    // Create the matrix to position the caustics mesh.
+                    var position = cam.transform.position;
+                    position.y = 0; // TODO should read a global 'water height' variable.
+                    var matrix = Matrix4x4.TRS(position, Quaternion.identity, Vector3.one);
+                    // Setup the CommandBuffer and draw the mesh with the caustic material and matrix
+                    cmd.DrawMesh(m_mesh, matrix, WaterCausticMaterial, 0, 0);
+
+                }
+
+                context.ExecuteCommandBuffer(cmd);
+                CommandBufferPool.Release(cmd);
+            }
+
             private class PassData
             {
                 public Vector3 cameraPosition;
