@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.RenderGraphModule;
+using UnityEngine.Rendering.RendererUtils;
 using UnityEngine.Rendering.Universal;
 using System;
 
@@ -19,6 +20,12 @@ namespace WaterSystem
             private readonly Color m_ClearColor = new Color(0.0f, 0.5f, 0.5f, 0.5f); //r = foam mask, g = normal.x, b = normal.z, a = displacement
             private FilteringSettings m_FilteringSettings;
             private RTHandle m_WaterFX;
+
+            private class PassData
+            {
+                public RendererListHandle renderListHdl;
+                public Color clearColor;
+            }
 
             public WaterFxPass()
             {
@@ -42,6 +49,31 @@ namespace WaterSystem
                 ConfigureTarget(m_WaterFX);
                 // clear the screen with a specific color for the packed data
                 ConfigureClear(ClearFlag.Color, m_ClearColor);
+            }
+
+            public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer contextContainer)
+            {
+                UniversalCameraData cameraData = contextContainer.Get<UniversalCameraData>();
+                UniversalResourceData resourceData = contextContainer.Get<UniversalResourceData>();
+
+                using (var builder = renderGraph.AddRasterRenderPass<PassData>(nameof(WaterCausticsPass), out var passData, profilingSampler))
+                {
+                    passData.clearColor = m_ClearColor;
+
+                    UniversalRenderingData renderingData = contextContainer.Get<UniversalRenderingData>();
+                    var renderListDesc = new RendererListDesc(m_WaterFXShaderTag, renderingData.cullResults, cameraData.camera)
+                    {
+                        sortingCriteria = SortingCriteria.CommonTransparent,
+                        renderQueueRange = RenderQueueRange.transparent,
+                    };
+                    passData.renderListHdl = renderGraph.CreateRendererList(renderListDesc);
+                    builder.UseRendererList(passData.renderListHdl);
+                    
+                    builder.SetRenderFunc((PassData data, RasterGraphContext context) =>
+                    {
+                        context.cmd.DrawRendererList(data.renderListHdl);
+                    });
+                }
             }
 
             [ObsoleteAttribute] public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
