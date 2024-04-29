@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.RenderGraphModule;
 using UnityEngine.Rendering.Universal;
 
 //[DisallowMultipleRendererFeature] // once not internal, this needs to be here
@@ -17,12 +18,17 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
         private Volume qualityVol;
         public static GameObject volumeHolder;
 
-        // This method is called before executing the render pass.
-        // It can be used to configure render targets and their clear state. Also to create temporary render target textures.
-        // When empty this render pass will render to the active camera render target.
-        // You should never call CommandBuffer.SetRenderTarget. Instead call <c>ConfigureTarget</c> and <c>ConfigureClear</c>.
-        // The render pipeline will ensure target setup and clearing happens in a performant manner.
         [ObsoleteAttribute] public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
+        {
+            Setup();
+        }
+        
+        public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
+        {
+            Setup();
+        }
+
+        public void Setup()
         {
             if(volumeHolder == null)
             {
@@ -48,16 +54,7 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
             }
         }
 
-        // Here you can implement the rendering logic.
-        // Use <c>ScriptableRenderContext</c> to issue drawing commands or execute command buffers
-        // https://docs.unity3d.com/ScriptReference/Rendering.ScriptableRenderContext.html
-        // You don't have to call ScriptableRenderContext.submit, the render pipeline will call it at specific points in the pipeline.
         [ObsoleteAttribute] public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
-        {
-        }
-
-        // Cleanup any allocated resources that were created during the execution of this render pass.
-        public override void OnCameraCleanup(CommandBuffer cmd)
         {
         }
     }
