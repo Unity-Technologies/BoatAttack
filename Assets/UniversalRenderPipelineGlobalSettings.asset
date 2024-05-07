@@ -53,6 +53,7 @@ MonoBehaviour:
       - rid: 8329534643960545281
       - rid: 8329534643960545282
       - rid: 8329534643960545283
+      - rid: 7932631822410973184
     m_RuntimeSettings:
       m_List: []
   m_AssetVersion: 8
@@ -78,6 +79,12 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
+    - rid: 7932631822410973184
+      type: {class: RenderGraphUtilsResources, ns: UnityEngine.Rendering.RenderGraphModule.Util,
+        asm: Unity.RenderPipelines.Core.Runtime}
+      data:
+        m_Version: 0
+        m_CoreCopyPS: {fileID: 4800000, guid: 12dc59547ea167a4ab435097dd0f9add, type: 3}
     - rid: 8329534643960545281
       type: {class: STP/RuntimeResources, ns: UnityEngine.Rendering, asm: Unity.RenderPipelines.Core.Runtime}
       data:
@@ -101,6 +108,10 @@ MonoBehaviour:
         skyOcclusionCS: {fileID: 7200000, guid: 798f52ec82fa04048a12826bbbbcf7b4,
           type: 3}
         skyOcclusionRT: {fileID: 4807578003741378534, guid: dfaf42b38dd001f49a72d8102b709f29,
+          type: 3}
+        renderingLayerCS: {fileID: 7200000, guid: a63c9cf933e3d8f41ae680a372784ebf,
+          type: 3}
+        renderingLayerRT: {fileID: 4807578003741378534, guid: c2be09c936362eb49a58f08aeb30627a,
           type: 3}
     - rid: 8329534643960545283
       type: {class: RenderGraphGlobalSettings, ns: UnityEngine.Rendering, asm: Unity.RenderPipelines.Core.Runtime}
