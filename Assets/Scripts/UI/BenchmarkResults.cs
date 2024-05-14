@@ -109,7 +109,7 @@ public class BenchmarkResults : MonoBehaviour
         var gui = entry.AddComponent<TextMeshProUGUI>();
         gui.fontSize = 14.0f;
         gui.text = text;
-        gui.enableWordWrapping = false;
+        gui.textWrappingMode = TextWrappingModes.NoWrap;
         gui.overflowMode = TextOverflowModes.Ellipsis;
         gui.lineSpacing = 6.0f;
         gui.raycastTarget = false;
