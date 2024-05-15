@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections;
-using GameplayIngredients;
+using LegacyUtility;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering.Universal;

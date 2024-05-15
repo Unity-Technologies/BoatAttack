@@ -293,7 +293,7 @@ namespace BoatAttack
         public static void UnloadRace()
         {
             ReplayCamera.Instance.DisableSpectatorMode();
-            Debug.LogWarning("Unloading Race");
+            Debug.Log("Unloading Race");
             if(Instance.raceUiPrefab != null && Instance.raceUiPrefab.IsValid())
             {
                 Instance.raceUiPrefab.ReleaseAsset();
