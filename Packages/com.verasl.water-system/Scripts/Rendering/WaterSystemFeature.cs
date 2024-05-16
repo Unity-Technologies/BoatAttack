@@ -222,10 +222,10 @@ namespace WaterSystem
                 UniversalCameraData cameraData = contextContainer.Get<UniversalCameraData>();
                 UniversalResourceData resourceData = contextContainer.Get<UniversalResourceData>();
 
+                if (!ExecutionCheck(cameraData, resourceData)) return;
+
                 using (var builder = renderGraph.AddRasterRenderPass<CausticsPassData>(k_RenderWaterCausticsTag, out var passData, m_WaterCaustics_Profile))
                 {
-                    if (!ExecutionCheck(cameraData, resourceData)) return;
-
                     passData.cameraPosition = cameraData.worldSpaceCameraPos;
 
                     // set buffers
