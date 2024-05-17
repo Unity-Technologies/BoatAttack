@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.RenderGraphModule;
-using UnityEngine.Rendering.RendererUtils;
 using UnityEngine.Rendering.Universal;
 using System;
 
@@ -212,7 +211,6 @@ namespace WaterSystem
 
             bool ExecutionCheck(UniversalCameraData camData, UniversalResourceData resourceData)
             {
-                if (camData.camera.cameraType is not (CameraType.SceneView or CameraType.Game)) return false;
                 if (resourceData.activeColorTexture.IsValid() == false) return false;
                 return WaterCausticMaterial != null;
             }
@@ -320,10 +318,18 @@ namespace WaterSystem
             m_CausticsPass.WaterCausticMaterial = _causticMaterial;
         }
 
+        bool ShouldEnqueueForCamera(Camera camera)
+        {
+            return camera.cameraType == CameraType.SceneView || camera.CompareTag("MainCamera");
+        }
+
         public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
         {
-            renderer.EnqueuePass(m_WaterFxPass);
-            renderer.EnqueuePass(m_CausticsPass);
+            if(ShouldEnqueueForCamera(renderingData.cameraData.camera))
+            {
+                renderer.EnqueuePass(m_WaterFxPass);
+                renderer.EnqueuePass(m_CausticsPass);
+            }
         }
 
         /// <summary>
