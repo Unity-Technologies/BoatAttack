@@ -17,11 +17,11 @@ namespace WaterSystem
         public override void OnInspectorGUI()
         {
             _generalSettingsBool = EditorGUILayout.BeginFoldoutHeaderGroup(_generalSettingsBool, "General Settings");
+            EditorGUILayout.EndFoldoutHeaderGroup();
             if (_generalSettingsBool)
             {
                 base.OnInspectorGUI();
             }
-            EditorGUILayout.EndFoldoutHeaderGroup();
 
             _heightsDebugBool = EditorGUILayout.BeginFoldoutHeaderGroup(_heightsDebugBool, "Height Debug Values");
             if (_heightsDebugBool)
