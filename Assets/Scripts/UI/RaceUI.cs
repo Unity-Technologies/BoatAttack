@@ -169,6 +169,11 @@ namespace BoatAttack.UI
         {
             RaceManager.UnloadRace();
         }
+        
+        public void RestartMatch()
+        {
+            RaceManager.RestartRace();
+        }
 
         public void LateUpdate()
         {

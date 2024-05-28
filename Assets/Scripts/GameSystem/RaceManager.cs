@@ -43,6 +43,12 @@ namespace BoatAttack
             PostRace
         }
 
+        private enum ResetMode
+        {
+            ResetBoatData,
+            KeepBoatData,
+        }
+
         [Serializable]
         public class Race
         {
@@ -109,11 +115,12 @@ namespace BoatAttack
             Instance = this;
         }
 
-        private void Reset()
+        private void Reset(ResetMode mode = ResetMode.ResetBoatData)
         {
             RaceStarted = false;
             RaceState = RaceStatus.PreRace;
-            RaceData.boats.Clear();
+            if (mode == ResetMode.ResetBoatData)
+                RaceData.boats.Clear();
             RaceTime = 0f;
             _boatTimes.Clear();
             raceStarted = null;
@@ -290,7 +297,7 @@ namespace BoatAttack
             SceneManager.sceneLoaded += Setup;
         }
 
-        public static void UnloadRace()
+        private static void UnloadRaceInternal(ResetMode mode = ResetMode.ResetBoatData)
         {
             ReplayCamera.Instance.DisableSpectatorMode();
             Debug.Log("Unloading Race");
@@ -298,9 +305,19 @@ namespace BoatAttack
             {
                 Instance.raceUiPrefab.ReleaseAsset();
             }
+            Instance.Reset(mode);
+        }
 
-            Instance.Reset();
-            AppSettings.LoadScene(0, LoadSceneMode.Single);
+        public static void UnloadRace()
+        {
+            UnloadRaceInternal();
+            AppSettings.LoadScene(0);
+        }
+        
+        public static void RestartRace()
+        {
+            UnloadRaceInternal(ResetMode.KeepBoatData); // Do not clear when we restart race as data is populated by Main Menu
+            LoadGame();
         }
         
         public static void SetHull(int player, int hull) => RaceData.boats[player].boatPrefab = Instance.boats[hull];
