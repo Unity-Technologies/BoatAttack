@@ -228,6 +228,7 @@ namespace WaterSystem
 
                     // set buffers
                     builder.SetRenderAttachment(resourceData.activeColorTexture, 0);
+                    builder.UseTexture(resourceData.cameraDepthTexture);
 
                     builder.SetRenderFunc((CausticsPassData data, RasterGraphContext context) =>
                     {
@@ -327,6 +328,8 @@ namespace WaterSystem
         {
             if(ShouldEnqueueForCamera(renderingData.cameraData.camera))
             {
+                m_CausticsPass.ConfigureInput(ScriptableRenderPassInput.Depth);
+
                 renderer.EnqueuePass(m_WaterFxPass);
                 renderer.EnqueuePass(m_CausticsPass);
             }
@@ -361,7 +364,7 @@ namespace WaterSystem
             return m;
         }
 
-        [System.Serializable]
+        [Serializable]
         public class WaterSystemSettings
         {
             [Header("Caustics Settings")] [Range(0.1f, 1f)]
