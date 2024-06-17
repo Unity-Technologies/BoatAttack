@@ -17,12 +17,10 @@ public class FocusUI : MonoBehaviour
 
     void UpdateSelectedUIElement()
     {
-        List<Selectable> visibleSelectables = GetVisibleSelectables();
-
         Selectable currentSelected = EventSystem.current.currentSelectedGameObject?.GetComponent<Selectable>();
-
         if (currentSelected == null || !currentSelected.gameObject.activeInHierarchy || !IsVisible(currentSelected))
         {
+            List<Selectable> visibleSelectables = GetVisibleSelectables();
             Selectable upperLeftSelectable = FindUpperLeftSelectable(visibleSelectables);
             if (upperLeftSelectable != null)
             {
@@ -34,7 +32,7 @@ public class FocusUI : MonoBehaviour
 
     List<Selectable> GetVisibleSelectables()
     {
-        Selectable[] allSelectables = FindObjectsOfType<Selectable>();
+        Selectable[] allSelectables = FindObjectsByType<Selectable>(FindObjectsSortMode.None);
         List<Selectable> visibleSelectables = new List<Selectable>();
 
         foreach (Selectable selectable in allSelectables)
@@ -51,48 +49,24 @@ public class FocusUI : MonoBehaviour
     bool IsVisible(Selectable selectable)
     {
         RectTransform rectTransform = selectable.GetComponent<RectTransform>();
-        if(rectTransform.position.x < 0)
-            return false;
-        Rect screenBounds = new Rect(0f, 0f, Screen.width, Screen.height); // Screen space bounds (assumes camera renders across the entire screen)
-        Vector3[] objectCorners = new Vector3[4];
-        //rectTransform.GetWorldCorners(objectCorners);
-
-        //Vector3 tempScreenSpaceCorner; // Cached
-        //for (var i = 0; i < objectCorners.Length; i++) // For each corner in rectTransform
-        {
-            //tempScreenSpaceCorner = Camera.main.WorldToScreenPoint(objectCorners[i]); // Transform world space position of corner to screen space
-            if (screenBounds.Contains(rectTransform.position)) // If the corner is inside the screen
-            {
-                // At least one corner of the UI element is visible in the canvas
-                return true;
-            }
-        }
-
-        return false;
+        Rect screenBounds = new Rect(0f, 0f, Screen.currentResolution.width, Screen.currentResolution.height); // Screen space bounds (assumes camera renders across the entire screen)
+        return screenBounds.Contains(rectTransform.position);
     }
 
     Selectable FindUpperLeftSelectable(List<Selectable> selectables)
     {
         Selectable upperLeftSelectable = null;
-        Vector2 upperLeftPosition = new Vector2(float.MinValue, float.MinValue);
+        Vector2 upperLeftPosition = new Vector2(float.MaxValue, float.MinValue);
 
         foreach (Selectable selectable in selectables)
         {
             RectTransform rectTransform = selectable.GetComponent<RectTransform>();
-            Vector3[] worldCorners = new Vector3[4];
-            rectTransform.GetWorldCorners(worldCorners);
-
-            foreach (Vector3 corner in worldCorners)
+            var canvasPoint = rectTransform.position;
+            if (canvasPoint.y > upperLeftPosition.y || 
+                (canvasPoint.y >= upperLeftPosition.y && canvasPoint.x < upperLeftPosition.x))
             {
-                Vector2 viewportPoint = Camera.main.WorldToViewportPoint(corner);
-                Vector2 canvasPoint = new Vector2(viewportPoint.x * Screen.width, viewportPoint.y * Screen.height);
-
-                if (canvasPoint.y > upperLeftPosition.y ||
-                     (canvasPoint.y == upperLeftPosition.y && canvasPoint.x < upperLeftPosition.x))
-                {
-                    upperLeftPosition = canvasPoint;
-                    upperLeftSelectable = selectable;
-                }
+                upperLeftPosition = canvasPoint;
+                upperLeftSelectable = selectable;
             }
         }
 
@@ -103,8 +77,8 @@ public class FocusUI : MonoBehaviour
     {
         if (!Application.isPlaying) return;
 
-        Selectable[] allSelectables = FindObjectsOfType<Selectable>();
-        foreach (Selectable selectable in allSelectables)
+        List<Selectable> visibleSelectables = GetVisibleSelectables();
+        foreach (Selectable selectable in visibleSelectables)
         {
             if (selectable.gameObject.activeInHierarchy)
             {
