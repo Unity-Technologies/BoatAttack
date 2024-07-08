@@ -47,7 +47,7 @@ namespace BoatAttack.UI
             _playerIndex = player;
             _boat = RaceManager.RaceData.boats[_playerIndex].Boat;
             _totalLaps = RaceManager.GetLapCount();
-            _totalPlayers = RaceManager.RaceData.boats.Count;
+            _totalPlayers = RaceManager.RaceData.boatCount;
             _timeOffset = Time.time;
 
             switch (AppSettings.Instance.speedFormat)
@@ -111,7 +111,7 @@ namespace BoatAttack.UI
 
         private IEnumerator SetupPlayerMarkers(int player)
         {
-            for (int i = 0; i < RaceManager.RaceData.boats.Count; i++)
+            for (int i = 0; i < RaceManager.RaceData.boatCount; i++)
             {
                 if (i == player) continue;
 
@@ -126,8 +126,9 @@ namespace BoatAttack.UI
 
         private IEnumerator SetupPlayerMapMarkers()
         {
-            foreach (var boatData in RaceManager.RaceData.boats)
+            for (int i = 0; i < RaceManager.RaceData.boatCount; i++)
             {
+                var boatData = RaceManager.RaceData.boats[i];
                 var mapMarkerLoading = playerMapMarker.InstantiateAsync(map);
                 yield return mapMarkerLoading; // wait for marker to load
 

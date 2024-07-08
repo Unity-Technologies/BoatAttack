@@ -262,7 +262,7 @@ namespace BoatAttack
             if (!RaceStarted) return;
 
             int finished = RaceData.boatCount;
-            for (var i = 0; i < RaceData.boats.Count; i++)
+            for (var i = 0; i < RaceData.boatCount; i++)
             {
                 var boat = RaceData.boats[i].Boat;
                 if (boat.MatchComplete)
@@ -324,7 +324,7 @@ namespace BoatAttack
         
         private static IEnumerator CreateBoats()
         {
-            for (int i = 0; i < RaceData.boats.Count; i++)
+            for (int i = 0; i < RaceData.boatCount; i++)
             {
                 var boat = RaceData.boats[i]; // boat to setup
 

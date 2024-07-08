@@ -40,7 +40,6 @@ namespace BoatAttack
 		private void Awake()
 		{
 			Instance = this;
-			CalculateTrackDistance();
 		}
 
 		public void Setup(bool reversed)
@@ -53,6 +52,8 @@ namespace BoatAttack
 				WPs.Insert(0, WPs[WPs.Count - 1]);
 				WPs.RemoveAt(WPs.Count - 1);
 			}
+			
+			CalculateTrackDistance();
 
 			var i = 0;
 			_triggers = new BoxCollider[WPs.Count];
@@ -77,6 +78,7 @@ namespace BoatAttack
 				i++;
 			}
 
+			StartingPositions = new Matrix4x4[RaceManager.RaceData.boatCount];
 			GetStartPositions();
 		}
 
