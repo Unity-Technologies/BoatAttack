@@ -27,12 +27,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3829577903138488069}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 108.12326, y: 11.028929, z: -31.28112}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3829577903138488074
 MonoBehaviour:
@@ -55,11 +56,13 @@ MonoBehaviour:
   loadingScreen:
     m_AssetGUID: 179a2376fe443449d9046bc913164c8b
     m_SubObjectName: 
+    m_SubObjectGUID: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
   volumeManager:
     m_AssetGUID: d4548d51034644d21971f134c82b6a9a
     m_SubObjectName: 
+    m_SubObjectGUID: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
   consoleCanvas: {fileID: 3861368940710368685, guid: eaccf287ac783bc4485d674d5998d3ab,
@@ -88,6 +91,7 @@ MonoBehaviour:
       boatPrefab:
         m_AssetGUID: 405c4bc591de844a3a100e1538790229
         m_SubObjectName: 
+        m_SubObjectGUID: 
         m_SubObjectType: 
         m_EditorAssetChanged: 0
       livery:
@@ -98,6 +102,7 @@ MonoBehaviour:
       boatPrefab:
         m_AssetGUID: 70d78230a0527e74dabc4f14906eef98
         m_SubObjectName: 
+        m_SubObjectGUID: 
         m_SubObjectType: 
         m_EditorAssetChanged: 0
       livery:
@@ -108,6 +113,7 @@ MonoBehaviour:
       boatPrefab:
         m_AssetGUID: 405c4bc591de844a3a100e1538790229
         m_SubObjectName: 
+        m_SubObjectGUID: 
         m_SubObjectType: 
         m_EditorAssetChanged: 0
       livery:
@@ -118,6 +124,7 @@ MonoBehaviour:
       boatPrefab:
         m_AssetGUID: 70d78230a0527e74dabc4f14906eef98
         m_SubObjectName: 
+        m_SubObjectGUID: 
         m_SubObjectType: 
         m_EditorAssetChanged: 0
       livery:
@@ -127,20 +134,24 @@ MonoBehaviour:
   boats:
   - m_AssetGUID: 405c4bc591de844a3a100e1538790229
     m_SubObjectName: 
+    m_SubObjectGUID: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
   - m_AssetGUID: 70d78230a0527e74dabc4f14906eef98
     m_SubObjectName: 
+    m_SubObjectGUID: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
   raceUiPrefab:
     m_AssetGUID: 0482dcbdb79ee4d7eb43a774a90bda4e
     m_SubObjectName: 
+    m_SubObjectGUID: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
   raceUiTouchPrefab:
     m_AssetGUID: c080ffd98277d4e3f97f96dedf2ec960
     m_SubObjectName: 
+    m_SubObjectGUID: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
 --- !u!114 &7312333174115242941
@@ -166,6 +177,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 643024a49360c40c0a27365c40d4d58d, type: 3}
+  m_Resource: {fileID: 8300000, guid: 643024a49360c40c0a27365c40d4d58d, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.5
   m_Pitch: 1

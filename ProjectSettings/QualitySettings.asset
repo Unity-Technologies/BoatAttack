@@ -4,7 +4,7 @@
 QualitySettings:
   m_ObjectHideFlags: 0
   serializedVersion: 5
-  m_CurrentQuality: 1
+  m_CurrentQuality: 2
   m_QualitySettings:
   - serializedVersion: 4
     name: Low
@@ -61,7 +61,6 @@ QualitySettings:
     excludedTargetPlatforms:
     - PS4
     - XboxOne
-    - Nintendo Switch
   - serializedVersion: 4
     name: Medium
     pixelLightCount: 4
@@ -178,9 +177,11 @@ QualitySettings:
   m_TextureMipmapLimitGroupNames: []
   m_PerPlatformDefaultQuality:
     Android: 1
+    GameCoreScarlett: 2
     Nintendo 3DS: 0
     Nintendo Switch: 1
     PS4: 2
+    PS5: 2
     PSP2: 0
     Standalone: 2
     Tizen: 0
