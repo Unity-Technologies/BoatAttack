@@ -54,18 +54,9 @@ MonoBehaviour:
       - rid: 3715396717999554809
       - rid: 8329534643960545283
       - rid: 7932631822410973184
+      - rid: 4975679781515558912
     m_RuntimeSettings:
-      m_List:
-      - rid: 9155629212231794688
-      - rid: 9155629212231794689
-      - rid: 9155629212231794690
-      - rid: 9155629212231794691
-      - rid: 9155629212231794692
-      - rid: 9155629212231794695
-      - rid: 9155629212231794702
-      - rid: 8329534643960545281
-      - rid: 8329534643960545283
-      - rid: 7932631822410973184
+      m_List: []
   m_AssetVersion: 8
   m_ObsoleteDefaultVolumeProfile: {fileID: 0}
   m_RenderingLayerNames:
@@ -153,8 +144,6 @@ MonoBehaviour:
         m_FallOffLookup: {fileID: 2800000, guid: 5688ab254e4c0634f8d6c8e0792331ca,
           type: 3}
         m_CopyDepthPS: {fileID: 4800000, guid: d6dae50ee9e1bfa4db75f19f99355220, type: 3}
-        m_DefaultCustomMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3,
-          type: 2}
         m_DefaultLitMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3,
           type: 2}
         m_DefaultUnlitMaterial: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40,
@@ -242,6 +231,16 @@ MonoBehaviour:
         renderingLayerCS: {fileID: 7200000, guid: a63c9cf933e3d8f41ae680a372784ebf,
           type: 3}
         renderingLayerRT: {fileID: 4807578003741378534, guid: c2be09c936362eb49a58f08aeb30627a,
+          type: 3}
+    - rid: 4975679781515558912
+      type: {class: UniversalRenderPipelineRuntimeXRResources, ns: UnityEngine.Rendering.Universal,
+        asm: Unity.RenderPipelines.Universal.Runtime}
+      data:
+        m_xrOcclusionMeshPS: {fileID: 4800000, guid: 4431b1f1f743fbf4eb310a967890cbea,
+          type: 3}
+        m_xrMirrorViewPS: {fileID: 4800000, guid: d5a307c014552314b9f560906d708772,
+          type: 3}
+        m_xrMotionVector: {fileID: 4800000, guid: f89aac1e4f84468418fe30e611dff395,
           type: 3}
     - rid: 7932631822410973184
       type: {class: RenderGraphUtilsResources, ns: UnityEngine.Rendering.RenderGraphModule.Util,
