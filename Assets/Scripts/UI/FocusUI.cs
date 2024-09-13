@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -15,10 +16,15 @@ public class FocusUI : MonoBehaviour
         UpdateSelectedUIElement();
     }
 
-    void UpdateSelectedUIElement()
+    bool IsCurrentSelectedInvalid()
     {
         Selectable currentSelected = EventSystem.current.currentSelectedGameObject?.GetComponent<Selectable>();
-        if (currentSelected == null || !currentSelected.gameObject.activeInHierarchy || !IsVisible(currentSelected))
+        return currentSelected == null || !currentSelected.gameObject.activeInHierarchy || !IsVisible(currentSelected);
+    }
+
+    void UpdateSelectedUIElement()
+    {
+        if (IsCurrentSelectedInvalid())
         {
             List<Selectable> visibleSelectables = GetVisibleSelectables();
             Selectable upperLeftSelectable = FindUpperLeftSelectable(visibleSelectables);
@@ -32,25 +38,56 @@ public class FocusUI : MonoBehaviour
 
     List<Selectable> GetVisibleSelectables()
     {
-        Selectable[] allSelectables = FindObjectsByType<Selectable>(FindObjectsSortMode.None);
+        Canvas[] allCanvases = FindObjectsByType<Canvas>(FindObjectsSortMode.None);
         List<Selectable> visibleSelectables = new List<Selectable>();
 
-        foreach (Selectable selectable in allSelectables)
+        foreach (Canvas canvas in allCanvases)
         {
-            if (selectable.gameObject.activeInHierarchy && IsVisible(selectable))
+            if (canvas.gameObject.activeInHierarchy == false)
+                continue;
+
+            RectTransform canvasRectTransform = canvas.GetComponent<RectTransform>();
+            Selectable[] selectables = canvas.GetComponentsInChildren<Selectable>();
+
+            foreach (Selectable selectable in selectables)
             {
-                visibleSelectables.Add(selectable);
+                RectTransform selectableRectTransform = selectable.GetComponent<RectTransform>();
+                if (selectable.gameObject.activeInHierarchy && IsWithinBounds(selectableRectTransform, canvasRectTransform))
+                    visibleSelectables.Add(selectable);
             }
         }
 
         return visibleSelectables;
     }
 
+    public bool IsWithinBounds(RectTransform child, RectTransform parent)
+    {
+        Vector3[] childCorners = new Vector3[4];
+        Vector3[] parentCorners = new Vector3[4];
+
+        child.GetWorldCorners(childCorners);
+        parent.GetWorldCorners(parentCorners);
+
+        // Convert corners into a bounding box (Rect) in screen space
+        Rect childRect = GetScreenSpaceRect(childCorners);
+        Rect parentRect = GetScreenSpaceRect(parentCorners);
+
+        return childRect.Overlaps(parentRect);
+    }
+
+    private Rect GetScreenSpaceRect(Vector3[] corners)
+    {
+        Vector3 bottomLeft = corners[0];
+        Vector3 topRight = corners[2];
+
+        return new Rect(bottomLeft.x, bottomLeft.y, topRight.x - bottomLeft.x, topRight.y - bottomLeft.y);
+    }
+
     bool IsVisible(Selectable selectable)
     {
-        RectTransform rectTransform = selectable.GetComponent<RectTransform>();
-        Rect screenBounds = new Rect(0f, 0f, Screen.currentResolution.width, Screen.currentResolution.height); // Screen space bounds (assumes camera renders across the entire screen)
-        return screenBounds.Contains(rectTransform.position);
+        RectTransform childRectTransform = selectable.GetComponent<RectTransform>();
+        RectTransform parentRectTransform = selectable.GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+        return IsWithinBounds(childRectTransform, parentRectTransform);
     }
 
     Selectable FindUpperLeftSelectable(List<Selectable> selectables)
