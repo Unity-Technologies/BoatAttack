@@ -24,13 +24,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6401600782625215993}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6396971548786091290}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6401600782625215995
 MonoBehaviour:
@@ -50,18 +51,28 @@ MonoBehaviour:
   voxelResolution: 1
   centerOfMass: {x: 0, y: 0, z: 0}
   waterLevelOffset: 0
-  voxels:
-  - {x: 0, y: 0, z: 0}
   colliders:
   - {fileID: 0}
-  percentSubmerged: 0
 --- !u!1001 &6401600783272712156
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 6401600782625215994}
     m_Modifications:
+    - target: {fileID: 1034065356363976, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
+      propertyPath: m_Name
+      value: Geo_Props_Kayak (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1034065356363976, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4950301651628742, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4950301651628742, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -73,6 +84,10 @@ PrefabInstance:
     - target: {fileID: 4950301651628742, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4950301651628742, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4950301651628742, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
       propertyPath: m_LocalRotation.x
@@ -87,14 +102,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4950301651628742, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4950301651628742, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4950301651628742, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
@@ -106,15 +113,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1034065356363976, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
-      propertyPath: m_Name
-      value: Geo_Props_Kayak (4)
-      objectReference: {fileID: 0}
-    - target: {fileID: 1034065356363976, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8cf78d9746e449f69179132e78d867f, type: 3}
 --- !u!4 &6396971548786091290 stripped
 Transform:
