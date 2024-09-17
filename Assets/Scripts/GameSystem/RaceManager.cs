@@ -204,6 +204,18 @@ namespace BoatAttack
             Debug.Log($"Level set to:{levelIndex} with path:{RaceData.level}");
         }
 
+        enum CameraType
+        {
+            PlayersOnly,
+            All
+        }
+
+        static void EnableCameras(CameraType type)
+        {
+            foreach (var b in RaceData.boats)
+                b.Boat.cam.enabled = type == CameraType.All ? true : b.human; 
+        }
+
         /// <summary>
         /// Triggered to begin the race
         /// </summary>
@@ -222,6 +234,8 @@ namespace BoatAttack
                 }
                 introCams.SetActive(false);
             }
+
+            EnableCameras(CameraType.PlayersOnly);
 
             yield return new WaitForSeconds(3f); // countdown 3..2..1..
             
@@ -245,6 +259,7 @@ namespace BoatAttack
                     break;
                 case GameType.Singleplayer:
                     SetupCamera(0, true);
+                    EnableCameras(CameraType.All);
                     break;
                 case GameType.LocalMultiplayer:
                     break;

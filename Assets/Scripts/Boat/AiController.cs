@@ -26,12 +26,12 @@ namespace BoatAttack
 
         private WaypointGroup.Waypoint[] _wPs;
 
-        private void Start ()
+        private void Start()
         {
             RaceManager.raceStarted += StartRace;
         }
 
-        private void StartRace(bool start)
+        public void StartRace(bool start)
         {
             AssignWp(WaypointGroup.Instance.GetWaypoint(0));
             InvokeRepeating(nameof(CalculatePath), 1f, 1f);

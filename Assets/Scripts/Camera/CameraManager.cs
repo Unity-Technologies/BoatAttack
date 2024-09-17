@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.UI;
-using Cinemachine;
+using Unity.Cinemachine;
 
 namespace BoatAttack
 {

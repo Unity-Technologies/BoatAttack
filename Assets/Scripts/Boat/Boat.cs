@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using Cinemachine;
+using Unity.Cinemachine;
 using BoatAttack.UI;
 using Object = UnityEngine.Object;
 
@@ -30,7 +30,7 @@ namespace BoatAttack
 
         [NonSerialized] public readonly List<float> SplitTimes = new List<float>();
 
-        public CinemachineVirtualCamera cam;
+        public CinemachineCamera cam;
         private float _camFovVel;
         [NonSerialized] public RaceUI RaceUi;
         private Object _controller;
@@ -63,20 +63,22 @@ namespace BoatAttack
             _allCheckPoints = WaypointGroup.Instance.GetCheckpointIndices();
         }
 
+        private void SwitchToAiController()
+        {
+            SetupController(false);
+            (_controller as AiController)?.StartRace(true);
+        }
+
         void SetupController(bool isHuman)
         {
             var controllerType = isHuman ? typeof(HumanController) : typeof(AiController);
-            // If controller exists then make sure it's teh right one, if not add it
+            // If controller exists then make sure it's the right one, if not add it
             if (_controller)
             {
                 if (_controller.GetType() == controllerType) return;
                 Destroy(_controller);
-                _controller = gameObject.AddComponent(controllerType);
             }
-            else
-            {
-                _controller = gameObject.AddComponent(controllerType);
-            }
+            _controller = gameObject.AddComponent(controllerType);
         }
 
         private void Update()
@@ -98,7 +100,7 @@ namespace BoatAttack
             if (cam)
             {
                 var fov = Mathf.SmoothStep(80f, 100f, engine.VelocityMag * 0.005f);
-                cam.m_Lens.FieldOfView = Mathf.SmoothDamp(cam.m_Lens.FieldOfView, fov, ref _camFovVel, 0.5f);
+                cam.Lens.FieldOfView = Mathf.SmoothDamp(cam.Lens.FieldOfView, fov, ref _camFovVel, 0.5f);
             }
         }
 
@@ -168,6 +170,8 @@ namespace BoatAttack
                 Debug.Log(
                     $"Boat {name} finished {RaceUI.OrdinalNumber(Place)} with time:{RaceUI.FormatRaceTime(SplitTimes.Last())}");
                 RaceManager.BoatFinished(_playerIndex);
+                if (_controller as HumanController != null)
+                    SwitchToAiController();
                 MatchComplete = true;
             }
         }

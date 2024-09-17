@@ -5173,7 +5173,7 @@ Transform:
   m_GameObject: {fileID: 7907029379700984250}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.000030517578, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6184,6 +6184,11 @@ PrefabInstance:
       propertyPath: m_textInfo.characterCount
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 59890228045598728, guid: 9c2a38523400349b29e5a37a5b202ea6,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
     - target: {fileID: 2367426047754857468, guid: 9c2a38523400349b29e5a37a5b202ea6,
         type: 3}
       propertyPath: m_Pivot.x
@@ -6919,53 +6924,63 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7803164479145020861, guid: 5aec52444778a4ef2b11847564e94866,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9745208
+      objectReference: {fileID: 0}
+    - target: {fileID: 7803164479145020861, guid: 5aec52444778a4ef2b11847564e94866,
+        type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.07858009
+      value: 0.076658905
+      objectReference: {fileID: 0}
+    - target: {fileID: 7803164479145020861, guid: 5aec52444778a4ef2b11847564e94866,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.008504468
       objectReference: {fileID: 0}
     - target: {fileID: 7803164479145020861, guid: 5aec52444778a4ef2b11847564e94866,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.21589711
+      value: -0.21061869
       objectReference: {fileID: 0}
     - target: {fileID: 7803164479520924053, guid: 5aec52444778a4ef2b11847564e94866,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.8925436
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7803164479520924053, guid: 5aec52444778a4ef2b11847564e94866,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.7719994
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7803164479520924053, guid: 5aec52444778a4ef2b11847564e94866,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.044201
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 7803164479520924053, guid: 5aec52444778a4ef2b11847564e94866,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.33287066
+      value: -0.87786
       objectReference: {fileID: 0}
     - target: {fileID: 7803164479520924053, guid: 5aec52444778a4ef2b11847564e94866,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.07858009
+      value: -0.15479039
       objectReference: {fileID: 0}
     - target: {fileID: 7803164479520924053, guid: 5aec52444778a4ef2b11847564e94866,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.91455495
+      value: 0.44632748
       objectReference: {fileID: 0}
     - target: {fileID: 7803164479520924053, guid: 5aec52444778a4ef2b11847564e94866,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.21589711
+      value: -0.07869957
       objectReference: {fileID: 0}
     - target: {fileID: 7803164479520924054, guid: 5aec52444778a4ef2b11847564e94866,
         type: 3}
       propertyPath: field of view
-      value: 50
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 7803164479910481698, guid: 5aec52444778a4ef2b11847564e94866,
         type: 3}
@@ -6976,11 +6991,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7803164479910481701, guid: 5aec52444778a4ef2b11847564e94866,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7803164479910481701, guid: 5aec52444778a4ef2b11847564e94866,
         type: 3}
@@ -7187,6 +7197,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_textInfo.characterCount
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3499581972667848699, guid: e95c985f007f74332872b8e64035af9d,
+        type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
       objectReference: {fileID: 0}
     - target: {fileID: 3499581973741518583, guid: e95c985f007f74332872b8e64035af9d,
         type: 3}

@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using Cinemachine;
+using Unity.Cinemachine;
 
 public class BenchmarkPath : MonoBehaviour
 {

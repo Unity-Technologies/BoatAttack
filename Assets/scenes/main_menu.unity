@@ -155,11 +155,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7003470173341666312, guid: 530da10d6c4d9442e9e8d5eeb77a25d8,
         type: 3}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7003470173341666312, guid: 530da10d6c4d9442e9e8d5eeb77a25d8,
-        type: 3}
       propertyPath: m_LocalPosition.x
       value: 13.33
       objectReference: {fileID: 0}
@@ -234,43 +229,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 7907029379336488239}
   m_PrefabAsset: {fileID: 0}
---- !u!84 &741717005
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: WaterDepthMap
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 6
-  m_Width: 1024
-  m_Height: 1024
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 94
-  m_ColorFormat: 0
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_UseDynamicScaleExplicit: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1 &852178392
 GameObject:
   m_ObjectHideFlags: 0
@@ -280,7 +238,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 852178394}
-  - component: {fileID: 852178393}
+  - component: {fileID: 852178398}
+  - component: {fileID: 852178397}
   - component: {fileID: 852178395}
   - component: {fileID: 852178396}
   m_Layer: 0
@@ -290,45 +249,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &852178393
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 852178392}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ExcludedPropertiesInInspector:
-  - m_Script
-  m_LockStageInInspector: 
-  m_StreamingVersion: 20170927
-  m_Priority: 0
-  m_StandbyUpdate: 2
-  m_LookAt: {fileID: 0}
-  m_Follow: {fileID: 0}
-  m_Lens:
-    FieldOfView: 53
-    OrthographicSize: 10
-    NearClipPlane: 0.5
-    FarClipPlane: 1500
-    Dutch: 0
-    ModeOverride: 0
-    LensShift: {x: 0, y: 0}
-    GateFit: 2
-    FocusDistance: 10
-    m_SensorSize: {x: 1, y: 1}
-  m_Transitions:
-    m_BlendHint: 0
-    m_InheritPosition: 0
-    m_OnCameraLive:
-      m_PersistentCalls:
-        m_Calls: []
-  m_LegacyBlendHint: 0
-  m_ComponentOwner: {fileID: 1211864296}
 --- !u!4 &852178394
 Transform:
   m_ObjectHideFlags: 0
@@ -341,8 +261,7 @@ Transform:
   m_LocalPosition: {x: 13.33, y: 2, z: 56.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1211864296}
+  m_Children: []
   m_Father: {fileID: 1900948176}
   m_LocalEulerAnglesHint: {x: -8.9, y: 59.6, z: 0}
 --- !u!114 &852178395
@@ -383,68 +302,66 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &1211864295
-GameObject:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1211864296}
-  - component: {fileID: 1211864299}
-  - component: {fileID: 1211864297}
-  m_Layer: 5
-  m_Name: cm
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1211864296
-Transform:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1211864295}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -60.161415, y: 8.881636, z: -68.91155}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 852178394}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1211864297
+--- !u!114 &852178397
 MonoBehaviour:
-  m_ObjectHideFlags: 3
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1211864295}
+  m_GameObject: {fileID: 852178392}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_NoiseProfile: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
-  m_PivotOffset: {x: 0, y: 0, z: 0}
-  m_AmplitudeGain: 0.25
-  m_FrequencyGain: 0.5
-  mNoiseOffsets: {x: -242.97891, y: 165.04227, z: 782.3706}
---- !u!114 &1211864299
+  NoiseProfile: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  PivotOffset: {x: 0, y: 0, z: 0}
+  AmplitudeGain: 0.25
+  FrequencyGain: 0.5
+  m_NoiseOffsets: {x: -242.97891, y: 165.04227, z: 782.3706}
+--- !u!114 &852178398
 MonoBehaviour:
-  m_ObjectHideFlags: 3
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1211864295}
+  m_GameObject: {fileID: 852178392}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
+  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Priority:
+    Enabled: 0
+    m_Value: 0
+  OutputChannel: 1
+  StandbyUpdate: 2
+  m_StreamingVersion: 20230301
+  m_LegacyPriority: 0
+  Target:
+    TrackingTarget: {fileID: 0}
+    LookAtTarget: {fileID: 0}
+    CustomLookAtTarget: 0
+  Lens:
+    FieldOfView: 53
+    OrthographicSize: 10
+    NearClipPlane: 0.5
+    FarClipPlane: 1500
+    Dutch: 0
+    ModeOverride: 0
+    PhysicalProperties:
+      GateFit: 2
+      SensorSize: {x: 1, y: 1}
+      LensShift: {x: 0, y: 0}
+      FocusDistance: 10
+      Iso: 200
+      ShutterSpeed: 0.005
+      Aperture: 16
+      BladeCount: 5
+      Curvature: {x: 2, y: 11}
+      BarrelClipping: 0.25
+      Anamorphism: 0
+  BlendHint: 0
 --- !u!1 &1232755595 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7055921330845455793, guid: 705cc40ed7b2348689ba68fd4bc915b3,
@@ -630,6 +547,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2396697376959644701, guid: 56de8e58d1a974ab880e61b104d7ef98,
         type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2396697376959644701, guid: 56de8e58d1a974ab880e61b104d7ef98,
+        type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -666,6 +588,16 @@ PrefabInstance:
     - target: {fileID: 4376516045305876914, guid: 56de8e58d1a974ab880e61b104d7ef98,
         type: 3}
       propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4376516045305876914, guid: 56de8e58d1a974ab880e61b104d7ef98,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4376516045305876914, guid: 56de8e58d1a974ab880e61b104d7ef98,
+        type: 3}
+      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4376516045305876914, guid: 56de8e58d1a974ab880e61b104d7ef98,
@@ -798,15 +730,45 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6677724033337728314, guid: 56de8e58d1a974ab880e61b104d7ef98,
+        type: 3}
+      propertyPath: m_Name
+      value: BoatRoomCameras
+      objectReference: {fileID: 0}
+    - target: {fileID: 6677724033928456936, guid: 56de8e58d1a974ab880e61b104d7ef98,
+        type: 3}
+      propertyPath: m_Name
+      value: StandardShot
+      objectReference: {fileID: 0}
+    - target: {fileID: 6677724033928456943, guid: 56de8e58d1a974ab880e61b104d7ef98,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.97328085
+      objectReference: {fileID: 0}
     - target: {fileID: 6677724033928456943, guid: 56de8e58d1a974ab880e61b104d7ef98,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.07858009
+      value: 0.07848011
+      objectReference: {fileID: 0}
+    - target: {fileID: 6677724033928456943, guid: 56de8e58d1a974ab880e61b104d7ef98,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.008493647
       objectReference: {fileID: 0}
     - target: {fileID: 6677724033928456943, guid: 56de8e58d1a974ab880e61b104d7ef98,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.21589711
+      value: -0.21562241
+      objectReference: {fileID: 0}
+    - target: {fileID: 6677724034019008999, guid: 56de8e58d1a974ab880e61b104d7ef98,
+        type: 3}
+      propertyPath: m_Name
+      value: SideShot
+      objectReference: {fileID: 0}
+    - target: {fileID: 6677724034071597157, guid: 56de8e58d1a974ab880e61b104d7ef98,
+        type: 3}
+      propertyPath: m_Name
+      value: TopShot
       objectReference: {fileID: 0}
     - target: {fileID: 6864725585560435237, guid: 56de8e58d1a974ab880e61b104d7ef98,
         type: 3}
@@ -822,6 +784,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7907029379700984249, guid: 56de8e58d1a974ab880e61b104d7ef98,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7907029380085608247, guid: 56de8e58d1a974ab880e61b104d7ef98,
         type: 3}
@@ -913,6 +880,21 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: LoadBenchmark
       objectReference: {fileID: 0}
+    - target: {fileID: 9215623977045039299, guid: 56de8e58d1a974ab880e61b104d7ef98,
+        type: 3}
+      propertyPath: m_ControllerManager.Controllers.Array.data[0].Owner
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 9215623977045039299, guid: 56de8e58d1a974ab880e61b104d7ef98,
+        type: 3}
+      propertyPath: m_ControllerManager.Controllers.Array.data[1].Owner
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 9215623977045039299, guid: 56de8e58d1a974ab880e61b104d7ef98,
+        type: 3}
+      propertyPath: m_ControllerManager.Controllers.Array.data[2].Owner
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -940,6 +922,37 @@ PrefabInstance:
       propertyPath: m_LocalRotation.y
       value: 0.44570655
       objectReference: {fileID: 0}
+    - target: {fileID: 1119832966504533663, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: AutomaticDolly.Method
+      value: 1470377270636446253
+      objectReference: {fileID: 0}
+    - target: {fileID: 1119832966504533663, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_SplineSettings.Spline
+      value: 
+      objectReference: {fileID: 6414021418852001239, guid: 344be8fa397804294b1b2f63976790a9,
+        type: 3}
+    - target: {fileID: 1119832966504533663, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446013]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 1119832966504533663, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446253]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 1119832966504533663, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446013].Speed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1119832966504533663, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446253].Speed
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 1390411985989647940, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: _depthTex
@@ -949,6 +962,99 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2292732344056345137, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: AutomaticDolly.Method
+      value: 1470377270636446250
+      objectReference: {fileID: 0}
+    - target: {fileID: 2292732344056345137, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_SplineSettings.Spline
+      value: 
+      objectReference: {fileID: 1386462144798840309, guid: 344be8fa397804294b1b2f63976790a9,
+        type: 3}
+    - target: {fileID: 2292732344056345137, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446010]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 2292732344056345137, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446250]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 2292732344056345137, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446010].Speed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 2292732344056345137, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446250].Speed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 2294187592614110090, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: AutomaticDolly.Method
+      value: 1470377270636446256
+      objectReference: {fileID: 0}
+    - target: {fileID: 2294187592614110090, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_SplineSettings.Spline
+      value: 
+      objectReference: {fileID: 6414021418852001239, guid: 344be8fa397804294b1b2f63976790a9,
+        type: 3}
+    - target: {fileID: 2294187592614110090, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446016]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 2294187592614110090, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446256]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 2294187592614110090, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446016].Speed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 2294187592614110090, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446256].Speed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 2487554076591861462, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: AutomaticDolly.Method
+      value: 1470377270636446251
+      objectReference: {fileID: 0}
+    - target: {fileID: 2487554076591861462, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_SplineSettings.Spline
+      value: 
+      objectReference: {fileID: 1386462144798840309, guid: 344be8fa397804294b1b2f63976790a9,
+        type: 3}
+    - target: {fileID: 2487554076591861462, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446011]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 2487554076591861462, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446251]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 2487554076591861462, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446011].Speed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 2487554076591861462, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446251].Speed
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 2894191589257018540, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
@@ -1050,6 +1156,56 @@ PrefabInstance:
       propertyPath: m_Materials.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3092263115603452847, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_Name
+      value: Windsurfer (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092263115818856477, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_Name
+      value: Windsurfer (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092263115863837773, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_Name
+      value: Windsurfer (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092263116127326914, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_Name
+      value: Windsurfer (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092263116585999903, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_Name
+      value: Windsurfer (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092263116623314770, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_Name
+      value: Windsurfer
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092263116992646102, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_Name
+      value: Windsurfer (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092263117000337912, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_Name
+      value: Windsurfer (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092263117092571172, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_Name
+      value: Windsurfer (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3092263117138803654, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_Name
+      value: Windsurfer (4)
+      objectReference: {fileID: 0}
     - target: {fileID: 3093802692011532849, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_IsActive
@@ -1115,275 +1271,419 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3093802693323564291, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_Name
+      value: SurferTrack01
+      objectReference: {fileID: 0}
+    - target: {fileID: 3093802693492705437, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_Name
+      value: SurferTrack02
+      objectReference: {fileID: 0}
     - target: {fileID: 3098304137253435410, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -48.01422
+      value: -48.01087
       objectReference: {fileID: 0}
     - target: {fileID: 3098304137253435410, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 79.15466
+      value: 79.15255
       objectReference: {fileID: 0}
     - target: {fileID: 3098304137253435410, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.85339105
+      value: 0.8666745
       objectReference: {fileID: 0}
     - target: {fileID: 3098304137253435410, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.108145125
+      value: -0.068841085
       objectReference: {fileID: 0}
     - target: {fileID: 3098304137253435410, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.47073406
+      value: -0.4780817
       objectReference: {fileID: 0}
     - target: {fileID: 3098304137253435410, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.19605568
+      value: 0.124796286
       objectReference: {fileID: 0}
     - target: {fileID: 3098304137776122239, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -103.41802
+      value: -103.42037
       objectReference: {fileID: 0}
     - target: {fileID: 3098304137776122239, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 76.07407
+      value: 76.07332
       objectReference: {fileID: 0}
     - target: {fileID: 3098304137776122239, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7384489
+      value: 0.76376444
       objectReference: {fileID: 0}
     - target: {fileID: 3098304137776122239, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.2391963
+      value: 0.19238439
       objectReference: {fileID: 0}
     - target: {fileID: 3098304137776122239, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.538359
+      value: 0.5567835
       objectReference: {fileID: 0}
     - target: {fileID: 3098304137776122239, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.32809755
+      value: 0.26390213
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138053265053, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 113.631226
+      value: 113.62813
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138053265053, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 49.215836
+      value: 49.218536
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138053265053, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.89808434
+      value: 0.90286845
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138053265053, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.06753482
+      value: 0.05252211
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138053265053, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.40845287
+      value: -0.41078454
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138053265053, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.14849195
+      value: -0.11543899
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138102840013, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 70.61526
+      value: 70.617744
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138102840013, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 63.53191
+      value: 63.525974
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138102840013, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.1955012
+      value: 0.19498837
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138102840013, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.1216949
+      value: 0.13944724
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138102840013, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9728163
+      value: 0.9704375
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138102840013, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.024456311
+      value: 0.028018894
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138388918550, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -24.485832
+      value: -24.462303
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138388918550, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 78.70347
+      value: 78.70197
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138388918550, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.6991671
+      value: 0.7034596
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138388918550, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.19530843
+      value: -0.17942213
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138388918550, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.65545154
+      value: -0.6606453
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138388918550, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.2083346
+      value: 0.19104987
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138435011316, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 147.28241
+      value: 147.25647
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138435011316, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -12.134232
+      value: -12.120224
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138435011316, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.4996427
+      value: 0.50008667
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138435011316, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.1853716
+      value: 0.18934543
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138435011316, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.8389315
+      value: 0.8374225
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138435011316, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.11040182
+      value: 0.113072105
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138527245096, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 94.29501
+      value: 94.28302
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138527245096, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 75.29607
+      value: 75.2958
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138527245096, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.6795601
+      value: 0.68231267
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138527245096, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.16869096
+      value: 0.15567908
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138527245096, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.6946265
+      value: -0.6978877
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138527245096, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.16503206
+      value: -0.15220477
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138538213638, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -99.99948
+      value: -100.02272
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138538213638, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 82.39775
+      value: 82.40267
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138538213638, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.61927533
+      value: 0.6194661
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138538213638, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.13937175
+      value: 0.13840486
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138538213638, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.76441157
+      value: 0.7645458
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138538213638, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.1129097
+      value: 0.11214126
+      objectReference: {fileID: 0}
+    - target: {fileID: 3098304138904933762, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.17865993
+      objectReference: {fileID: 0}
+    - target: {fileID: 3098304138904933762, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.117275946
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138945262799, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 146.97678
+      value: 146.97919
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138945262799, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -17.140808
+      value: -17.171837
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138945262799, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.03885394
+      value: 0.038769916
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138945262799, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.077793226
+      value: -0.012754055
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138945262799, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.99620754
+      value: 0.99916667
       objectReference: {fileID: 0}
     - target: {fileID: 3098304138945262799, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0030340797
+      value: -0.00049488584
+      objectReference: {fileID: 0}
+    - target: {fileID: 3563209578908223126, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: AutomaticDolly.Method
+      value: 1470377270636446248
+      objectReference: {fileID: 0}
+    - target: {fileID: 3563209578908223126, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_SplineSettings.Spline
+      value: 
+      objectReference: {fileID: 1386462144798840309, guid: 344be8fa397804294b1b2f63976790a9,
+        type: 3}
+    - target: {fileID: 3563209578908223126, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446008]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 3563209578908223126, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446248]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 3563209578908223126, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446008].Speed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 3563209578908223126, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446248].Speed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 3808443231131614372, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: AutomaticDolly.Method
+      value: 1470377270636446247
+      objectReference: {fileID: 0}
+    - target: {fileID: 3808443231131614372, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_SplineSettings.Spline
+      value: 
+      objectReference: {fileID: 1386462144798840309, guid: 344be8fa397804294b1b2f63976790a9,
+        type: 3}
+    - target: {fileID: 3808443231131614372, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446007]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 3808443231131614372, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446247]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 3808443231131614372, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446007].Speed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 3808443231131614372, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446247].Speed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 5480207571026253416, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: AutomaticDolly.Method
+      value: 1470377270636446255
+      objectReference: {fileID: 0}
+    - target: {fileID: 5480207571026253416, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_SplineSettings.Spline
+      value: 
+      objectReference: {fileID: 6414021418852001239, guid: 344be8fa397804294b1b2f63976790a9,
+        type: 3}
+    - target: {fileID: 5480207571026253416, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446015]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 5480207571026253416, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446255]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 5480207571026253416, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446015].Speed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 5480207571026253416, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446255].Speed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 5690852729992954029, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: AutomaticDolly.Method
+      value: 1470377270636446254
+      objectReference: {fileID: 0}
+    - target: {fileID: 5690852729992954029, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_SplineSettings.Spline
+      value: 
+      objectReference: {fileID: 6414021418852001239, guid: 344be8fa397804294b1b2f63976790a9,
+        type: 3}
+    - target: {fileID: 5690852729992954029, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446014]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 5690852729992954029, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446254]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 5690852729992954029, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446014].Speed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 5690852729992954029, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446254].Speed
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 5772596621923325528, guid: 705cc40ed7b2348689ba68fd4bc915b3,
         type: 3}
@@ -1395,7 +1695,81 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 50
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 5967141773964471494, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: AutomaticDolly.Method
+      value: 1470377270636446252
+      objectReference: {fileID: 0}
+    - target: {fileID: 5967141773964471494, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_SplineSettings.Spline
+      value: 
+      objectReference: {fileID: 6414021418852001239, guid: 344be8fa397804294b1b2f63976790a9,
+        type: 3}
+    - target: {fileID: 5967141773964471494, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446012]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 5967141773964471494, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446252]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 5967141773964471494, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446012].Speed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 5967141773964471494, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446252].Speed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 6760873684879689673, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: AutomaticDolly.Method
+      value: 1470377270636446249
+      objectReference: {fileID: 0}
+    - target: {fileID: 6760873684879689673, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: m_SplineSettings.Spline
+      value: 
+      objectReference: {fileID: 1386462144798840309, guid: 344be8fa397804294b1b2f63976790a9,
+        type: 3}
+    - target: {fileID: 6760873684879689673, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446009]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 6760873684879689673, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: 'managedReferences[1470377270636446249]'
+      value: Unity.Cinemachine Unity.Cinemachine.SplineAutoDolly/FixedSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 6760873684879689673, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446009].Speed
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 6760873684879689673, guid: 705cc40ed7b2348689ba68fd4bc915b3,
+        type: 3}
+      propertyPath: managedReferences[1470377270636446249].Speed
+      value: 0.01
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 3093802693323564290, guid: 705cc40ed7b2348689ba68fd4bc915b3, type: 3}
+    - {fileID: 3093802693492705439, guid: 705cc40ed7b2348689ba68fd4bc915b3, type: 3}
+    - {fileID: 3132819566955975966, guid: 705cc40ed7b2348689ba68fd4bc915b3, type: 3}
+    - {fileID: 3132819567840683521, guid: 705cc40ed7b2348689ba68fd4bc915b3, type: 3}
+    - {fileID: 3132819568100379107, guid: 705cc40ed7b2348689ba68fd4bc915b3, type: 3}
+    - {fileID: 3132819566351770216, guid: 705cc40ed7b2348689ba68fd4bc915b3, type: 3}
+    - {fileID: 3132819566431539594, guid: 705cc40ed7b2348689ba68fd4bc915b3, type: 3}
+    - {fileID: 3132819566309852084, guid: 705cc40ed7b2348689ba68fd4bc915b3, type: 3}
+    - {fileID: 3132819567586179214, guid: 705cc40ed7b2348689ba68fd4bc915b3, type: 3}
+    - {fileID: 3132819567764494929, guid: 705cc40ed7b2348689ba68fd4bc915b3, type: 3}
+    - {fileID: 3132819566320787866, guid: 705cc40ed7b2348689ba68fd4bc915b3, type: 3}
+    - {fileID: 3132819566987883603, guid: 705cc40ed7b2348689ba68fd4bc915b3, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:

@@ -4,7 +4,7 @@ using UnityEditor;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Cinemachine;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Object = UnityEngine.Object;
@@ -87,7 +87,7 @@ public static class Utility
         {
             var comp = cam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
             if(comp)
-                comp.m_AmplitudeGain = 0.0f;
+                comp.AmplitudeGain = 0.0f;
         }
         // make the cinemachine carts static
         var carts = GameObject.FindObjectsByType<CinemachineDollyCart>(FindObjectsSortMode.None);
