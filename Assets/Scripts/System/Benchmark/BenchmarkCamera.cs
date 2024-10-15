@@ -23,7 +23,7 @@ namespace BoatAttack.Benchmark
                     case BenchmarkCameraType.Static:
                         break;
                     case BenchmarkCameraType.FlyThrough:
-                        cam.Dolly = cam.camera.GetCinemachineComponent<CinemachineTrackedDolly>();
+                        cam.Dolly = cam.camera.GetComponent<CinemachineSplineDolly>();
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -41,8 +41,8 @@ namespace BoatAttack.Benchmark
                 {
                     if (!benchCam.Dolly) continue;
 
-                    benchCam.Dolly.m_PathPosition += 1f / Frames;
-                    benchCam.Dolly.m_PathPosition = Mathf.Repeat(benchCam.Dolly.m_PathPosition, 1f);
+                    benchCam.Dolly.SplineSettings.Position += 1f / Frames;
+                    benchCam.Dolly.SplineSettings.Position = Mathf.Repeat(benchCam.Dolly.SplineSettings.Position, 1f);
                 }
             }
         }
@@ -51,10 +51,10 @@ namespace BoatAttack.Benchmark
         public class BenchmarkCameraSettings
         {
             public BenchmarkCameraType type;
-            public CinemachineVirtualCamera camera;
+            public CinemachineCamera camera;
 
             // public but not saved
-            [NonSerialized] public CinemachineTrackedDolly Dolly;
+            [NonSerialized] public CinemachineSplineDolly Dolly;
         }
     }
 }
