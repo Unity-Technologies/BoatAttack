@@ -447,6 +447,7 @@ GameObject:
   - component: {fileID: 3273538309571339402}
   - component: {fileID: 5029030102096579753}
   - component: {fileID: -5724565492997137697}
+  - component: {fileID: 3409998597512684321}
   m_Layer: 5
   m_Name: Race_Canvas
   m_TagString: Untagged
@@ -635,6 +636,20 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
+--- !u!114 &3409998597512684321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5347790855530666824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b95733f69ee9c45aaa9357926afb2c2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1 &5347790855547287923
 GameObject:
   m_ObjectHideFlags: 0
