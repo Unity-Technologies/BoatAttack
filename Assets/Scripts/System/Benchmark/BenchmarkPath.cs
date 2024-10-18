@@ -4,13 +4,13 @@ using Unity.Cinemachine;
 public class BenchmarkPath : MonoBehaviour
 {
     public CinemachineCamera cam;
-    CinemachineTrackedDolly dolly;
+    CinemachineSplineDolly dolly;
 
     public int frameLength = 2000;
 
     private void OnEnable()
     {
-        dolly = cam.GetComponent<CinemachineTrackedDolly>();
+        dolly = cam.GetComponent<CinemachineSplineDolly>();
     }
 
     // Update is called once per frame
@@ -18,8 +18,8 @@ public class BenchmarkPath : MonoBehaviour
     {
         if (dolly)
         {
-            dolly.m_PathPosition += 1f / frameLength;
-            dolly.m_PathPosition = Mathf.Repeat(dolly.m_PathPosition, 1f);
+            dolly.SplineSettings.Position += 1f / frameLength;
+            dolly.SplineSettings.Position = Mathf.Repeat(dolly.SplineSettings.Position, 1f);
         }
     }
 }

@@ -14,9 +14,9 @@ namespace BoatAttack
         public GameObject UI;
         public CameraModes _camModes;
         public PlayableDirector _cutsceneDirector;
-        public List<CinemachineVirtualCamera> _cutsceneCameras = new List<CinemachineVirtualCamera>();
-        public CinemachineVirtualCamera _droneCamera;
-        public CinemachineVirtualCamera _raceCamera;
+        public List<CinemachineCamera> _cutsceneCameras = new List<CinemachineCamera>();
+        public CinemachineCamera _droneCamera;
+        public CinemachineCamera _raceCamera;
         public CinemachineClearShot _replayShots;
         public Text _staticCamText;
         private int _curStaticCam = 0;
