@@ -169,9 +169,9 @@ namespace BoatAttack
             }
         }
 
-        public void ToggleSRPBatcher(bool enabled)
+        public void ToggleSRPBatcher(bool enableSRPBatcher)
         {
-            UniversalRenderPipeline.asset.useSRPBatcher = enabled;
+            UniversalRenderPipeline.asset.useSRPBatcher = enableSRPBatcher;
         }
 
         public static void LoadScene(int buildIndex, LoadSceneMode mode = LoadSceneMode.Single)
