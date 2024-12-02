@@ -18,7 +18,7 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
         private Volume qualityVol;
         public static GameObject volumeHolder;
 
-        [ObsoleteAttribute] public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
+        [Obsolete] public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
         {
             Setup();
         }
@@ -54,7 +54,7 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
             }
         }
 
-        [ObsoleteAttribute] public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+        [Obsolete] public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
         }
     }

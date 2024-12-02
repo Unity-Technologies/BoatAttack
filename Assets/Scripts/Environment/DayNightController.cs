@@ -19,8 +19,6 @@ namespace BoatAttack
         public bool autoIcrement;
         public float speed = 1f;
 
-        public static float GlobalTime;
-
         // Skybox
         [Header("Skybox Settings")]
         public Material _skybox; // skybox reference
@@ -100,7 +98,6 @@ namespace BoatAttack
                 }
             }
 
-            GlobalTime = this.time;
             // do update
             if (_sun)
             {

@@ -84,7 +84,7 @@ namespace WaterSystem
             }
 
             // Calling Configure since we are wanting to render into a RenderTexture and control cleat
-            [ObsoleteAttribute]
+            [Obsolete]
             public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
             {
                 ConfigureCameraDescriptor(ref cameraTextureDescriptor);
@@ -129,7 +129,7 @@ namespace WaterSystem
                 }
             }
 
-            [ObsoleteAttribute]
+            [Obsolete]
             public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
             {
                 var cam = renderingData.cameraData.camera;
@@ -169,9 +169,9 @@ namespace WaterSystem
             private const string k_RenderWaterCausticsTag = "Render Water Caustics";
             private ProfilingSampler m_WaterCaustics_Profile = new ProfilingSampler(k_RenderWaterCausticsTag);
             public Material WaterCausticMaterial;
-            private static Mesh m_mesh;
+            private Mesh m_mesh;
 
-            [ObsoleteAttribute]
+            [Obsolete]
             public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
             {
                 var cam = renderingData.cameraData.camera;
@@ -257,7 +257,7 @@ namespace WaterSystem
         WaterFxPass m_WaterFxPass;
         WaterCausticsPass m_CausticsPass;
 
-        public WaterSystemSettings settings = new WaterSystemSettings();
+        public WaterSystemSettings settings = new();
         [HideInInspector][SerializeField] private Shader causticShader;
         [HideInInspector][SerializeField] private Texture2D causticTexture;
 
