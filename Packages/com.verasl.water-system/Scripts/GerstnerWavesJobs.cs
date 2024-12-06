@@ -4,18 +4,16 @@ using Unity.Jobs;
 using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Collections;
-using UnityEngine.Rendering.Universal;
 using WaterSystem.Data;
 
 namespace WaterSystem
 {
 	/// <summary>
-	/// C# Jobs system version of the Gerstner waves implimentation
+	/// C# Jobs system version of the Gerstner waves implementation
 	/// </summary>
-    public static class GerstnerWavesJobs
+    public class GerstnerWavesJobs
     {
         //General variables
-        public static bool Initialized;
         private static bool _firstFrame = true;
         private static bool _processing;
         private static int _waveCount;
@@ -27,10 +25,17 @@ namespace WaterSystem
         private static NativeArray<float3> _wavePos;
         private static NativeArray<float3> _waveNormal;
         private static JobHandle _waterHeightHandle;
-        static readonly Dictionary<int, int2> Registry = new Dictionary<int, int2>();
-
+        static readonly Dictionary<int, int2> Registry = new();
+        
         public static void Init()
         {
+            _waterHeightHandle.Complete();
+            _positionCount = 0;
+            _waveCount = 0;
+            _firstFrame = true;
+            _processing = false;
+            Registry.Clear();
+            
             if(Debug.isDebugBuild)
                 Debug.Log("Initializing Gerstner Waves Jobs");
             //Wave data
@@ -44,8 +49,6 @@ namespace WaterSystem
             _positions = new NativeArray<float3>(4096, Allocator.Persistent);
             _wavePos = new NativeArray<float3>(4096, Allocator.Persistent);
             _waveNormal = new NativeArray<float3>(4096, Allocator.Persistent);
-
-            Initialized = true;
         }
 
         public static void Cleanup()
@@ -59,6 +62,7 @@ namespace WaterSystem
             _positions.Dispose();
             _wavePos.Dispose();
             _waveNormal.Dispose();
+            Registry.Clear();
         }
 
         public static void UpdateSamplePoints(ref NativeArray<float3> samplePoints, int guid)

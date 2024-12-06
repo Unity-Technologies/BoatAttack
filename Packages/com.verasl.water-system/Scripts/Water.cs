@@ -13,16 +13,8 @@ namespace WaterSystem
     public class Water : MonoBehaviour
     {
         // Singleton
-        private static Water _instance;
-        public static Water Instance
-        {
-            get
-            {
-                if (_instance == null)
-                    _instance = Object.FindFirstObjectByType<Water>();
-                return _instance;
-            }
-        }
+        public static Water Instance;
+
         // Script references
         private PlanarReflections _planarReflections;
 
@@ -61,6 +53,16 @@ namespace WaterSystem
         private static readonly int WaveData = Shader.PropertyToID("waveData");
         private static readonly int AbsorptionScatteringRamp = Shader.PropertyToID("_AbsorptionScatteringRamp");
         private static readonly int DepthCamZParams = Shader.PropertyToID("_VeraslWater_DepthCamParams");
+
+        [RuntimeInitializeOnLoadMethod]
+        private static void RuntimeInitializeOnLoad()
+        {
+            var found = FindObjectsByType<Water>(FindObjectsSortMode.None);
+            Debug.Assert(found.Length == 1); // Should be one and only one.
+            Instance = found[0];
+
+            GerstnerWavesJobs.Init();
+        }
 
         private void OnEnable()
         {
@@ -248,9 +250,6 @@ namespace WaterSystem
                 Shader.DisableKeyword("USE_STRUCTURED_BUFFER");
                 Shader.SetGlobalVectorArray(WaveData, GetWaveData());
             }
-            //CPU side
-            if(GerstnerWavesJobs.Initialized == false && Application.isPlaying)
-                GerstnerWavesJobs.Init();
         }
 
         private Vector4[] GetWaveData()
