@@ -17,11 +17,8 @@ namespace BoatAttack
         private int _curPoint;
         [NonSerialized] public int CurWp;
         private bool _foundPath;
-        private int _pathPointNum;
 
         private float _idleTime;
-        private Vector3 _tempFrom;//nav from position
-        private Vector3 _tempTo;//nav to position
         private float _targetSide;//side of destination, positive on right side, negative on left side
 
         private WaypointGroup.Waypoint[] _wPs;
@@ -40,6 +37,11 @@ namespace BoatAttack
         private void OnDisable()
         {
             StopAllCoroutines();
+            RaceManager.raceStarted -= StartRace;
+        }
+
+        private void OnDestroy()
+        {
             RaceManager.raceStarted -= StartRace;
         }
 

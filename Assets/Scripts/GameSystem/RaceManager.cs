@@ -72,15 +72,30 @@ namespace BoatAttack
         [NonSerialized] public static bool RaceStarted;
         [NonSerialized] public static Race RaceData;
         [NonSerialized] public static RaceStatus RaceState;
-        public Race demoRaceData = new Race();
+        public Race demoRaceData = new();
         [NonSerialized] public static float RaceTime;
-        private readonly Dictionary<int, float> _boatTimes = new Dictionary<int, float>();
+        private readonly Dictionary<int, float> _boatTimes = new();
 
         public static Action<bool> raceStarted;
 
         [Header("Assets")] public AssetReference[] boats;
         public AssetReference raceUiPrefab;
         public AssetReference raceUiTouchPrefab;
+        
+        [RuntimeInitializeOnLoadMethod]
+        private static void RuntimeInitializeOnLoad()
+        {
+            RaceManager[] raceManagers = FindObjectsByType<RaceManager>(FindObjectsSortMode.None);
+            Debug.Assert(raceManagers.Length == 1); // Should be one and only one.
+            Instance = raceManagers[0];
+            
+            SceneManager.sceneLoaded -= Setup;
+            RaceStarted = false;
+            RaceData = null;
+            RaceState = RaceStatus.PreRace;
+            RaceTime = 0;
+            raceStarted = null;
+        }
         
         public static void BoatFinished(int player)
         {
@@ -112,7 +127,6 @@ namespace BoatAttack
         {
             if(Debug.isDebugBuild)
                 Debug.Log("RaceManager Loaded");
-            Instance = this;
         }
 
         private void Reset(ResetMode mode = ResetMode.ResetBoatData)

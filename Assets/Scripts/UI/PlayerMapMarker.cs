@@ -28,6 +28,11 @@ namespace BoatAttack.UI
             RenderPipelineManager.beginContextRendering -= UpdatePosition;
         }
 
+        private void OnDestroy()
+        {
+            RenderPipelineManager.beginContextRendering -= UpdatePosition;
+        }
+
         public void Setup(BoatData boat, float scale = 0.0028f) // TODO magic number for mini map size
         {
             _boatData = boat;

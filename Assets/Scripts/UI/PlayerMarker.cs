@@ -24,6 +24,11 @@ namespace BoatAttack.UI
         {
             RenderPipelineManager.beginContextRendering -= UpdatePosition;
         }
+        
+        private void OnDestroy()
+        {
+            RenderPipelineManager.beginContextRendering -= UpdatePosition;
+        }
 
         public void Setup(BoatData boat)
         {

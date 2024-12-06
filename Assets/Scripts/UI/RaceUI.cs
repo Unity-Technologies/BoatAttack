@@ -42,6 +42,11 @@ namespace BoatAttack.UI
             RaceManager.raceStarted += SetGameplayUi;
         }
 
+        private void OnDestroy()
+        {
+            RaceManager.raceStarted -= SetGameplayUi;
+        }
+
         public void Setup(int player)
         {
             _playerIndex = player;

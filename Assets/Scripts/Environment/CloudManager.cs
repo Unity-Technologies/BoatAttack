@@ -43,6 +43,11 @@ public class CloudManager : MonoBehaviour
         RenderPipelineManager.beginCameraRendering -= CloudAlign;
     }
 
+    private void OnDestroy()
+    {
+        RenderPipelineManager.beginCameraRendering -= CloudAlign;
+    }
+
     void CloudAlign(ScriptableRenderContext context, Camera camera)
     {
         if (camera.cameraType != CameraType.Preview)

@@ -54,7 +54,7 @@ namespace LegacyUtility
 
     public abstract class Manager : MonoBehaviour
     {
-        private static Dictionary<Type, Manager> s_Managers = new Dictionary<Type, Manager>();
+        private static Dictionary<Type, Manager> s_Managers;
 
         private static readonly Type[] kAllManagerTypes = TypeUtility.GetConcreteTypes<Manager>();
 
@@ -103,7 +103,7 @@ namespace LegacyUtility
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void AutoCreateAll()
         {
-            s_Managers.Clear();
+            s_Managers = new();
 
             Type[] array = kAllManagerTypes;
             foreach (Type type in array)
