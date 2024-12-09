@@ -60,6 +60,17 @@ namespace BoatAttack
         public static GameObject ConsoleCanvas;
 
         // Use this for initialization
+        [RuntimeInitializeOnLoadMethod]
+        private static void RuntimeInitializeOnLoad()
+        {
+            var found = FindObjectsByType<AppSettings>(FindObjectsSortMode.None);
+            Debug.Assert(found.Length == 1); // Should be one and only one.
+            Instance = found[0];
+            MainCamera = Camera.main;
+            SceneManager.sceneLoaded -= LevelWasLoaded;
+            SceneManager.sceneLoaded += LevelWasLoaded;
+        }
+
         private void Awake()
         {
             if(Debug.isDebugBuild)
@@ -67,15 +78,12 @@ namespace BoatAttack
             Initialize();
             CmdArgs();
             SetRenderScale();
-            SceneManager.sceneLoaded += LevelWasLoaded;
         }
         
         private void Initialize()
         {
-            Instance = this;
             ConsoleCanvas = Instantiate(consoleCanvas);
             DontDestroyOnLoad(ConsoleCanvas);
-            MainCamera = Camera.main;
         }
 
         private void OnDisable()
