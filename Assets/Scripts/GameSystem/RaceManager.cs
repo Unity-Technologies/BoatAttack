@@ -8,7 +8,6 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
 using BoatAttack.UI;
 using UnityEngine.Playables;
-using UnityEngine.Rendering.Universal;
 using Random = UnityEngine.Random;
 
 namespace BoatAttack
@@ -85,9 +84,10 @@ namespace BoatAttack
         [RuntimeInitializeOnLoadMethod]
         private static void RuntimeInitializeOnLoad()
         {
-            RaceManager[] raceManagers = FindObjectsByType<RaceManager>(FindObjectsSortMode.None);
-            Debug.Assert(raceManagers.Length == 1); // Should be one and only one.
-            Instance = raceManagers[0];
+            RaceManager[] found = FindObjectsByType<RaceManager>(FindObjectsSortMode.None);
+            if (found.Length == 0) return;
+            Debug.Assert(found.Length == 1); // Should be one and only one.
+            Instance = found[0];
             
             SceneManager.sceneLoaded -= Setup;
             RaceStarted = false;

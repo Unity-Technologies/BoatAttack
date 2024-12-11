@@ -58,6 +58,7 @@ namespace WaterSystem
         private static void RuntimeInitializeOnLoad()
         {
             var found = FindObjectsByType<Water>(FindObjectsSortMode.None);
+            if (found.Length == 0) return;
             Debug.Assert(found.Length == 1); // Should be one and only one.
             Instance = found[0];
 
