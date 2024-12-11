@@ -1,12 +1,13 @@
 #if UNITY_EDITOR
 using UnityEditor;
+using System.Linq;
+using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 #endif
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Unity.Cinemachine;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using Object = UnityEngine.Object;
 
 public static class Utility
@@ -96,6 +97,20 @@ public static class Utility
             cart.AutomaticDolly.Enabled = false;
         }
     }
+
+#if UNITY_EDITOR
+    public static string GetURPPackageVersion()
+    {
+        List<PackageInfo> packageJsons = AssetDatabase.FindAssets("package")
+            .Select(AssetDatabase.GUIDToAssetPath).Where(x => AssetDatabase.LoadAssetAtPath<TextAsset>(x) != null)
+            .Select(PackageInfo.FindForAssetPath).ToList();
+            
+        var URPInfo = packageJsons.Find(x => x.name == "com.unity.render-pipelines.universal");
+        
+        return URPInfo?.version;
+    }
+#endif
+
 }
 
 #if UNITY_EDITOR
