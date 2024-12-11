@@ -7,7 +7,6 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
-using UnityEditor;
 using UnityEditor.SceneManagement;
 #endif
 
@@ -18,7 +17,7 @@ namespace BoatAttack.Benchmark
         // data
         public bool autoStart = true;
         private bool singleBench = false;
-        [HideInInspector] public string urpVersion = "N/A";
+        private static string urpVersion = "N/A";
         public static string UrpVersion;
         [HideInInspector] public int simpleRunScene = -1;
         public BenchmarkConfigData settings;
@@ -34,11 +33,21 @@ namespace BoatAttack.Benchmark
         public static int CurrentRunIndex;
         public static int CurrentRunFrame;
         private int _totalRunFrames;
-        private bool _running = false;
 
         // Bench results
-        private readonly List<PerfBasic> _perfData = new List<PerfBasic>();
+        private readonly List<PerfBasic> _perfData = new();
 
+        [RuntimeInitializeOnLoadMethod]
+        private static void RuntimeInitializeOnLoad()
+        {
+            SimpleRun = false;
+            Current = null;
+            _stats = null;
+            CurrentRunIndex = 0;
+            CurrentRunFrame = 0;
+
+        }
+        
         private void Start()
         {
             if (settings == null) AppSettings.ExitGame("Benchmark Not Setup");
@@ -79,6 +88,7 @@ namespace BoatAttack.Benchmark
 
         private void OnDestroy()
         {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
             RenderPipelineManager.endContextRendering -= EndContextRendering;
 #if UNITY_EDITOR
             EditorSceneManager.playModeStartScene = null; // need to reset benchmark start scene once benchmark is destroyed
@@ -351,12 +361,14 @@ namespace BoatAttack.Benchmark
         public string Quality;
         public string Resolution;
 
-        public TestInfo(string benchmarkName, string urpVersion = "N/A")
+        public TestInfo(string benchmarkName)
         {
             BenchmarkName = benchmarkName;
             Scene = Utility.RemoveWhitespace(SceneManager.GetActiveScene().name);
             UnityVersion = Application.unityVersion;
-            UrpVersion = urpVersion;
+#if UNITY_EDITOR
+            UrpVersion = Utility.GetURPPackageVersion();
+#endif
             BoatAttackVersion = Application.version;
             Platform =  Utility.RemoveWhitespace(Application.platform.ToString());
             API =  Utility.RemoveWhitespace(SystemInfo.graphicsDeviceType.ToString());

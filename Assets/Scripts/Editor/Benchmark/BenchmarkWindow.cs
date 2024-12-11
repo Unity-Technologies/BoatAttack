@@ -3,11 +3,8 @@ using System.Linq;
 using BoatAttack.Benchmark;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
-using UnityEditor.PackageManager;
 using UnityEditor.SceneManagement;
-using UnityEditorInternal;
 using UnityEngine;
-using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 public class BenchmarkWindow : EditorWindow
 {
@@ -179,7 +176,7 @@ public class BenchmarkWindow : EditorWindow
         if (!benchmarkPrefab.prefabContentsRoot.TryGetComponent(out Benchmark b)) return;
         b.simpleRun = index != -1;
         b.simpleRunScene = index;
-        b.urpVersion = GetURPPackageVersion();
+        Benchmark.UrpVersion = Utility.GetURPPackageVersion();
     }
 
     private void RunBenchmark()
@@ -490,17 +487,6 @@ public class BenchmarkWindow : EditorWindow
     private static SceneAsset GetBenchmarkLoader()
     {
         return (SceneAsset)AssetDatabase.LoadAssetAtPath(benchmarkLoaderPath, typeof(SceneAsset));
-    }
-
-    public static string GetURPPackageVersion()
-    {
-        List<PackageInfo> packageJsons = AssetDatabase.FindAssets("package")
-            .Select(AssetDatabase.GUIDToAssetPath).Where(x => AssetDatabase.LoadAssetAtPath<TextAsset>(x) != null)
-            .Select(PackageInfo.FindForAssetPath).ToList();
-
-        var URPInfo = packageJsons.Find(x => x.name == "com.unity.render-pipelines.universal");
-
-        return URPInfo.version;
     }
 
     #endregion
