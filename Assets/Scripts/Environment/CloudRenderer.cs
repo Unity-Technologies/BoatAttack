@@ -13,8 +13,13 @@ public class CloudRenderer : MonoBehaviour
     public ParticleSystem ps;
 
     private NativeArray<ParticleSystem.Particle> particles;
-    //private ParticleSystem.Particle[] parts;
     private MaterialPropertyBlock[] mpbs;
+    
+    void UnregisterDelegates()
+    {
+        RenderPipelineManager.beginCameraRendering -= RenderPipelineManagerOnbeginCameraRendering;
+        PlanarReflections.BeginPlanarReflections -= RenderPipelineManagerOnbeginCameraRendering;
+    }
     
     private void OnEnable()
     {
@@ -23,7 +28,6 @@ public class CloudRenderer : MonoBehaviour
         
         var main = ps.main;
         particles = new NativeArray<ParticleSystem.Particle>(main.maxParticles, Allocator.Persistent);
-        //parts = new ParticleSystem.Particle[main.maxParticles];
         mpbs = new MaterialPropertyBlock[main.maxParticles];
         for (var index = 0; index < mpbs.Length; index++)
         {
@@ -33,10 +37,14 @@ public class CloudRenderer : MonoBehaviour
 
     private void OnDisable()
     {
-        RenderPipelineManager.beginCameraRendering -= RenderPipelineManagerOnbeginCameraRendering;
-        PlanarReflections.BeginPlanarReflections -= RenderPipelineManagerOnbeginCameraRendering;
+        UnregisterDelegates();
 
         particles.Dispose();
+    }
+
+    private void OnDestroy()
+    {
+        UnregisterDelegates();
     }
 
     private void RenderPipelineManagerOnbeginCameraRendering(ScriptableRenderContext context, Camera camera)
