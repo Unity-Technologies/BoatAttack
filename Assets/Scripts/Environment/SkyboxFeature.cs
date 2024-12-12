@@ -19,7 +19,7 @@ public class SkyboxFeature : ScriptableRendererFeature
         private static SkyboxSystem system;
         public LayerMask mask;
         
-        [ObsoleteAttribute] public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
+        [Obsolete] public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
             if (system == null)
                 system = FindObjectOfType<SkyboxSystem>();
@@ -32,7 +32,7 @@ public class SkyboxFeature : ScriptableRendererFeature
             m_TransparentFilteringSettings = new FilteringSettings(RenderQueueRange.transparent, mask);
         }
         
-        [ObsoleteAttribute] public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+        [Obsolete] public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
             var cameraData = renderingData.cameraData;
             var cameraPosition = cameraData.camera.transform.position;
