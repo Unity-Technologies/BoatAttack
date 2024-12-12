@@ -16,12 +16,11 @@ namespace BoatAttack.Benchmark
     {
         // data
         public bool autoStart = true;
-        private bool singleBench = false;
-        private static string urpVersion = "N/A";
+        private bool singleBench;
         public static string UrpVersion;
         [HideInInspector] public int simpleRunScene = -1;
         public BenchmarkConfigData settings;
-        public bool simpleRun = false;
+        public bool simpleRun;
         public FinishAction finish = FinishAction.Exit;
         public static bool SimpleRun;
         private int _benchIndex;
@@ -40,6 +39,7 @@ namespace BoatAttack.Benchmark
         [RuntimeInitializeOnLoadMethod]
         private static void RuntimeInitializeOnLoad()
         {
+            UrpVersion = Utility.GetURPPackageVersion();
             SimpleRun = false;
             Current = null;
             _stats = null;
@@ -62,7 +62,6 @@ namespace BoatAttack.Benchmark
 
         public void Initialize()
         {
-            UrpVersion = urpVersion;
             if(settings.disableVSync)
                 QualitySettings.vSyncCount = 0;
             if(settings.stats)
