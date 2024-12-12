@@ -18,6 +18,7 @@ namespace BoatAttack
         public Renderer boatRenderer; // The renderer for the boat mesh
         public Renderer engineRenderer; // The renderer for the boat mesh
         public Engine engine;
+        public string hullName;
         private float _spawnHeight = 0f;
 
         // RaceStats
