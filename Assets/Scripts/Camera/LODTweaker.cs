@@ -22,14 +22,11 @@ namespace BoatAttack
                 QualitySettings.lodBias = 0.5f;
         }
 
-        private void OnEnable()
+        [RuntimeInitializeOnLoadMethod]
+        private static void RuntimeInitializeOnLoad()
         {
-            RenderPipelineManager.beginCameraRendering += SetMaxLod; // listen for LWRP camera callback
-        }
-
-        private void OnDisable()
-        {
-            RenderPipelineManager.beginCameraRendering -= SetMaxLod; // stop listening for LWRP camera callback
+            RenderPipelineManager.beginCameraRendering -= SetMaxLod;
+            RenderPipelineManager.beginCameraRendering += SetMaxLod;
         }
     }
 }
