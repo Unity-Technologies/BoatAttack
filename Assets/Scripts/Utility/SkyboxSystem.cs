@@ -25,10 +25,20 @@ public class SkyboxSystem : MonoBehaviour
         renderList = GetComponentsInChildren<Renderer>();
     }
 
-    private void OnDisable()
+    private void UnregisterDelegates()
     {
         RenderPipelineManager.beginCameraRendering -= OnCamera;
         RenderPipelineManager.endCameraRendering -= OnCameraFinish;
+    }
+
+    private void OnDisable()
+    {
+        UnregisterDelegates();
+    }
+    
+    private void OnDestroy()
+    {
+        UnregisterDelegates();
     }
 
     private void OnCamera(ScriptableRenderContext context, Camera camera)

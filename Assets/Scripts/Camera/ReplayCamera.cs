@@ -8,8 +8,8 @@ namespace BoatAttack
     public class ReplayCamera : MonoBehaviour
     {
         public static ReplayCamera Instance;
-        private static bool _spectatorEnabled;
-        private static BoatData _focusedBoat;
+        private bool _spectatorEnabled;
+        private BoatData _focusedBoat;
         private Transform _focusPoint;
         public CinemachineClearShot clearShot;
         private ICinemachineCamera currentCam;
