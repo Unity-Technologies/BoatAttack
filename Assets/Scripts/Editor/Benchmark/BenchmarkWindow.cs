@@ -176,7 +176,6 @@ public class BenchmarkWindow : EditorWindow
         if (!benchmarkPrefab.prefabContentsRoot.TryGetComponent(out Benchmark b)) return;
         b.simpleRun = index != -1;
         b.simpleRunScene = index;
-        Benchmark.UrpVersion = Utility.GetURPPackageVersion();
     }
 
     private void RunBenchmark()

@@ -58,6 +58,9 @@ namespace BoatAttack
         [Header("Prefabs")]
         public GameObject consoleCanvas;
         public static GameObject ConsoleCanvas;
+        
+        [SerializeField] public string urpVersion;
+        public static string UrpVersion { get { return Instance.urpVersion; } }
 
         // Use this for initialization
         [RuntimeInitializeOnLoadMethod]
@@ -85,6 +88,9 @@ namespace BoatAttack
         {
             ConsoleCanvas = Instantiate(consoleCanvas);
             DontDestroyOnLoad(ConsoleCanvas);
+#if UNITY_EDITOR
+            urpVersion = Utility.GetURPPackageVersion();
+#endif
         }
 
         private void OnDisable()

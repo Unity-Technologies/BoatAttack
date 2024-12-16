@@ -17,7 +17,6 @@ namespace BoatAttack.Benchmark
         // data
         public bool autoStart = true;
         private bool singleBench;
-        public static string UrpVersion;
         [HideInInspector] public int simpleRunScene = -1;
         public BenchmarkConfigData settings;
         public bool simpleRun;
@@ -39,13 +38,11 @@ namespace BoatAttack.Benchmark
         [RuntimeInitializeOnLoadMethod]
         private static void RuntimeInitializeOnLoad()
         {
-            UrpVersion = Utility.GetURPPackageVersion();
             SimpleRun = false;
             Current = null;
             _stats = null;
             CurrentRunIndex = 0;
             CurrentRunFrame = 0;
-
         }
         
         private void Start()

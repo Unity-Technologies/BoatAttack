@@ -37,7 +37,7 @@ public class PerfomanceStats : MonoBehaviour
 
     public void StartRun(string benchmarkName, int runLength)
     {
-	    Stats = new PerfBasic(benchmarkName, Benchmark.UrpVersion, runLength);
+	    Stats = new PerfBasic(benchmarkName, AppSettings.UrpVersion, runLength);
 	    CreateTextGui();
     }
 
