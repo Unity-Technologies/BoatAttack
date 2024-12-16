@@ -144,6 +144,11 @@ namespace BoatAttack
         {
             Instance.StartCoroutine(SetupRace());
         }
+        
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= Setup;
+        }
 
         public static IEnumerator SetupRace()
         {
