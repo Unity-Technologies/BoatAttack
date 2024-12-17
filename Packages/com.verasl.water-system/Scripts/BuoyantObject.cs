@@ -2,7 +2,7 @@
 // by Alex Zhdankin
 // Version 2.1
 //
-// http://forum.unity3d.com/threads/72974-Buoyancy-script
+// https://discussions.unity.com/t/buoyancy-script/432786
 //
 // Terms of use: do whatever you like
 //
