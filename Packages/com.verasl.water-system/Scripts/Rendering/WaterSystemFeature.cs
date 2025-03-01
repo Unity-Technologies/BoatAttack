@@ -16,16 +16,16 @@ namespace WaterSystem
             private readonly ShaderTagId m_WaterFXShaderTag = new ShaderTagId("WaterFX");
             private readonly Color m_ClearColor = new Color(0.0f, 0.5f, 0.5f, 0.5f); //r = foam mask, g = normal.x, b = normal.z, a = displacement
             private FilteringSettings m_FilteringSettings;
-            private RenderTargetHandle m_WaterFX = RenderTargetHandle.CameraTarget;
+            private RTHandle m_WaterFX;
 
             public WaterFxPass()
             {
-                m_WaterFX.Init("_WaterFXMap");
+                m_WaterFX = RTHandles.Alloc("_WaterFXMap", name: "_WaterFXMap");
                 // only wanting to render transparent objects
                 m_FilteringSettings = new FilteringSettings(RenderQueueRange.transparent);
             }
 
-            // Calling Configure since we are wanting to render into a RenderTexture and control cleat
+            // Calling Configure since we are wanting to render into a RenderTexture and control clear
             public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
             {
                 // no need for a depth buffer
@@ -36,8 +36,9 @@ namespace WaterSystem
                 // default format TODO research usefulness of HDR format
                 cameraTextureDescriptor.colorFormat = RenderTextureFormat.Default;
                 // get a temp RT for rendering into
-                cmd.GetTemporaryRT(m_WaterFX.id, cameraTextureDescriptor, FilterMode.Bilinear);
-                ConfigureTarget(m_WaterFX.Identifier());
+                RTHandles.Release(m_WaterFX);
+                m_WaterFX = RTHandles.Alloc(cameraTextureDescriptor, FilterMode.Bilinear, name: "_WaterFXMap");
+                ConfigureTarget(m_WaterFX);
                 // clear the screen with a specific color for the packed data
                 ConfigureClear(ClearFlag.Color, m_ClearColor);
             }
@@ -61,10 +62,10 @@ namespace WaterSystem
                 CommandBufferPool.Release(cmd);
             }
 
-            public override void OnCameraCleanup(CommandBuffer cmd) 
+            public override void OnCameraCleanup(CommandBuffer cmd)
             {
-                // since the texture is used within the single cameras use we need to cleanup the RT afterwards
-                cmd.ReleaseTemporaryRT(m_WaterFX.id);
+                // since the texture is used within the single camera's use we need to cleanup the RT afterwards
+                RTHandles.Release(m_WaterFX);
             }
         }
 
@@ -93,7 +94,6 @@ namespace WaterSystem
                         ? RenderSettings.sun.transform.localToWorldMatrix
                         : Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(-45f, 45f, 0f), Vector3.one);
                     WaterCausticMaterial.SetMatrix("_MainLightDir", sunMatrix);
-                
                 
                     // Create mesh if needed
                     if (!m_mesh)

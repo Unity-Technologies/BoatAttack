@@ -36,7 +36,7 @@ static class UniversalSettings
             guiHandler = (searchContext) =>
             {
                 Styles.header.fontSize = 16;
-                var asset = GraphicsSettings.renderPipelineAsset;
+                var asset = GraphicsSettings.defaultRenderPipeline;
 
                 if(asset == null) // No Pipeline asset in Graphics Settings
                     return;

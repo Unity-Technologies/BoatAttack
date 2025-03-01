@@ -237,8 +237,8 @@ namespace WaterSystem
         private void UpdateDrag(float submergedAmount)
         {
             PercentSubmerged = math.lerp(PercentSubmerged, submergedAmount, 0.25f);
-            _rb.drag = _baseDrag + _baseDrag * (PercentSubmerged * 10f);
-            _rb.angularDrag = _baseAngularDrag + PercentSubmerged * 0.5f;
+            _rb.linearDamping = _baseDrag + _baseDrag * (PercentSubmerged * 10f);
+            _rb.angularDamping = _baseAngularDrag + PercentSubmerged * 0.5f;
         }
 
         private void GetVelocityPoints()
@@ -325,8 +325,8 @@ namespace WaterSystem
                 Debug.LogError($"Buoyancy:Object \"{name}\" had no Rigidbody. Rigidbody has been added.");
             }
             _rb.centerOfMass = centerOfMass + _voxelBounds.center;
-            _baseDrag = _rb.drag;
-            _baseAngularDrag = _rb.angularDrag;
+            _baseDrag = _rb.linearDamping;
+            _baseAngularDrag = _rb.angularDamping;
             
             _velocity = new float3[_voxels.Length];
             var archimedesForceMagnitude = WaterDensity * Mathf.Abs(Physics.gravity.y) * volume;

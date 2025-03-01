@@ -133,16 +133,7 @@ namespace BoatAttack
 
         private void OnDrawGizmos()
         {
-            var c = Color.yellow;
-            Gizmos.color = c;
-
-            for (var i = 0; i < _pathPoint.Length - 1; i++)
-            {
-                if (i == _pathPoint.Length - 1)
-                    Gizmos.DrawLine(_pathPoint[_pathPoint.Length - 1], _pathPoint[i]);
-                else
-                    Gizmos.DrawLine(_pathPoint[i], _pathPoint[i + 1]);
-            }
+           
         }
     }
 }

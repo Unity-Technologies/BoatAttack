@@ -1,8 +1,21 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8060695183832050726
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 9
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -10,14 +23,22 @@ Material:
   m_Name: Clouds
   m_Shader: {fileID: -6465566751694194690, guid: db0b334ed7edc2149a5c784f34eefeba,
     type: 3}
-  m_ShaderKeywords: BOOLEAN_3A4FA4CB1FE54F0D8BDC5D502F6ADCB0_ON BOOLEAN_68600FB702FC441CA4969E5B54503936_ON
-    BOOLEAN_9A9F210EF4D44680B8F0CB7ACD99DFBB_ON ETC1_EXTERNAL_ALPHA
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - BOOLEAN_9A9F210EF4D44680B8F0CB7ACD99DFBB_ON
+  m_InvalidKeywords:
+  - BOOLEAN_3A4FA4CB1FE54F0D8BDC5D502F6ADCB0_ON
+  - BOOLEAN_68600FB702FC441CA4969E5B54503936_ON
+  - ETC1_EXTERNAL_ALPHA
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 3600
   stringTagMap: {}
-  disabledShaderPasses: []
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -37,6 +58,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: 7247454f970266b4c8d99e1f01e15296, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_36aff2641eb842bfb8ac1025d9bb12f9_Out_0_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7247454f970266b4c8d99e1f01e15296, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Texture2DAsset_bd2a7217cfc44a0095b8acce83da0833_Out_0:
         m_Texture: {fileID: 2800000, guid: 7247454f970266b4c8d99e1f01e15296, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -53,6 +78,7 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - BOOLEAN_12063517206649E192703C709593BEE9: 0
     - BOOLEAN_3A4FA4CB1FE54F0D8BDC5D502F6ADCB0: 1
@@ -67,8 +93,11 @@ Material:
     - Vector1_2d1f70e8efb04843b1f8184ae06925e0: 119.23
     - Vector1_33982692: 150
     - Vector1_5f4b185241524942830132fc71554a33: 1
+    - _QueueControl: 1
+    - _QueueOffset: 0
     m_Colors:
     - Color_7eff2e7fc27440719d0a871a39dabdd3: {r: 1, g: 1, b: 1, a: 0}
     - Vector2_65050940ec244ae3bf42db206c2dccca: {r: 0, g: 50, b: 0, a: 0}
     - _Color: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
