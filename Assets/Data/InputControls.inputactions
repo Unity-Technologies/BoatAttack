@@ -6,12 +6,13 @@
             "id": "ef127e39-c6d2-4d6f-8edc-46296d5de0cb",
             "actions": [
                 {
-                    "name": "Trottle",
+                    "name": "Throttle",
                     "type": "Value",
                     "id": "591093b7-743c-42e6-b71e-bab02d178bd1",
                     "expectedControlType": "Axis",
                     "processors": "AxisDeadzone(min=0.1,max=1)",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Steering",
@@ -19,7 +20,8 @@
                     "id": "67e3403a-b3e8-43af-ab52-4575ba23afef",
                     "expectedControlType": "Axis",
                     "processors": "AxisDeadzone(min=0.1,max=1)",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Reset",
@@ -27,7 +29,8 @@
                     "id": "218640d2-e6dc-4136-842e-4621c0883e15",
                     "expectedControlType": "",
                     "processors": "AxisDeadzone(min=0.1,max=1)",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Pause",
@@ -35,7 +38,8 @@
                     "id": "097a2ec8-8df3-4d48-96e5-fbf096270878",
                     "expectedControlType": "",
                     "processors": "AxisDeadzone(min=0.1,max=1)",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -46,7 +50,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Trottle",
+                    "action": "Throttle",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -57,7 +61,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Trottle",
+                    "action": "Throttle",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -68,7 +72,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Trottle",
+                    "action": "Throttle",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -79,7 +83,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
-                    "action": "Trottle",
+                    "action": "Throttle",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -90,7 +94,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
-                    "action": "Trottle",
+                    "action": "Throttle",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -101,7 +105,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
-                    "action": "Trottle",
+                    "action": "Throttle",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -112,7 +116,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Trottle",
+                    "action": "Throttle",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -123,7 +127,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "Trottle",
+                    "action": "Throttle",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -134,7 +138,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
-                    "action": "Trottle",
+                    "action": "Throttle",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -145,7 +149,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
-                    "action": "Trottle",
+                    "action": "Throttle",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -156,7 +160,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
-                    "action": "Trottle",
+                    "action": "Throttle",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -167,7 +171,7 @@
                     "interactions": "",
                     "processors": "Clamp(min=-1,max=1)",
                     "groups": "TouchScreen",
-                    "action": "Trottle",
+                    "action": "Throttle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -326,7 +330,8 @@
                     "id": "c57759c4-f215-4fe9-bd6c-1c835c6074bd",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "TimeOfDay",
@@ -334,7 +339,8 @@
                     "id": "bfb079cd-5e64-4031-b061-eb65384dacba",
                     "expectedControlType": "",
                     "processors": "AxisDeadzone(min=0.1,max=1)",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [

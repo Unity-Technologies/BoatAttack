@@ -19,8 +19,8 @@ namespace BoatAttack
         {
             _controls = new InputControls();
             
-            _controls.BoatControls.Trottle.performed += context => _throttle = context.ReadValue<float>();
-            _controls.BoatControls.Trottle.canceled += context => _throttle = 0f;
+            _controls.BoatControls.Throttle.performed += context => _throttle = context.ReadValue<float>();
+            _controls.BoatControls.Throttle.canceled += context => _throttle = 0f;
             
             _controls.BoatControls.Steering.performed += context => _steering = context.ReadValue<float>();
             _controls.BoatControls.Steering.canceled += context => _steering = 0f;
