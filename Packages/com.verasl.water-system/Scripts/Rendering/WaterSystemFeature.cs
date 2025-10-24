@@ -16,11 +16,17 @@ namespace WaterSystem
             private readonly ShaderTagId m_WaterFXShaderTag = new ShaderTagId("WaterFX");
             private readonly Color m_ClearColor = new Color(0.0f, 0.5f, 0.5f, 0.5f); //r = foam mask, g = normal.x, b = normal.z, a = displacement
             private FilteringSettings m_FilteringSettings;
+#if UNITY_2022_1_OR_NEWER
+            private RTHandle m_WaterFX = RTHandles.Alloc(BuiltinRenderTextureType.CameraTarget,"_WaterFXMap");
+#else
             private RenderTargetHandle m_WaterFX = RenderTargetHandle.CameraTarget;
+#endif
 
             public WaterFxPass()
             {
+#if !UNITY_2022_1_OR_NEWER
                 m_WaterFX.Init("_WaterFXMap");
+#endif
                 // only wanting to render transparent objects
                 m_FilteringSettings = new FilteringSettings(RenderQueueRange.transparent);
             }
@@ -36,8 +42,13 @@ namespace WaterSystem
                 // default format TODO research usefulness of HDR format
                 cameraTextureDescriptor.colorFormat = RenderTextureFormat.Default;
                 // get a temp RT for rendering into
+#if UNITY_2022_1_OR_NEWER
+                cmd.GetTemporaryRT(Shader.PropertyToID(m_WaterFX.name), cameraTextureDescriptor, FilterMode.Bilinear);
+                ConfigureTarget(m_WaterFX);
+#else
                 cmd.GetTemporaryRT(m_WaterFX.id, cameraTextureDescriptor, FilterMode.Bilinear);
                 ConfigureTarget(m_WaterFX.Identifier());
+#endif
                 // clear the screen with a specific color for the packed data
                 ConfigureClear(ClearFlag.Color, m_ClearColor);
             }
@@ -55,7 +66,13 @@ namespace WaterSystem
                         SortingCriteria.CommonTransparent);
 
                     // draw all the renderers matching the rules we setup
+#if UNITY_2022_1_OR_NEWER
+                    var param = new RendererListParams(renderingData.cullResults,drawSettings,m_FilteringSettings);
+                    var rendererList = context.CreateRendererList(ref param);
+                    cmd.DrawRendererList(rendererList);
+#else
                     context.DrawRenderers(renderingData.cullResults, ref drawSettings, ref m_FilteringSettings);
+#endif
                 }
                 context.ExecuteCommandBuffer(cmd);
                 CommandBufferPool.Release(cmd);
@@ -64,7 +81,11 @@ namespace WaterSystem
             public override void OnCameraCleanup(CommandBuffer cmd) 
             {
                 // since the texture is used within the single cameras use we need to cleanup the RT afterwards
+#if UNITY_2022_1_OR_NEWER
+                cmd.ReleaseTemporaryRT(Shader.PropertyToID(m_WaterFX.name));
+#else
                 cmd.ReleaseTemporaryRT(m_WaterFX.id);
+#endif
             }
         }
 
