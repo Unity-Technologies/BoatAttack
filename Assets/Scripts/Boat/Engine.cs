@@ -150,7 +150,7 @@ namespace BoatAttack
                     forward = Vector3.forward;
                 }
                 
-                RB.AddForce(horsePower * forward, ForceMode.Acceleration); // add force forward based on input and horsepower
+                RB.AddForce(horsePower * modifier * forward, ForceMode.Acceleration); // add force forward based on input and horsepower
                 RB.AddRelativeTorque(-Vector3.right * modifier, ForceMode.Acceleration);
             }
         }
@@ -172,7 +172,8 @@ namespace BoatAttack
             if (_yHeight > -0.1f && RB != null) // if the engine is deeper than 0.1
             {
                 // ⚠️ NaN 방지: torque 벡터 검증
-                Vector3 torque = new Vector3(0f, steeringTorque, -steeringTorque * 0.5f) * modifier;
+                // Z축 Roll 제거: 선회 시 기울어지지 않아 직진 성능 유지
+                Vector3 torque = new Vector3(0f, steeringTorque, 0f) * modifier;
                 if (float.IsNaN(torque.x) || float.IsNaN(torque.y) || float.IsNaN(torque.z))
                 {
                     torque = Vector3.zero;

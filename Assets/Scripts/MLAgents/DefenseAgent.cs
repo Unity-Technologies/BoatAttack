@@ -62,13 +62,21 @@ namespace BoatAttack
         public float maxAngularAcceleration = 45f;
 
         [Header("Control Settings")]
+        [Range(0f, 1f)]
+        [Tooltip("기본 전진값 (키 입력 없을 때 적용)")]
+        public float baseThrottle = 0.5f;
+
+        [Range(0f, 1f)]
+        [Tooltip("최소 전진값 (후진 방지용, 이 값 이하로 내려가지 않음)")]
+        public float minThrottle = 0.5f;
+
         [Range(0.1f, 2.0f)]
         [Tooltip("조종 감도 조절")]
         public float steeringSensitivity = 0.3f;
 
         [Range(0.01f, 1.0f)]
-        [Tooltip("입력 스무스 처리 속도 - 높을수록 빠른 반응 (0.2 = 부드러움, 0.5 = 빠른 반응)")]
-        public float inputSmoothing = 0.4f;  // 0.2 → 0.4로 증가 (더 빠른 반응)
+        [Tooltip("입력 스무스 처리 (1.0 = 즉각 반응, 0.5 = 부드러움)")]
+        public float inputSmoothing = 1.0f;  // 1.0 = 스무딩 없음 (즉각 반응)
 
         [Header("Debug")]
         [Tooltip("에디터에서 Raycast 시각화")]
@@ -89,6 +97,29 @@ namespace BoatAttack
         // 저주파 필터 (Low-Pass Filter) - 이전 명령과의 연속성 부여
         private float _prevThrottle = 0f;
         private float _prevSteering = 0f;
+
+        // 개별 보상용 이전 헤딩 저장
+        private float _prevHeading = 0f;
+        private bool _hasPrevHeading = false;
+
+        /// <summary>
+        /// 이전 프레임의 헤딩값 반환 (개별 보상 계산용)
+        /// </summary>
+        public float PreviousHeading => _prevHeading;
+
+        /// <summary>
+        /// 이전 헤딩값이 유효한지 여부
+        /// </summary>
+        public bool HasPreviousHeading => _hasPrevHeading;
+
+        /// <summary>
+        /// 현재 헤딩을 이전 헤딩으로 저장 (매 프레임 호출)
+        /// </summary>
+        public void UpdatePreviousHeading()
+        {
+            _prevHeading = transform.eulerAngles.y;
+            _hasPrevHeading = true;
+        }
 
         private new void Awake()
         {
@@ -180,6 +211,8 @@ namespace BoatAttack
             _lastStepReward = 0f;
             _prevThrottle = 0f;
             _prevSteering = 0f;
+            _prevHeading = transform.eulerAngles.y;
+            _hasPrevHeading = false;  // 첫 프레임에는 이전 헤딩 없음
 
             // PushBlockEnvController 패턴: 
             // ML-Agents가 자동으로 OnEpisodeBegin을 호출하므로,
@@ -247,11 +280,12 @@ namespace BoatAttack
             }
 
             // === 3. 적군 선박들 (4 × maxEnemyCount) - 거리 기반 정렬 + 상대 좌표 ===
-            // 먼저 적군을 거리순으로 정렬
+            // 먼저 적군을 거리순으로 정렬 (활성화된 적군만)
             List<(GameObject enemy, float distance)> sortedEnemies = new List<(GameObject, float)>();
             for (int i = 0; i < enemyShips.Length && i < maxEnemyCount; i++)
             {
-                if (enemyShips[i] != null)
+                // null 체크 + 활성화 체크 (Stage1에서 비활성화된 적군 제외)
+                if (enemyShips[i] != null && enemyShips[i].activeInHierarchy)
                 {
                     float dist = Vector3.Distance(myPos, enemyShips[i].transform.position);
                     sortedEnemies.Add((enemyShips[i], dist));
@@ -339,8 +373,8 @@ namespace BoatAttack
                 steeringInput = 0f;
             }
             
-            // 범위 제한
-            throttleInput = Mathf.Clamp(throttleInput, -1f, 1f);
+            // 범위 제한 (minThrottle 이상으로 유지)
+            throttleInput = Mathf.Clamp(throttleInput, minThrottle, 1f);
             steeringInput = Mathf.Clamp(steeringInput, -1f, 1f);
             
             // 전진만 허용 (후진은 0으로 처리) 또는 후진도 허용하려면 주석 해제
@@ -352,14 +386,17 @@ namespace BoatAttack
             float steering = steeringInput * steeringSensitivity;
             steering = Mathf.Clamp(steering, -1f, 1f);
 
-            // 저주파 필터 (Low-Pass Filter) 적용: 이전 명령과의 연속성 부여
-            // inputSmoothing이 낮을수록 부드러운 전환, 높을수록 빠른 반응
-            throttle = Mathf.Lerp(_prevThrottle, throttle, inputSmoothing);
-            steering = Mathf.Lerp(_prevSteering, steering, inputSmoothing);
+            // ⚠️ 저주파 필터 제거 - 즉각적인 반응으로 변경
+            // 필요시 inputSmoothing으로 스무딩 활성화 가능
+            if (inputSmoothing < 1f)
+            {
+                throttle = Mathf.Lerp(_prevThrottle, throttle, inputSmoothing);
+                steering = Mathf.Lerp(_prevSteering, steering, inputSmoothing);
+            }
             _prevThrottle = throttle;
             _prevSteering = steering;
 
-            // Engine에 전달 (필터링된 값)
+            // Engine에 전달
             _engine.Accelerate(throttle);
             _engine.Turn(steering);
             
@@ -428,7 +465,8 @@ namespace BoatAttack
             }
 
             // 키보드 입력을 throttle/steering으로 직접 변환 (-1~1)
-            float throttle = 0f;
+            // 기본 전진값 적용 (키 안 눌러도 전진)
+            float throttle = baseThrottle;
             float steering = 0f;
             
             // Agent 이름으로 구분 (더 유연한 매칭)

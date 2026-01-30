@@ -6,14 +6,44 @@ using System.Linq;
 namespace BoatAttack
 {
     /// <summary>
+    /// 커리큘럼 학습 단계
+    /// </summary>
+    public enum TrainingStage
+    {
+        Stage1_Formation,   // 대형 유지 학습
+        Stage2_Capture,     // 포획 보상 학습
+        Stage3_Tactical     // 전술 기동 학습
+    }
+
+    /// <summary>
     /// 방어 환경 컨트롤러 (중앙 허브 버전)
     /// - 모든 에피소드 재시작 로직을 중앙에서 관리
     /// - 그룹 보상 분배 및 환경 관리
     /// - 선박 위치 리셋 및 적군 추적
     /// - 에피소드 시작/종료 관리
+    /// - 커리큘럼 학습 단계별 보상 제어
     /// </summary>
     public class DefenseEnvController : MonoBehaviour
     {
+        [Header("Training Stage")]
+        [Tooltip("현재 학습 단계 (Stage1: 대형유지, Stage2: 포획, Stage3: 전술기동)")]
+        public TrainingStage currentStage = TrainingStage.Stage1_Formation;
+
+        [Tooltip("Stage1에서 적군 비활성화")]
+        public bool disableEnemiesInStage1 = true;
+
+        [Tooltip("Stage1에서 활성화할 적군 수 (disableEnemiesInStage1이 false일 때)")]
+        [Range(0, 5)]
+        public int stage1EnemyCount = 0;
+
+        [Tooltip("Stage2에서 활성화할 적군 수")]
+        [Range(1, 5)]
+        public int stage2EnemyCount = 2;
+
+        [Tooltip("Stage3에서 활성화할 적군 수")]
+        [Range(1, 5)]
+        public int stage3EnemyCount = 5;
+
         [Header("Agents")]
         [Tooltip("방어 에이전트 1")]
         public DefenseAgent defenseAgent1;
@@ -75,11 +105,11 @@ namespace BoatAttack
         [Tooltip("포획 성공 보상")]
         public float captureReward = 1.0f;
         
-        [Tooltip("포획 위치 보너스 (최대)")]
-        public float captureCenterBonus = 0.3f;
-        
-        [Tooltip("포획 위치 보너스 최대 거리")]
-        public float captureCenterMaxDistance = 30f;
+        [Tooltip("포획 거리 보너스 (최대) - 모선과 멀리서 포획할수록 보상")]
+        public float captureDistanceBonus = 0.5f;
+
+        [Tooltip("포획 거리 보너스 기준 (m) - 이 거리 이상에서 최대 보너스")]
+        public float captureDistanceBonusRange = 500f;
         
         [Tooltip("모선 방어 성공 보상")]
         public float motherShipDefenseReward = 0.5f;
@@ -97,7 +127,7 @@ namespace BoatAttack
         public float boundary1km = 1000f;
         
         [Tooltip("모선 충돌 패널티 (Game Over)")]
-        public float motherShipCollisionPenalty = -1.75f;
+        public float motherShipCollisionPenalty = -2.0f;
         
         [Header("Explosion Settings")]
         [Tooltip("폭발 효과 Prefab (War FX)")]
@@ -119,11 +149,20 @@ namespace BoatAttack
         public bool endEpisodeOnAllEnemiesDestroyed = true;
 
         [Tooltip("아군 간 최대 허용 거리 (이 거리 초과 시 에피소드 종료)")]
-        public float maxAllyDistance = 25f;
+        public float maxAllyDistance = 120f;  // Stage1 최적거리(50m) + 대형붕괴거리(100m) 사이 여유
 
         [Tooltip("아군 거리 초과 페널티")]
-        public float allyDistancePenalty = -2.0f;
-        
+        public float allyDistancePenalty = -1.0f;
+
+        [Header("Reward Monitor (Read Only)")]
+        [SerializeField] private float _currentEpisodeReward = 0f;
+        [SerializeField] private float _lastStepReward = 0f;
+        [SerializeField] private float _cooperativeReward = 0f;
+        [SerializeField] private float _tacticalReward = 0f;
+        [SerializeField] private float _safetyPenalty = 0f;
+        [SerializeField] private int _currentStep = 0;
+        [SerializeField] private int _totalCollisions = 0;
+
         [Header("Debug")]
         [Tooltip("디버그 로그 활성화")]
         public bool enableDebugLog = false;
@@ -172,8 +211,30 @@ namespace BoatAttack
         private System.Collections.Generic.HashSet<string> _destroyedAttackBoatNames = new System.Collections.Generic.HashSet<string>(); // 파괴된 attack_boat 이름 추적
         private int _initialAttackBoatCount = 0;
         
+        // Inspector에서 Stage 변경 시 자동 적용 (에디터 전용)
+        private TrainingStage _lastStage;
+
+        private void OnValidate()
+        {
+            // Play 모드에서만 실행
+            if (!Application.isPlaying)
+                return;
+
+            // Stage가 변경되었는지 확인
+            if (_lastStage != currentStage)
+            {
+                Debug.Log($"[OnValidate] Stage 변경 감지: {_lastStage} → {currentStage}");
+                _lastStage = currentStage;
+                SyncStageToRewardCalculator();
+                ApplyStageSettings();
+            }
+        }
+
         private void Start()
         {
+            // 초기 Stage 저장
+            _lastStage = currentStage;
+
             // SimpleMultiAgentGroup 초기화
             if (m_AgentGroup == null)
             {
@@ -201,6 +262,12 @@ namespace BoatAttack
                 {
                 }
             }
+
+            // RewardCalculator에 현재 Stage 동기화
+            SyncStageToRewardCalculator();
+
+            // Stage별 적군 활성화/비활성화
+            ApplyStageSettings();
             
             // 모선 찾기
             if (motherShip == null)
@@ -383,6 +450,16 @@ namespace BoatAttack
             
             // 6. 부여: 그룹 보상 또는 개별 보상
             float totalReward = cooperativeReward + tacticalReward + safetyPenalty + boundaryPenalty;
+
+            // Inspector 모니터링 업데이트
+            _lastStepReward = totalReward;
+            _currentEpisodeReward += totalReward;
+            _cooperativeReward = cooperativeReward;
+            _tacticalReward = tacticalReward;
+            _safetyPenalty = safetyPenalty + boundaryPenalty;
+            _currentStep = _resetTimer;
+            _totalCollisions = _totalCollisionCount;
+
             if (Mathf.Abs(totalReward) > 0.0001f)
             {
                 if (m_AgentGroup != null)
@@ -399,8 +476,63 @@ namespace BoatAttack
                         defenseAgent2.AddReward(totalReward);
                 }
             }
+
+            // === 개별 보상 부여 (Stage1 전용) ===
+            // 그룹 보상과 별개로 각 에이전트에 직접 부여
+            if (rewardCalculator.currentStage == TrainingStage.Stage1_Formation)
+            {
+                float deltaTime = Time.fixedDeltaTime * rewardCalculationInterval;
+
+                // Agent 1 개별 보상
+                if (defenseAgent1 != null)
+                {
+                    // 개별 속도 보상
+                    float speedReward1 = rewardCalculator.CalculateIndividualSpeedReward(agent1State);
+
+                    // 조향 안정성 보상 (이전 헤딩이 있을 때만)
+                    float stabilityReward1 = 0f;
+                    if (defenseAgent1.HasPreviousHeading)
+                    {
+                        stabilityReward1 = rewardCalculator.CalculateSteeringStabilityReward(
+                            agent1State.heading, defenseAgent1.PreviousHeading, deltaTime);
+                    }
+
+                    float individualReward1 = speedReward1 + stabilityReward1;
+                    if (Mathf.Abs(individualReward1) > 0.00001f)
+                    {
+                        defenseAgent1.AddReward(individualReward1);
+                    }
+
+                    // 이전 헤딩 업데이트
+                    defenseAgent1.UpdatePreviousHeading();
+                }
+
+                // Agent 2 개별 보상
+                if (defenseAgent2 != null)
+                {
+                    // 개별 속도 보상
+                    float speedReward2 = rewardCalculator.CalculateIndividualSpeedReward(agent2State);
+
+                    // 조향 안정성 보상 (이전 헤딩이 있을 때만)
+                    float stabilityReward2 = 0f;
+                    if (defenseAgent2.HasPreviousHeading)
+                    {
+                        stabilityReward2 = rewardCalculator.CalculateSteeringStabilityReward(
+                            agent2State.heading, defenseAgent2.PreviousHeading, deltaTime);
+                    }
+
+                    float individualReward2 = speedReward2 + stabilityReward2;
+                    if (Mathf.Abs(individualReward2) > 0.00001f)
+                    {
+                        defenseAgent2.AddReward(individualReward2);
+                    }
+
+                    // 이전 헤딩 업데이트
+                    defenseAgent2.UpdatePreviousHeading();
+                }
+            }
         }
-        
+
         #region 중앙 허브: 통합 에피소드 재시작 로직
         
         /// <summary>
@@ -422,11 +554,22 @@ namespace BoatAttack
             int previousTotalCount = _totalCollisionCount;
             _totalCollisionCount = 0;
             _collisionCooldownTimes.Clear();
-            
+
+            // Inspector 모니터 로그 및 초기화
+            float previousEpisodeReward = _currentEpisodeReward;
+            _currentEpisodeReward = 0f;
+            _lastStepReward = 0f;
+            _cooperativeReward = 0f;
+            _tacticalReward = 0f;
+            _safetyPenalty = 0f;
+            _currentStep = 0;
+            _totalCollisions = 0;
+
             // 에피소드 번호 증가 및 로그 출력
             _episodeNumber++;
             Debug.Log($"[RestartEpisode] ========== 에피소드 #{_episodeNumber} 종료 ==========");
             Debug.Log($"[RestartEpisode] 종료 사유: {reason}");
+            Debug.Log($"[RestartEpisode] 누적 보상: {previousEpisodeReward:F3}");
             Debug.Log($"[RestartEpisode] 최종 보상: {(finalReward.HasValue ? finalReward.Value.ToString("F3") : "없음")}");
             Debug.Log($"[RestartEpisode] 이전 총 충돌 횟수 (Web+MotherShip): {previousTotalCount} → 초기화됨 (0)");
             Debug.Log($"[RestartEpisode] ==========================================");
@@ -548,7 +691,11 @@ namespace BoatAttack
             {
                 rewardCalculator.Reset();
             }
-            
+
+            // Stage 설정 적용 (에피소드 시작 시마다)
+            SyncStageToRewardCalculator();
+            ApplyStageSettings();
+
             // 모든 선박 리셋
             ResetPositionsOnly();
             
@@ -585,25 +732,26 @@ namespace BoatAttack
             // 에피소드가 종료 중이면 무시
             if (_episodeEnding)
                 return;
-            
+
             // 기본 포획 보상
             float totalReward = captureReward;
-            
-            // 위치 보너스 계산 (그물 중심에 가까울수록)
-            if (defenseAgent1 != null && defenseAgent2 != null)
+
+            // 거리 보너스 계산 (모선과 멀리서 포획할수록 보상)
+            if (motherShip != null)
             {
-                Vector3 netCenter = (defenseAgent1.transform.position + 
-                                   defenseAgent2.transform.position) / 2f;
-                float distanceToCenter = Vector3.Distance(enemyPosition, netCenter);
-                
-                if (distanceToCenter <= captureCenterMaxDistance)
+                float distanceFromMotherShip = Vector3.Distance(enemyPosition, motherShip.transform.position);
+
+                // 모선과의 거리가 멀수록 보너스 (최대 captureDistanceBonusRange에서 최대 보너스)
+                float distanceFactor = Mathf.Clamp01(distanceFromMotherShip / captureDistanceBonusRange);
+                float distanceBonus = captureDistanceBonus * distanceFactor;
+                totalReward += distanceBonus;
+
+                if (enableDebugLog)
                 {
-                    float centerBonus = captureCenterBonus * 
-                        (1f - distanceToCenter / captureCenterMaxDistance);
-                    totalReward += centerBonus;
+                    Debug.Log($"[OnEnemyCaptured] 모선과의 거리: {distanceFromMotherShip:F1}m, 거리 보너스: +{distanceBonus:F3}");
                 }
             }
-            
+
             // 통합 에피소드 재시작 메서드 호출
             RestartEpisode("EnemyCaptured", totalReward);
         }
@@ -639,23 +787,20 @@ namespace BoatAttack
             // 통합 충돌 횟수 증가 (Web + MotherShip 합산)
             _totalCollisionCount++;
             Debug.Log($"[OnEnemyHitWeb] Web 충돌 발생! 적군: {enemyBoat.name}, 총 충돌 횟수(Web+MotherShip): {_totalCollisionCount}/{maxCollisionCount}");
-            
-            // 포획 보상 계산 (공통)
-            float totalReward = captureReward;
-            if (defenseAgent1 != null && defenseAgent2 != null)
+
+            // Stage1에서는 포획 보상 비활성화
+            // Stage2에서만 포획 보상 부여
+            float totalReward = IsCaptureRewardEnabled() ? captureReward : 0f;
+
+            // 거리 보너스 계산 (모선과 멀리서 포획할수록 보상)
+            if (motherShip != null && IsCaptureRewardEnabled())
             {
-                Vector3 netCenter = (defenseAgent1.transform.position + 
-                                   defenseAgent2.transform.position) / 2f;
-                float distanceToCenter = Vector3.Distance(enemyBoat.transform.position, netCenter);
-                
-                if (distanceToCenter <= captureCenterMaxDistance)
-                {
-                    float centerBonus = captureCenterBonus * 
-                        (1f - distanceToCenter / captureCenterMaxDistance);
-                    totalReward += centerBonus;
-                }
+                float distanceFromMotherShip = Vector3.Distance(enemyBoat.transform.position, motherShip.transform.position);
+                float distanceFactor = Mathf.Clamp01(distanceFromMotherShip / captureDistanceBonusRange);
+                float distanceBonus = captureDistanceBonus * distanceFactor;
+                totalReward += distanceBonus;
             }
-            
+
             // 통합 충돌 횟수가 maxCollisionCount 이상이면 즉시 에피소드 종료
             if (_totalCollisionCount >= maxCollisionCount)
             {
@@ -679,24 +824,9 @@ namespace BoatAttack
                 return; // 여기서 종료하여 아래 코드 실행 방지
             }
             
-            // 충돌 횟수가 3회 미만이면 일반 처리
-            // 포획 보상 부여
-            
-            // 위치 보너스 계산 (그물 중심에 가까울수록)
-            if (defenseAgent1 != null && defenseAgent2 != null)
-            {
-                Vector3 netCenter = (defenseAgent1.transform.position + 
-                                   defenseAgent2.transform.position) / 2f;
-                float distanceToCenter = Vector3.Distance(enemyBoat.transform.position, netCenter);
-                
-                if (distanceToCenter <= captureCenterMaxDistance)
-                {
-                    float centerBonus = captureCenterBonus * 
-                        (1f - distanceToCenter / captureCenterMaxDistance);
-                    totalReward += centerBonus;
-                }
-            }
-            
+            // 충돌 횟수가 maxCollisionCount 미만이면 일반 처리
+            // 포획 보상 이미 위에서 계산됨 (totalReward에 captureReward + distanceBonus 포함)
+
             // 보상 부여
             if (m_AgentGroup != null)
             {
@@ -843,26 +973,33 @@ namespace BoatAttack
             _totalCollisionCount++;
             Debug.Log($"[OnMotherShipCollision] MotherShip 충돌 발생! 적군: {enemyBoat.name}, 총 충돌 횟수(Web+MotherShip): {_totalCollisionCount}/{maxCollisionCount}");
 
+            // Stage1에서는 모선 충돌 페널티 비활성화
+            // Stage2, Stage3에서만 페널티 부여
+            float penalty = IsMotherShipPenaltyEnabled() ? motherShipCollisionPenalty : 0f;
+
             // 통합 충돌 횟수가 maxCollisionCount 이상이면 즉시 에피소드 종료
             if (_totalCollisionCount >= maxCollisionCount)
             {
                 Debug.Log($"[OnMotherShipCollision] ⚠️ 총 충돌 횟수({_totalCollisionCount}, Web+MotherShip)가 최대 허용 횟수({maxCollisionCount})에 도달! 에피소드 종료.");
-                
-                // 패널티 부여
-                if (m_AgentGroup != null)
+
+                // 패널티 부여 (Stage2, Stage3에서만)
+                if (penalty != 0f)
                 {
-                    m_AgentGroup.AddGroupReward(motherShipCollisionPenalty);
+                    if (m_AgentGroup != null)
+                    {
+                        m_AgentGroup.AddGroupReward(penalty);
+                    }
+                    else
+                    {
+                        if (defenseAgent1 != null)
+                            defenseAgent1.AddReward(penalty);
+                        if (defenseAgent2 != null)
+                            defenseAgent2.AddReward(penalty);
+                    }
                 }
-                else
-                {
-                    if (defenseAgent1 != null)
-                        defenseAgent1.AddReward(motherShipCollisionPenalty);
-                    if (defenseAgent2 != null)
-                        defenseAgent2.AddReward(motherShipCollisionPenalty);
-                }
-                
+
                 // 에피소드 종료 (RestartEpisode 내부에서 _episodeEnding 설정)
-                RestartEpisode("MotherShipCollisionLimit", motherShipCollisionPenalty);
+                RestartEpisode("MotherShipCollisionLimit", penalty != 0f ? penalty : (float?)null);
                 return; // 여기서 종료하여 아래 코드 실행 방지
             }
 
@@ -872,17 +1009,20 @@ namespace BoatAttack
             }
 
             // 충돌 횟수가 3회 미만이면 일반 처리
-            // 패널티 부여
-            if (m_AgentGroup != null)
+            // 패널티 부여 (Stage2, Stage3에서만)
+            if (penalty != 0f)
             {
-                m_AgentGroup.AddGroupReward(motherShipCollisionPenalty);
-            }
-            else
-            {
-                if (defenseAgent1 != null)
-                    defenseAgent1.AddReward(motherShipCollisionPenalty);
-                if (defenseAgent2 != null)
-                    defenseAgent2.AddReward(motherShipCollisionPenalty);
+                if (m_AgentGroup != null)
+                {
+                    m_AgentGroup.AddGroupReward(penalty);
+                }
+                else
+                {
+                    if (defenseAgent1 != null)
+                        defenseAgent1.AddReward(penalty);
+                    if (defenseAgent2 != null)
+                        defenseAgent2.AddReward(penalty);
+                }
             }
 
             // 해당 공격선만 원점으로 리셋
@@ -943,36 +1083,20 @@ namespace BoatAttack
         }
         
         /// <summary>
-        /// 아군 충돌 처리
+        /// 아군 충돌 처리 (아군-아군 또는 아군-모선 충돌)
+        /// 에피소드 종료 + 페널티 부여
         /// </summary>
         public void OnFriendlyCollision()
         {
             // 에피소드가 종료 중이면 무시
             if (_episodeEnding)
                 return;
-            
-            // 충돌 패널티 부여 (그룹 또는 개별)
-            if (m_AgentGroup != null)
-            {
-                m_AgentGroup.AddGroupReward(collisionPenalty);
-                m_AgentGroup.EndGroupEpisode();
-            }
-            else
-            {
-                if (defenseAgent1 != null)
-                {
-                    defenseAgent1.AddReward(collisionPenalty);
-                    defenseAgent1.EndEpisode();
-                }
-                if (defenseAgent2 != null)
-                {
-                    defenseAgent2.AddReward(collisionPenalty);
-                    defenseAgent2.EndEpisode();
-                }
-            }
-            
-            // PushBlockEnvController 패턴: 에피소드 종료 후 환경 리셋
-            ResetScene();
+
+            Debug.LogWarning("[OnFriendlyCollision] ⚠️ 아군 충돌 발생! 에피소드 종료 + 페널티 부여");
+
+            // RestartEpisode를 통해 일관된 방식으로 에피소드 종료
+            // 패널티 부여 + EndGroupEpisode + ResetScene 모두 처리됨
+            RestartEpisode("FriendlyCollision", collisionPenalty);
         }
         
         /// <summary>
@@ -1157,6 +1281,8 @@ namespace BoatAttack
                     _attackBoats.Add(boat);
                     Vector3 initialPos = boat.transform.position;
                     _attackBoatInitialPositions[boat] = initialPos;
+
+                    Debug.Log($"[FindAndSaveAttackBoats] 적군 '{boat.name}' 초기 위치 저장: {initialPos}");
                     
                     // 원본 객체를 프리팹으로 저장 (파괴 후 재생성용)
                     // 이름을 키로 사용하여 같은 이름의 객체를 재생성할 수 있도록 함
@@ -1359,22 +1485,34 @@ namespace BoatAttack
         /// <summary>
         /// 모든 적군 선박 (attack_boat 태그)을 원점으로 리셋
         /// 에피소드 재시작 시 호출되며, 파괴된 적군 선박도 다시 생성
+        /// Stage 설정에 따라 재생성 수 제한
         /// </summary>
         private void ResetAttackBoatsToOrigin()
         {
             // null이거나 파괴된 객체 제거
             _attackBoats.RemoveAll(boat => boat == null);
-            
+
+            // Stage에 따른 목표 적군 수 결정
+            int stageTargetCount = GetActiveEnemyCountForStage();
+
+            // Stage1에서 적군 0대면 재생성 스킵
+            if (stageTargetCount == 0)
+            {
+                Debug.Log("[ResetAttackBoatsToOrigin] Stage 설정에 따라 적군 재생성 스킵 (목표: 0대)");
+                return;
+            }
+
             // 씬의 모든 attack_boat 다시 찾기
             GameObject[] allAttackBoatsInScene = GameObject.FindGameObjectsWithTag("attack_boat");
-            
+
             // 파괴된 attack_boat 재생성
             int recreatedCount = 0;
-            
-            // 초기 적군 선박 수만큼 재생성 (모든 프리팹에서)
-            // 저장된 프리팹을 사용하여 파괴된 객체 재생성
-            // 초기 적군 선박 수만큼 재생성해야 함
-            int targetCount = _initialAttackBoatCount > 0 ? _initialAttackBoatCount : _attackBoatPrefabs.Count;
+
+            // Stage 설정에 맞는 적군 수만큼만 재생성
+            int targetCount = Mathf.Min(
+                stageTargetCount,
+                _initialAttackBoatCount > 0 ? _initialAttackBoatCount : _attackBoatPrefabs.Count
+            );
             
             foreach (var kvp in _attackBoatPrefabs)
             {
@@ -1398,8 +1536,8 @@ namespace BoatAttack
                     }
                 }
                 
-                // 씬에 없으면 재생성 필요
-                if (!foundInScene)
+                // 씬에 없으면 재생성 필요 (단, 목표 수 초과 시 스킵)
+                if (!foundInScene && recreatedCount < targetCount)
                 {
                     // 프리팹에서 재생성
                     GameObject recreatedBoat = Instantiate(prefab);
@@ -1646,11 +1784,7 @@ namespace BoatAttack
                     _attackBoatInitialPositionsByName[boatName] = spawnPos;
                 }
 
-                // 위치와 회전 설정 (transform은 비활성화 상태에서도 접근 가능)
-                boat.transform.position = spawnPos;
-                boat.transform.rotation = Quaternion.identity;
-
-                // Cinemachine Dolly Cart 리셋
+                // Cinemachine Dolly Cart 리셋 (위치 설정보다 먼저!)
                 CinemachineDollyCart dollyCart = boat.GetComponent<CinemachineDollyCart>();
                 if (dollyCart != null)
                 {
@@ -1670,8 +1804,35 @@ namespace BoatAttack
                     {
                         dollyCart.m_Path = originalPath;
                         dollyCart.m_Position = 0f;
+
+                        // Speed가 음수면 양수로 변경 (경로 0→끝 방향으로)
+                        if (dollyCart.m_Speed < 0)
+                        {
+                            Debug.LogWarning($"[ResetAttackBoatsToOrigin] '{boatName}' Dolly Cart Speed가 음수({dollyCart.m_Speed})! 양수로 변경.");
+                            dollyCart.m_Speed = Mathf.Abs(dollyCart.m_Speed);
+                        }
+
+                        // 경로 시작/끝 위치 확인
+                        Vector3 pathStartPos = originalPath.EvaluatePositionAtUnit(0f, CinemachinePathBase.PositionUnits.PathUnits);
+                        Vector3 pathEndPos = originalPath.EvaluatePositionAtUnit(originalPath.MaxPos, CinemachinePathBase.PositionUnits.PathUnits);
+                        boat.transform.position = pathStartPos;
+                        Debug.Log($"[ResetAttackBoatsToOrigin] '{boatName}' Dolly Cart - Position 0: {pathStartPos}, Position Max({originalPath.MaxPos}): {pathEndPos}, Speed: {dollyCart.m_Speed}");
+                    }
+                    else
+                    {
+                        // 경로가 없으면 저장된 위치 사용
+                        boat.transform.position = spawnPos;
+                        Debug.Log($"[ResetAttackBoatsToOrigin] '{boatName}' 저장된 위치로 리셋 (경로 없음): {spawnPos}");
                     }
                 }
+                else
+                {
+                    // Dolly Cart가 없으면 저장된 위치 사용
+                    boat.transform.position = spawnPos;
+                    Debug.Log($"[ResetAttackBoatsToOrigin] '{boatName}' 저장된 위치로 리셋 (Dolly Cart 없음): {spawnPos}");
+                }
+
+                boat.transform.rotation = Quaternion.identity;
 
                 resetCount++;
             }
@@ -1747,7 +1908,196 @@ namespace BoatAttack
             float randomZ = originalPos.z + Random.Range(-spawnRange, spawnRange);
             return new Vector3(randomX, originalPos.y, randomZ);
         }
-        
+
+        #endregion
+
+        #region Stage Management
+
+        /// <summary>
+        /// RewardCalculator에 현재 Stage 동기화
+        /// </summary>
+        private void SyncStageToRewardCalculator()
+        {
+            if (rewardCalculator != null)
+            {
+                rewardCalculator.currentStage = currentStage;
+                Debug.Log($"[SyncStageToRewardCalculator] Stage 동기화: {currentStage}");
+            }
+        }
+
+        /// <summary>
+        /// 현재 Stage에 맞는 설정 적용
+        /// - Stage1: 적군 비활성화, 대형 유지만 학습
+        /// - Stage2: 적군 1~2대 활성화, 포획 보상 학습
+        /// - Stage3: 적군 3~5대 활성화, 전술 기동 학습
+        /// </summary>
+        private void ApplyStageSettings()
+        {
+            int activeEnemyCount = GetActiveEnemyCountForStage();
+
+            Debug.Log($"[ApplyStageSettings] 현재 Stage: {currentStage}, 활성화할 적군 수: {activeEnemyCount}");
+
+            // 적군 활성화/비활성화
+            ApplyEnemyActivation(activeEnemyCount);
+
+            // Stage별 추가 설정
+            switch (currentStage)
+            {
+                case TrainingStage.Stage1_Formation:
+                    // Stage1: 대형 유지에 집중
+                    // 포획/모선 관련 이벤트는 발생해도 보상 없음 (적군이 비활성화되므로 발생 안함)
+                    Debug.Log("[ApplyStageSettings] Stage1: 대형 유지 학습 모드");
+                    break;
+
+                case TrainingStage.Stage2_Capture:
+                    // Stage2: 포획 보상 활성화
+                    Debug.Log("[ApplyStageSettings] Stage2: 포획 보상 학습 모드");
+                    break;
+
+                case TrainingStage.Stage3_Tactical:
+                    // Stage3: 전술 기동 보상 활성화
+                    Debug.Log("[ApplyStageSettings] Stage3: 전술 기동 학습 모드");
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 현재 Stage에서 활성화할 적군 수 반환
+        /// </summary>
+        private int GetActiveEnemyCountForStage()
+        {
+            switch (currentStage)
+            {
+                case TrainingStage.Stage1_Formation:
+                    return disableEnemiesInStage1 ? 0 : stage1EnemyCount;
+
+                case TrainingStage.Stage2_Capture:
+                    return stage2EnemyCount;
+
+                case TrainingStage.Stage3_Tactical:
+                    return stage3EnemyCount;
+
+                default:
+                    return 0;
+            }
+        }
+
+        /// <summary>
+        /// 적군 선박 활성화/비활성화 적용
+        /// </summary>
+        private void ApplyEnemyActivation(int activeCount)
+        {
+            Debug.Log($"[ApplyEnemyActivation] ========== 적군 활성화 시작 ==========");
+            Debug.Log($"[ApplyEnemyActivation] 목표 활성화 수: {activeCount}");
+            Debug.Log($"[ApplyEnemyActivation] enemyShips 배열: {(enemyShips != null ? enemyShips.Length.ToString() + "개" : "null")}");
+            Debug.Log($"[ApplyEnemyActivation] _attackBoats 리스트: {_attackBoats.Count}개");
+
+            // enemyShips 배열과 _attackBoats 리스트 모두 처리
+            int activated = 0;
+
+            // enemyShips 배열 처리
+            if (enemyShips != null && enemyShips.Length > 0)
+            {
+                for (int i = 0; i < enemyShips.Length; i++)
+                {
+                    if (enemyShips[i] != null)
+                    {
+                        bool shouldBeActive = activated < activeCount;
+                        bool wasActive = enemyShips[i].activeSelf;
+                        enemyShips[i].SetActive(shouldBeActive);
+
+                        Debug.Log($"[ApplyEnemyActivation] [{i}] {enemyShips[i].name}: {(wasActive ? "ON" : "OFF")} → {(shouldBeActive ? "ON" : "OFF")}");
+
+                        if (shouldBeActive)
+                        {
+                            activated++;
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[ApplyEnemyActivation] [{i}] enemyShips[{i}]가 null입니다!");
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogWarning("[ApplyEnemyActivation] ⚠️ enemyShips 배열이 비어있거나 null! Inspector에서 Enemy Ships에 적군을 할당하세요.");
+            }
+
+            // _attackBoats 리스트도 처리 (enemyShips와 중복되지 않는 것들)
+            foreach (var boat in _attackBoats)
+            {
+                if (boat == null) continue;
+
+                // enemyShips에 이미 포함되어 있는지 확인
+                bool alreadyProcessed = false;
+                if (enemyShips != null)
+                {
+                    foreach (var enemy in enemyShips)
+                    {
+                        if (enemy == boat)
+                        {
+                            alreadyProcessed = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!alreadyProcessed)
+                {
+                    bool shouldBeActive = activated < activeCount;
+                    boat.SetActive(shouldBeActive);
+
+                    if (shouldBeActive)
+                    {
+                        activated++;
+                    }
+                }
+            }
+
+            Debug.Log($"[ApplyEnemyActivation] 총 {activated}대 적군 활성화됨 (목표: {activeCount})");
+        }
+
+        /// <summary>
+        /// Stage 변경 (Inspector 또는 코드에서 호출)
+        /// </summary>
+        public void SetTrainingStage(TrainingStage newStage)
+        {
+            if (currentStage != newStage)
+            {
+                Debug.Log($"[SetTrainingStage] Stage 변경: {currentStage} → {newStage}");
+                currentStage = newStage;
+                SyncStageToRewardCalculator();
+                ApplyStageSettings();
+            }
+        }
+
+        /// <summary>
+        /// 포획 보상 활성화 여부 (Stage2, Stage3에서만 true)
+        /// </summary>
+        public bool IsCaptureRewardEnabled()
+        {
+            return currentStage == TrainingStage.Stage2_Capture ||
+                   currentStage == TrainingStage.Stage3_Tactical;
+        }
+
+        /// <summary>
+        /// 모선 충돌 페널티 활성화 여부 (Stage2, Stage3에서만 true)
+        /// </summary>
+        public bool IsMotherShipPenaltyEnabled()
+        {
+            return currentStage == TrainingStage.Stage2_Capture ||
+                   currentStage == TrainingStage.Stage3_Tactical;
+        }
+
+        /// <summary>
+        /// 전술 기동 보상 활성화 여부 (Stage3에서만 true)
+        /// </summary>
+        public bool IsTacticalRewardEnabled()
+        {
+            return currentStage == TrainingStage.Stage3_Tactical;
+        }
+
         #endregion
     }
 }
