@@ -209,7 +209,7 @@ namespace BoatAttack
             _episodeEnded = false;
             _totalReward = 0f;
             _lastStepReward = 0f;
-            _prevThrottle = 0f;
+            _prevThrottle = 0.5f;  // Mapping 최소값 (0.5~1.0 범위)
             _prevSteering = 0f;
             _prevHeading = transform.eulerAngles.y;
             _hasPrevHeading = false;  // 첫 프레임에는 이전 헤딩 없음
@@ -373,14 +373,12 @@ namespace BoatAttack
                 steeringInput = 0f;
             }
             
-            // 범위 제한 (minThrottle 이상으로 유지)
-            throttleInput = Mathf.Clamp(throttleInput, minThrottle, 1f);
+            // Steering 범위 제한
             steeringInput = Mathf.Clamp(steeringInput, -1f, 1f);
-            
-            // 전진만 허용 (후진은 0으로 처리) 또는 후진도 허용하려면 주석 해제
-            float throttle = Mathf.Clamp01(throttleInput);  // 0~1 범위 (전진만)
-            // float throttle = 1f;  // 항상 전진
-            // float throttle = (throttleInput + 1f) * 0.5f;  // 후진도 허용하려면 이 줄 사용
+
+            // Throttle: Mapping 방식 (-1~1 → 0.5~1.0)
+            // -1 → 0.5, 0 → 0.75, 1 → 1.0
+            float throttle = (throttleInput + 1f) * 0.25f + 0.5f;
 
             // Steering에 감도 적용
             float steering = steeringInput * steeringSensitivity;

@@ -12655,6 +12655,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Geo_Props_Blimp (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1498022358861262, guid: c3d58a4b3ca744acf803225ae9cec836, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4932471864557294, guid: c3d58a4b3ca744acf803225ae9cec836, type: 3}
       propertyPath: m_LocalScale.x
       value: 2
@@ -34667,16 +34671,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentStage: 0
-  stage1HeadingReward: 0.002
-  stage1SpeedSyncReward: 0.002
-  stage1DistanceReward: 0.002
-  stage1SpeedReward: 0.002
+  stage1HeadingReward: 0.01
+  stage1SpeedSyncReward: 0.01
+  stage1DistanceReward: 0.01
+  stage1SpeedReward: 0.01
   stage1SpeedRewardMultiplier: 4
-  stage1IndividualSpeedReward: 0.001
-  stage1SteeringStabilityReward: 0.001
-  stage1MaxHeadingChange: 30
+  stage1IndividualSpeedReward: 0.004
+  stage1SteeringPenaltyCoeff: 0.00001
   stage1OptimalDistance: 25
-  stage1SpeedThreshold: 10
+  stage1SpeedThreshold: 2
   stage1FormationDistancePenalty: -0.01
   stage1MaxDistance: 100
   stage1FormationAnglePenalty: -0.01
@@ -40724,13 +40727,7 @@ MonoBehaviour:
     m_EditorAssetChanged: 0
   genDistance: 0.5
   maxAge: 5
---- !u!4 &1799776937 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: c5eadc855f505434990b0311d0649a52,
-    type: 3}
-  m_PrefabInstance: {fileID: 1944094747}
-  m_PrefabAsset: {fileID: 0}
---- !u!84 &1805133920
+--- !u!84 &1779328356
 RenderTexture:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -40768,6 +40765,12 @@ RenderTexture:
   m_Dimension: 2
   m_VolumeDepth: 1
   m_ShadowSamplingMode: 2
+--- !u!4 &1799776937 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: c5eadc855f505434990b0311d0649a52,
+    type: 3}
+  m_PrefabInstance: {fileID: 1944094747}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1829541557 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5019066133126118482, guid: 405c4bc591de844a3a100e1538790229,
@@ -42746,6 +42749,10 @@ PrefabInstance:
     - target: {fileID: 1498022358861262, guid: c3d58a4b3ca744acf803225ae9cec836, type: 3}
       propertyPath: m_Name
       value: Geo_Props_Blimp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1498022358861262, guid: c3d58a4b3ca744acf803225ae9cec836, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4932471864557294, guid: c3d58a4b3ca744acf803225ae9cec836, type: 3}
       propertyPath: m_LocalScale.x

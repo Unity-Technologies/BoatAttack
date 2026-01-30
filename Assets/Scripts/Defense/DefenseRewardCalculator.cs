@@ -37,7 +37,7 @@ namespace BoatAttack
         public float stage1IndividualSpeedReward = 0.02f;  // 0.001→0.02 (20배)
 
         [Tooltip("Stage1 선회 페널티 계수 (1도/초당 페널티량) - 변화량에 비례")]
-        public float stage1SteeringPenaltyCoeff = 0.002f;  // 10도/초 → -0.02, 20도/초 → -0.04
+        public float stage1SteeringPenaltyCoeff = 0.0002f;  // 100도/초에서 속도보상과 균형
 
         [Tooltip("Stage1 최적 거리 (m)")]
         public float stage1OptimalDistance = 50f;
