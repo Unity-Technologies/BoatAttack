@@ -513,6 +513,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 92e3a622aaf5e4fadab4253ad1853184, type: 2}
+    - target: {fileID: 1857749394586354482, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 2901399632790975270, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
       propertyPath: m_LocalScale.z
@@ -665,6 +670,8 @@ MonoBehaviour:
   angularVelocityControlGain: 1
   maxLinearAcceleration: 5
   maxAngularAcceleration: 45
+  baseThrottle: 0.5
+  minThrottle: 0.5
   steeringSensitivity: 0.3
   inputSmoothing: 0.2
   showRaycasts: 1

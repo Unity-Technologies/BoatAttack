@@ -7,6 +7,8 @@ namespace BoatAttack
     /// 2대의 방어 선박 사이에 동적으로 생성되는 Web (장막)
     /// 선박 간 거리에 따라 크기가 자동으로 조정됨
     /// </summary>
+    [RequireComponent(typeof(Rigidbody))]  // ML-Agents 빌드 호환성: 런타임 AddComponent 방지
+    [RequireComponent(typeof(BoxCollider))]
     public class DynamicWeb : MonoBehaviour
     {
         [Header("Target Ships")]
@@ -15,6 +17,13 @@ namespace BoatAttack
 
         [Tooltip("방어 선박 2")]
         public Transform defenseShip2;
+
+        [Header("Web Anchor Points (Inspector에서 할당)")]
+        [Tooltip("Web 시작점 (선박1에 부착된 자식 오브젝트)")]
+        public Transform webAnchor1;
+
+        [Tooltip("Web 끝점 (선박2에 부착된 자식 오브젝트)")]
+        public Transform webAnchor2;
 
         [Header("Web Settings")]
         [Tooltip("Web 높이")]
@@ -37,6 +46,9 @@ namespace BoatAttack
         [Header("Collision Reward")]
         [Tooltip("공격 보트를 막았을 때 방어선에게 주는 보상")]
         public float defenseReward = 10f;
+
+        [Tooltip("아군 선박이 Web과 충돌했을 때 페널티")]
+        public float allyWebCollisionPenalty = -2.0f;
 
         [Header("Explosion Effect")]
         [Tooltip("공격 보트 폭발 효과 Prefab (War FX)")]
@@ -75,17 +87,10 @@ namespace BoatAttack
             _collider.isTrigger = isTrigger;
             Debug.Log($"[DynamicWeb] Collider 설정 - isTrigger: {_collider.isTrigger}, size: {_collider.size}, center: {_collider.center}");
 
-            // Rigidbody 확인 및 추가 (Trigger 충돌에 필수)
+            // Rigidbody 확인 (RequireComponent로 자동 추가됨)
+            // 런타임 AddComponent 제거 - ML-Agents 빌드 호환성 문제 방지
             var rb = gameObject.GetComponent<Rigidbody>();
-            if (rb == null)
-            {
-                Debug.LogWarning("[DynamicWeb] Rigidbody가 없어서 새로 추가합니다. (Trigger 충돌에 필요)");
-                rb = gameObject.AddComponent<Rigidbody>();
-                rb.isKinematic = true; // 물리 영향 받지 않도록 설정
-                rb.useGravity = false; // 중력 사용 안함
-                Debug.Log("[DynamicWeb] Rigidbody 추가 완료 (isKinematic=true, useGravity=false)");
-            }
-            else
+            if (rb != null)
             {
                 Debug.Log($"[DynamicWeb] 기존 Rigidbody 사용: isKinematic = {rb.isKinematic}, useGravity = {rb.useGravity}");
             }
@@ -144,14 +149,15 @@ namespace BoatAttack
         /// </summary>
         private void UpdateWebTransform()
         {
-            Vector3 pos1 = defenseShip1.position;
-            Vector3 pos2 = defenseShip2.position;
+            // Anchor가 할당되어 있으면 Anchor 사용, 아니면 선박 중심 사용
+            Vector3 pos1 = (webAnchor1 != null) ? webAnchor1.position : defenseShip1.position;
+            Vector3 pos2 = (webAnchor2 != null) ? webAnchor2.position : defenseShip2.position;
 
-            // Web 중심 위치 (두 선박 중간)
+            // Web 중심 위치 (두 앵커/선박 중간)
             Vector3 centerPos = (pos1 + pos2) / 2f;
             transform.position = centerPos;
 
-            // Web 회전 (두 선박을 연결하는 방향)
+            // Web 회전 (두 점을 연결하는 방향)
             Vector3 direction = pos2 - pos1;
             direction.y = 0f; // Y축 회전만 고려
             if (direction.magnitude > 0.01f)
@@ -160,7 +166,7 @@ namespace BoatAttack
                 transform.rotation = targetRotation;
             }
 
-            // Web 크기 (두 선박 간 거리)
+            // Web 크기 (두 점 간 거리)
             float distance = Vector3.Distance(pos1, pos2);
 
             // BoxCollider 크기 조정
@@ -242,12 +248,8 @@ namespace BoatAttack
             if (_renderer != null && _renderer.material != null)
             {
                 _renderer.material.color = color;
-                Debug.Log($"[DynamicWeb] SetColor 성공: {color}, Material.color = {_renderer.material.color}");
             }
-            else
-            {
-                Debug.LogWarning($"[DynamicWeb] SetColor 실패: _renderer null? {_renderer == null}, material null? {(_renderer != null ? _renderer.material == null : true)}");
-            }
+            // 경고 로그 제거 - showVisual=false이거나 초기화 전일 수 있음 (정상 동작)
         }
 
         /// <summary>
@@ -255,21 +257,12 @@ namespace BoatAttack
         /// </summary>
         private void OnValidate()
         {
-            // 런타임에만 적용
-            if (Application.isPlaying)
+            // 런타임에서만 색상 변경 적용 (showVisual && _renderer가 준비된 경우만)
+            if (Application.isPlaying && showVisual && _renderer != null && _renderer.material != null)
             {
-                Debug.Log($"[DynamicWeb] OnValidate 호출: webColor = {webColor}, _renderer null? {_renderer == null}");
-
-                if (_renderer != null && _renderer.material != null)
-                {
-                    Debug.Log($"[DynamicWeb] 색상 변경 시도: {webColor}");
-                    SetColor(webColor);
-                }
-                else
-                {
-                    Debug.LogWarning("[DynamicWeb] _renderer 또는 material이 null입니다!");
-                }
+                SetColor(webColor);
             }
+            // 경고 로그 제거 - 초기화 전에 OnValidate가 호출될 수 있음 (정상 동작)
         }
 
         /// <summary>
@@ -283,7 +276,7 @@ namespace BoatAttack
             Debug.LogWarning($"[DynamicWeb] - Layer: {LayerMask.LayerToName(other.gameObject.layer)}");
             Debug.LogWarning($"[DynamicWeb] - Position: {other.transform.position}");
 
-            // attack_boat 태그를 가진 오브젝트와 충돌했는지 확인
+            // attack_boat 태그를 가진 오브젝트와 충돌했는지 확인 (적군 포획)
             if (other.CompareTag("attack_boat"))
             {
                 Debug.LogError($"[DynamicWeb] ★★★ attack_boat 충돌 감지!!! {other.gameObject.name} ★★★");
@@ -299,9 +292,56 @@ namespace BoatAttack
                     Debug.LogError($"[DynamicWeb] HandleAttackBoatCollision 실행 중 예외 발생: {e.Message}\n{e.StackTrace}");
                 }
             }
+            // 아군 선박이 Web과 충돌했는지 확인 (페널티)
+            else if (IsDefenseShip(other.gameObject))
+            {
+                Debug.LogError($"[DynamicWeb] ★★★ 아군 선박 Web 충돌!!! {other.gameObject.name} ★★★");
+                HandleAllyWebCollision(other.gameObject);
+            }
             else
             {
-                Debug.LogWarning($"[DynamicWeb] attack_boat 태그가 아닙니다. 현재 태그: '{other.tag}'");
+                Debug.LogWarning($"[DynamicWeb] attack_boat/defense_boat 태그가 아닙니다. 현재 태그: '{other.tag}'");
+            }
+        }
+
+        /// <summary>
+        /// 아군 선박인지 확인
+        /// </summary>
+        private bool IsDefenseShip(GameObject obj)
+        {
+            // defenseShip1 또는 defenseShip2와 같은 오브젝트인지 확인
+            if (defenseShip1 != null && obj.transform == defenseShip1)
+                return true;
+            if (defenseShip2 != null && obj.transform == defenseShip2)
+                return true;
+
+            // 또는 DefenseAgent 컴포넌트가 있는지 확인
+            if (obj.GetComponent<DefenseAgent>() != null)
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// 아군 선박 Web 충돌 처리 (페널티 + 에피소드 종료)
+        /// </summary>
+        private void HandleAllyWebCollision(GameObject allyShip)
+        {
+            Debug.LogError($"[DynamicWeb] HandleAllyWebCollision: {allyShip.name}");
+
+            if (envController == null)
+            {
+                envController = FindObjectOfType<DefenseEnvController>();
+            }
+
+            if (envController != null)
+            {
+                // DefenseEnvController에 아군 Web 충돌 알림
+                envController.OnAllyHitWeb(allyShip, allyWebCollisionPenalty);
+            }
+            else
+            {
+                Debug.LogError("[DynamicWeb] DefenseEnvController를 찾을 수 없습니다!");
             }
         }
 
@@ -316,15 +356,21 @@ namespace BoatAttack
             Debug.LogWarning($"[DynamicWeb] - Layer: {LayerMask.LayerToName(collision.gameObject.layer)}");
             Debug.LogWarning($"[DynamicWeb] - Position: {collision.transform.position}");
 
-            // attack_boat 태그를 가진 오브젝트와 충돌했는지 확인
+            // attack_boat 태그를 가진 오브젝트와 충돌했는지 확인 (적군 포획)
             if (collision.gameObject.CompareTag("attack_boat"))
             {
                 Debug.LogError($"[DynamicWeb] ★★★ attack_boat 충돌 감지!!! {collision.gameObject.name} ★★★");
                 HandleAttackBoatCollision(collision.gameObject);
             }
+            // 아군 선박이 Web과 충돌했는지 확인 (페널티)
+            else if (IsDefenseShip(collision.gameObject))
+            {
+                Debug.LogError($"[DynamicWeb] ★★★ 아군 선박 Web 충돌!!! {collision.gameObject.name} ★★★");
+                HandleAllyWebCollision(collision.gameObject);
+            }
             else
             {
-                Debug.LogWarning($"[DynamicWeb] attack_boat 태그가 아닙니다. 현재 태그: '{collision.gameObject.tag}'");
+                Debug.LogWarning($"[DynamicWeb] attack_boat/defense_boat 태그가 아닙니다. 현재 태그: '{collision.gameObject.tag}'");
             }
         }
 

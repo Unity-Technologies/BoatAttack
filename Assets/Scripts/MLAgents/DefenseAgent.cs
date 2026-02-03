@@ -226,18 +226,19 @@ namespace BoatAttack
         }
 
         /// <summary>
-        /// 관측 수집 (상대 좌표 기반)
-        /// - 자신: 위치(x,z), 헤딩, 속도 = 4개
+        /// 관측 수집 (상대 좌표 기반 - 좌우 편향 방지)
+        /// - 자신: 헤딩, 속도 = 2개 (절대 위치 제거로 좌우 편향 방지)
         /// - 팀원: 상대 위치(x,z), 상대 헤딩, 속도 = 4개
         /// - 적군들: 상대 위치(x,z), 상대 헤딩, 속도 = 4 × 적군수 (거리순 정렬)
         /// - 모선: 상대 위치(x,z), 거리 = 3개
+        /// 총 관측: 2 + 4 + (4 × 5) + 3 = 29개
         /// </summary>
         public override void CollectObservations(VectorSensor sensor)
         {
             if (_engine == null || _engine.RB == null)
             {
-                // 기본값 추가
-                int totalObservations = 4 + 4 + (4 * maxEnemyCount) + 3;
+                // 기본값 추가: 2 + 4 + (4 * maxEnemyCount) + 3 = 29
+                int totalObservations = 2 + 4 + (4 * maxEnemyCount) + 3;
                 for (int i = 0; i < totalObservations; i++)
                 {
                     sensor.AddObservation(0f);
@@ -250,9 +251,8 @@ namespace BoatAttack
             Vector3 myRight = transform.right;
             float myAngle = transform.eulerAngles.y;
 
-            // === 1. 자신의 상태 (4개) - 절대 좌표 유지 (기준점) ===
-            sensor.AddObservation(myPos.x / 100f);
-            sensor.AddObservation(myPos.z / 100f);
+            // === 1. 자신의 상태 (2개) - 절대 위치 제거 (좌우 편향 방지) ===
+            // 헤딩과 속도만 유지 - 두 에이전트가 같은 정책을 공유할 때 대칭성 보장
             sensor.AddObservation(myAngle / 360f);
             sensor.AddObservation(_engine.RB.velocity.magnitude / 20f);
 

@@ -151,8 +151,14 @@ namespace BoatAttack
         [Tooltip("아군 간 최대 허용 거리 (이 거리 초과 시 에피소드 종료)")]
         public float maxAllyDistance = 120f;  // Stage1 최적거리(50m) + 대형붕괴거리(100m) 사이 여유
 
-        [Tooltip("아군 거리 초과 페널티")]
+        [Tooltip("아군 간 최소 허용 거리 (이 거리 미만 시 에피소드 종료)")]
+        public float minAllyDistance = 4f;
+
+        [Tooltip("아군 거리 초과/미달 페널티")]
         public float allyDistancePenalty = -1.0f;
+
+        [Tooltip("아군 위치 교차 페널티 (왼쪽/오른쪽 위치가 바뀌면)")]
+        public float positionSwapPenalty = -1.0f;
 
         [Header("Reward Monitor (Read Only)")]
         [SerializeField] private float _currentEpisodeReward = 0f;
@@ -194,6 +200,10 @@ namespace BoatAttack
         private Vector3 _originalDefense2Pos;
         private Quaternion _originalDefense1Rot;
         private Quaternion _originalDefense2Rot;
+
+        // 아군 선박 좌/우 위치 추적 (위치 교차 감지용)
+        // 에피소드 시작 시 agent1이 agent2의 왼쪽에 있으면 true
+        private bool _agent1StartsOnLeft = true;
         private System.Collections.Generic.Dictionary<GameObject, Vector3> _originalEnemyPositions = 
             new System.Collections.Generic.Dictionary<GameObject, Vector3>();
         private System.Collections.Generic.Dictionary<GameObject, Vector3> _originalBoatPositions = 
@@ -409,15 +419,35 @@ namespace BoatAttack
                 return;
             }
 
-            // 아군 간 거리 체크
-            if (defenseAgent1 != null && defenseAgent2 != null && maxAllyDistance > 0f)
+            // 아군 간 거리 체크 (최대/최소)
+            if (defenseAgent1 != null && defenseAgent2 != null)
             {
-                float allyDist = Vector3.Distance(
-                    defenseAgent1.transform.position, defenseAgent2.transform.position);
-                if (allyDist > maxAllyDistance)
+                Vector3 pos1 = defenseAgent1.transform.position;
+                Vector3 pos2 = defenseAgent2.transform.position;
+                float allyDist = Vector3.Distance(pos1, pos2);
+
+                // 최대 거리 초과 체크
+                if (maxAllyDistance > 0f && allyDist > maxAllyDistance)
                 {
                     Debug.Log($"[FixedUpdate] ⚠️ 아군 간 거리 초과! 거리: {allyDist:F1}m > 최대: {maxAllyDistance}m → 에피소드 종료");
                     RestartEpisode("AllyDistanceExceeded", allyDistancePenalty);
+                    return;
+                }
+
+                // 최소 거리 미달 체크
+                if (minAllyDistance > 0f && allyDist < minAllyDistance)
+                {
+                    Debug.Log($"[FixedUpdate] ⚠️ 아군 간 거리 미달! 거리: {allyDist:F1}m < 최소: {minAllyDistance}m → 에피소드 종료");
+                    RestartEpisode("AllyDistanceTooClose", allyDistancePenalty);
+                    return;
+                }
+
+                // 위치 교차 체크 (왼쪽/오른쪽 위치가 바뀌면 페널티)
+                bool agent1CurrentlyOnLeft = pos1.x < pos2.x;
+                if (agent1CurrentlyOnLeft != _agent1StartsOnLeft)
+                {
+                    Debug.Log($"[FixedUpdate] ⚠️ 아군 위치 교차! 초기: agent1 왼쪽={_agent1StartsOnLeft}, 현재: agent1 왼쪽={agent1CurrentlyOnLeft} → 에피소드 종료");
+                    RestartEpisode("PositionSwapped", positionSwapPenalty);
                     return;
                 }
             }
@@ -477,9 +507,9 @@ namespace BoatAttack
                 }
             }
 
-            // === 개별 보상 부여 (Stage1 전용) ===
+            // === 개별 보상 부여 (모든 Stage) ===
             // 그룹 보상과 별개로 각 에이전트에 직접 부여
-            if (rewardCalculator.currentStage == TrainingStage.Stage1_Formation)
+            if (true)  // 모든 Stage에서 개별 보상 적용
             {
                 float deltaTime = Time.fixedDeltaTime * rewardCalculationInterval;
 
@@ -852,7 +882,21 @@ namespace BoatAttack
                 _webDetector.ResetDetector();
             }
         }
-        
+
+        /// <summary>
+        /// 아군 선박이 Web과 충돌 시 처리 (페널티 + 에피소드 종료)
+        /// </summary>
+        public void OnAllyHitWeb(GameObject allyShip, float penalty)
+        {
+            if (_episodeEnding)
+                return;
+
+            Debug.LogError($"[OnAllyHitWeb] ⚠️ 아군 선박이 Web과 충돌! {allyShip.name}, 페널티: {penalty}");
+
+            // 페널티 부여 후 에피소드 종료
+            RestartEpisode("AllyHitWeb", penalty);
+        }
+
         /// <summary>
         /// 단일 적군 선박을 원점으로 리셋 (레거시 - ResetSingleAttackBoat 사용 권장)
         /// </summary>
@@ -1039,12 +1083,13 @@ namespace BoatAttack
 
             string boatName = attackBoat.name.Replace("(Clone)", "");
 
-            // 1. Rigidbody 속도 초기화 (비활성화 없이)
+            // 1. Rigidbody 속도 초기화 + Sleep (비활성화 없이)
             Rigidbody rb = attackBoat.GetComponent<Rigidbody>();
             if (rb != null)
             {
                 rb.velocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
+                rb.Sleep();  // 물리 시뮬레이션 일시 정지
             }
 
             // 2. 원점 위치로 이동
@@ -1060,6 +1105,13 @@ namespace BoatAttack
 
             attackBoat.transform.position = initialPos;
             attackBoat.transform.rotation = Quaternion.identity;
+
+            // Engine 리셋 (Gerstner 파도 안정화 전까지 _yHeight 조건 무시)
+            var boat = attackBoat.GetComponent<Boat>();
+            if (boat != null && boat.engine != null)
+            {
+                boat.engine.OnEpisodeReset();
+            }
 
             // 3. Cinemachine Dolly Cart 리셋 (경로 시작점으로)
             Cinemachine.CinemachineDollyCart dollyCart = attackBoat.GetComponent<Cinemachine.CinemachineDollyCart>();
@@ -1419,6 +1471,16 @@ namespace BoatAttack
             ResetDefenseAgentPosition(defenseAgent1, _originalDefense1Pos, defense1SpawnPos, _originalDefense1Rot);
             ResetDefenseAgentPosition(defenseAgent2, _originalDefense2Pos, defense2SpawnPos, _originalDefense2Rot);
 
+            // 아군 선박 좌/우 위치 기록 (위치 교차 감지용)
+            if (defenseAgent1 != null && defenseAgent2 != null)
+            {
+                Vector3 pos1 = defenseAgent1.transform.position;
+                Vector3 pos2 = defenseAgent2.transform.position;
+                // X축 기준으로 좌/우 판단 (pos1.x < pos2.x면 agent1이 왼쪽)
+                _agent1StartsOnLeft = pos1.x < pos2.x;
+                Debug.Log($"[ResetPositionsWithDeactivation] 초기 위치: agent1({pos1.x:F1}), agent2({pos2.x:F1}), agent1이 왼쪽: {_agent1StartsOnLeft}");
+            }
+
             // ========================================
             // 2. 적군 선박들 위치 리셋 (비활성화 없이 - Water System Dictionary 충돌 방지)
             // ========================================
@@ -1467,16 +1529,23 @@ namespace BoatAttack
                 targetPos = GetRandomSpawnPosition(targetPos);
             }
 
-            // Rigidbody 속도 초기화
+            // Rigidbody 속도 초기화 + Sleep
             if (agent.TryGetComponent<Rigidbody>(out var rb))
             {
                 rb.velocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
+                rb.Sleep();  // 물리 시뮬레이션 일시 정지 (누적된 힘 제거)
             }
 
             // 위치와 회전 설정
             agent.transform.position = targetPos;
             agent.transform.rotation = originalRot;
+
+            // Engine 리셋 (Gerstner 파도 안정화 전까지 _yHeight 조건 무시)
+            if (agent._engine != null)
+            {
+                agent._engine.OnEpisodeReset();
+            }
 
             // 항상 로그 출력 (디버깅용)
             Debug.Log($"[DefenseEnvController] 아군 선박 리셋: {agent.name} → {targetPos} (원점: {originalPos})");

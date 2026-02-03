@@ -203,26 +203,21 @@ namespace BoatAttack
         }
 
         /// <summary>
-        /// Stage1 개별 속도 보상 계산 (각 에이전트별로 부여)
-        /// 빠를수록 높은 보상
+        /// 개별 속도 보상 계산 (각 에이전트별로 부여)
+        /// 빠를수록 높은 보상 - 모든 Stage에서 적용
         /// </summary>
         public float CalculateIndividualSpeedReward(AgentState agent)
         {
-            if (currentStage != TrainingStage.Stage1_Formation)
-                return 0f;
-
             float speedFactor = Mathf.Clamp01(agent.speed / stage1SpeedThreshold);
             return stage1IndividualSpeedReward * speedFactor;
         }
 
         /// <summary>
-        /// Stage1 조향 페널티 계산 (각 에이전트별로 부여)
-        /// 단순 선형: 선회량 × 계수 = 페널티
+        /// 조향 페널티 계산 (각 에이전트별로 부여)
+        /// 단순 선형: 선회량 × 계수 = 페널티 - 모든 Stage에서 적용
         /// </summary>
         public float CalculateSteeringStabilityReward(float currentHeading, float prevHeading, float deltaTime)
         {
-            if (currentStage != TrainingStage.Stage1_Formation)
-                return 0f;
 
             // 각도 변화량 계산 (도/초)
             float headingChange = Mathf.Abs(Mathf.DeltaAngle(currentHeading, prevHeading));
@@ -236,15 +231,17 @@ namespace BoatAttack
         }
 
         /// <summary>
-        /// Stage2/3 협동 기동 보상 계산
+        /// 협동 기동 보상 계산
+        /// 모든 Stage에서 Stage1 보상 사용 (대형 유지 기반)
+        /// Stage2/3: 포획 시 추가 보상 (별도 이벤트)
         /// </summary>
         public float CalculateCooperativeRewards(AgentState agent1, AgentState agent2)
         {
-            // Stage1에서는 별도 함수 사용
-            if (currentStage == TrainingStage.Stage1_Formation)
-            {
-                return CalculateStage1Rewards(agent1, agent2);
-            }
+            // 모든 Stage에서 Stage1 보상 함수 사용
+            return CalculateStage1Rewards(agent1, agent2);
+
+            // 아래 코드는 더 이상 사용하지 않음 (Stage2 전용 보상 제거)
+            /*
 
             float totalReward = 0f;
 
@@ -294,19 +291,22 @@ namespace BoatAttack
             }
 
             return totalReward;
+            */
         }
 
         /// <summary>
         /// 전술 기동 보상 계산
-        /// Stage2부터 활성화 (Stage1에서는 0 반환)
+        /// Stage2, Stage3에서 활성화 (Stage1에서는 0 반환)
+        /// 단순화: Stage2에서는 비활성화하여 포획 이벤트에만 집중
         /// </summary>
         public float CalculateTacticalRewards(AgentState agent1, AgentState agent2,
             GameObject[] enemyShips, GameObject webObject)
         {
             float totalReward = 0f;
 
-            // Stage2부터 전술 기동 보상 활성화 (Stage1에서는 비활성)
-            if (currentStage == TrainingStage.Stage1_Formation)
+            // Stage3에서만 전술 기동 보상 활성화 (Stage1, Stage2는 비활성)
+            // Stage2는 Stage1 보상 + 포획 이벤트만 사용 (단순화)
+            if (currentStage != TrainingStage.Stage3_Tactical)
             {
                 return totalReward;
             }

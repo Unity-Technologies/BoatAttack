@@ -28,6 +28,10 @@ namespace BoatAttack
         private float _turnVel;
         private float _currentAngle;
 
+        // 에피소드 시작 시 _yHeight 조건 무시용 카운터
+        private int _skipHeightCheckFrames = 0;
+        private const int SKIP_FRAMES_ON_RESET = 5;  // 5프레임 동안 조건 무시
+
         private void Awake()
         {
 			if(engineSound)
@@ -123,7 +127,16 @@ namespace BoatAttack
                 _point.Dispose();
             }
         }
-        
+
+        /// <summary>
+        /// 에피소드 리셋 시 호출 - 몇 프레임 동안 _yHeight 조건 무시
+        /// </summary>
+        public void OnEpisodeReset()
+        {
+            _skipHeightCheckFrames = SKIP_FRAMES_ON_RESET;
+            _yHeight = 0f;  // 수면 위로 가정
+        }
+
         /// <summary>
         /// Controls the acceleration of the boat
         /// </summary>
@@ -137,19 +150,21 @@ namespace BoatAttack
             }
             
             modifier = Mathf.Clamp(modifier, 0f, 1f); // clamp for reasonable values
-            
-            if (_yHeight > -0.1f && RB != null) // if the engine is deeper than 0.1
+
+            // ⚠️ _yHeight 조건 완전 무시 (학습 안정성 테스트)
+            // 원래 조건: if (_yHeight > -0.1f && RB != null)
+            if (RB != null)
             {
                 var forward = RB.transform.forward;
                 forward.y = 0f;
                 forward.Normalize();
-                
+
                 // ⚠️ NaN 방지: 벡터 검증
                 if (float.IsNaN(forward.x) || float.IsNaN(forward.y) || float.IsNaN(forward.z))
                 {
                     forward = Vector3.forward;
                 }
-                
+
                 RB.AddForce(horsePower * modifier * forward, ForceMode.Acceleration); // add force forward based on input and horsepower
                 RB.AddRelativeTorque(-Vector3.right * modifier, ForceMode.Acceleration);
             }
@@ -168,8 +183,10 @@ namespace BoatAttack
             }
             
             modifier = Mathf.Clamp(modifier, -1f, 1f); // clamp for reasonable values
-            
-            if (_yHeight > -0.1f && RB != null) // if the engine is deeper than 0.1
+
+            // ⚠️ _yHeight 조건 완전 무시 (학습 안정성 테스트)
+            // 원래 조건: if (_yHeight > -0.1f && RB != null)
+            if (RB != null)
             {
                 // ⚠️ NaN 방지: torque 벡터 검증
                 // Z축 Roll 제거: 선회 시 기울어지지 않아 직진 성능 유지
