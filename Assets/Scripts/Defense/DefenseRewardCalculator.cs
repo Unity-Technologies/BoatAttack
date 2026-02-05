@@ -34,8 +34,8 @@ namespace BoatAttack
         [Tooltip("Stage1 개별 속도 보상 (각 에이전트별로 부여)")]
         public float stage1IndividualSpeedReward = 0.02f;  // 0.001→0.02 (20배)
 
-        [Tooltip("Stage1 선회 페널티 계수 (1도/초당 페널티량) - 변화량에 비례")]
-        public float stage1SteeringPenaltyCoeff = 0.0002f;  // 100도/초에서 속도보상과 균형
+        [Tooltip("명령 연속성 보상 계수 (추력/조향 변화가 작을수록 보상)")]
+        public float actionSmoothnessCoeff = 0.002f;
 
         [Tooltip("Stage1 최적 거리 (m)")]
         public float stage1OptimalDistance = 50f;
@@ -199,20 +199,17 @@ namespace BoatAttack
         }
 
         /// <summary>
-        /// 조향 페널티 계산 (각 에이전트별로 부여)
-        /// 단순 선형: 선회량 × 계수 = 페널티 - 모든 Stage에서 적용
+        /// 명령 연속성 보상 (각 에이전트별로 부여, 모든 Stage 적용)
+        /// 추력/조향 명령의 변화가 작을수록 보상, 클수록 페널티
         /// </summary>
-        public float CalculateSteeringStabilityReward(float currentHeading, float prevHeading, float deltaTime)
+        public float CalculateActionSmoothnessReward(float throttleDelta, float steeringDelta)
         {
-            // 각도 변화량 계산 (도/초)
-            float headingChange = Mathf.Abs(Mathf.DeltaAngle(currentHeading, prevHeading));
-            float headingChangeRate = headingChange / Mathf.Max(deltaTime, 0.001f);
+            // 변화량 평균 (0 = 완전 연속, 1 = 최대 변화)
+            float avgDelta = (throttleDelta + steeringDelta) * 0.5f;
 
-            // 단순 선형: 변화량 × 계수 = 페널티 (음수)
-            // 직진(0도/초): 0
-            // 10도/초: -0.02
-            // 20도/초: -0.04
-            return -(headingChangeRate * stage1SteeringPenaltyCoeff);
+            // 변화 없음(0): +coeff, 최대 변화(1): -coeff
+            // 선형: (1 - 2*delta) * coeff
+            return (1f - 2f * avgDelta) * actionSmoothnessCoeff;
         }
 
         /// <summary>

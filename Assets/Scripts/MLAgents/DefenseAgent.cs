@@ -65,17 +65,15 @@ namespace BoatAttack
         private bool _episodeEnded = false;
         private float _prevThrottle = 0f;
         private float _prevSteering = 0f;
-        private float _prevHeading = 0f;
-        private bool _hasPrevHeading = false;
 
-        public float PreviousHeading => _prevHeading;
-        public bool HasPreviousHeading => _hasPrevHeading;
+        // 명령 변화량 (이전 스텝과의 차이, 보상 계산용)
+        private float _throttleDelta = 0f;
+        private float _steeringDelta = 0f;
 
-        public void UpdatePreviousHeading()
-        {
-            _prevHeading = transform.eulerAngles.y;
-            _hasPrevHeading = true;
-        }
+        public float PrevThrottle => _prevThrottle;
+        public float PrevSteering => _prevSteering;
+        public float ThrottleDelta => _throttleDelta;
+        public float SteeringDelta => _steeringDelta;
 
         private new void Awake()
         {
@@ -100,21 +98,21 @@ namespace BoatAttack
             _episodeEnded = false;
             _totalReward = 0f;
             _lastStepReward = 0f;
-            _prevThrottle = 0.5f;
+            _prevThrottle = 0f;
             _prevSteering = 0f;
-            _prevHeading = transform.eulerAngles.y;
-            _hasPrevHeading = false;
+            _throttleDelta = 0f;
+            _steeringDelta = 0f;
         }
 
         /// <summary>
         /// 관측 수집 (상대 좌표 기반)
-        /// 자신(2) + 팀원(4) + 적군(4×maxEnemyCount) + 모선(3) = 29개
+        /// 자신(4) + 팀원(4) + 적군(4×maxEnemyCount) + 모선(3) = 31개
         /// </summary>
         public override void CollectObservations(VectorSensor sensor)
         {
             if (_engine == null || _engine.RB == null)
             {
-                int totalObservations = 2 + 4 + (4 * maxEnemyCount) + 3;
+                int totalObservations = 4 + 4 + (4 * maxEnemyCount) + 3;
                 for (int i = 0; i < totalObservations; i++)
                     sensor.AddObservation(0f);
                 return;
@@ -125,9 +123,11 @@ namespace BoatAttack
             Vector3 myRight = transform.right;
             float myAngle = transform.eulerAngles.y;
 
-            // 1. 자신 (2개)
+            // 1. 자신 (4개: 헤딩, 속도, 이전추력, 이전조향)
             sensor.AddObservation(myAngle / 360f);
             sensor.AddObservation(_engine.RB.velocity.magnitude / 20f);
+            sensor.AddObservation(_prevThrottle);
+            sensor.AddObservation(_prevSteering);
 
             // 2. 팀원 (4개)
             if (partnerAgent != null && partnerAgent._engine != null && partnerAgent._engine.RB != null)
@@ -217,6 +217,10 @@ namespace BoatAttack
                 throttle = Mathf.Lerp(_prevThrottle, throttle, inputSmoothing);
                 steering = Mathf.Lerp(_prevSteering, steering, inputSmoothing);
             }
+            // 명령 변화량 기록 (보상 계산용)
+            _throttleDelta = Mathf.Abs(throttle - _prevThrottle);
+            _steeringDelta = Mathf.Abs(steering - _prevSteering);
+
             _prevThrottle = throttle;
             _prevSteering = steering;
 

@@ -484,56 +484,33 @@ namespace BoatAttack
 
             // === 개별 보상 부여 (모든 Stage) ===
             // 그룹 보상과 별개로 각 에이전트에 직접 부여
-            if (true)  // 모든 Stage에서 개별 보상 적용
             {
-                float deltaTime = Time.fixedDeltaTime * rewardCalculationInterval;
-
                 // Agent 1 개별 보상
                 if (defenseAgent1 != null)
                 {
-                    // 개별 속도 보상
                     float speedReward1 = rewardCalculator.CalculateIndividualSpeedReward(agent1State);
+                    float smoothReward1 = rewardCalculator.CalculateActionSmoothnessReward(
+                        defenseAgent1.ThrottleDelta, defenseAgent1.SteeringDelta);
 
-                    // 조향 안정성 보상 (이전 헤딩이 있을 때만)
-                    float stabilityReward1 = 0f;
-                    if (defenseAgent1.HasPreviousHeading)
-                    {
-                        stabilityReward1 = rewardCalculator.CalculateSteeringStabilityReward(
-                            agent1State.heading, defenseAgent1.PreviousHeading, deltaTime);
-                    }
-
-                    float individualReward1 = speedReward1 + stabilityReward1;
+                    float individualReward1 = speedReward1 + smoothReward1;
                     if (Mathf.Abs(individualReward1) > 0.00001f)
                     {
                         defenseAgent1.AddReward(individualReward1);
                     }
-
-                    // 이전 헤딩 업데이트
-                    defenseAgent1.UpdatePreviousHeading();
                 }
 
                 // Agent 2 개별 보상
                 if (defenseAgent2 != null)
                 {
-                    // 개별 속도 보상
                     float speedReward2 = rewardCalculator.CalculateIndividualSpeedReward(agent2State);
+                    float smoothReward2 = rewardCalculator.CalculateActionSmoothnessReward(
+                        defenseAgent2.ThrottleDelta, defenseAgent2.SteeringDelta);
 
-                    // 조향 안정성 보상 (이전 헤딩이 있을 때만)
-                    float stabilityReward2 = 0f;
-                    if (defenseAgent2.HasPreviousHeading)
-                    {
-                        stabilityReward2 = rewardCalculator.CalculateSteeringStabilityReward(
-                            agent2State.heading, defenseAgent2.PreviousHeading, deltaTime);
-                    }
-
-                    float individualReward2 = speedReward2 + stabilityReward2;
+                    float individualReward2 = speedReward2 + smoothReward2;
                     if (Mathf.Abs(individualReward2) > 0.00001f)
                     {
                         defenseAgent2.AddReward(individualReward2);
                     }
-
-                    // 이전 헤딩 업데이트
-                    defenseAgent2.UpdatePreviousHeading();
                 }
             }
         }

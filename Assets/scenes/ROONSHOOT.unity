@@ -6017,7 +6017,7 @@ PrefabInstance:
     - target: {fileID: 38375215458064404, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
       propertyPath: m_BrainParameters.VectorObservationSize
-      value: 13
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 38375215458064404, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
@@ -23018,7 +23018,7 @@ PrefabInstance:
     - target: {fileID: 38375215458064404, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
       propertyPath: m_BrainParameters.VectorObservationSize
-      value: 13
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 38375215458064404, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
@@ -34873,7 +34873,7 @@ MonoBehaviour:
   stage1SpeedReward: 0.05
   stage1SpeedRewardMultiplier: 4
   stage1IndividualSpeedReward: 0.004
-  stage1SteeringPenaltyCoeff: 0.00001
+  actionSmoothnessCoeff: 0.002
   stage1OptimalDistance: 25
   stage1SpeedThreshold: 2
   stage1FormationDistancePenalty: -0.01
