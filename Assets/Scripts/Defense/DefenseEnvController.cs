@@ -366,7 +366,8 @@ namespace BoatAttack
             // attack_boat 태그를 가진 모든 적군 선박 찾기 및 초기 위치 저장
             FindAndSaveAttackBoats();
 
-            // 적군 경로 원본 웨이포인트 저장 (랜덤화용)
+            // 씬의 모든 attack_track 경로 수집 및 원본 웨이포인트 저장
+            FindAllAttackTrackPaths();
             SaveOriginalWaypoints();
 
             // 첫 에피소드 시작 (PushBlockEnvController 패턴)
@@ -1795,76 +1796,110 @@ namespace BoatAttack
         }
 
         /// <summary>
-        /// 적군 경로 원본 웨이포인트 저장 (Start()에서 호출)
+        /// 씬에서 "attack_track"을 이름에 포함하는 모든 오브젝트의 CinemachineSmoothPath를 수집
         /// </summary>
-        private void SaveOriginalWaypoints()
+        private void FindAllAttackTrackPaths()
         {
-            if (attackTrackPath == null)
+            var paths = new System.Collections.Generic.List<CinemachineSmoothPath>();
+
+            // 씬의 모든 CinemachineSmoothPath 중 이름에 "attack_track"이 포함된 것을 수집
+            var allPaths = FindObjectsOfType<CinemachineSmoothPath>();
+            foreach (var path in allPaths)
             {
-                // attackTrackPath가 Inspector에서 설정되지 않은 경우 찾기 시도
-                var foundPath = GameObject.Find("AttackTrack01");
-                if (foundPath != null)
+                if (path.gameObject.name.ToLower().Contains("attack_track"))
                 {
-                    attackTrackPath = foundPath.GetComponent<CinemachineSmoothPath>();
+                    paths.Add(path);
                 }
             }
 
-            if (attackTrackPath == null || attackTrackPath.m_Waypoints == null)
-            {
-                return;
-            }
-
-            int waypointCount = attackTrackPath.m_Waypoints.Length;
-            _originalWaypoints = new Vector3[waypointCount];
-
-            for (int i = 0; i < waypointCount; i++)
-            {
-                _originalWaypoints[i] = attackTrackPath.m_Waypoints[i].position;
-            }
-
+            _availableAttackPaths = paths.ToArray();
         }
 
         /// <summary>
-        /// 적군 경로 웨이포인트 랜덤화 (에피소드 시작 시 호출)
-        /// 웨이포인트 0, 1, 2번만 랜덤화 (30m 반경 내 원형 영역)
+        /// 랜덤 attack_track 경로 반환
+        /// </summary>
+        private CinemachinePathBase GetRandomAttackPath()
+        {
+            if (_availableAttackPaths == null || _availableAttackPaths.Length == 0)
+                return null;
+
+            int index = Random.Range(0, _availableAttackPaths.Length);
+            return _availableAttackPaths[index];
+        }
+
+        /// <summary>
+        /// 모든 attack_track 경로의 원본 웨이포인트 저장 (Start()에서 호출)
+        /// </summary>
+        private void SaveOriginalWaypoints()
+        {
+            if (_availableAttackPaths == null || _availableAttackPaths.Length == 0)
+                return;
+
+            _allOriginalWaypoints = new Vector3[_availableAttackPaths.Length][];
+
+            for (int p = 0; p < _availableAttackPaths.Length; p++)
+            {
+                var path = _availableAttackPaths[p];
+                if (path == null || path.m_Waypoints == null)
+                {
+                    _allOriginalWaypoints[p] = new Vector3[0];
+                    continue;
+                }
+
+                int waypointCount = path.m_Waypoints.Length;
+                _allOriginalWaypoints[p] = new Vector3[waypointCount];
+
+                for (int i = 0; i < waypointCount; i++)
+                {
+                    _allOriginalWaypoints[p][i] = path.m_Waypoints[i].position;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 모든 attack_track 경로의 웨이포인트 0, 1, 2번을 랜덤화 (에피소드 시작 시 호출)
         /// </summary>
         private void RandomizeEnemyWaypoints()
         {
             if (!enableEnemyPathRandomization)
                 return;
 
-            if (attackTrackPath == null || _originalWaypoints == null || _originalWaypoints.Length < 3)
-            {
+            if (_availableAttackPaths == null || _allOriginalWaypoints == null)
                 return;
-            }
 
-            // 웨이포인트 0, 1, 2번만 랜덤화
-            for (int i = 0; i < 3 && i < attackTrackPath.m_Waypoints.Length; i++)
+            for (int p = 0; p < _availableAttackPaths.Length; p++)
             {
-                Vector3 originalPos = _originalWaypoints[i];
-                Vector3 randomizedPos = GetRandomSpawnPosition(originalPos);
+                var path = _availableAttackPaths[p];
+                if (path == null || path.m_Waypoints == null)
+                    continue;
 
-                // CinemachineSmoothPath의 웨이포인트는 로컬 좌표 사용
-                // Transform이 있으면 월드 → 로컬 변환 필요
-                if (attackTrackPath.transform.parent != null)
+                var origWaypoints = _allOriginalWaypoints[p];
+                if (origWaypoints == null || origWaypoints.Length < 3)
+                    continue;
+
+                // 웨이포인트 0, 1, 2번만 랜덤화
+                for (int i = 0; i < 3 && i < path.m_Waypoints.Length; i++)
                 {
-                    randomizedPos = attackTrackPath.transform.InverseTransformPoint(
-                        attackTrackPath.transform.TransformPoint(originalPos) +
-                        (randomizedPos - originalPos)
-                    );
-                }
-                else
-                {
-                    // 부모가 없으면 로컬 좌표 == 월드 좌표
-                    randomizedPos = originalPos + (randomizedPos - originalPos);
+                    Vector3 originalPos = origWaypoints[i];
+                    Vector3 randomizedPos = GetRandomSpawnPosition(originalPos);
+
+                    if (path.transform.parent != null)
+                    {
+                        randomizedPos = path.transform.InverseTransformPoint(
+                            path.transform.TransformPoint(originalPos) +
+                            (randomizedPos - originalPos)
+                        );
+                    }
+                    else
+                    {
+                        randomizedPos = originalPos + (randomizedPos - originalPos);
+                    }
+
+                    path.m_Waypoints[i].position = randomizedPos;
                 }
 
-                attackTrackPath.m_Waypoints[i].position = randomizedPos;
+                path.InvalidateDistanceCache();
             }
-
-            // 경로 업데이트 (Cinemachine 경로 재계산)
-            attackTrackPath.InvalidateDistanceCache();
-
         }
 
         #endregion
