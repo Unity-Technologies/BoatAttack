@@ -963,21 +963,29 @@ namespace BoatAttack
                 boat.engine.OnEpisodeReset();
             }
 
-            // 3. Cinemachine Dolly Cart 리셋 (경로 시작점으로)
+            // 3. Cinemachine Dolly Cart 리셋 (랜덤 경로 할당 또는 원래 경로 복원)
             Cinemachine.CinemachineDollyCart dollyCart = attackBoat.GetComponent<Cinemachine.CinemachineDollyCart>();
             if (dollyCart != null)
             {
-                if (_attackBoatInitialPathsByName.ContainsKey(boatName))
+                CinemachinePathBase assignedPath = null;
+
+                if (enableRandomPathAssignment)
                 {
-                    CinemachinePathBase originalPath = _attackBoatInitialPathsByName[boatName];
-                    if (originalPath != null)
-                    {
-                        dollyCart.m_Path = originalPath;
-                    }
+                    assignedPath = GetRandomAttackPath();
+                }
+
+                // 랜덤 경로가 없으면 원래 경로 fallback
+                if (assignedPath == null && _attackBoatInitialPathsByName.ContainsKey(boatName))
+                {
+                    assignedPath = _attackBoatInitialPathsByName[boatName];
+                }
+
+                if (assignedPath != null)
+                {
+                    dollyCart.m_Path = assignedPath;
                 }
                 dollyCart.m_Position = 0f;
             }
-            
         }
         
         /// <summary>
@@ -1438,19 +1446,21 @@ namespace BoatAttack
                     recreatedBoat.transform.position = initialPos;
                     recreatedBoat.transform.rotation = Quaternion.identity;
                     
-                    // Cinemachine Dolly Cart 리셋
+                    // Cinemachine Dolly Cart 리셋 (랜덤 경로 할당)
                     CinemachineDollyCart dollyCart = recreatedBoat.GetComponent<CinemachineDollyCart>();
                     if (dollyCart != null)
                     {
-                        // 원본 경로 찾기 (이름 기반 Dictionary에서 찾기)
-                        if (_attackBoatInitialPathsByName.ContainsKey(boatName))
+                        CinemachinePathBase assignedPath = enableRandomPathAssignment ? GetRandomAttackPath() : null;
+
+                        if (assignedPath == null && _attackBoatInitialPathsByName.ContainsKey(boatName))
                         {
-                            CinemachinePathBase originalPath = _attackBoatInitialPathsByName[boatName];
-                            if (originalPath != null)
-                            {
-                                dollyCart.m_Path = originalPath;
-                                dollyCart.m_Position = 0f;
-                            }
+                            assignedPath = _attackBoatInitialPathsByName[boatName];
+                        }
+
+                        if (assignedPath != null)
+                        {
+                            dollyCart.m_Path = assignedPath;
+                            dollyCart.m_Position = 0f;
                         }
                     }
                     
@@ -1586,12 +1596,18 @@ namespace BoatAttack
                         recreatedBoat.transform.rotation = Quaternion.identity;
                         
                         CinemachineDollyCart dollyCart = recreatedBoat.GetComponent<CinemachineDollyCart>();
-                        if (dollyCart != null && _attackBoatInitialPathsByName.ContainsKey(boatName))
+                        if (dollyCart != null)
                         {
-                            CinemachinePathBase originalPath = _attackBoatInitialPathsByName[boatName];
-                            if (originalPath != null)
+                            CinemachinePathBase assignedPath = enableRandomPathAssignment ? GetRandomAttackPath() : null;
+
+                            if (assignedPath == null && _attackBoatInitialPathsByName.ContainsKey(boatName))
                             {
-                                dollyCart.m_Path = originalPath;
+                                assignedPath = _attackBoatInitialPathsByName[boatName];
+                            }
+
+                            if (assignedPath != null)
+                            {
+                                dollyCart.m_Path = assignedPath;
                                 dollyCart.m_Position = 0f;
                             }
                         }
@@ -1667,41 +1683,46 @@ namespace BoatAttack
                     _attackBoatInitialPositionsByName[boatName] = spawnPos;
                 }
 
-                // Cinemachine Dolly Cart 리셋 (위치 설정보다 먼저!)
+                // Cinemachine Dolly Cart 리셋 (랜덤 경로 할당 또는 원래 경로 복원)
                 CinemachineDollyCart dollyCart = boat.GetComponent<CinemachineDollyCart>();
                 if (dollyCart != null)
                 {
-                    CinemachinePathBase originalPath = null;
+                    CinemachinePathBase assignedPath = null;
 
-                    if (_attackBoatInitialPathsByName.ContainsKey(boatName))
+                    if (enableRandomPathAssignment)
                     {
-                        originalPath = _attackBoatInitialPathsByName[boatName];
-                    }
-                    else if (_attackBoatInitialPaths.ContainsKey(boat) && _attackBoatInitialPaths[boat] != null)
-                    {
-                        originalPath = _attackBoatInitialPaths[boat];
-                        _attackBoatInitialPathsByName[boatName] = originalPath;
+                        assignedPath = GetRandomAttackPath();
                     }
 
-                    if (originalPath != null)
+                    // 랜덤 경로가 없으면 원래 경로 fallback
+                    if (assignedPath == null)
                     {
-                        dollyCart.m_Path = originalPath;
+                        if (_attackBoatInitialPathsByName.ContainsKey(boatName))
+                        {
+                            assignedPath = _attackBoatInitialPathsByName[boatName];
+                        }
+                        else if (_attackBoatInitialPaths.ContainsKey(boat) && _attackBoatInitialPaths[boat] != null)
+                        {
+                            assignedPath = _attackBoatInitialPaths[boat];
+                            _attackBoatInitialPathsByName[boatName] = assignedPath;
+                        }
+                    }
+
+                    if (assignedPath != null)
+                    {
+                        dollyCart.m_Path = assignedPath;
                         dollyCart.m_Position = 0f;
 
-                        // Speed가 음수면 양수로 변경 (경로 0→끝 방향으로)
                         if (dollyCart.m_Speed < 0)
                         {
                             dollyCart.m_Speed = Mathf.Abs(dollyCart.m_Speed);
                         }
 
-                        // 경로 시작/끝 위치 확인
-                        Vector3 pathStartPos = originalPath.EvaluatePositionAtUnit(0f, CinemachinePathBase.PositionUnits.PathUnits);
-                        Vector3 pathEndPos = originalPath.EvaluatePositionAtUnit(originalPath.MaxPos, CinemachinePathBase.PositionUnits.PathUnits);
+                        Vector3 pathStartPos = assignedPath.EvaluatePositionAtUnit(0f, CinemachinePathBase.PositionUnits.PathUnits);
                         boat.transform.position = pathStartPos;
                     }
                     else
                     {
-                        // 경로가 없으면 저장된 위치 사용
                         boat.transform.position = spawnPos;
                     }
                 }
@@ -1762,8 +1783,11 @@ namespace BoatAttack
             // ========================================
             // 아군 선박(DefenseAgent)은 비활성화 없이 위치만 리셋
             // ========================================
-            ResetDefenseAgentPosition(defenseAgent1, _originalDefense1Pos, defense1SpawnPos, _originalDefense1Rot);
-            ResetDefenseAgentPosition(defenseAgent2, _originalDefense2Pos, defense2SpawnPos, _originalDefense2Rot);
+            float sharedAngle = enableRandomSpawn
+                ? Random.Range(-defenseRandomAngleRange, defenseRandomAngleRange)
+                : 0f;
+            ResetDefenseAgentPosition(defenseAgent1, _originalDefense1Pos, defense1SpawnPos, _originalDefense1Rot, sharedAngle);
+            ResetDefenseAgentPosition(defenseAgent2, _originalDefense2Pos, defense2SpawnPos, _originalDefense2Rot, sharedAngle);
 
             // Web 위치 설정 (2대 중간)
             if (webObject != null && defenseAgent1 != null && defenseAgent2 != null)
@@ -1802,11 +1826,12 @@ namespace BoatAttack
         {
             var paths = new System.Collections.Generic.List<CinemachineSmoothPath>();
 
-            // 씬의 모든 CinemachineSmoothPath 중 이름에 "attack_track"이 포함된 것을 수집
+            // 씬의 모든 CinemachineSmoothPath 중 이름에 "attacktrack"이 포함된 것을 수집
             var allPaths = FindObjectsOfType<CinemachineSmoothPath>();
             foreach (var path in allPaths)
             {
-                if (path.gameObject.name.ToLower().Contains("attack_track"))
+                string lowerName = path.gameObject.name.ToLower();
+                if (lowerName.Contains("attacktrack") || lowerName.Contains("attack_track"))
                 {
                     paths.Add(path);
                 }
@@ -2109,37 +2134,41 @@ namespace BoatAttack
                 #endif
             }
 
-            // 적군 웨이포인트 스폰 범위 시각화 (Red)
-            if (enableEnemyPathRandomization && attackTrackPath != null)
+            // 적군 웨이포인트 스폰 범위 시각화 (Red) - 모든 attack_track 경로
+            if (enableEnemyPathRandomization && _availableAttackPaths != null)
             {
                 Gizmos.color = new Color(1f, 0.3f, 0.3f, 0.3f); // 반투명 빨강
 
-                // 원본 웨이포인트 또는 현재 웨이포인트 사용
-                for (int i = 0; i < 3 && i < attackTrackPath.m_Waypoints.Length; i++)
+                for (int p = 0; p < _availableAttackPaths.Length; p++)
                 {
-                    Vector3 waypointPos;
-                    if (_originalWaypoints != null && i < _originalWaypoints.Length)
-                    {
-                        waypointPos = _originalWaypoints[i];
-                    }
-                    else
-                    {
-                        waypointPos = attackTrackPath.m_Waypoints[i].position;
-                    }
+                    var path = _availableAttackPaths[p];
+                    if (path == null || path.m_Waypoints == null) continue;
 
-                    // 월드 좌표로 변환
-                    if (attackTrackPath.transform != null)
+                    for (int i = 0; i < 3 && i < path.m_Waypoints.Length; i++)
                     {
-                        waypointPos = attackTrackPath.transform.TransformPoint(waypointPos);
+                        Vector3 waypointPos;
+                        if (_allOriginalWaypoints != null && p < _allOriginalWaypoints.Length && i < _allOriginalWaypoints[p].Length)
+                        {
+                            waypointPos = _allOriginalWaypoints[p][i];
+                        }
+                        else
+                        {
+                            waypointPos = path.m_Waypoints[i].position;
+                        }
+
+                        if (path.transform != null)
+                        {
+                            waypointPos = path.transform.TransformPoint(waypointPos);
+                        }
+
+                        DrawCircleGizmo(waypointPos, spawnRange, 32);
+                        Gizmos.DrawWireSphere(waypointPos, 2f);
+
+                        #if UNITY_EDITOR
+                        UnityEditor.Handles.color = Color.red;
+                        UnityEditor.Handles.Label(waypointPos + Vector3.up * 5f, $"{path.gameObject.name} WP{i}\n반경: {spawnRange}m");
+                        #endif
                     }
-
-                    DrawCircleGizmo(waypointPos, spawnRange, 32);
-                    Gizmos.DrawWireSphere(waypointPos, 2f); // 중심점 표시
-
-                    #if UNITY_EDITOR
-                    UnityEditor.Handles.color = Color.red;
-                    UnityEditor.Handles.Label(waypointPos + Vector3.up * 5f, $"Waypoint {i}\n반경: {spawnRange}m");
-                    #endif
                 }
             }
         }

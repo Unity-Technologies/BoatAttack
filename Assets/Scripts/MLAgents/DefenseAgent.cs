@@ -205,8 +205,8 @@ namespace BoatAttack
 
             steeringInput = Mathf.Clamp(steeringInput, -1f, 1f);
 
-            // Throttle Mapping: -1~1 → 0.5~1.0
-            float throttle = (throttleInput + 1f) * 0.25f + 0.5f;
+            // Throttle Mapping: -1~1 → 0.0~1.0 (정지 허용)
+            float throttle = (throttleInput+0.2f) * 1.0f;
 
             // Steering 감도 적용
             float steering = Mathf.Clamp(steeringInput * steeringSensitivity, -1f, 1f);
@@ -256,7 +256,7 @@ namespace BoatAttack
                 return;
             }
 
-            float throttle = baseThrottle;
+            float throttle = 0f;
             float steering = 0f;
 
             string agentName = gameObject.name.ToLower();

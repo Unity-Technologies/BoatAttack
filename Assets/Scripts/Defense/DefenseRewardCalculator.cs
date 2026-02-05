@@ -56,11 +56,11 @@ namespace BoatAttack
         [Tooltip("Stage1 최대 허용 각도 차이 (도) - 이 각도 초과 시 페널티")]
         public float stage1MaxAngleDiff = 90f;
 
-        [Tooltip("Stage1 정지 페널티 - 속도가 너무 낮을 때")]
-        public float stage1StationaryPenalty = -0.005f;
+        [Tooltip("정지 페널티 - 속도가 너무 낮을 때 (모든 Stage 공통)")]
+        public float stationaryPenalty = -0.005f;
 
-        [Tooltip("Stage1 최소 속도 (m/s) - 이 속도 미만이면 정지 페널티")]
-        public float stage1MinSpeed = 2f;
+        [Tooltip("최소 속도 (m/s) - 이 속도 미만이면 정지 페널티 (모든 Stage 공통)")]
+        public float minSpeed = 2f;
 
         [Header("Net Tension")]
         [Tooltip("그물 장력 보상 (최대값)")]
@@ -157,7 +157,7 @@ namespace BoatAttack
             float speedDiff = Mathf.Abs(agent1.speed - agent2.speed);
             float speedSyncFactor = Mathf.Clamp01(1f - (speedDiff / 10f));
             // 평균 속도가 최소 속도 이상일 때만 속도 동기화 보상
-            if (avgSpeed >= stage1MinSpeed)
+            if (avgSpeed >= minSpeed)
             {
                 totalReward += stage1SpeedSyncReward * speedSyncFactor;
             }
@@ -312,26 +312,24 @@ namespace BoatAttack
             float distance = Vector3.Distance(agent1.position, agent2.position);
             float headingDiff = Mathf.Abs(Mathf.DeltaAngle(agent1.heading, agent2.heading));
 
-            // Stage1: 대형 붕괴 페널티 + 정지 페널티 (시간 패널티 없음)
+            // 정지 페널티 (모든 Stage 공통 - 평균 속도가 최소 속도 미만이면)
+            float avgSpeed = (agent1.speed + agent2.speed) / 2f;
+            if (avgSpeed < minSpeed)
+            {
+                totalPenalty += stationaryPenalty;
+            }
+
+            // Stage1: 대형 붕괴 페널티 (시간 패널티 없음)
             if (currentStage == TrainingStage.Stage1_Formation)
             {
-                // 거리 초과 페널티
                 if (distance > stage1MaxDistance)
                 {
                     totalPenalty += stage1FormationDistancePenalty;
                 }
 
-                // 각도 차이 초과 페널티
                 if (headingDiff > stage1MaxAngleDiff)
                 {
                     totalPenalty += stage1FormationAnglePenalty;
-                }
-
-                // 정지 페널티 (평균 속도가 최소 속도 미만이면)
-                float avgSpeed = (agent1.speed + agent2.speed) / 2f;
-                if (avgSpeed < stage1MinSpeed)
-                {
-                    totalPenalty += stage1StationaryPenalty;
                 }
 
                 return totalPenalty;

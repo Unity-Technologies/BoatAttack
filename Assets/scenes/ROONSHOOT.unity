@@ -6022,7 +6022,7 @@ PrefabInstance:
     - target: {fileID: 38375215458064404, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
       propertyPath: m_BrainParameters.NumStackedVectorObservations
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 481488137263271977, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
@@ -7339,11 +7339,11 @@ GameObject:
   - component: {fileID: 643215823}
   m_Layer: 0
   m_Name: AttackTrack02 (2)
-  m_TagString: Untagged
+  m_TagString: attack_track
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &643215823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7363,15 +7363,15 @@ MonoBehaviour:
     width: 0.79
   m_Looped: 1
   m_Waypoints:
-  - position: {x: 0.9114151, y: 0, z: -8.381149}
+  - position: {x: -298.2213, y: 0, z: -1086.9261}
     roll: -34.37
-  - position: {x: 15.536942, y: 0, z: 19.615955}
+  - position: {x: -198.98164, y: 0, z: -189.6103}
     roll: 36.5
-  - position: {x: 35.270203, y: 0, z: 56.56792}
+  - position: {x: -145.62662, y: 0, z: 129.15797}
     roll: -34.26
-  - position: {x: 10.44035, y: 0, z: 80.33612}
+  - position: {x: 10.440346, y: 0, z: 454.26953}
     roll: 56.5
-  - position: {x: -132.50409, y: 0, z: 167.80391}
+  - position: {x: 137.10028, y: 0, z: 167.80391}
     roll: -27.32
 --- !u!4 &643215824
 Transform:
@@ -7382,7 +7382,7 @@ Transform:
   m_GameObject: {fileID: 643215822}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 65, y: 0, z: 7.8}
+  m_LocalPosition: {x: 119.1, y: 0, z: 7.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7489,11 +7489,11 @@ GameObject:
   - component: {fileID: 663103929}
   m_Layer: 0
   m_Name: AttackTrack02 (1)
-  m_TagString: Untagged
+  m_TagString: attack_track
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &663103929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7513,15 +7513,15 @@ MonoBehaviour:
     width: 0.79
   m_Looped: 1
   m_Waypoints:
-  - position: {x: 0.9114151, y: 0, z: -8.381149}
+  - position: {x: 227.57085, y: 0, z: -1678.5334}
     roll: -34.37
-  - position: {x: 15.536942, y: 0, z: 19.615955}
+  - position: {x: 17.965336, y: 0, z: -413.1466}
     roll: 36.5
-  - position: {x: 8.131844, y: 0, z: 56.56792}
+  - position: {x: -97.00561, y: 0, z: 230.22437}
     roll: -34.26
-  - position: {x: 10.44035, y: 0, z: 80.33612}
+  - position: {x: -114.418274, y: 0, z: 807.90186}
     roll: 56.5
-  - position: {x: -106.62949, y: 0, z: 167.80391}
+  - position: {x: 71.07086, y: 0, z: 1319.7976}
     roll: -27.32
 --- !u!4 &663103930
 Transform:
@@ -7532,7 +7532,7 @@ Transform:
   m_GameObject: {fileID: 663103928}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 48.3, y: 0, z: 7.8}
+  m_LocalPosition: {x: 48.3, y: 0, z: 103.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7815,7 +7815,7 @@ GameObject:
   - component: {fileID: 753175275}
   m_Layer: 0
   m_Name: AttackTrack01 (2)
-  m_TagString: Untagged
+  m_TagString: attack_track
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7839,9 +7839,9 @@ MonoBehaviour:
     width: 2.01
   m_Looped: 1
   m_Waypoints:
-  - position: {x: 146.26614, y: 0, z: -550}
+  - position: {x: 146.26614, y: 0, z: -964.83563}
     roll: -24.68
-  - position: {x: 152.14362, y: 0, z: -400}
+  - position: {x: 140.05013, y: 0, z: -400}
     roll: 29.7
   - position: {x: 141.95045, y: 0, z: -200}
     roll: -20.55
@@ -23023,7 +23023,7 @@ PrefabInstance:
     - target: {fileID: 38375215458064404, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
       propertyPath: m_BrainParameters.NumStackedVectorObservations
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
@@ -23368,7 +23368,7 @@ GameObject:
   - component: {fileID: 1068471930}
   m_Layer: 0
   m_Name: AttackTrack01 (1)
-  m_TagString: Untagged
+  m_TagString: attack_track
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -23392,13 +23392,13 @@ MonoBehaviour:
     width: 2.01
   m_Looped: 1
   m_Waypoints:
-  - position: {x: 16.098663, y: 0, z: -520}
+  - position: {x: 16.098663, y: 0, z: -1096.263}
     roll: -24.68
-  - position: {x: 11.399188, y: 0, z: -300}
+  - position: {x: 2.7722206, y: 0, z: -300}
     roll: 29.7
-  - position: {x: 18.131111, y: 0, z: -100}
+  - position: {x: 24.141615, y: 0, z: 90.36048}
     roll: -20.55
-  - position: {x: 6.7675724, y: 0, z: -0.62672424}
+  - position: {x: 6.7675724, y: 0, z: 180.76984}
     roll: 25.69
   - position: {x: 46.374016, y: 0, z: 64.54373}
     roll: -36
@@ -23411,7 +23411,7 @@ Transform:
   m_GameObject: {fileID: 1068471929}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -18.6, y: 0, z: 74.8}
+  m_LocalPosition: {x: -18.6, y: 0, z: 49.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -29371,11 +29371,11 @@ GameObject:
   - component: {fileID: 1271920281}
   m_Layer: 0
   m_Name: AttackTrack02
-  m_TagString: Untagged
+  m_TagString: attack_track
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1271920281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29395,15 +29395,15 @@ MonoBehaviour:
     width: 0.79
   m_Looped: 1
   m_Waypoints:
-  - position: {x: 0.9114151, y: 0, z: -8.381149}
+  - position: {x: 189.38199, y: 0, z: -730.7669}
     roll: -34.37
-  - position: {x: 15.536942, y: 0, z: 19.615955}
+  - position: {x: -67.67934, y: 0, z: 19.615955}
     roll: 36.5
-  - position: {x: 35.270203, y: 0, z: 56.56792}
+  - position: {x: -57.550407, y: 0, z: 286.69482}
     roll: -34.26
-  - position: {x: 10.44035, y: 0, z: 80.33612}
+  - position: {x: 10.44035, y: 0, z: 252.18347}
     roll: 56.5
-  - position: {x: -51.44592, y: 0, z: 167.80391}
+  - position: {x: 48.15017, y: 0, z: 167.80391}
     roll: -27.32
 --- !u!4 &1271920282
 Transform:
@@ -29414,7 +29414,7 @@ Transform:
   m_GameObject: {fileID: 1271920280}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 18.2, y: 0, z: 7.8}
+  m_LocalPosition: {x: 42.1, y: 0, z: -30.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -34870,7 +34870,7 @@ MonoBehaviour:
   stage1HeadingReward: 0.01
   stage1SpeedSyncReward: 0.01
   stage1DistanceReward: 0.01
-  stage1SpeedReward: 0.01
+  stage1SpeedReward: 0.05
   stage1SpeedRewardMultiplier: 4
   stage1IndividualSpeedReward: 0.004
   stage1SteeringPenaltyCoeff: 0.00001
@@ -34880,15 +34880,8 @@ MonoBehaviour:
   stage1MaxDistance: 100
   stage1FormationAnglePenalty: -0.01
   stage1MaxAngleDiff: 90
-  stage1StationaryPenalty: -0.005
-  stage1MinSpeed: 2
-  headingSyncReward: 0.0002
-  headingSyncTolerance: 15
-  speedSyncReward: 0.0002
-  speedSyncTolerance: 2
-  distanceMaintainReward: 0.0002
-  optimalDistance: 50
-  distanceTolerance: 5
+  stationaryPenalty: -0.005
+  minSpeed: 0
   netTensionReward: 0.0005
   netMaxLength: 50
   netOptimalMinRatio: 0.9
@@ -34918,7 +34911,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92731fdf222c4ed46bf9c385a64a8160, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentStage: 2
+  currentStage: 0
   disableEnemiesInStage1: 0
   stage1EnemyCount: 0
   stage2EnemyCount: 1
@@ -34940,6 +34933,9 @@ MonoBehaviour:
   maxCollisionCount: 1
   spawnRange: 0
   enableRandomSpawn: 1
+  defenseRandomAngleRange: 100
+  enableEnemyPathRandomization: 1
+  enableRandomPathAssignment: 1
   captureReward: 1
   captureDistanceBonus: 0.5
   captureDistanceBonusRange: 500
@@ -34965,7 +34961,6 @@ MonoBehaviour:
   _safetyPenalty: 0
   _currentStep: 0
   _totalCollisions: 0
-  enableDebugLog: 0
 --- !u!4 &1396138364
 Transform:
   m_ObjectHideFlags: 0
@@ -42231,7 +42226,7 @@ GameObject:
   - component: {fileID: 1946985653}
   m_Layer: 0
   m_Name: AttackTrack01
-  m_TagString: Untagged
+  m_TagString: attack_track
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
