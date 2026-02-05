@@ -1,6 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace BoatAttack
 {
@@ -63,28 +61,6 @@ namespace BoatAttack
 
         [Tooltip("Stage1 최소 속도 (m/s) - 이 속도 미만이면 정지 페널티")]
         public float stage1MinSpeed = 2f;
-
-        [Header("=== Stage 2/3: Cooperative Rewards ===")]
-        [Tooltip("헤딩 동기화 보상 (최대값)")]
-        public float headingSyncReward = 0.001f;
-
-        [Tooltip("헤딩 동기화 허용 범위 (도)")]
-        public float headingSyncTolerance = 45f;
-
-        [Tooltip("속도 동기화 보상 (최대값)")]
-        public float speedSyncReward = 0.001f;
-
-        [Tooltip("속도 동기화 허용 범위 (m/s)")]
-        public float speedSyncTolerance = 5f;
-
-        [Tooltip("간격 유지 보상 (최대값)")]
-        public float distanceMaintainReward = 0.001f;
-
-        [Tooltip("최적 거리 (m)")]
-        public float optimalDistance = 50f;
-
-        [Tooltip("거리 허용 범위 (m)")]
-        public float distanceTolerance = 20f;
 
         [Header("Net Tension")]
         [Tooltip("그물 장력 보상 (최대값)")]
@@ -228,7 +204,6 @@ namespace BoatAttack
         /// </summary>
         public float CalculateSteeringStabilityReward(float currentHeading, float prevHeading, float deltaTime)
         {
-
             // 각도 변화량 계산 (도/초)
             float headingChange = Mathf.Abs(Mathf.DeltaAngle(currentHeading, prevHeading));
             float headingChangeRate = headingChange / Mathf.Max(deltaTime, 0.001f);
@@ -241,67 +216,11 @@ namespace BoatAttack
         }
 
         /// <summary>
-        /// 협동 기동 보상 계산
-        /// 모든 Stage에서 Stage1 보상 사용 (대형 유지 기반)
-        /// Stage2/3: 포획 시 추가 보상 (별도 이벤트)
+        /// 협동 기동 보상 계산 (모든 Stage에서 Stage1 보상 사용)
         /// </summary>
         public float CalculateCooperativeRewards(AgentState agent1, AgentState agent2)
         {
-            // 모든 Stage에서 Stage1 보상 함수 사용
             return CalculateStage1Rewards(agent1, agent2);
-
-            // 아래 코드는 더 이상 사용하지 않음 (Stage2 전용 보상 제거)
-            /*
-
-            float totalReward = 0f;
-
-            // 1. 헤딩 동기화 (그라데이션)
-            float headingDiff = Mathf.Abs(Mathf.DeltaAngle(agent1.heading, agent2.heading));
-            if (headingDiff <= headingSyncTolerance)
-            {
-                float headingFactor = 1f - (headingDiff / headingSyncTolerance);
-                totalReward += headingSyncReward * headingFactor;
-            }
-
-            // 2. 속도 동기화 (그라데이션)
-            float speedDiff = Mathf.Abs(agent1.speed - agent2.speed);
-            if (speedDiff <= speedSyncTolerance)
-            {
-                float speedSyncFactor = 1f - (speedDiff / speedSyncTolerance);
-                totalReward += speedSyncReward * speedSyncFactor;
-            }
-
-            // 3. 간격 유지 (그라데이션)
-            float distance = Vector3.Distance(agent1.position, agent2.position);
-            float distanceError = Mathf.Abs(distance - optimalDistance);
-            if (distanceError <= distanceTolerance)
-            {
-                float distanceFactor = 1f - (distanceError / distanceTolerance);
-                totalReward += distanceMaintainReward * distanceFactor;
-            }
-
-            // 4. 속도 보상 (빠를수록 높은 보상)
-            if (speedRewardThreshold > 0f)
-            {
-                float avgSpeed = (agent1.speed + agent2.speed) / 2f;
-                float speedFactor = Mathf.Clamp01(avgSpeed / speedRewardThreshold);
-                totalReward += speedReward * speedFactor;
-            }
-
-            // 5. 그물 장력 (Net Tension)
-            float optimalMin = netMaxLength * netOptimalMinRatio;
-            float optimalMax = netMaxLength * netOptimalMaxRatio;
-            if (distance >= optimalMin && distance <= optimalMax)
-            {
-                float centerDistance = (optimalMin + optimalMax) / 2f;
-                float distanceFromCenter = Mathf.Abs(distance - centerDistance);
-                float maxDeviation = (optimalMax - optimalMin) / 2f;
-                float tensionFactor = 1f - (distanceFromCenter / maxDeviation);
-                totalReward += netTensionReward * tensionFactor;
-            }
-
-            return totalReward;
-            */
         }
 
         /// <summary>

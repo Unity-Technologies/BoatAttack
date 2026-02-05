@@ -108,15 +108,15 @@ namespace BoatAttack
         [Tooltip("적군 경로 랜덤화 활성화")]
         public bool enableEnemyPathRandomization = true;
 
-        [Tooltip("적군 경로 (CinemachineSmoothPath) - 웨이포인트 랜덤화용")]
-        public Cinemachine.CinemachineSmoothPath attackTrackPath;
+        [Tooltip("적군 경로 랜덤 할당 활성화 (리셋 시 attack_track 중 랜덤 선택)")]
+        public bool enableRandomPathAssignment = true;
         
         [Header("Mission Rewards")]
-        [Tooltip("포획 성공 보상")]
-        public float captureReward = 1.0f;
-        
+        [Tooltip("포획 성공 보상 (매 스텝 누적보상 대비 유의미한 크기로 설정)")]
+        public float captureReward = 5.0f;
+
         [Tooltip("포획 거리 보너스 (최대) - 모선과 멀리서 포획할수록 보상")]
-        public float captureDistanceBonus = 0.5f;
+        public float captureDistanceBonus = 2.0f;
 
         [Tooltip("포획 거리 보너스 기준 (m) - 이 거리 이상에서 최대 보너스")]
         public float captureDistanceBonusRange = 500f;
@@ -179,10 +179,6 @@ namespace BoatAttack
         [SerializeField] private int _currentStep = 0;
         [SerializeField] private int _totalCollisions = 0;
 
-        [Header("Debug")]
-        [Tooltip("디버그 로그 활성화")]
-        public bool enableDebugLog = false;
-        
         private int _resetTimer = 0; // FixedUpdate 기반 타이머
         private bool _episodeActive = false;
         private bool _episodeEnding = false; // 에피소드 종료 중 플래그 (중복 호출 방지)
@@ -211,8 +207,11 @@ namespace BoatAttack
         private Quaternion _originalDefense1Rot;
         private Quaternion _originalDefense2Rot;
 
-        // 적군 경로 원본 웨이포인트 저장 (랜덤화용)
-        private Vector3[] _originalWaypoints;
+        // 씬의 모든 attack_track 경로 (랜덤 할당용)
+        private CinemachineSmoothPath[] _availableAttackPaths;
+
+        // 각 경로별 원본 웨이포인트 저장 (랜덤화용)
+        private Vector3[][] _allOriginalWaypoints;
 
         // 아군 선박 좌/우 위치 추적 (위치 교차 감지용)
         // 에피소드 시작 시 agent1이 agent2의 왼쪽에 있으면 true
@@ -246,7 +245,6 @@ namespace BoatAttack
             // Stage가 변경되었는지 확인
             if (_lastStage != currentStage)
             {
-                Debug.Log($"[OnValidate] Stage 변경 감지: {_lastStage} → {currentStage}");
                 _lastStage = currentStage;
                 SyncStageToRewardCalculator();
                 ApplyStageSettings();
@@ -273,17 +271,11 @@ namespace BoatAttack
                     m_AgentGroup.RegisterAgent(defenseAgent2);
                 
             }
-            else
-            {
-            }
             
             // RewardCalculator 초기화
             if (rewardCalculator == null)
             {
                 rewardCalculator = GetComponent<DefenseRewardCalculator>();
-                if (rewardCalculator == null)
-                {
-                }
             }
 
             // RewardCalculator에 현재 Stage 동기화
@@ -327,9 +319,6 @@ namespace BoatAttack
             }
 
             // 원점 = 인스펙터에 설정된 Spawn Position 값 사용
-            Debug.Log($"[Start] ⚠️ 인스펙터 값 확인 (저장 전):");
-            Debug.Log($"  - defense1SpawnPos: {defense1SpawnPos} (IsZero: {defense1SpawnPos == Vector3.zero})");
-            Debug.Log($"  - defense2SpawnPos: {defense2SpawnPos} (IsZero: {defense2SpawnPos == Vector3.zero})");
             
             // 만약 인스펙터 값이 (0,0,0)이면 강제로 기본값 설정
             if (defense1SpawnPos == Vector3.zero)
@@ -348,16 +337,6 @@ namespace BoatAttack
             _originalDefense1Rot = Quaternion.Euler(defense1SpawnRot);
             _originalDefense2Rot = Quaternion.Euler(defense2SpawnRot);
 
-            // 저장 후 검증
-            if (_originalDefense1Pos == Vector3.zero && defense1SpawnPos != Vector3.zero)
-            {
-                _originalDefense1Pos = defense1SpawnPos;
-            }
-            if (_originalDefense2Pos == Vector3.zero && defense2SpawnPos != Vector3.zero)
-            {
-                _originalDefense2Pos = defense2SpawnPos;
-            }
-            
             // 태그가 "boat"인 모든 GameObject의 초기 위치 및 각도 저장 (WAKE 제외)
             _originalBoatPositions.Clear();
             _originalBoatRotations.Clear();
@@ -390,16 +369,9 @@ namespace BoatAttack
             // 적군 경로 원본 웨이포인트 저장 (랜덤화용)
             SaveOriginalWaypoints();
 
-            Debug.Log($"[Start] ⚠️ ResetScene() 호출 전 최종 확인:");
-            Debug.Log($"  - defense1SpawnPos: {defense1SpawnPos}");
-            Debug.Log($"  - _originalDefense1Pos: {_originalDefense1Pos}");
-            
             // 첫 에피소드 시작 (PushBlockEnvController 패턴)
             ResetScene();
             
-            Debug.Log($"[Start] ⚠️ ResetScene() 호출 후 확인:");
-            Debug.Log($"  - defense1SpawnPos: {defense1SpawnPos}");
-            Debug.Log($"  - _originalDefense1Pos: {_originalDefense1Pos}");
         }
         
         /// <summary>
@@ -420,7 +392,6 @@ namespace BoatAttack
             // 최대 스텝 수 체크 (PushBlockEnvController 패턴)
             if (_resetTimer >= maxEnvironmentSteps && maxEnvironmentSteps > 0)
             {
-                Debug.Log($"[FixedUpdate] ⚠️ 최대 스텝 수 도달! _resetTimer={_resetTimer}, maxEnvironmentSteps={maxEnvironmentSteps}");
                 RestartEpisode("MaxEnvironmentSteps");
                 return;
             }
@@ -435,7 +406,6 @@ namespace BoatAttack
                 // 최대 거리 초과 체크
                 if (maxAllyDistance > 0f && allyDist > maxAllyDistance)
                 {
-                    Debug.Log($"[FixedUpdate] ⚠️ 아군 간 거리 초과! 거리: {allyDist:F1}m > 최대: {maxAllyDistance}m → 에피소드 종료");
                     RestartEpisode("AllyDistanceExceeded", allyDistancePenalty);
                     return;
                 }
@@ -443,7 +413,6 @@ namespace BoatAttack
                 // 최소 거리 미달 체크
                 if (minAllyDistance > 0f && allyDist < minAllyDistance)
                 {
-                    Debug.Log($"[FixedUpdate] ⚠️ 아군 간 거리 미달! 거리: {allyDist:F1}m < 최소: {minAllyDistance}m → 에피소드 종료");
                     RestartEpisode("AllyDistanceTooClose", allyDistancePenalty);
                     return;
                 }
@@ -452,7 +421,6 @@ namespace BoatAttack
                 bool agent1CurrentlyOnLeft = pos1.x < pos2.x;
                 if (agent1CurrentlyOnLeft != _agent1StartsOnLeft)
                 {
-                    Debug.Log($"[FixedUpdate] ⚠️ 아군 위치 교차! 초기: agent1 왼쪽={_agent1StartsOnLeft}, 현재: agent1 왼쪽={agent1CurrentlyOnLeft} → 에피소드 종료");
                     RestartEpisode("PositionSwapped", positionSwapPenalty);
                     return;
                 }
@@ -582,17 +550,14 @@ namespace BoatAttack
             // 중복 호출 방지
             if (_episodeEnding)
             {
-                Debug.Log($"[RestartEpisode] ⚠️ 이미 에피소드 종료 중입니다. 무시합니다. (Reason: {reason})");
                 return;
             }
             
-            // ⚠️ 가장 먼저 충돌 횟수 초기화 (에피소드 종료 시 즉시 리셋)
-            int previousTotalCount = _totalCollisionCount;
+            // 충돌 횟수 초기화 (에피소드 종료 시 즉시 리셋)
             _totalCollisionCount = 0;
             _collisionCooldownTimes.Clear();
 
-            // Inspector 모니터 로그 및 초기화
-            float previousEpisodeReward = _currentEpisodeReward;
+            // Inspector 모니터 초기화
             _currentEpisodeReward = 0f;
             _lastStepReward = 0f;
             _cooperativeReward = 0f;
@@ -603,18 +568,10 @@ namespace BoatAttack
 
             // 에피소드 번호 증가 및 로그 출력
             _episodeNumber++;
-            Debug.Log($"[RestartEpisode] ========== 에피소드 #{_episodeNumber} 종료 ==========");
-            Debug.Log($"[RestartEpisode] 종료 사유: {reason}");
-            Debug.Log($"[RestartEpisode] 누적 보상: {previousEpisodeReward:F3}");
-            Debug.Log($"[RestartEpisode] 최종 보상: {(finalReward.HasValue ? finalReward.Value.ToString("F3") : "없음")}");
-            Debug.Log($"[RestartEpisode] 이전 총 충돌 횟수 (Web+MotherShip): {previousTotalCount} → 초기화됨 (0)");
-            Debug.Log($"[RestartEpisode] ==========================================");
             
             // 타이머도 여기서 명시적으로 리셋 (안전장치)
             _resetTimer = 0;
-            
-            Debug.Log($"[RestartEpisode] ✅ 충돌 횟수 및 타이머 초기화 완료: _resetTimer={_resetTimer}, _totalCollisionCount={_totalCollisionCount}");
-            
+
             // 1단계: 에피소드 종료 플래그 설정
             _episodeEnding = true;
             
@@ -677,28 +634,10 @@ namespace BoatAttack
         /// </summary>
         public void ResetScene()
         {
-            Debug.Log($"[ResetScene] ========== 에피소드 #{_episodeNumber} 시작 ==========");
-            Debug.Log($"[ResetScene] ⚠️ ResetPositionsOnly() 호출 전:");
-            Debug.Log($"  - defense1SpawnPos: {defense1SpawnPos}");
-            Debug.Log($"  - _originalDefense1Pos: {_originalDefense1Pos}");
             
             // 충돌 횟수 리셋
             _totalCollisionCount = 0;
             
-            // ⚠️ _originalDefense1Pos가 (0,0,0)이면 defense1SpawnPos로 복구
-            if (_originalDefense1Pos == Vector3.zero && defense1SpawnPos != Vector3.zero)
-            {
-                _originalDefense1Pos = defense1SpawnPos;
-            }
-            if (_originalDefense2Pos == Vector3.zero && defense2SpawnPos != Vector3.zero)
-            {
-                _originalDefense2Pos = defense2SpawnPos;
-            }
-            
-            // 초기 각도 업데이트 (인스펙터 값 사용)
-            _originalDefense1Rot = Quaternion.Euler(defense1SpawnRot);
-            _originalDefense2Rot = Quaternion.Euler(defense2SpawnRot);
-
             // 기존 리셋 코루틴 중지 및 플래그 초기화
             StopAllCoroutines();
             _isResettingPositions = false;
@@ -714,8 +653,6 @@ namespace BoatAttack
             _enemyEnteredDefenseZone = false;
             _boundary2kmBreached = false;
             _boundary1kmBreached = false;
-            
-            Debug.Log($"[ResetScene] ✅ 타이머 및 플래그 초기화 완료: _resetTimer={_resetTimer}, _episodeEnding={_episodeEnding}, _episodeActive={_episodeActive}");
 
             // 파괴된 적군 선박 목록 초기화 (에피소드 재시작 시)
             _destroyedAttackBoatNames.Clear();
@@ -736,10 +673,6 @@ namespace BoatAttack
             // 모든 선박 리셋
             ResetPositionsOnly();
             
-            Debug.Log($"[ResetScene] ⚠️ ResetPositionsOnly() 호출 후:");
-            Debug.Log($"  - defense1SpawnPos: {defense1SpawnPos}");
-            Debug.Log($"  - _originalDefense1Pos: {_originalDefense1Pos}");
-            Debug.Log($"[ResetScene] ========== 에피소드 #{_episodeNumber} 시작 완료 ==========");
         }
         
         #endregion
@@ -783,10 +716,6 @@ namespace BoatAttack
                 float distanceBonus = captureDistanceBonus * distanceFactor;
                 totalReward += distanceBonus;
 
-                if (enableDebugLog)
-                {
-                    Debug.Log($"[OnEnemyCaptured] 모선과의 거리: {distanceFromMotherShip:F1}m, 거리 보너스: +{distanceBonus:F3}");
-                }
             }
 
             // 통합 에피소드 재시작 메서드 호출
@@ -813,7 +742,6 @@ namespace BoatAttack
                 float lastCollisionTime = _collisionCooldownTimes[enemyBoat];
                 if (currentTime - lastCollisionTime < _collisionCooldown)
                 {
-                    Debug.Log($"[OnEnemyHitWeb] ⚠️ 중복 충돌 무시: {enemyBoat.name} (마지막 충돌: {currentTime - lastCollisionTime:F2}초 전)");
                     return;
                 }
             }
@@ -823,7 +751,6 @@ namespace BoatAttack
 
             // 통합 충돌 횟수 증가 (Web + MotherShip 합산)
             _totalCollisionCount++;
-            Debug.Log($"[OnEnemyHitWeb] Web 충돌 발생! 적군: {enemyBoat.name}, 총 충돌 횟수(Web+MotherShip): {_totalCollisionCount}/{maxCollisionCount}");
 
             // Stage1에서는 포획 보상 비활성화
             // Stage2에서만 포획 보상 부여
@@ -841,7 +768,6 @@ namespace BoatAttack
             // 통합 충돌 횟수가 maxCollisionCount 이상이면 즉시 에피소드 종료
             if (_totalCollisionCount >= maxCollisionCount)
             {
-                Debug.Log($"[OnEnemyHitWeb] ⚠️ 총 충돌 횟수({_totalCollisionCount}, Web+MotherShip)가 최대 허용 횟수({maxCollisionCount})에 도달! 에피소드 종료.");
                 
                 // 보상 부여
                 if (m_AgentGroup != null)
@@ -903,91 +829,17 @@ namespace BoatAttack
         }
 
         /// <summary>
-        /// 단일 적군 선박을 원점으로 리셋 (레거시 - ResetSingleAttackBoat 사용 권장)
-        /// </summary>
-        private void ResetSingleAttackBoatToOrigin(GameObject attackBoat)
-        {
-            if (attackBoat == null)
-                return;
-            
-            // 초기 위치 찾기 (이름 기반으로 찾기)
-            Vector3 spawnPos;
-            string boatName = attackBoat.name.Replace("(Clone)", "");
-            
-            if (_attackBoatInitialPositionsByName.ContainsKey(boatName))
-            {
-                spawnPos = _attackBoatInitialPositionsByName[boatName];
-            }
-            else if (_attackBoatInitialPositions.ContainsKey(attackBoat))
-            {
-                spawnPos = _attackBoatInitialPositions[attackBoat];
-                _attackBoatInitialPositionsByName[boatName] = spawnPos;
-            }
-            else
-            {
-                spawnPos = attackBoat.transform.position;
-                _attackBoatInitialPositions[attackBoat] = spawnPos;
-                _attackBoatInitialPositionsByName[boatName] = spawnPos;
-            }
-            
-            // Rigidbody 리셋
-            Rigidbody rb = attackBoat.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.velocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-            }
-            
-            // 위치와 회전 설정
-            attackBoat.transform.position = spawnPos;
-            attackBoat.transform.rotation = Quaternion.identity;
-            
-            // Cinemachine Dolly Cart 리셋
-            CinemachineDollyCart dollyCart = attackBoat.GetComponent<CinemachineDollyCart>();
-            if (dollyCart != null)
-            {
-                CinemachinePathBase originalPath = null;
-                
-                if (_attackBoatInitialPathsByName.ContainsKey(boatName))
-                {
-                    originalPath = _attackBoatInitialPathsByName[boatName];
-                }
-                else if (_attackBoatInitialPaths.ContainsKey(attackBoat) && _attackBoatInitialPaths[attackBoat] != null)
-                {
-                    originalPath = _attackBoatInitialPaths[attackBoat];
-                    _attackBoatInitialPathsByName[boatName] = originalPath;
-                }
-                
-                if (originalPath != null)
-                {
-                    dollyCart.m_Path = originalPath;
-                    dollyCart.m_Position = 0f;
-                }
-            }
-        }
-        
-        /// <summary>
         /// 아군 선박들을 원점으로 리셋
         /// </summary>
         private void ResetDefenseAgentsToOrigin()
         {
-            // ⚠️ _originalDefense1Pos가 (0,0,0)이면 defense1SpawnPos로 복구
-            if (_originalDefense1Pos == Vector3.zero && defense1SpawnPos != Vector3.zero)
-            {
-                _originalDefense1Pos = defense1SpawnPos;
-            }
-            if (_originalDefense2Pos == Vector3.zero && defense2SpawnPos != Vector3.zero)
-            {
-                _originalDefense2Pos = defense2SpawnPos;
-            }
-            
-            // 초기 각도 업데이트 (인스펙터 값 사용)
-            _originalDefense1Rot = Quaternion.Euler(defense1SpawnRot);
-            _originalDefense2Rot = Quaternion.Euler(defense2SpawnRot);
-            
-            // 아군 선박 위치 및 각도 리셋
-            ResetDefenseAgentPosition(defenseAgent1, _originalDefense1Pos, defense1SpawnPos, _originalDefense1Rot);
-            ResetDefenseAgentPosition(defenseAgent2, _originalDefense2Pos, defense2SpawnPos, _originalDefense2Rot);
+            // 두 선박이 동일한 랜덤 각도를 바라보도록 한 번만 생성
+            float sharedRandomAngle = enableRandomSpawn
+                ? Random.Range(-defenseRandomAngleRange, defenseRandomAngleRange)
+                : 0f;
+
+            ResetDefenseAgentPosition(defenseAgent1, _originalDefense1Pos, defense1SpawnPos, _originalDefense1Rot, sharedRandomAngle);
+            ResetDefenseAgentPosition(defenseAgent2, _originalDefense2Pos, defense2SpawnPos, _originalDefense2Rot, sharedRandomAngle);
         }
         
         /// <summary>
@@ -1010,7 +862,6 @@ namespace BoatAttack
                 float lastCollisionTime = _collisionCooldownTimes[enemyBoat];
                 if (currentTime - lastCollisionTime < _collisionCooldown)
                 {
-                    Debug.Log($"[OnMotherShipCollision] ⚠️ 중복 충돌 무시: {enemyBoat.name} (마지막 충돌: {currentTime - lastCollisionTime:F2}초 전)");
                     return;
                 }
             }
@@ -1020,7 +871,6 @@ namespace BoatAttack
 
             // 통합 충돌 횟수 증가 (Web + MotherShip 합산)
             _totalCollisionCount++;
-            Debug.Log($"[OnMotherShipCollision] MotherShip 충돌 발생! 적군: {enemyBoat.name}, 총 충돌 횟수(Web+MotherShip): {_totalCollisionCount}/{maxCollisionCount}");
 
             // Stage1에서는 모선 충돌 페널티 비활성화
             // Stage2, Stage3에서만 페널티 부여
@@ -1029,7 +879,6 @@ namespace BoatAttack
             // 통합 충돌 횟수가 maxCollisionCount 이상이면 즉시 에피소드 종료
             if (_totalCollisionCount >= maxCollisionCount)
             {
-                Debug.Log($"[OnMotherShipCollision] ⚠️ 총 충돌 횟수({_totalCollisionCount}, Web+MotherShip)가 최대 허용 횟수({maxCollisionCount})에 도달! 에피소드 종료.");
 
                 // 패널티 부여 (Stage2, Stage3에서만)
                 if (penalty != 0f)
@@ -1050,11 +899,6 @@ namespace BoatAttack
                 // 에피소드 종료 (RestartEpisode 내부에서 _episodeEnding 설정)
                 RestartEpisode("MotherShipCollisionLimit", penalty != 0f ? penalty : (float?)null);
                 return; // 여기서 종료하여 아래 코드 실행 방지
-            }
-
-            if (enableDebugLog)
-            {
-                Debug.Log($"[DefenseEnvController] 모선 충돌! 적군: {enemyBoat.name} - 해당 공격선만 원점으로 리셋");
             }
 
             // 충돌 횟수가 3회 미만이면 일반 처리
@@ -1133,10 +977,6 @@ namespace BoatAttack
                 dollyCart.m_Position = 0f;
             }
             
-            if (enableDebugLog)
-            {
-                Debug.Log($"[DefenseEnvController] 공격선 리셋 완료: {boatName} → 위치: {initialPos}");
-            }
         }
         
         /// <summary>
@@ -1309,23 +1149,10 @@ namespace BoatAttack
             // enemyShips 배열 자동 동기화 (인스펙터에 할당된 것과 씬의 실제 객체를 동기화)
             if (enemyShips == null || enemyShips.Length == 0 || enemyShips.All(e => e == null))
             {
-                // enemyShips 배열이 비어있으면 자동으로 채움
                 enemyShips = new GameObject[foundBoats.Length];
                 for (int i = 0; i < foundBoats.Length; i++)
                 {
                     enemyShips[i] = foundBoats[i];
-                }
-                }
-                else
-                {
-                // enemyShips 배열에 있는 객체도 _attackBoats에 추가 (중복 방지)
-                foreach (var enemyShip in enemyShips)
-                {
-                    if (enemyShip != null && enemyShip.CompareTag("attack_boat") && !_attackBoats.Contains(enemyShip))
-                    {
-                        // enemyShips 배열에 있지만 씬에서 찾지 못한 경우도 있으므로 확인
-                        bool foundInScene = foundBoats.Contains(enemyShip);
-                    }
                 }
             }
             
@@ -1337,8 +1164,6 @@ namespace BoatAttack
                     Vector3 initialPos = boat.transform.position;
                     _attackBoatInitialPositions[boat] = initialPos;
 
-                    Debug.Log($"[FindAndSaveAttackBoats] 적군 '{boat.name}' 초기 위치 저장: {initialPos}");
-                    
                     // 원본 객체를 프리팹으로 저장 (파괴 후 재생성용)
                     // 이름을 키로 사용하여 같은 이름의 객체를 재생성할 수 있도록 함
                     string boatName = boat.name.Replace("(Clone)", ""); // Clone 접미사 제거
@@ -1382,9 +1207,6 @@ namespace BoatAttack
             }
             
             _initialAttackBoatCount = _attackBoats.Count;
-            
-            // enemyShips 배열과 실제 씬의 객체 수가 다른 경우 경고
-            int enemyShipsCount = enemyShips != null ? enemyShips.Count(e => e != null) : 0;
         }
         
         /// <summary>
@@ -1457,9 +1279,6 @@ namespace BoatAttack
         /// </summary>
         private System.Collections.IEnumerator ResetPositionsWithDeactivation()
         {
-            Debug.Log($"[ResetPositionsWithDeactivation] ⚠️ 코루틴 시작:");
-            Debug.Log($"  - defense1SpawnPos: {defense1SpawnPos}");
-            Debug.Log($"  - _originalDefense1Pos: {_originalDefense1Pos}");
             
             // 모든 WAKE 객체 제거 및 WakeGenerator 비활성화
             DestroyAllWakeObjects();
@@ -1467,12 +1286,14 @@ namespace BoatAttack
             // ========================================
             // 1. 아군 선박(DefenseAgent) 위치 리셋 (비활성화 없이)
             // ========================================
-            Debug.Log($"[ResetPositionsWithDeactivation] ⚠️ ResetDefenseAgentPosition 호출 전:");
-            Debug.Log($"  - defense1SpawnPos: {defense1SpawnPos}");
-            Debug.Log($"  - _originalDefense1Pos: {_originalDefense1Pos}");
             
-            ResetDefenseAgentPosition(defenseAgent1, _originalDefense1Pos, defense1SpawnPos, _originalDefense1Rot);
-            ResetDefenseAgentPosition(defenseAgent2, _originalDefense2Pos, defense2SpawnPos, _originalDefense2Rot);
+            // 두 선박이 동일한 랜덤 각도를 바라보도록 한 번만 생성
+            float sharedRandomAngle = enableRandomSpawn
+                ? Random.Range(-defenseRandomAngleRange, defenseRandomAngleRange)
+                : 0f;
+
+            ResetDefenseAgentPosition(defenseAgent1, _originalDefense1Pos, defense1SpawnPos, _originalDefense1Rot, sharedRandomAngle);
+            ResetDefenseAgentPosition(defenseAgent2, _originalDefense2Pos, defense2SpawnPos, _originalDefense2Rot, sharedRandomAngle);
 
             // 아군 선박 좌/우 위치 기록 (위치 교차 감지용)
             if (defenseAgent1 != null && defenseAgent2 != null)
@@ -1481,7 +1302,6 @@ namespace BoatAttack
                 Vector3 pos2 = defenseAgent2.transform.position;
                 // X축 기준으로 좌/우 판단 (pos1.x < pos2.x면 agent1이 왼쪽)
                 _agent1StartsOnLeft = pos1.x < pos2.x;
-                Debug.Log($"[ResetPositionsWithDeactivation] 초기 위치: agent1({pos1.x:F1}), agent2({pos2.x:F1}), agent1이 왼쪽: {_agent1StartsOnLeft}");
             }
 
             // ========================================
@@ -1500,41 +1320,30 @@ namespace BoatAttack
             // 코루틴 실행 완료 플래그 해제 및 에피소드 활성화
             _isResettingPositions = false;
             _episodeActive = true;
-            Debug.Log($"[ResetPositionsWithDeactivation] ✅ 코루틴 완료: _episodeActive={_episodeActive}, _resetTimer={_resetTimer}");
         }
 
         /// <summary>
         /// 아군 선박 위치만 리셋 (비활성화 없이)
         /// originalPos = 인스펙터에 설정된 Spawn Position 값
         /// </summary>
-        private void ResetDefenseAgentPosition(DefenseAgent agent, Vector3 originalPos, Vector3 defaultPos, Quaternion originalRot)
+        private void ResetDefenseAgentPosition(DefenseAgent agent, Vector3 originalPos, Vector3 defaultPos, Quaternion originalRot, float sharedRandomAngle)
         {
             if (agent == null)
                 return;
 
-            Debug.Log($"[ResetDefenseAgentPosition] ⚠️ 함수 호출: {agent.name}");
-            Debug.Log($"  - originalPos (전달받은 값): {originalPos} (IsZero: {originalPos == Vector3.zero})");
-            Debug.Log($"  - defaultPos (전달받은 값): {defaultPos} (IsZero: {defaultPos == Vector3.zero})");
-            Debug.Log($"  - _originalDefense1Pos (현재 필드 값): {_originalDefense1Pos} (IsZero: {_originalDefense1Pos == Vector3.zero})");
-            Debug.Log($"  - defense1SpawnPos (현재 필드 값): {defense1SpawnPos} (IsZero: {defense1SpawnPos == Vector3.zero})");
-
-            // 위치 계산: 인스펙터에 설정된 Spawn Position 사용
-            // ⚠️ originalPos가 (0,0,0)이면 defaultPos 사용 (fallback)
+            // originalPos가 (0,0,0)이면 defaultPos 사용 (fallback)
             Vector3 targetPos = originalPos;
             if (targetPos == Vector3.zero && defaultPos != Vector3.zero)
             {
                 targetPos = defaultPos;
             }
 
-            // 랜덤 각도 계산 (enableRandomSpawn일 때만)
+            // 랜덤 스폰: 위치는 개별 랜덤, 각도는 두 선박 공유
             Quaternion targetRot = originalRot;
             if (enableRandomSpawn)
             {
                 targetPos = GetRandomSpawnPosition(targetPos);
-
-                // 랜덤 각도 적용 (-defenseRandomAngleRange ~ +defenseRandomAngleRange)
-                float randomYAngle = Random.Range(-defenseRandomAngleRange, defenseRandomAngleRange);
-                targetRot = originalRot * Quaternion.Euler(0f, randomYAngle, 0f);
+                targetRot = originalRot * Quaternion.Euler(0f, sharedRandomAngle, 0f);
             }
 
             // Rigidbody 속도 초기화 + Sleep
@@ -1554,9 +1363,6 @@ namespace BoatAttack
             {
                 agent._engine.OnEpisodeReset();
             }
-
-            // 항상 로그 출력 (디버깅용)
-            Debug.Log($"[DefenseEnvController] 아군 선박 리셋: {agent.name} → {targetPos} (원점: {originalPos})");
         }
         
         /// <summary>
@@ -1575,7 +1381,6 @@ namespace BoatAttack
             // Stage1에서 적군 0대면 재생성 스킵
             if (stageTargetCount == 0)
             {
-                Debug.Log("[ResetAttackBoatsToOrigin] Stage 설정에 따라 적군 재생성 스킵 (목표: 0대)");
                 return;
             }
 
@@ -1892,20 +1697,17 @@ namespace BoatAttack
                         Vector3 pathStartPos = originalPath.EvaluatePositionAtUnit(0f, CinemachinePathBase.PositionUnits.PathUnits);
                         Vector3 pathEndPos = originalPath.EvaluatePositionAtUnit(originalPath.MaxPos, CinemachinePathBase.PositionUnits.PathUnits);
                         boat.transform.position = pathStartPos;
-                        Debug.Log($"[ResetAttackBoatsToOrigin] '{boatName}' Dolly Cart - Position 0: {pathStartPos}, Position Max({originalPath.MaxPos}): {pathEndPos}, Speed: {dollyCart.m_Speed}");
                     }
                     else
                     {
                         // 경로가 없으면 저장된 위치 사용
                         boat.transform.position = spawnPos;
-                        Debug.Log($"[ResetAttackBoatsToOrigin] '{boatName}' 저장된 위치로 리셋 (경로 없음): {spawnPos}");
                     }
                 }
                 else
                 {
                     // Dolly Cart가 없으면 저장된 위치 사용
                     boat.transform.position = spawnPos;
-                    Debug.Log($"[ResetAttackBoatsToOrigin] '{boatName}' 저장된 위치로 리셋 (Dolly Cart 없음): {spawnPos}");
                 }
 
                 boat.transform.rotation = Quaternion.identity;
@@ -2009,7 +1811,6 @@ namespace BoatAttack
 
             if (attackTrackPath == null || attackTrackPath.m_Waypoints == null)
             {
-                Debug.Log("[SaveOriginalWaypoints] attackTrackPath가 없거나 웨이포인트가 없습니다.");
                 return;
             }
 
@@ -2021,7 +1822,6 @@ namespace BoatAttack
                 _originalWaypoints[i] = attackTrackPath.m_Waypoints[i].position;
             }
 
-            Debug.Log($"[SaveOriginalWaypoints] 원본 웨이포인트 {waypointCount}개 저장 완료");
         }
 
         /// <summary>
@@ -2035,7 +1835,6 @@ namespace BoatAttack
 
             if (attackTrackPath == null || _originalWaypoints == null || _originalWaypoints.Length < 3)
             {
-                Debug.Log("[RandomizeEnemyWaypoints] 웨이포인트 랜덤화 스킵 (경로/웨이포인트 없음)");
                 return;
             }
 
@@ -2066,7 +1865,6 @@ namespace BoatAttack
             // 경로 업데이트 (Cinemachine 경로 재계산)
             attackTrackPath.InvalidateDistanceCache();
 
-            Debug.Log($"[RandomizeEnemyWaypoints] 웨이포인트 0, 1, 2 랜덤화 완료 (반경: {spawnRange}m)");
         }
 
         #endregion
@@ -2081,7 +1879,6 @@ namespace BoatAttack
             if (rewardCalculator != null)
             {
                 rewardCalculator.currentStage = currentStage;
-                Debug.Log($"[SyncStageToRewardCalculator] Stage 동기화: {currentStage}");
             }
         }
 
@@ -2095,7 +1892,6 @@ namespace BoatAttack
         {
             int activeEnemyCount = GetActiveEnemyCountForStage();
 
-            Debug.Log($"[ApplyStageSettings] 현재 Stage: {currentStage}, 활성화할 적군 수: {activeEnemyCount}");
 
             // 적군 활성화/비활성화
             ApplyEnemyActivation(activeEnemyCount);
@@ -2106,17 +1902,14 @@ namespace BoatAttack
                 case TrainingStage.Stage1_Formation:
                     // Stage1: 대형 유지에 집중
                     // 포획/모선 관련 이벤트는 발생해도 보상 없음 (적군이 비활성화되므로 발생 안함)
-                    Debug.Log("[ApplyStageSettings] Stage1: 대형 유지 학습 모드");
                     break;
 
                 case TrainingStage.Stage2_Capture:
                     // Stage2: 포획 보상 활성화
-                    Debug.Log("[ApplyStageSettings] Stage2: 포획 보상 학습 모드");
                     break;
 
                 case TrainingStage.Stage3_Tactical:
                     // Stage3: 전술 기동 보상 활성화
-                    Debug.Log("[ApplyStageSettings] Stage3: 전술 기동 학습 모드");
                     break;
             }
         }
@@ -2206,7 +1999,6 @@ namespace BoatAttack
         {
             if (currentStage != newStage)
             {
-                Debug.Log($"[SetTrainingStage] Stage 변경: {currentStage} → {newStage}");
                 currentStage = newStage;
                 SyncStageToRewardCalculator();
                 ApplyStageSettings();
