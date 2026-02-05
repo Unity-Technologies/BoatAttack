@@ -103,13 +103,23 @@ namespace BoatAttack
 
         [Header("Tactical Rewards (Stage 2+)")]
         [Tooltip("수직 차단 보상 (Stage2부터 적용)")]
-        public float perpendicularInterceptReward = 0.001f;
+        public float perpendicularInterceptReward = 0.005f;  // 0.001 → 0.005 (5배 증가)
 
         [Tooltip("수직 차단 각도 허용 범위 (도)")]
         public float perpendicularAngleTolerance = 30f;
 
         [Tooltip("추적 이득 보상 (Stage2부터 적용)")]
-        public float trackingGainReward = 0.0005f;
+        public float trackingGainReward = 0.002f;  // 0.0005 → 0.002 (4배 증가)
+
+        [Header("Enemy Approach Reward (Stage 2+)")]
+        [Tooltip("적 접근 보상 - 가까울수록 높은 보상")]
+        public float enemyApproachReward = 0.003f;
+
+        [Tooltip("적 접근 보상 최대 거리 (이 거리 이상이면 보상 0)")]
+        public float enemyApproachMaxDistance = 200f;
+
+        [Tooltip("적 접근 보상 최소 거리 (이 거리 이하면 최대 보상)")]
+        public float enemyApproachMinDistance = 20f;
 
         [Header("Speed Reward (Stage 2/3)")]
         [Tooltip("속도 보상 (빠를수록 높은 보상, 최대값)")]
@@ -357,6 +367,17 @@ namespace BoatAttack
                 totalReward += trackingGainReward * (distanceReduction / 10f);
             }
             _lastEnemyToWebDistance = currentDistance;
+
+            // 3. 적 접근 보상 (가까울수록 높은 보상) - 시간 페널티 상쇄용
+            // 거리가 가까울수록 보상 증가 (그라데이션)
+            if (currentDistance <= enemyApproachMaxDistance)
+            {
+                // minDistance(최대 보상) ~ maxDistance(보상 0) 사이에서 선형 보간
+                float distanceRange = enemyApproachMaxDistance - enemyApproachMinDistance;
+                float normalizedDistance = Mathf.Clamp01((currentDistance - enemyApproachMinDistance) / distanceRange);
+                float approachFactor = 1f - normalizedDistance;  // 가까울수록 1에 가까움
+                totalReward += enemyApproachReward * approachFactor;
+            }
 
             return totalReward;
         }

@@ -95,11 +95,21 @@ namespace BoatAttack
         public int maxCollisionCount = 1;
         
         [Header("Random Spawn Settings")]
-        [Tooltip("랜덤 스폰 범위 (기존 위치에서 ±range 범위로 랜덤 생성)")]
-        public float spawnRange = 20f;
-        
+        [Tooltip("랜덤 스폰 범위 (기존 위치에서 반경 내 원형 영역)")]
+        public float spawnRange = 30f;
+
         [Tooltip("랜덤 스폰 활성화 (에피소드 시작 시 랜덤 위치로 재생성)")]
         public bool enableRandomSpawn = true;
+
+        [Tooltip("아군 선박 랜덤 시작 각도 범위 (±도)")]
+        public float defenseRandomAngleRange = 30f;
+
+        [Header("Enemy Path Randomization")]
+        [Tooltip("적군 경로 랜덤화 활성화")]
+        public bool enableEnemyPathRandomization = true;
+
+        [Tooltip("적군 경로 (CinemachineSmoothPath) - 웨이포인트 랜덤화용")]
+        public Cinemachine.CinemachineSmoothPath attackTrackPath;
         
         [Header("Mission Rewards")]
         [Tooltip("포획 성공 보상")]
@@ -200,6 +210,9 @@ namespace BoatAttack
         private Vector3 _originalDefense2Pos;
         private Quaternion _originalDefense1Rot;
         private Quaternion _originalDefense2Rot;
+
+        // 적군 경로 원본 웨이포인트 저장 (랜덤화용)
+        private Vector3[] _originalWaypoints;
 
         // 아군 선박 좌/우 위치 추적 (위치 교차 감지용)
         // 에피소드 시작 시 agent1이 agent2의 왼쪽에 있으면 true
@@ -318,15 +331,13 @@ namespace BoatAttack
             Debug.Log($"  - defense1SpawnPos: {defense1SpawnPos} (IsZero: {defense1SpawnPos == Vector3.zero})");
             Debug.Log($"  - defense2SpawnPos: {defense2SpawnPos} (IsZero: {defense2SpawnPos == Vector3.zero})");
             
-            // 만약 인스펙터 값이 (0,0,0)이면 강제로 기본값 설정 (테스트용)
+            // 만약 인스펙터 값이 (0,0,0)이면 강제로 기본값 설정
             if (defense1SpawnPos == Vector3.zero)
             {
-                Debug.LogWarning($"[Start] ⚠️ defense1SpawnPos가 (0,0,0)입니다! 강제로 기본값 설정: (-115, -8, -10)");
                 defense1SpawnPos = new Vector3(-115f, -8f, -10f);
             }
             if (defense2SpawnPos == Vector3.zero)
             {
-                Debug.LogWarning($"[Start] ⚠️ defense2SpawnPos가 (0,0,0)입니다! 강제로 기본값 설정: (0, -8, -6)");
                 defense2SpawnPos = new Vector3(0f, -8f, -6f);
             }
             
@@ -337,21 +348,13 @@ namespace BoatAttack
             _originalDefense1Rot = Quaternion.Euler(defense1SpawnRot);
             _originalDefense2Rot = Quaternion.Euler(defense2SpawnRot);
 
-            Debug.Log($"[Start] ✅ 저장 후 값 확인:");
-            Debug.Log($"  - defense1SpawnPos: {defense1SpawnPos}");
-            Debug.Log($"  - defense2SpawnPos: {defense2SpawnPos}");
-            Debug.Log($"  - _originalDefense1Pos: {_originalDefense1Pos}");
-            Debug.Log($"  - _originalDefense2Pos: {_originalDefense2Pos}");
-            
-            // ⚠️ 저장 후 검증: _originalDefense1Pos가 (0,0,0)이고 defense1SpawnPos가 (0,0,0)이 아니면 다시 저장
+            // 저장 후 검증
             if (_originalDefense1Pos == Vector3.zero && defense1SpawnPos != Vector3.zero)
             {
-                Debug.LogWarning($"[Start] ⚠️ _originalDefense1Pos가 (0,0,0)입니다! defense1SpawnPos({defense1SpawnPos})로 다시 저장합니다.");
                 _originalDefense1Pos = defense1SpawnPos;
             }
             if (_originalDefense2Pos == Vector3.zero && defense2SpawnPos != Vector3.zero)
             {
-                Debug.LogWarning($"[Start] ⚠️ _originalDefense2Pos가 (0,0,0)입니다! defense2SpawnPos({defense2SpawnPos})로 다시 저장합니다.");
                 _originalDefense2Pos = defense2SpawnPos;
             }
             
@@ -383,7 +386,10 @@ namespace BoatAttack
             
             // attack_boat 태그를 가진 모든 적군 선박 찾기 및 초기 위치 저장
             FindAndSaveAttackBoats();
-            
+
+            // 적군 경로 원본 웨이포인트 저장 (랜덤화용)
+            SaveOriginalWaypoints();
+
             Debug.Log($"[Start] ⚠️ ResetScene() 호출 전 최종 확인:");
             Debug.Log($"  - defense1SpawnPos: {defense1SpawnPos}");
             Debug.Log($"  - _originalDefense1Pos: {_originalDefense1Pos}");
@@ -682,12 +688,10 @@ namespace BoatAttack
             // ⚠️ _originalDefense1Pos가 (0,0,0)이면 defense1SpawnPos로 복구
             if (_originalDefense1Pos == Vector3.zero && defense1SpawnPos != Vector3.zero)
             {
-                Debug.LogWarning($"[ResetScene] ⚠️ _originalDefense1Pos가 (0,0,0)입니다! defense1SpawnPos({defense1SpawnPos})로 복구합니다.");
                 _originalDefense1Pos = defense1SpawnPos;
             }
             if (_originalDefense2Pos == Vector3.zero && defense2SpawnPos != Vector3.zero)
             {
-                Debug.LogWarning($"[ResetScene] ⚠️ _originalDefense2Pos가 (0,0,0)입니다! defense2SpawnPos({defense2SpawnPos})로 복구합니다.");
                 _originalDefense2Pos = defense2SpawnPos;
             }
             
@@ -725,6 +729,9 @@ namespace BoatAttack
             // Stage 설정 적용 (에피소드 시작 시마다)
             SyncStageToRewardCalculator();
             ApplyStageSettings();
+
+            // 적군 경로 웨이포인트 랜덤화 (선박 리셋 전에 호출)
+            RandomizeEnemyWaypoints();
 
             // 모든 선박 리셋
             ResetPositionsOnly();
@@ -890,8 +897,6 @@ namespace BoatAttack
         {
             if (_episodeEnding)
                 return;
-
-            Debug.LogError($"[OnAllyHitWeb] ⚠️ 아군 선박이 Web과 충돌! {allyShip.name}, 페널티: {penalty}");
 
             // 페널티 부여 후 에피소드 종료
             RestartEpisode("AllyHitWeb", penalty);
@@ -1143,8 +1148,6 @@ namespace BoatAttack
             // 에피소드가 종료 중이면 무시
             if (_episodeEnding)
                 return;
-
-            Debug.LogWarning("[OnFriendlyCollision] ⚠️ 아군 충돌 발생! 에피소드 종료 + 페널티 부여");
 
             // RestartEpisode를 통해 일관된 방식으로 에피소드 종료
             // 패널티 부여 + EndGroupEpisode + ResetScene 모두 처리됨
@@ -1520,13 +1523,18 @@ namespace BoatAttack
             Vector3 targetPos = originalPos;
             if (targetPos == Vector3.zero && defaultPos != Vector3.zero)
             {
-                Debug.LogWarning($"[ResetDefenseAgentPosition] ⚠️ originalPos가 (0,0,0)입니다! defaultPos({defaultPos})를 사용합니다.");
                 targetPos = defaultPos;
             }
 
+            // 랜덤 각도 계산 (enableRandomSpawn일 때만)
+            Quaternion targetRot = originalRot;
             if (enableRandomSpawn)
             {
                 targetPos = GetRandomSpawnPosition(targetPos);
+
+                // 랜덤 각도 적용 (-defenseRandomAngleRange ~ +defenseRandomAngleRange)
+                float randomYAngle = Random.Range(-defenseRandomAngleRange, defenseRandomAngleRange);
+                targetRot = originalRot * Quaternion.Euler(0f, randomYAngle, 0f);
             }
 
             // Rigidbody 속도 초기화 + Sleep
@@ -1539,7 +1547,7 @@ namespace BoatAttack
 
             // 위치와 회전 설정
             agent.transform.position = targetPos;
-            agent.transform.rotation = originalRot;
+            agent.transform.rotation = targetRot;
 
             // Engine 리셋 (Gerstner 파도 안정화 전까지 _yHeight 조건 무시)
             if (agent._engine != null)
@@ -1877,7 +1885,6 @@ namespace BoatAttack
                         // Speed가 음수면 양수로 변경 (경로 0→끝 방향으로)
                         if (dollyCart.m_Speed < 0)
                         {
-                            Debug.LogWarning($"[ResetAttackBoatsToOrigin] '{boatName}' Dolly Cart Speed가 음수({dollyCart.m_Speed})! 양수로 변경.");
                             dollyCart.m_Speed = Mathf.Abs(dollyCart.m_Speed);
                         }
 
@@ -1971,11 +1978,95 @@ namespace BoatAttack
         /// <summary>
         /// 기존 위치에서 랜덤 스폰 위치 생성
         /// </summary>
+        /// <summary>
+        /// 원형 랜덤 스폰 위치 계산 (30m 반경 내 원형 영역)
+        /// </summary>
         private Vector3 GetRandomSpawnPosition(Vector3 originalPos)
         {
-            float randomX = originalPos.x + Random.Range(-spawnRange, spawnRange);
-            float randomZ = originalPos.z + Random.Range(-spawnRange, spawnRange);
+            // 원형 영역 내 균등 분포 (극좌표 사용)
+            float randomAngle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
+            float randomRadius = Mathf.Sqrt(Random.Range(0f, 1f)) * spawnRange; // sqrt로 균등 분포
+
+            float randomX = originalPos.x + randomRadius * Mathf.Cos(randomAngle);
+            float randomZ = originalPos.z + randomRadius * Mathf.Sin(randomAngle);
             return new Vector3(randomX, originalPos.y, randomZ);
+        }
+
+        /// <summary>
+        /// 적군 경로 원본 웨이포인트 저장 (Start()에서 호출)
+        /// </summary>
+        private void SaveOriginalWaypoints()
+        {
+            if (attackTrackPath == null)
+            {
+                // attackTrackPath가 Inspector에서 설정되지 않은 경우 찾기 시도
+                var foundPath = GameObject.Find("AttackTrack01");
+                if (foundPath != null)
+                {
+                    attackTrackPath = foundPath.GetComponent<CinemachineSmoothPath>();
+                }
+            }
+
+            if (attackTrackPath == null || attackTrackPath.m_Waypoints == null)
+            {
+                Debug.Log("[SaveOriginalWaypoints] attackTrackPath가 없거나 웨이포인트가 없습니다.");
+                return;
+            }
+
+            int waypointCount = attackTrackPath.m_Waypoints.Length;
+            _originalWaypoints = new Vector3[waypointCount];
+
+            for (int i = 0; i < waypointCount; i++)
+            {
+                _originalWaypoints[i] = attackTrackPath.m_Waypoints[i].position;
+            }
+
+            Debug.Log($"[SaveOriginalWaypoints] 원본 웨이포인트 {waypointCount}개 저장 완료");
+        }
+
+        /// <summary>
+        /// 적군 경로 웨이포인트 랜덤화 (에피소드 시작 시 호출)
+        /// 웨이포인트 0, 1, 2번만 랜덤화 (30m 반경 내 원형 영역)
+        /// </summary>
+        private void RandomizeEnemyWaypoints()
+        {
+            if (!enableEnemyPathRandomization)
+                return;
+
+            if (attackTrackPath == null || _originalWaypoints == null || _originalWaypoints.Length < 3)
+            {
+                Debug.Log("[RandomizeEnemyWaypoints] 웨이포인트 랜덤화 스킵 (경로/웨이포인트 없음)");
+                return;
+            }
+
+            // 웨이포인트 0, 1, 2번만 랜덤화
+            for (int i = 0; i < 3 && i < attackTrackPath.m_Waypoints.Length; i++)
+            {
+                Vector3 originalPos = _originalWaypoints[i];
+                Vector3 randomizedPos = GetRandomSpawnPosition(originalPos);
+
+                // CinemachineSmoothPath의 웨이포인트는 로컬 좌표 사용
+                // Transform이 있으면 월드 → 로컬 변환 필요
+                if (attackTrackPath.transform.parent != null)
+                {
+                    randomizedPos = attackTrackPath.transform.InverseTransformPoint(
+                        attackTrackPath.transform.TransformPoint(originalPos) +
+                        (randomizedPos - originalPos)
+                    );
+                }
+                else
+                {
+                    // 부모가 없으면 로컬 좌표 == 월드 좌표
+                    randomizedPos = originalPos + (randomizedPos - originalPos);
+                }
+
+                attackTrackPath.m_Waypoints[i].position = randomizedPos;
+            }
+
+            // 경로 업데이트 (Cinemachine 경로 재계산)
+            attackTrackPath.InvalidateDistanceCache();
+
+            Debug.Log($"[RandomizeEnemyWaypoints] 웨이포인트 0, 1, 2 랜덤화 완료 (반경: {spawnRange}m)");
         }
 
         #endregion
@@ -2056,12 +2147,6 @@ namespace BoatAttack
         /// </summary>
         private void ApplyEnemyActivation(int activeCount)
         {
-            Debug.Log($"[ApplyEnemyActivation] ========== 적군 활성화 시작 ==========");
-            Debug.Log($"[ApplyEnemyActivation] 목표 활성화 수: {activeCount}");
-            Debug.Log($"[ApplyEnemyActivation] enemyShips 배열: {(enemyShips != null ? enemyShips.Length.ToString() + "개" : "null")}");
-            Debug.Log($"[ApplyEnemyActivation] _attackBoats 리스트: {_attackBoats.Count}개");
-
-            // enemyShips 배열과 _attackBoats 리스트 모두 처리
             int activated = 0;
 
             // enemyShips 배열 처리
@@ -2072,25 +2157,14 @@ namespace BoatAttack
                     if (enemyShips[i] != null)
                     {
                         bool shouldBeActive = activated < activeCount;
-                        bool wasActive = enemyShips[i].activeSelf;
                         enemyShips[i].SetActive(shouldBeActive);
-
-                        Debug.Log($"[ApplyEnemyActivation] [{i}] {enemyShips[i].name}: {(wasActive ? "ON" : "OFF")} → {(shouldBeActive ? "ON" : "OFF")}");
 
                         if (shouldBeActive)
                         {
                             activated++;
                         }
                     }
-                    else
-                    {
-                        Debug.LogWarning($"[ApplyEnemyActivation] [{i}] enemyShips[{i}]가 null입니다!");
-                    }
                 }
-            }
-            else
-            {
-                Debug.LogWarning("[ApplyEnemyActivation] ⚠️ enemyShips 배열이 비어있거나 null! Inspector에서 Enemy Ships에 적군을 할당하세요.");
             }
 
             // _attackBoats 리스트도 처리 (enemyShips와 중복되지 않는 것들)
@@ -2123,8 +2197,6 @@ namespace BoatAttack
                     }
                 }
             }
-
-            Debug.Log($"[ApplyEnemyActivation] 총 {activated}대 적군 활성화됨 (목표: {activeCount})");
         }
 
         /// <summary>
@@ -2165,6 +2237,105 @@ namespace BoatAttack
         public bool IsTacticalRewardEnabled()
         {
             return currentStage == TrainingStage.Stage3_Tactical;
+        }
+
+        #endregion
+
+        #region Gizmo Visualization
+
+        /// <summary>
+        /// 에디터에서 스폰 범위 시각화
+        /// </summary>
+        private void OnDrawGizmos()
+        {
+            if (!enableRandomSpawn && !enableEnemyPathRandomization)
+                return;
+
+            // 아군 선박 스폰 범위 시각화 (Cyan)
+            if (enableRandomSpawn)
+            {
+                Gizmos.color = new Color(0f, 1f, 1f, 0.3f); // 반투명 시안
+
+                // Defense 1 스폰 범위
+                Vector3 def1Pos = _originalDefense1Pos != Vector3.zero ? _originalDefense1Pos : defense1SpawnPos;
+                if (def1Pos != Vector3.zero)
+                {
+                    DrawCircleGizmo(def1Pos, spawnRange, 32);
+                    Gizmos.DrawWireSphere(def1Pos, 1f); // 중심점 표시
+                }
+
+                // Defense 2 스폰 범위
+                Vector3 def2Pos = _originalDefense2Pos != Vector3.zero ? _originalDefense2Pos : defense2SpawnPos;
+                if (def2Pos != Vector3.zero)
+                {
+                    DrawCircleGizmo(def2Pos, spawnRange, 32);
+                    Gizmos.DrawWireSphere(def2Pos, 1f); // 중심점 표시
+                }
+
+                // 라벨 표시
+                #if UNITY_EDITOR
+                UnityEditor.Handles.color = Color.cyan;
+                if (def1Pos != Vector3.zero)
+                    UnityEditor.Handles.Label(def1Pos + Vector3.up * 5f, $"Defense1\n반경: {spawnRange}m");
+                if (def2Pos != Vector3.zero)
+                    UnityEditor.Handles.Label(def2Pos + Vector3.up * 5f, $"Defense2\n반경: {spawnRange}m");
+                #endif
+            }
+
+            // 적군 웨이포인트 스폰 범위 시각화 (Red)
+            if (enableEnemyPathRandomization && attackTrackPath != null)
+            {
+                Gizmos.color = new Color(1f, 0.3f, 0.3f, 0.3f); // 반투명 빨강
+
+                // 원본 웨이포인트 또는 현재 웨이포인트 사용
+                for (int i = 0; i < 3 && i < attackTrackPath.m_Waypoints.Length; i++)
+                {
+                    Vector3 waypointPos;
+                    if (_originalWaypoints != null && i < _originalWaypoints.Length)
+                    {
+                        waypointPos = _originalWaypoints[i];
+                    }
+                    else
+                    {
+                        waypointPos = attackTrackPath.m_Waypoints[i].position;
+                    }
+
+                    // 월드 좌표로 변환
+                    if (attackTrackPath.transform != null)
+                    {
+                        waypointPos = attackTrackPath.transform.TransformPoint(waypointPos);
+                    }
+
+                    DrawCircleGizmo(waypointPos, spawnRange, 32);
+                    Gizmos.DrawWireSphere(waypointPos, 2f); // 중심점 표시
+
+                    #if UNITY_EDITOR
+                    UnityEditor.Handles.color = Color.red;
+                    UnityEditor.Handles.Label(waypointPos + Vector3.up * 5f, $"Waypoint {i}\n반경: {spawnRange}m");
+                    #endif
+                }
+            }
+        }
+
+        /// <summary>
+        /// XZ 평면에 원 그리기 (Gizmo용)
+        /// </summary>
+        private void DrawCircleGizmo(Vector3 center, float radius, int segments)
+        {
+            float angleStep = 360f / segments;
+            Vector3 prevPoint = center + new Vector3(radius, 0f, 0f);
+
+            for (int i = 1; i <= segments; i++)
+            {
+                float angle = i * angleStep * Mathf.Deg2Rad;
+                Vector3 newPoint = center + new Vector3(
+                    Mathf.Cos(angle) * radius,
+                    0f,
+                    Mathf.Sin(angle) * radius
+                );
+                Gizmos.DrawLine(prevPoint, newPoint);
+                prevPoint = newPoint;
+            }
         }
 
         #endregion

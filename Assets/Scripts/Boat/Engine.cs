@@ -28,8 +28,10 @@ namespace BoatAttack
         private float _turnVel;
         private float _currentAngle;
 
-        // 에피소드 시작 시 _yHeight 조건 무시용 카운터
+        // 에피소드 시작 시 _yHeight 조건 무시용 카운터 (향후 사용 예정)
+        #pragma warning disable CS0414
         private int _skipHeightCheckFrames = 0;
+        #pragma warning restore CS0414
         private const int SKIP_FRAMES_ON_RESET = 5;  // 5프레임 동안 조건 무시
 
         private void Awake()

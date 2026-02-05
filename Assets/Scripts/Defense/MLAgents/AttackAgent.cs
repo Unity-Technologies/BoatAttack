@@ -98,7 +98,7 @@ namespace BoatAttack
         private Vector3 _currentWaypointPosition;
         private bool _waypointInitialized = false;
 
-        private void Awake()
+        private new void Awake()
         {
             // Boat와 Engine 컴포넌트 찾기
             if (TryGetComponent(out _boat))
@@ -418,7 +418,7 @@ namespace BoatAttack
         /// ML-Agents Behavior Type을 "Heuristic Only"로 설정하면 이 함수가 호출됩니다.
         /// Unity의 새로운 Input System (UnityEngine.InputSystem)을 사용합니다.
         /// </summary>
-        public void Heuristic(in ActionBuffers actionsOut)
+        public override void Heuristic(in ActionBuffers actionsOut)
         {
             var continuousActions = actionsOut.ContinuousActions;
             

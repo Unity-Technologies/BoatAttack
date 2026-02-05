@@ -87,9 +87,10 @@ namespace BoatAttack
 
         [Header("Reward Display")]
         [Tooltip("현재 에피소드의 총 보상")]
+        #pragma warning disable CS0414
         [SerializeField] private float _totalReward = 0f;
-
         [SerializeField] private float _lastStepReward = 0f;
+        #pragma warning restore CS0414
 
         // 내부 변수
         private bool _episodeEnded = false;
