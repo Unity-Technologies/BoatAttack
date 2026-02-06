@@ -90,10 +90,11 @@ namespace BoatAttack
             // 초기 색상 저장
             _lastWebColor = webColor;
 
-            // DefenseEnvController 찾기 및 캐싱
+            // DefenseEnvController 찾기 및 캐싱 (멀티 환경 호환)
             if (envController == null)
             {
-                envController = FindObjectOfType<DefenseEnvController>();
+                Transform envRoot = transform.parent != null ? transform.parent : transform;
+                envController = envRoot.GetComponentInChildren<DefenseEnvController>();
             }
         }
 
@@ -264,7 +265,8 @@ namespace BoatAttack
 
             if (envController == null)
             {
-                envController = FindObjectOfType<DefenseEnvController>();
+                Transform envRoot = transform.parent != null ? transform.parent : transform;
+                envController = envRoot.GetComponentInChildren<DefenseEnvController>();
             }
 
             if (envController != null)
@@ -298,7 +300,8 @@ namespace BoatAttack
 
             if (envController == null)
             {
-                envController = FindObjectOfType<DefenseEnvController>();
+                Transform envRoot = transform.parent != null ? transform.parent : transform;
+                envController = envRoot.GetComponentInChildren<DefenseEnvController>();
                 if (envController == null)
                     return;
             }
@@ -391,7 +394,8 @@ namespace BoatAttack
 
             if (envController == null)
             {
-                envController = FindObjectOfType<DefenseEnvController>();
+                Transform envRoot = transform.parent != null ? transform.parent : transform;
+                envController = envRoot.GetComponentInChildren<DefenseEnvController>();
             }
 
             if (envController != null)

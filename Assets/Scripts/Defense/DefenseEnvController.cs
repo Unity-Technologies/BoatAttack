@@ -170,6 +170,10 @@ namespace BoatAttack
         [Tooltip("아군 위치 교차 페널티 (왼쪽/오른쪽 위치가 바뀌면)")]
         public float positionSwapPenalty = -1.0f;
 
+        [Header("Multi-Environment")]
+        [Tooltip("환경 루트 Transform (Island Level 등). 비어있으면 부모 또는 자기 자신 사용")]
+        public Transform environmentRoot;
+
         [Header("Reward Monitor (Read Only)")]
         [SerializeField] private float _currentEpisodeReward = 0f;
         [SerializeField] private float _lastStepReward = 0f;
@@ -236,6 +240,60 @@ namespace BoatAttack
         // Inspector에서 Stage 변경 시 자동 적용 (에디터 전용)
         private TrainingStage _lastStage;
 
+        #region Multi-Environment Helpers
+
+        /// <summary>
+        /// 환경 루트 Transform 반환 (멀티 환경 학습용)
+        /// environmentRoot → 부모 → 자기 자신 순서로 fallback
+        /// </summary>
+        private Transform GetEnvironmentRoot()
+        {
+            if (environmentRoot != null) return environmentRoot;
+            if (transform.parent != null) return transform.parent;
+            return transform;
+        }
+
+        /// <summary>
+        /// 현재 환경 내에서만 특정 태그의 GameObject를 찾기 (다른 환경의 오브젝트 제외)
+        /// </summary>
+        private GameObject[] FindGameObjectsWithTagInEnvironment(string tag)
+        {
+            var root = GetEnvironmentRoot();
+            var allWithTag = GameObject.FindGameObjectsWithTag(tag);
+            var result = new System.Collections.Generic.List<GameObject>();
+            foreach (var obj in allWithTag)
+            {
+                if (obj != null && obj.transform.IsChildOf(root))
+                    result.Add(obj);
+            }
+            return result.ToArray();
+        }
+
+        /// <summary>
+        /// 현재 환경 내에서만 특정 태그의 단일 GameObject를 찾기
+        /// </summary>
+        private GameObject FindGameObjectWithTagInEnvironment(string tag)
+        {
+            var root = GetEnvironmentRoot();
+            var allWithTag = GameObject.FindGameObjectsWithTag(tag);
+            foreach (var obj in allWithTag)
+            {
+                if (obj != null && obj.transform.IsChildOf(root))
+                    return obj;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 현재 환경 내에서만 컴포넌트 검색 (다른 환경의 컴포넌트 제외)
+        /// </summary>
+        private T[] FindComponentsInEnvironment<T>() where T : Component
+        {
+            return GetEnvironmentRoot().GetComponentsInChildren<T>(true);
+        }
+
+        #endregion
+
         private void OnValidate()
         {
             // Play 모드에서만 실행
@@ -284,12 +342,22 @@ namespace BoatAttack
             // Stage별 적군 활성화/비활성화
             ApplyStageSettings();
             
-            // 모선 찾기
+            // 모선 찾기 (환경 내에서만 검색)
             if (motherShip == null)
             {
-                motherShip = GameObject.FindGameObjectWithTag("MotherShip");
+                motherShip = FindGameObjectWithTagInEnvironment("MotherShip");
             }
             
+            // MotherShipCollisionDetector에 envController 할당
+            if (motherShip != null)
+            {
+                var motherShipDetector = motherShip.GetComponent<MotherShipCollisionDetector>();
+                if (motherShipDetector != null)
+                {
+                    motherShipDetector.envController = this;
+                }
+            }
+
             // WebCollisionDetector 설정
             if (webObject != null)
             {
@@ -299,6 +367,13 @@ namespace BoatAttack
                     _webDetector = webObject.AddComponent<WebCollisionDetector>();
                 }
                 _webDetector.envController = this;
+
+                // DynamicWeb에도 envController 할당
+                var dynamicWeb = webObject.GetComponent<DynamicWeb>();
+                if (dynamicWeb != null)
+                {
+                    dynamicWeb.envController = this;
+                }
             }
 
             // 에이전트 페어링
@@ -309,6 +384,13 @@ namespace BoatAttack
 
                 defenseAgent1.webObject = webObject;
                 defenseAgent2.webObject = webObject;
+
+                // 모선 참조 할당 (멀티 환경에서 올바른 모선을 사용하도록)
+                if (motherShip != null)
+                {
+                    defenseAgent1.motherShip = motherShip;
+                    defenseAgent2.motherShip = motherShip;
+                }
                 
                 // 적군 배열 설정
                 if (enemyShips != null && enemyShips.Length > 0)
@@ -318,29 +400,19 @@ namespace BoatAttack
                 }
             }
 
-            // 원점 = 인스펙터에 설정된 Spawn Position 값 사용
-            
-            // 만약 인스펙터 값이 (0,0,0)이면 강제로 기본값 설정
-            if (defense1SpawnPos == Vector3.zero)
-            {
-                defense1SpawnPos = new Vector3(-115f, -8f, -10f);
-            }
-            if (defense2SpawnPos == Vector3.zero)
-            {
-                defense2SpawnPos = new Vector3(0f, -8f, -6f);
-            }
-            
-            _originalDefense1Pos = defense1SpawnPos;
-            _originalDefense2Pos = defense2SpawnPos;
+            // 원점 = 실제 에이전트의 현재 위치 사용 (멀티 환경 호환)
+            // 환경을 복제하면 에이전트도 함께 이동하므로, 실제 위치를 저장해야 올바른 리셋 좌표를 사용
+            _originalDefense1Pos = (defenseAgent1 != null) ? defenseAgent1.transform.position : defense1SpawnPos;
+            _originalDefense2Pos = (defenseAgent2 != null) ? defenseAgent2.transform.position : defense2SpawnPos;
 
-            // 회전은 인스펙터에 설정된 각도 사용 (Euler → Quaternion 변환)
-            _originalDefense1Rot = Quaternion.Euler(defense1SpawnRot);
-            _originalDefense2Rot = Quaternion.Euler(defense2SpawnRot);
+            // 회전도 실제 에이전트 각도 사용 (fallback: 인스펙터 값)
+            _originalDefense1Rot = (defenseAgent1 != null) ? defenseAgent1.transform.rotation : Quaternion.Euler(defense1SpawnRot);
+            _originalDefense2Rot = (defenseAgent2 != null) ? defenseAgent2.transform.rotation : Quaternion.Euler(defense2SpawnRot);
 
-            // 태그가 "boat"인 모든 GameObject의 초기 위치 및 각도 저장 (WAKE 제외)
+            // 태그가 "boat"인 모든 GameObject의 초기 위치 및 각도 저장 (WAKE 제외, 환경 내에서만)
             _originalBoatPositions.Clear();
             _originalBoatRotations.Clear();
-            GameObject[] allBoats = GameObject.FindGameObjectsWithTag("boat");
+            GameObject[] allBoats = FindGameObjectsWithTagInEnvironment("boat");
             foreach (var boat in allBoats)
             {
                 // WAKE 객체는 제외 (파도 효과 등)
@@ -816,10 +888,13 @@ namespace BoatAttack
                 ? Random.Range(-defenseRandomAngleRange, defenseRandomAngleRange)
                 : 0f;
 
-            ResetDefenseAgentPosition(defenseAgent1, _originalDefense1Pos, defense1SpawnPos, _originalDefense1Rot, sharedRandomAngle);
-            ResetDefenseAgentPosition(defenseAgent2, _originalDefense2Pos, defense2SpawnPos, _originalDefense2Rot, sharedRandomAngle);
+            // 두 선박이 동일한 위치 오프셋을 공유
+            Vector3 sharedOffset = GetSharedRandomOffset();
+
+            ResetDefenseAgentPosition(defenseAgent1, _originalDefense1Pos, _originalDefense1Rot, sharedRandomAngle, sharedOffset);
+            ResetDefenseAgentPosition(defenseAgent2, _originalDefense2Pos, _originalDefense2Rot, sharedRandomAngle, sharedOffset);
         }
-        
+
         /// <summary>
         /// 모선 충돌 처리 - 해당 공격선만 원점으로 리셋
         /// 충돌 횟수가 maxCollisionCount 이상이면 에피소드 종료
@@ -1088,8 +1163,8 @@ namespace BoatAttack
             // null이거나 파괴된 객체 제거
             _attackBoats.RemoveAll(boat => boat == null);
             
-            // 현재 활성화된 적군 선박 수 확인 (씬에서 직접 찾기, 파괴된 선박 제외)
-            GameObject[] allAttackBoatsInScene = GameObject.FindGameObjectsWithTag("attack_boat");
+            // 현재 활성화된 적군 선박 수 확인 (환경 내에서 직접 찾기, 파괴된 선박 제외)
+            GameObject[] allAttackBoatsInScene = FindGameObjectsWithTagInEnvironment("attack_boat");
             // 파괴된 선박 이름을 기준으로 제외
             int activeCount = allAttackBoatsInScene.Count(boat => 
                 boat != null && 
@@ -1129,8 +1204,8 @@ namespace BoatAttack
             _attackBoatInitialPaths.Clear();
             // 프리팹 딕셔너리와 이름 기반 딕셔너리는 초기화하지 않음 (에피소드 재시작 시 재사용)
             
-            // 씬의 모든 attack_boat 태그를 가진 객체 찾기
-            GameObject[] foundBoats = GameObject.FindGameObjectsWithTag("attack_boat");
+            // 현재 환경 내의 attack_boat 태그를 가진 객체 찾기 (멀티 환경 호환)
+            GameObject[] foundBoats = FindGameObjectsWithTagInEnvironment("attack_boat");
             
             // enemyShips 배열 자동 동기화 (인스펙터에 할당된 것과 씬의 실제 객체를 동기화)
             if (enemyShips == null || enemyShips.Length == 0 || enemyShips.All(e => e == null))
@@ -1230,7 +1305,7 @@ namespace BoatAttack
         /// </summary>
         private void UpdateOriginalBoatPositions()
         {
-            GameObject[] allBoats = GameObject.FindGameObjectsWithTag("boat");
+            GameObject[] allBoats = FindGameObjectsWithTagInEnvironment("boat");
             
             int addedCount = 0;
             foreach (var boat in allBoats)
@@ -1278,8 +1353,11 @@ namespace BoatAttack
                 ? Random.Range(-defenseRandomAngleRange, defenseRandomAngleRange)
                 : 0f;
 
-            ResetDefenseAgentPosition(defenseAgent1, _originalDefense1Pos, defense1SpawnPos, _originalDefense1Rot, sharedRandomAngle);
-            ResetDefenseAgentPosition(defenseAgent2, _originalDefense2Pos, defense2SpawnPos, _originalDefense2Rot, sharedRandomAngle);
+            // 두 선박이 동일한 위치 오프셋을 공유
+            Vector3 sharedOffset = GetSharedRandomOffset();
+
+            ResetDefenseAgentPosition(defenseAgent1, _originalDefense1Pos, _originalDefense1Rot, sharedRandomAngle, sharedOffset);
+            ResetDefenseAgentPosition(defenseAgent2, _originalDefense2Pos, _originalDefense2Rot, sharedRandomAngle, sharedOffset);
 
             // 아군 선박 좌/우 위치 기록 (위치 교차 감지용)
             if (defenseAgent1 != null && defenseAgent2 != null)
@@ -1310,25 +1388,21 @@ namespace BoatAttack
 
         /// <summary>
         /// 아군 선박 위치만 리셋 (비활성화 없이)
-        /// originalPos = 인스펙터에 설정된 Spawn Position 값
+        /// originalPos = Start() 시점의 실제 에이전트 위치 (멀티 환경 호환)
+        /// sharedPositionOffset = 두 에이전트가 공유하는 위치 오프셋
         /// </summary>
-        private void ResetDefenseAgentPosition(DefenseAgent agent, Vector3 originalPos, Vector3 defaultPos, Quaternion originalRot, float sharedRandomAngle)
+        private void ResetDefenseAgentPosition(DefenseAgent agent, Vector3 originalPos, Quaternion originalRot, float sharedRandomAngle, Vector3 sharedPositionOffset)
         {
             if (agent == null)
                 return;
 
-            // originalPos가 (0,0,0)이면 defaultPos 사용 (fallback)
-            Vector3 targetPos = originalPos;
-            if (targetPos == Vector3.zero && defaultPos != Vector3.zero)
-            {
-                targetPos = defaultPos;
-            }
+            // 공유 오프셋 적용 (두 에이전트가 동일한 오프셋 사용)
+            Vector3 targetPos = originalPos + sharedPositionOffset;
 
-            // 랜덤 스폰: 위치는 개별 랜덤, 각도는 두 선박 공유
+            // 랜덤 스폰: 각도만 적용 (위치는 이미 공유 오프셋으로 적용됨)
             Quaternion targetRot = originalRot;
             if (enableRandomSpawn)
             {
-                targetPos = GetRandomSpawnPosition(targetPos);
                 targetRot = originalRot * Quaternion.Euler(0f, sharedRandomAngle, 0f);
             }
 
@@ -1370,8 +1444,8 @@ namespace BoatAttack
                 return;
             }
 
-            // 씬의 모든 attack_boat 다시 찾기
-            GameObject[] allAttackBoatsInScene = GameObject.FindGameObjectsWithTag("attack_boat");
+            // 현재 환경 내의 attack_boat 다시 찾기 (멀티 환경 호환)
+            GameObject[] allAttackBoatsInScene = FindGameObjectsWithTagInEnvironment("attack_boat");
 
             // 파괴된 attack_boat 재생성
             int recreatedCount = 0;
@@ -1407,12 +1481,12 @@ namespace BoatAttack
                 // 씬에 없으면 재생성 필요 (단, 목표 수 초과 시 스킵)
                 if (!foundInScene && recreatedCount < targetCount)
                 {
-                    // 프리팹에서 재생성
-                    GameObject recreatedBoat = Instantiate(prefab);
+                    // 프리팹에서 재생성 (환경 루트 아래에 배치하여 멀티 환경 호환)
+                    GameObject recreatedBoat = Instantiate(prefab, GetEnvironmentRoot());
                     recreatedBoat.name = boatName; // 원본 이름 유지
                     recreatedBoat.tag = "attack_boat"; // 태그 설정
                     recreatedBoat.SetActive(true); // 활성화
-                    
+
                     // 초기 위치 찾기 (이름 기반 Dictionary에서 찾기)
                     Vector3 initialPos = Vector3.zero;
                     if (_attackBoatInitialPositionsByName.ContainsKey(boatName))
@@ -1559,8 +1633,8 @@ namespace BoatAttack
                     
                     if (!alreadyInList)
                     {
-                        // 재생성
-                        GameObject recreatedBoat = Instantiate(prefab);
+                        // 재생성 (환경 루트 아래에 배치하여 멀티 환경 호환)
+                        GameObject recreatedBoat = Instantiate(prefab, GetEnvironmentRoot());
                         recreatedBoat.name = boatName;
                         recreatedBoat.tag = "attack_boat";
                         recreatedBoat.SetActive(true);
@@ -1722,20 +1796,20 @@ namespace BoatAttack
         {
             int destroyedCount = 0;
             
-            // 씬에 있는 모든 GameObject를 찾아서 "Wake(Clone)" 이름을 가진 것들을 파괴
-            // FindObjectsOfType은 활성화된 객체만 찾지만, FindObjectsOfTypeAll은 비활성화된 객체도 찾습니다
-            GameObject[] allObjects = FindObjectsOfType<GameObject>(true); // true = 비활성화된 객체도 포함
-            foreach (var obj in allObjects)
+            // 현재 환경 내의 Wake(Clone) 오브젝트만 찾아서 파괴 (멀티 환경 호환)
+            var envRoot = GetEnvironmentRoot();
+            Transform[] allTransforms = envRoot.GetComponentsInChildren<Transform>(true);
+            foreach (var t in allTransforms)
             {
-                if (obj != null && obj.name.Contains("Wake") && (obj.name.Contains("Clone") || obj.name.Contains("(Clone)")))
+                if (t != null && t.gameObject.name.Contains("Wake") && (t.gameObject.name.Contains("Clone") || t.gameObject.name.Contains("(Clone)")))
                 {
-                    Destroy(obj);
+                    Destroy(t.gameObject);
                     destroyedCount++;
                 }
             }
-            
-            // 모든 WakeGenerator 컴포넌트를 찾아서 비활성화하고 코루틴 중지
-            WakeGenerator[] allWakeGenerators = FindObjectsOfType<WakeGenerator>(true); // true = 비활성화된 객체도 포함
+
+            // 현재 환경 내의 WakeGenerator만 찾아서 비활성화하고 코루틴 중지 (멀티 환경 호환)
+            WakeGenerator[] allWakeGenerators = envRoot.GetComponentsInChildren<WakeGenerator>(true);
             foreach (var wakeGen in allWakeGenerators)
             {
                 if (wakeGen != null)
@@ -1763,8 +1837,12 @@ namespace BoatAttack
             float sharedAngle = enableRandomSpawn
                 ? Random.Range(-defenseRandomAngleRange, defenseRandomAngleRange)
                 : 0f;
-            ResetDefenseAgentPosition(defenseAgent1, _originalDefense1Pos, defense1SpawnPos, _originalDefense1Rot, sharedAngle);
-            ResetDefenseAgentPosition(defenseAgent2, _originalDefense2Pos, defense2SpawnPos, _originalDefense2Rot, sharedAngle);
+
+            // 두 선박이 동일한 위치 오프셋을 공유
+            Vector3 sharedOffset = GetSharedRandomOffset();
+
+            ResetDefenseAgentPosition(defenseAgent1, _originalDefense1Pos, _originalDefense1Rot, sharedAngle, sharedOffset);
+            ResetDefenseAgentPosition(defenseAgent2, _originalDefense2Pos, _originalDefense2Rot, sharedAngle, sharedOffset);
 
             // Web 위치 설정 (2대 중간)
             if (webObject != null && defenseAgent1 != null && defenseAgent2 != null)
@@ -1780,10 +1858,22 @@ namespace BoatAttack
         }
         
         /// <summary>
-        /// 기존 위치에서 랜덤 스폰 위치 생성
+        /// 아군 선박 2대가 공유하는 랜덤 오프셋 계산 (위치 동기화용)
         /// </summary>
+        private Vector3 GetSharedRandomOffset()
+        {
+            if (!enableRandomSpawn)
+                return Vector3.zero;
+
+            // 원형 영역 내 균등 분포 (극좌표 사용)
+            float randomAngle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
+            float randomRadius = Mathf.Sqrt(Random.Range(0f, 1f)) * spawnRange;
+
+            return new Vector3(randomRadius * Mathf.Cos(randomAngle), 0f, randomRadius * Mathf.Sin(randomAngle));
+        }
+
         /// <summary>
-        /// 원형 랜덤 스폰 위치 계산 (30m 반경 내 원형 영역)
+        /// 기존 위치에서 랜덤 스폰 위치 생성 (적군 경로용)
         /// </summary>
         private Vector3 GetRandomSpawnPosition(Vector3 originalPos)
         {
@@ -1803,8 +1893,8 @@ namespace BoatAttack
         {
             var paths = new System.Collections.Generic.List<CinemachineSmoothPath>();
 
-            // 씬의 모든 CinemachineSmoothPath 중 이름에 "attacktrack"이 포함된 것을 수집
-            var allPaths = FindObjectsOfType<CinemachineSmoothPath>();
+            // 현재 환경 내의 CinemachineSmoothPath 중 이름에 "attacktrack"이 포함된 것을 수집 (멀티 환경 호환)
+            var allPaths = FindComponentsInEnvironment<CinemachineSmoothPath>();
             foreach (var path in allPaths)
             {
                 string lowerName = path.gameObject.name.ToLower();

@@ -30,10 +30,11 @@ namespace BoatAttack
 
         private void Start()
         {
-            // 환경 컨트롤러 자동 찾기
+            // 환경 컨트롤러 자동 찾기 (멀티 환경 호환)
             if (envController == null)
             {
-                envController = FindObjectOfType<DefenseEnvController>();
+                Transform envRoot = transform.parent != null ? transform.parent : transform;
+                envController = envRoot.GetComponentInChildren<DefenseEnvController>();
             }
         }
 

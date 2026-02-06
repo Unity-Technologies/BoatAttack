@@ -39,8 +39,9 @@ namespace BoatAttack
         public float maxAngularAcceleration = 45f;
 
         [Header("Control Settings")]
-        [Range(0f, 1f)]
-        public float baseThrottle = 0.5f;
+        [Range(-1f, 1f)]
+        [Tooltip("Throttle 입력에 더해지는 기본 오프셋 (-1~1 입력을 이동시킴)")]
+        public float throttleOffset = 0.2f;
 
         [Range(0f, 1f)]
         public float minThrottle = 0.5f;
@@ -89,7 +90,22 @@ namespace BoatAttack
 
             if (motherShip == null)
             {
-                motherShip = GameObject.FindGameObjectWithTag(motherShipTag);
+                // 멀티 환경 호환: 같은 환경 계층 내에서 먼저 찾기
+                Transform envRoot = transform.parent != null ? transform.parent : transform;
+                var allWithTag = GameObject.FindGameObjectsWithTag(motherShipTag);
+                foreach (var obj in allWithTag)
+                {
+                    if (obj != null && obj.transform.IsChildOf(envRoot))
+                    {
+                        motherShip = obj;
+                        break;
+                    }
+                }
+                // 환경 내에서 못 찾으면 글로벌 fallback
+                if (motherShip == null && allWithTag.Length > 0)
+                {
+                    motherShip = allWithTag[0];
+                }
             }
         }
 
@@ -206,7 +222,7 @@ namespace BoatAttack
             steeringInput = Mathf.Clamp(steeringInput, -1f, 1f);
 
             // Throttle Mapping: -1~1 → 0.0~1.0 (정지 허용)
-            float throttle = (throttleInput+0.2f) * 1.0f;
+            float throttle = (throttleInput + throttleOffset) * 1.0f;
 
             // Steering 감도 적용
             float steering = Mathf.Clamp(steeringInput * steeringSensitivity, -1f, 1f);
@@ -226,6 +242,12 @@ namespace BoatAttack
 
             _engine.Accelerate(throttle);
             _engine.Turn(steering);
+
+            // 디버그 로그
+            if (enableDebugLog)
+            {
+                Debug.Log($"[{gameObject.name}] Throttle: {throttle:F2}, Steering: {steering:F2}");
+            }
         }
 
         /// <summary>
@@ -238,7 +260,9 @@ namespace BoatAttack
 
             _episodeEnded = true;
 
-            DefenseEnvController envController = FindObjectOfType<DefenseEnvController>();
+            // 멀티 환경 호환: 같은 환경 계층 내에서 컨트롤러 찾기
+            Transform envRoot = transform.parent != null ? transform.parent : transform;
+            DefenseEnvController envController = envRoot.GetComponentInChildren<DefenseEnvController>();
             if (envController != null)
             {
                 envController.OnEnemyCaptured(enemyPosition);
@@ -301,7 +325,9 @@ namespace BoatAttack
             if (collision.gameObject.GetComponent<DefenseAgent>() != null ||
                 collision.gameObject.CompareTag("MotherShip"))
             {
-                DefenseEnvController envController = FindObjectOfType<DefenseEnvController>();
+                // 멀티 환경 호환: 같은 환경 계층 내에서 컨트롤러 찾기
+                Transform envRoot = transform.parent != null ? transform.parent : transform;
+                DefenseEnvController envController = envRoot.GetComponentInChildren<DefenseEnvController>();
                 if (envController != null)
                 {
                     envController.OnFriendlyCollision();
