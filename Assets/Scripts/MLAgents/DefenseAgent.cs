@@ -39,12 +39,13 @@ namespace BoatAttack
         public float maxAngularAcceleration = 45f;
 
         [Header("Control Settings")]
-        [Range(-1f, 1f)]
-        [Tooltip("Throttle 입력에 더해지는 기본 오프셋 (-1~1 입력을 이동시킴)")]
-        public float throttleOffset = 0.2f;
+        [Range(0f, 1.5f)]
+        [Tooltip("최대 Throttle (기본 전진 속도)")]
+        public float maxThrottle = 1.0f;
 
         [Range(0f, 1f)]
-        public float minThrottle = 0.5f;
+        [Tooltip("최소 Throttle (감속 시 최소값)")]
+        public float minThrottle = 0.8f;
 
         [Range(0.1f, 2.0f)]
         public float steeringSensitivity = 0.3f;
@@ -221,8 +222,8 @@ namespace BoatAttack
 
             steeringInput = Mathf.Clamp(steeringInput, -1f, 1f);
 
-            // Throttle Mapping: -1~1 → 0.0~1.0 (정지 허용)
-            float throttle = (throttleInput + throttleOffset) * 1.0f;
+            // Throttle Mapping: -1 → minThrottle, +1 → maxThrottle (기본 전진에서 감속 학습)
+            float throttle = Mathf.Lerp(minThrottle, maxThrottle, (throttleInput + 1f) * 0.5f);
 
             // Steering 감도 적용
             float steering = Mathf.Clamp(steeringInput * steeringSensitivity, -1f, 1f);

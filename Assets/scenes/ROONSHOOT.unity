@@ -956,7 +956,7 @@ PrefabInstance:
     - target: {fileID: 6589000189934312664, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6589000190083865096, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
@@ -3217,7 +3217,7 @@ PrefabInstance:
     - target: {fileID: 6589000189934312664, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6589000190083865096, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
@@ -20251,7 +20251,7 @@ PrefabInstance:
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
       propertyPath: minThrottle
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
@@ -20272,6 +20272,11 @@ PrefabInstance:
         type: 3}
       propertyPath: inputSmoothing
       value: 0.202
+      objectReference: {fileID: 0}
+    - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
+        type: 3}
+      propertyPath: throttleOffset
+      value: 0.472
       objectReference: {fileID: 0}
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
@@ -26444,7 +26449,7 @@ PrefabInstance:
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
       propertyPath: minThrottle
-      value: 0
+      value: 0.649
       objectReference: {fileID: 0}
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
@@ -33125,7 +33130,7 @@ PrefabInstance:
     - target: {fileID: 6589000189934312664, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6589000190083865096, guid: e70416e3bc35d4004a9981d0ac102ba5,
         type: 3}
@@ -34991,9 +34996,9 @@ MonoBehaviour:
   defense2SpawnRot: {x: 0, y: 180, z: 0}
   webSpawnPos: {x: 0, y: 0.8, z: 0}
   maxCollisionCount: 1
-  spawnRange: 0
+  spawnRange: 98.72
   enableRandomSpawn: 1
-  defenseRandomAngleRange: 100
+  defenseRandomAngleRange: 40
   enableEnemyPathRandomization: 1
   enableRandomPathAssignment: 1
   captureReward: 1
@@ -35569,9 +35574,9 @@ MonoBehaviour:
   defense2SpawnRot: {x: 0, y: 180, z: 0}
   webSpawnPos: {x: 0, y: 0.8, z: 0}
   maxCollisionCount: 1
-  spawnRange: 0
+  spawnRange: 100
   enableRandomSpawn: 1
-  defenseRandomAngleRange: 100
+  defenseRandomAngleRange: 40
   enableEnemyPathRandomization: 1
   enableRandomPathAssignment: 1
   captureReward: 1
@@ -35944,15 +35949,15 @@ MonoBehaviour:
     width: 0.79
   m_Looped: 1
   m_Waypoints:
-  - position: {x: -298.2213, y: 0, z: -1086.9261}
+  - position: {x: -298.2213, y: 0, z: -1075.9606}
     roll: -34.37
-  - position: {x: -198.98164, y: 0, z: -189.6103}
+  - position: {x: -274.48657, y: 0, z: -469.72186}
     roll: 36.5
-  - position: {x: -145.62662, y: 0, z: 129.15797}
+  - position: {x: -187.01337, y: 0, z: -51.853863}
     roll: -34.26
-  - position: {x: 10.440346, y: 0, z: 454.26953}
+  - position: {x: -55.481102, y: 0, z: 454.26953}
     roll: 56.5
-  - position: {x: 137.10028, y: 0, z: 167.80391}
+  - position: {x: -1.614708, y: 0, z: 167.80391}
     roll: -27.32
 --- !u!4 &643215824
 Transform:
@@ -36100,15 +36105,15 @@ MonoBehaviour:
     width: 0.79
   m_Looped: 1
   m_Waypoints:
-  - position: {x: 227.57085, y: 0, z: -1678.5334}
+  - position: {x: 227.57085, y: 0, z: -1067.1947}
     roll: -34.37
-  - position: {x: 17.965336, y: 0, z: -413.1466}
+  - position: {x: 17.965336, y: 0, z: -282.90884}
     roll: 36.5
-  - position: {x: -97.00561, y: 0, z: 230.22437}
+  - position: {x: -140.88849, y: 0, z: 230.22437}
     roll: -34.26
-  - position: {x: -114.418274, y: 0, z: 807.90186}
+  - position: {x: -114.418274, y: 0, z: 307.03882}
     roll: 56.5
-  - position: {x: 71.07086, y: 0, z: 1319.7976}
+  - position: {x: 71.07086, y: 0, z: -16.813446}
     roll: -27.32
 --- !u!4 &663103930
 Transform:
@@ -52035,7 +52040,7 @@ PrefabInstance:
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
       propertyPath: minThrottle
-      value: 0
+      value: 0.649
       objectReference: {fileID: 0}
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
@@ -52554,7 +52559,7 @@ MonoBehaviour:
     roll: -20.55
   - position: {x: 139.59944, y: 0, z: 0}
     roll: 25.69
-  - position: {x: 150.10175, y: 0, z: 5}
+  - position: {x: 150.10175, y: 0, z: 178.07034}
     roll: -36
 --- !u!4 &753175276
 Transform:
@@ -78995,7 +79000,7 @@ PrefabInstance:
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
       propertyPath: minThrottle
-      value: 0
+      value: 0.649
       objectReference: {fileID: 0}
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
@@ -79370,7 +79375,7 @@ PrefabInstance:
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
       propertyPath: minThrottle
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
@@ -79391,6 +79396,11 @@ PrefabInstance:
         type: 3}
       propertyPath: inputSmoothing
       value: 0.202
+      objectReference: {fileID: 0}
+    - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
+        type: 3}
+      propertyPath: throttleOffset
+      value: 0.472
       objectReference: {fileID: 0}
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
@@ -91267,7 +91277,7 @@ PrefabInstance:
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
       propertyPath: minThrottle
-      value: 0
+      value: 0.649
       objectReference: {fileID: 0}
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
@@ -98731,15 +98741,15 @@ MonoBehaviour:
     width: 0.79
   m_Looped: 1
   m_Waypoints:
-  - position: {x: 189.38199, y: 0, z: -730.7669}
+  - position: {x: 68.92019, y: 0, z: -1110.7698}
     roll: -34.37
-  - position: {x: -67.67934, y: 0, z: 19.615955}
+  - position: {x: -67.69868, y: 0, z: -301.7838}
     roll: 36.5
-  - position: {x: -57.550407, y: 0, z: 286.69482}
+  - position: {x: -56.167854, y: 0, z: 157.03752}
     roll: -34.26
-  - position: {x: 10.44035, y: 0, z: 252.18347}
+  - position: {x: -7.3596725, y: 0, z: 298.09277}
     roll: 56.5
-  - position: {x: 48.15017, y: 0, z: 167.80391}
+  - position: {x: 48.15017, y: 0, z: -85.04314}
     roll: -27.32
 --- !u!4 &1271920282
 Transform:
@@ -115100,7 +115110,7 @@ PrefabInstance:
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
       propertyPath: minThrottle
-      value: 0
+      value: 0.649
       objectReference: {fileID: 0}
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
@@ -115685,11 +115695,11 @@ MonoBehaviour:
   defense2SpawnRot: {x: 0, y: 180, z: 0}
   webSpawnPos: {x: 0, y: 0.8, z: 0}
   maxCollisionCount: 1
-  spawnRange: 0
+  spawnRange: 60
   enableRandomSpawn: 1
-  defenseRandomAngleRange: 100
-  enableEnemyPathRandomization: 1
-  enableRandomPathAssignment: 1
+  defenseRandomAngleRange: 40
+  enableEnemyPathRandomization: 0
+  enableRandomPathAssignment: 0
   captureReward: 1
   captureDistanceBonus: 0.5
   captureDistanceBonusRange: 500
@@ -159484,7 +159494,7 @@ PrefabInstance:
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
       propertyPath: minThrottle
-      value: 0
+      value: 0.649
       objectReference: {fileID: 0}
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
@@ -169199,9 +169209,9 @@ MonoBehaviour:
   defense2SpawnRot: {x: 0, y: 180, z: 0}
   webSpawnPos: {x: 0, y: 0.8, z: 0}
   maxCollisionCount: 1
-  spawnRange: 0
+  spawnRange: 100
   enableRandomSpawn: 1
-  defenseRandomAngleRange: 100
+  defenseRandomAngleRange: 40
   enableEnemyPathRandomization: 1
   enableRandomPathAssignment: 1
   captureReward: 1
