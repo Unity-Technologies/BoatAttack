@@ -38,11 +38,11 @@ namespace BoatAttack
 
         [Tooltip("Stage2에서 활성화할 적군 수")]
         [Range(1, 5)]
-        public int stage2EnemyCount = 2;
+        public int stage2EnemyCount = 1;
 
         [Tooltip("Stage3에서 활성화할 적군 수")]
         [Range(1, 5)]
-        public int stage3EnemyCount = 5;
+        public int stage3EnemyCount = 1;
 
         [Header("Agents")]
         [Tooltip("방어 에이전트 1")]
@@ -111,16 +111,6 @@ namespace BoatAttack
         [Tooltip("적군 경로 랜덤 할당 활성화 (리셋 시 attack_track 중 랜덤 선택)")]
         public bool enableRandomPathAssignment = true;
         
-        [Header("Mission Settings (거리 임계값)")]
-        [Tooltip("모선 방어 반경 (m)")]
-        public float motherShipDefenseRadius = 1000f;
-
-        [Tooltip("2km 경계선")]
-        public float boundary2km = 2000f;
-
-        [Tooltip("1km 경계선")]
-        public float boundary1km = 1000f;
-
         [Header("Explosion Settings")]
         [Tooltip("폭발 효과 Prefab (War FX)")]
         public GameObject explosionPrefab;
@@ -132,10 +122,6 @@ namespace BoatAttack
         [Tooltip("폭발 효과 지속 시간 (초) - 이 시간 후 에피소드 재시작")]
         public float explosionDuration = 2.0f;
         
-        [Header("Collision Detection")]
-        [Tooltip("충돌 패널티 (아군-아군, 아군-모선)")]
-        public float collisionPenalty = -1.0f;
-        
         [Header("Episode End Conditions")]
         [Tooltip("모든 적군 선박 파괴 시 에피소드 종료")]
         public bool endEpisodeOnAllEnemiesDestroyed = true;
@@ -145,12 +131,6 @@ namespace BoatAttack
 
         [Tooltip("아군 간 최소 허용 거리 (이 거리 미만 시 에피소드 종료)")]
         public float minAllyDistance = 4f;
-
-        [Tooltip("아군 거리 초과/미달 페널티")]
-        public float allyDistancePenalty = -1.0f;
-
-        [Tooltip("아군 위치 교차 페널티 (왼쪽/오른쪽 위치가 바뀌면)")]
-        public float positionSwapPenalty = -1.0f;
 
         [Header("Multi-Environment")]
         [Tooltip("환경 루트 Transform (Island Level 등). 비어있으면 부모 또는 자기 자신 사용")]
@@ -165,9 +145,6 @@ namespace BoatAttack
         private int _resetTimer = 0; // FixedUpdate 기반 타이머
         private bool _episodeActive = false;
         private bool _episodeEnding = false; // 에피소드 종료 중 플래그 (중복 호출 방지)
-        private bool _enemyEnteredDefenseZone = false;
-        private bool _boundary2kmBreached = false;
-        private bool _boundary1kmBreached = false;
         
         // 에피소드 추적
         private int _episodeNumber = 0; // 에피소드 번호 (재시작 확인용)
@@ -283,7 +260,7 @@ namespace BoatAttack
             if (_lastStage != currentStage)
             {
                 _lastStage = currentStage;
-                SyncStageToRewardCalculator();
+
                 ApplyStageSettings();
             }
         }
@@ -314,9 +291,6 @@ namespace BoatAttack
             {
                 rewardCalculator = GetComponent<DefenseRewardCalculator>();
             }
-
-            // RewardCalculator에 현재 Stage 동기화
-            SyncStageToRewardCalculator();
 
             // Stage별 적군 활성화/비활성화
             ApplyStageSettings();
@@ -458,14 +432,14 @@ namespace BoatAttack
                 // 최대 거리 초과 체크
                 if (maxAllyDistance > 0f && allyDist > maxAllyDistance)
                 {
-                    RestartEpisode("AllyDistanceExceeded", allyDistancePenalty);
+                    RestartEpisode("AllyDistanceExceeded", rewardCalculator.collisionPenalty);
                     return;
                 }
 
                 // 최소 거리 미달 체크
                 if (minAllyDistance > 0f && allyDist < minAllyDistance)
                 {
-                    RestartEpisode("AllyDistanceTooClose", allyDistancePenalty);
+                    RestartEpisode("AllyDistanceTooClose", rewardCalculator.collisionPenalty);
                     return;
                 }
 
@@ -473,7 +447,7 @@ namespace BoatAttack
                 bool agent1CurrentlyOnLeft = pos1.x < pos2.x;
                 if (agent1CurrentlyOnLeft != _agent1StartsOnLeft)
                 {
-                    RestartEpisode("PositionSwapped", positionSwapPenalty);
+                    RestartEpisode("PositionSwapped", rewardCalculator.collisionPenalty);
                     return;
                 }
             }
@@ -481,87 +455,35 @@ namespace BoatAttack
             // 보상 계산 주기 확인
             if (_resetTimer % rewardCalculationInterval != 0)
                 return;
-            
+
             if (defenseAgent1 == null || defenseAgent2 == null || rewardCalculator == null)
                 return;
-            
-            // 1. 관측: 두 에이전트의 상태 수집
+
+            // 상태 수집 → 보상 계산 (대형 유지 + 적 접근 + 시간 페널티)
             var agent1State = rewardCalculator.GetAgentState(defenseAgent1);
             var agent2State = rewardCalculator.GetAgentState(defenseAgent2);
-            
-            // 2. 계산: 협동 기동 보상
-            float cooperativeReward = rewardCalculator.CalculateCooperativeRewards(
-                agent1State, agent2State);
-            
-            // 3. 계산: 전술 기동 보상
-            float tacticalReward = rewardCalculator.CalculateTacticalRewards(
+            float stepReward = rewardCalculator.CalculateStepReward(
                 agent1State, agent2State, enemyShips, webObject);
-            
-            // 4. 계산: 안전 및 제약 페널티
-            float safetyPenalty = rewardCalculator.CalculateSafetyPenalties(
-                agent1State, agent2State);
-            
-            // 5. 계산: 방어선 침범 체크
-            float boundaryPenalty = CheckBoundaryBreach();
-            
-            // 6. 부여: 그룹 보상 또는 개별 보상
-            float totalReward = cooperativeReward + tacticalReward + safetyPenalty + boundaryPenalty;
 
-            // Inspector 모니터링 업데이트
-            _lastStepReward = totalReward;
-            _currentEpisodeReward += totalReward;
-            _cooperativeReward = cooperativeReward;
-            _tacticalReward = tacticalReward;
-            _safetyPenalty = safetyPenalty + boundaryPenalty;
+            // Inspector 모니터링
+            _lastStepReward = stepReward;
+            _currentEpisodeReward += stepReward;
             _currentStep = _resetTimer;
             _totalCollisions = _totalCollisionCount;
 
-            if (Mathf.Abs(totalReward) > 0.0001f)
+            // 보상 부여
+            if (Mathf.Abs(stepReward) > 0.0001f)
             {
                 if (m_AgentGroup != null)
                 {
-                    // 그룹 보상 모드
-                    m_AgentGroup.AddGroupReward(totalReward);
+                    m_AgentGroup.AddGroupReward(stepReward);
                 }
                 else
                 {
-                    // 개별 보상 모드 (fallback)
                     if (defenseAgent1 != null)
-                        defenseAgent1.AddReward(totalReward);
+                        defenseAgent1.AddReward(stepReward);
                     if (defenseAgent2 != null)
-                        defenseAgent2.AddReward(totalReward);
-                }
-            }
-
-            // === 개별 보상 부여 (모든 Stage) ===
-            // 그룹 보상과 별개로 각 에이전트에 직접 부여
-            {
-                // Agent 1 개별 보상
-                if (defenseAgent1 != null)
-                {
-                    float speedReward1 = rewardCalculator.CalculateIndividualSpeedReward(agent1State);
-                    float smoothReward1 = rewardCalculator.CalculateActionSmoothnessReward(
-                        defenseAgent1.ThrottleDelta, defenseAgent1.SteeringDelta);
-
-                    float individualReward1 = speedReward1 + smoothReward1;
-                    if (Mathf.Abs(individualReward1) > 0.00001f)
-                    {
-                        defenseAgent1.AddReward(individualReward1);
-                    }
-                }
-
-                // Agent 2 개별 보상
-                if (defenseAgent2 != null)
-                {
-                    float speedReward2 = rewardCalculator.CalculateIndividualSpeedReward(agent2State);
-                    float smoothReward2 = rewardCalculator.CalculateActionSmoothnessReward(
-                        defenseAgent2.ThrottleDelta, defenseAgent2.SteeringDelta);
-
-                    float individualReward2 = speedReward2 + smoothReward2;
-                    if (Mathf.Abs(individualReward2) > 0.00001f)
-                    {
-                        defenseAgent2.AddReward(individualReward2);
-                    }
+                        defenseAgent2.AddReward(stepReward);
                 }
             }
         }
@@ -589,9 +511,6 @@ namespace BoatAttack
             // Inspector 모니터 초기화
             _currentEpisodeReward = 0f;
             _lastStepReward = 0f;
-            _cooperativeReward = 0f;
-            _tacticalReward = 0f;
-            _safetyPenalty = 0f;
             _currentStep = 0;
             _totalCollisions = 0;
 
@@ -620,23 +539,7 @@ namespace BoatAttack
                 }
             }
             
-            // 3단계: 모선 방어 성공 체크 (적이 방어 존에 진입하지 않았을 때)
-            if (!_enemyEnteredDefenseZone && motherShip != null && reason != "MotherShipDefense")
-            {
-                if (m_AgentGroup != null)
-                {
-                    m_AgentGroup.AddGroupReward(motherShipDefenseReward);
-                }
-                else
-                {
-                    if (defenseAgent1 != null)
-                        defenseAgent1.AddReward(motherShipDefenseReward);
-                    if (defenseAgent2 != null)
-                        defenseAgent2.AddReward(motherShipDefenseReward);
-                }
-            }
-            
-            // 4단계: 에이전트 에피소드 종료
+            // 3단계: 에이전트 에피소드 종료
             if (m_AgentGroup != null)
             {
                 m_AgentGroup.EndGroupEpisode();
@@ -728,12 +631,7 @@ namespace BoatAttack
             if (_episodeEnding)
                 return;
 
-            // 포획 보상 계산 (Calculator에서 Stage 체크 + 거리 보너스 포함)
-            float totalReward = motherShip != null
-                ? rewardCalculator.CalculateCaptureReward(enemyPosition, motherShip.transform.position)
-                : rewardCalculator.captureReward;
-
-            RestartEpisode("EnemyCaptured", totalReward);
+            RestartEpisode("EnemyCaptured", rewardCalculator.captureReward);
         }
         
         /// <summary>
@@ -766,32 +664,26 @@ namespace BoatAttack
             // 통합 충돌 횟수 증가 (Web + MotherShip 합산)
             _totalCollisionCount++;
 
-            // 포획 보상 계산 (Calculator에서 Stage 체크 + 거리 보너스 포함)
-            float totalReward = motherShip != null
-                ? rewardCalculator.CalculateCaptureReward(enemyBoat.transform.position, motherShip.transform.position)
-                : rewardCalculator.CalculateCaptureReward(enemyBoat.transform.position, Vector3.zero);
+            float reward = rewardCalculator.captureReward;
 
             // 통합 충돌 횟수가 maxCollisionCount 이상이면 에피소드 종료
             if (_totalCollisionCount >= maxCollisionCount)
             {
-                RestartEpisode("WebCollisionLimit", captureReward);
+                RestartEpisode("WebCollisionLimit", reward);
                 return;
             }
-            
-            // 충돌 횟수가 maxCollisionCount 미만이면 일반 처리
-            // 충돌 횟수가 maxCollisionCount 미만이면 일반 처리
 
-            // 보상 부여
+            // 충돌 횟수가 maxCollisionCount 미만이면 보상 부여 후 해당 적군만 리셋
             if (m_AgentGroup != null)
             {
-                m_AgentGroup.AddGroupReward(captureReward);
+                m_AgentGroup.AddGroupReward(reward);
             }
             else
             {
                 if (defenseAgent1 != null)
-                    defenseAgent1.AddReward(captureReward);
+                    defenseAgent1.AddReward(reward);
                 if (defenseAgent2 != null)
-                    defenseAgent2.AddReward(captureReward);
+                    defenseAgent2.AddReward(reward);
             }
             
             // 적군 선박을 원점으로 리셋 (모선 충돌과 동일한 메커니즘 사용)
@@ -866,9 +758,7 @@ namespace BoatAttack
             // 통합 충돌 횟수 증가 (Web + MotherShip 합산)
             _totalCollisionCount++;
 
-            // Stage1에서는 모선 충돌 페널티 비활성화
-            // Stage2, Stage3에서만 페널티 부여
-            float penalty = rewardCalculator.GetMotherShipCollisionPenalty();
+            float penalty = rewardCalculator.motherShipHitPenalty;
 
             // 통합 충돌 횟수가 maxCollisionCount 이상이면 에피소드 종료
             if (_totalCollisionCount >= maxCollisionCount)
@@ -970,48 +860,7 @@ namespace BoatAttack
 
             // RestartEpisode를 통해 일관된 방식으로 에피소드 종료
             // 패널티 부여 + EndGroupEpisode + ResetScene 모두 처리됨
-            RestartEpisode("FriendlyCollision", collisionPenalty);
-        }
-        
-        /// <summary>
-        /// 방어선 침범 체크
-        /// </summary>
-        private float CheckBoundaryBreach()
-        {
-            if (motherShip == null || enemyShips == null)
-                return 0f;
-            
-            float totalPenalty = 0f;
-            
-            foreach (var enemy in enemyShips)
-            {
-                if (enemy == null) continue;
-                
-                float distanceToMotherShip = Vector3.Distance(
-                    enemy.transform.position, motherShip.transform.position);
-                
-                // 2km 경계선 체크
-                if (!_boundary2kmBreached && distanceToMotherShip <= boundary2km)
-                {
-                    _boundary2kmBreached = true;
-                    totalPenalty += boundaryBreachPenalty;
-                }
-                
-                // 1km 경계선 체크
-                if (!_boundary1kmBreached && distanceToMotherShip <= boundary1km)
-                {
-                    _boundary1kmBreached = true;
-                    totalPenalty += boundaryBreachPenalty;
-                }
-                
-                // 모선 방어 존 진입 체크
-                if (distanceToMotherShip <= motherShipDefenseRadius)
-                {
-                    _enemyEnteredDefenseZone = true;
-                }
-            }
-            
-            return totalPenalty;
+            RestartEpisode("FriendlyCollision", rewardCalculator.collisionPenalty);
         }
         
         #region DefenseBoatManager 통합 기능
@@ -1917,17 +1766,6 @@ namespace BoatAttack
         #region Stage Management
 
         /// <summary>
-        /// RewardCalculator에 현재 Stage 동기화
-        /// </summary>
-        private void SyncStageToRewardCalculator()
-        {
-            if (rewardCalculator != null)
-            {
-                rewardCalculator.currentStage = currentStage;
-            }
-        }
-
-        /// <summary>
         /// 현재 Stage에 맞는 설정 적용
         /// - Stage1: 적군 비활성화, 대형 유지만 학습
         /// - Stage2: 적군 1~2대 활성화, 포획 보상 학습
@@ -2045,7 +1883,7 @@ namespace BoatAttack
             if (currentStage != newStage)
             {
                 currentStage = newStage;
-                SyncStageToRewardCalculator();
+
                 ApplyStageSettings();
             }
         }
