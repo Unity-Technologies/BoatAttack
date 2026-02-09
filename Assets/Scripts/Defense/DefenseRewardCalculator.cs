@@ -6,6 +6,11 @@ namespace BoatAttack
     /// 방어 에이전트들의 보상을 중앙에서 계산하는 클래스
     /// 그룹 보상을 계산하여 DefenseEnvController에 전달
     /// 커리큘럼 학습 단계별로 다른 보상 함수 적용
+    ///
+    /// ETA-Hys-RL 논문 기반 개선:
+    /// - Progress Reward: 적에게 가까워질 때마다 보상
+    /// - Commit Zone: 근접 시 단계별 추가 보상
+    /// - Stuck 감지: 진전 없는 에이전트에 페널티
     /// </summary>
     public class DefenseRewardCalculator : MonoBehaviour
     {
@@ -28,11 +33,11 @@ namespace BoatAttack
 
         [Tooltip("Stage1 속도 보상 배수 (기본 2배, 더 키우려면 증가)")]
         [Range(1f, 10f)]
-        public float stage1SpeedRewardMultiplier = 4f;  // 2 → 4배로 증가
+        public float stage1SpeedRewardMultiplier = 4f;
 
         [Header("Stage 1 Individual Rewards (개별 보상)")]
         [Tooltip("Stage1 개별 속도 보상 (각 에이전트별로 부여)")]
-        public float stage1IndividualSpeedReward = 0.02f;  // 0.001→0.02 (20배)
+        public float stage1IndividualSpeedReward = 0.02f;
 
         [Tooltip("명령 연속성 보상 계수 (추력/조향 변화가 작을수록 보상)")]
         public float actionSmoothnessCoeff = 0.002f;
@@ -79,30 +84,50 @@ namespace BoatAttack
 
         [Header("Tactical Rewards (Stage 2+)")]
         [Tooltip("수직 차단 보상 (Stage2부터 적용)")]
-        public float perpendicularInterceptReward = 0.005f;  // 0.001 → 0.005 (5배 증가)
+        public float perpendicularInterceptReward = 0.005f;
 
         [Tooltip("수직 차단 각도 허용 범위 (도)")]
         public float perpendicularAngleTolerance = 30f;
 
         [Tooltip("추적 이득 보상 (Stage2부터 적용)")]
-        public float trackingGainReward = 0.002f;  // 0.0005 → 0.002 (4배 증가)
+        public float trackingGainReward = 0.002f;
 
-        [Header("Enemy Approach Reward (Stage 2+)")]
-        [Tooltip("적 접근 보상 - 가까울수록 높은 보상")]
-        public float enemyApproachReward = 0.003f;
+        [Header("=== Progress Reward (Stage 2+) - 논문 기반 ===")]
+        [Tooltip("Progress 보상 계수 (Web이 적에게 1m 가까워질 때마다 이 값만큼 보상)")]
+        public float progressRewardCoeff = 0.01f;
 
-        [Tooltip("적 접근 보상 최대 거리 (이 거리 이상이면 보상 0)")]
-        public float enemyApproachMaxDistance = 200f;
+        [Tooltip("Progress 페널티 계수 (Web이 적에게서 1m 멀어질 때마다 이 값만큼 페널티)")]
+        public float progressPenaltyCoeff = 0.005f;
 
-        [Tooltip("적 접근 보상 최소 거리 (이 거리 이하면 최대 보상)")]
-        public float enemyApproachMinDistance = 20f;
+        [Header("=== Commit Zone Reward (Stage 2+) - 논문 기반 ===")]
+        [Tooltip("Commit Zone 1 보상 (최대값) - 근접 시 추가 보상")]
+        public float commitZone1Reward = 0.005f;
 
-        [Header("Speed Reward (Stage 2/3)")]
-        [Tooltip("속도 보상 (빠를수록 높은 보상, 최대값)")]
-        public float speedReward = 0.001f;
+        [Tooltip("Commit Zone 1 거리 (m) - 이 거리 이내에서 Zone1 보상")]
+        public float commitZone1Distance = 100f;
 
-        [Tooltip("속도 보상 기준 속도 (m/s)")]
-        public float speedRewardThreshold = 8f;
+        [Tooltip("Commit Zone 2 보상 (최대값) - 매우 근접 시 추가 보상")]
+        public float commitZone2Reward = 0.01f;
+
+        [Tooltip("Commit Zone 2 거리 (m) - 이 거리 이내에서 Zone2 보상")]
+        public float commitZone2Distance = 50f;
+
+        [Header("=== Stuck Detection (Stage 2+) - 논문 기반 ===")]
+        [Tooltip("Stuck 페널티 (한 번에 부과되는 페널티)")]
+        public float stuckPenalty = -0.1f;
+
+        [Tooltip("Stuck 판정 스텝 수 (이 스텝 동안 진전 없으면 Stuck)")]
+        public int stuckThreshold = 40;
+
+        [Tooltip("Stuck 판정 최소 진전 거리 (m) - 이 거리 이상 가까워져야 진전으로 인정)")]
+        public float stuckProgressMinimum = 2f;
+
+        [Header("Idle Penalty (Stage 2+)")]
+        [Tooltip("Idle 페널티 (속도가 매우 낮을 때 추가 페널티)")]
+        public float idlePenalty = -0.005f;
+
+        [Tooltip("Idle 판정 속도 (m/s)")]
+        public float idleSpeedThreshold = 1f;
 
         [Header("Safety Penalties (Stage 2/3 Only)")]
         [Tooltip("충돌 패널티 (아군-아군, 아군-모선)")]
@@ -121,8 +146,41 @@ namespace BoatAttack
         [Tooltip("시간 패널티 (매 프레임) - Stage1에서는 적용 안 함")]
         public float timePenalty = -0.0001f;
 
+        [Header("=== Event Rewards (이벤트 보상) ===")]
+        [Tooltip("포획 성공 보상")]
+        public float captureReward = 5.0f;
+
+        [Tooltip("포획 거리 보너스 (최대) - 모선과 멀리서 포획할수록 보상")]
+        public float captureDistanceBonus = 2.0f;
+
+        [Tooltip("포획 거리 보너스 기준 (m) - 이 거리 이상에서 최대 보너스")]
+        public float captureDistanceBonusRange = 500f;
+
+        [Tooltip("모선 방어 성공 보상")]
+        public float motherShipDefenseReward = 0.5f;
+
+        [Tooltip("모선 충돌 패널티 (Game Over)")]
+        public float motherShipCollisionPenalty = -2.0f;
+
+        [Tooltip("방어선 침범 패널티")]
+        public float boundaryBreachPenalty = -0.1f;
+
+        [Tooltip("아군 거리 초과/미달 페널티")]
+        public float allyDistancePenalty = -1.0f;
+
+        [Tooltip("아군 위치 교차 페널티")]
+        public float positionSwapPenalty = -1.0f;
+
+        // === 내부 상태 변수 ===
         // 이전 스텝의 적-그물 거리 (추적 이득 계산용)
         private float _lastEnemyToWebDistance = float.MaxValue;
+
+        // Progress Reward 추적용
+        private float _lastProgressDistance = float.MaxValue;
+
+        // Stuck 감지용
+        private int _noProgressSteps = 0;
+        private float _stuckCheckBaseDistance = float.MaxValue;
 
         /// <summary>
         /// 에이전트 상태 구조체
@@ -147,23 +205,19 @@ namespace BoatAttack
             float avgSpeed = (agent1.speed + agent2.speed) / 2f;
 
             // 1. 헤딩 동기화 (그라데이션: 완전 일치 = 최대 보상)
-            // 180도 기준으로 정규화 (0도 = 1.0, 180도 = 0.0)
             float headingDiff = Mathf.Abs(Mathf.DeltaAngle(agent1.heading, agent2.heading));
             float headingFactor = 1f - (headingDiff / 180f);
             totalReward += stage1HeadingReward * headingFactor;
 
             // 2. 속도 동기화 (그라데이션: 속도 차이 0 = 최대 보상)
-            // 단, 둘 다 움직이고 있을 때만 보상 (정지 상태 방지)
             float speedDiff = Mathf.Abs(agent1.speed - agent2.speed);
             float speedSyncFactor = Mathf.Clamp01(1f - (speedDiff / 10f));
-            // 평균 속도가 최소 속도 이상일 때만 속도 동기화 보상
             if (avgSpeed >= minSpeed)
             {
                 totalReward += stage1SpeedSyncReward * speedSyncFactor;
             }
 
             // 3. 간격 유지 (그라데이션: 최적 거리에 가까울수록 높은 보상)
-            // 최적 거리에서 50m 벗어나면 0
             float distance = Vector3.Distance(agent1.position, agent2.position);
             float distanceError = Mathf.Abs(distance - stage1OptimalDistance);
             float distanceFactor = Mathf.Clamp01(1f - (distanceError / 50f));
@@ -173,7 +227,7 @@ namespace BoatAttack
             float speedFactor = Mathf.Clamp01(avgSpeed / stage1SpeedThreshold);
             totalReward += stage1SpeedReward * speedFactor * stage1SpeedRewardMultiplier;
 
-            // 5. 그물 장력 (Net Tension) - Stage1에서도 적용
+            // 5. 그물 장력 (Net Tension)
             float optimalMin = netMaxLength * netOptimalMinRatio;
             float optimalMax = netMaxLength * netOptimalMaxRatio;
             if (distance >= optimalMin && distance <= optimalMax)
@@ -204,11 +258,7 @@ namespace BoatAttack
         /// </summary>
         public float CalculateActionSmoothnessReward(float throttleDelta, float steeringDelta)
         {
-            // 변화량 평균 (0 = 완전 연속, 1 = 최대 변화)
             float avgDelta = (throttleDelta + steeringDelta) * 0.5f;
-
-            // 변화 없음(0): +coeff, 최대 변화(1): -coeff
-            // 선형: (1 - 2*delta) * coeff
             return (1f - 2f * avgDelta) * actionSmoothnessCoeff;
         }
 
@@ -223,24 +273,21 @@ namespace BoatAttack
         /// <summary>
         /// 전술 기동 보상 계산
         /// Stage2, Stage3에서 활성화 (Stage1에서는 0 반환)
-        /// 단순화: Stage2에서는 비활성화하여 포획 이벤트에만 집중
+        /// 수직 차단 + 추적 이득
         /// </summary>
         public float CalculateTacticalRewards(AgentState agent1, AgentState agent2,
             GameObject[] enemyShips, GameObject webObject)
         {
             float totalReward = 0f;
 
-            // Stage3에서만 전술 기동 보상 활성화 (Stage1, Stage2는 비활성)
-            // Stage2는 Stage1 보상 + 포획 이벤트만 사용 (단순화)
-            if (currentStage != TrainingStage.Stage3_Tactical)
-            {
+            // Stage1에서는 비활성
+            if (currentStage == TrainingStage.Stage1_Formation)
                 return totalReward;
-            }
 
             if (enemyShips == null || enemyShips.Length == 0 || webObject == null)
                 return totalReward;
 
-            // 가장 가까운 적군 찾기
+            // Web 중심에서 가장 가까운 적군 찾기
             GameObject nearestEnemy = null;
             float minDistance = float.MaxValue;
 
@@ -284,18 +331,146 @@ namespace BoatAttack
             }
             _lastEnemyToWebDistance = currentDistance;
 
-            // 3. 적 접근 보상 (가까울수록 높은 보상) - 시간 페널티 상쇄용
-            // 거리가 가까울수록 보상 증가 (그라데이션)
-            if (currentDistance <= enemyApproachMaxDistance)
+            return totalReward;
+        }
+
+        /// <summary>
+        /// [논문 기반] Progress Reward - Web이 적에게 가까워질 때 보상, 멀어지면 페널티
+        /// Stage2, Stage3에서 활성화 (그룹 보상)
+        /// </summary>
+        public float CalculateProgressReward(GameObject[] enemyShips, GameObject webObject)
+        {
+            if (currentStage == TrainingStage.Stage1_Formation)
+                return 0f;
+
+            if (enemyShips == null || enemyShips.Length == 0 || webObject == null)
+                return 0f;
+
+            // Web 중심에서 가장 가까운 적 거리
+            float nearestDistance = GetNearestEnemyDistance(enemyShips, webObject.transform.position);
+            if (nearestDistance == float.MaxValue)
+                return 0f;
+
+            float reward = 0f;
+
+            if (_lastProgressDistance != float.MaxValue)
             {
-                // minDistance(최대 보상) ~ maxDistance(보상 0) 사이에서 선형 보간
-                float distanceRange = enemyApproachMaxDistance - enemyApproachMinDistance;
-                float normalizedDistance = Mathf.Clamp01((currentDistance - enemyApproachMinDistance) / distanceRange);
-                float approachFactor = 1f - normalizedDistance;  // 가까울수록 1에 가까움
-                totalReward += enemyApproachReward * approachFactor;
+                float distanceChange = _lastProgressDistance - nearestDistance;
+
+                if (distanceChange > 0f)
+                {
+                    // 가까워짐 → 보상
+                    reward = distanceChange * progressRewardCoeff;
+                }
+                else if (distanceChange < 0f)
+                {
+                    // 멀어짐 → 페널티 (절반 크기)
+                    reward = distanceChange * progressPenaltyCoeff;
+                }
             }
 
-            return totalReward;
+            _lastProgressDistance = nearestDistance;
+            return reward;
+        }
+
+        /// <summary>
+        /// [논문 기반] Commit Zone Reward - Web이 적에게 근접할수록 단계별 추가 보상
+        /// Stage2, Stage3에서 활성화 (그룹 보상)
+        /// </summary>
+        public float CalculateCommitZoneReward(GameObject[] enemyShips, GameObject webObject)
+        {
+            if (currentStage == TrainingStage.Stage1_Formation)
+                return 0f;
+
+            if (enemyShips == null || enemyShips.Length == 0 || webObject == null)
+                return 0f;
+
+            float nearestDistance = GetNearestEnemyDistance(enemyShips, webObject.transform.position);
+            if (nearestDistance == float.MaxValue)
+                return 0f;
+
+            float reward = 0f;
+
+            // Zone 1: commitZone1Distance 이내 → 그라데이션 보상
+            if (nearestDistance <= commitZone1Distance)
+            {
+                float factor = 1f - (nearestDistance / commitZone1Distance);
+                reward += commitZone1Reward * factor;
+            }
+
+            // Zone 2: commitZone2Distance 이내 → 추가 그라데이션 보상
+            if (nearestDistance <= commitZone2Distance)
+            {
+                float factor = 1f - (nearestDistance / commitZone2Distance);
+                reward += commitZone2Reward * factor;
+            }
+
+            return reward;
+        }
+
+        /// <summary>
+        /// [논문 기반] Stuck 감지 - N스텝 동안 진전 없으면 페널티
+        /// Stage2, Stage3에서 활성화 (그룹 보상)
+        /// </summary>
+        public float CalculateStuckPenalty(GameObject[] enemyShips, GameObject webObject)
+        {
+            if (currentStage == TrainingStage.Stage1_Formation)
+                return 0f;
+
+            if (enemyShips == null || enemyShips.Length == 0 || webObject == null)
+                return 0f;
+
+            float nearestDistance = GetNearestEnemyDistance(enemyShips, webObject.transform.position);
+            if (nearestDistance == float.MaxValue)
+                return 0f;
+
+            // 첫 호출 시 기준 거리 설정
+            if (_stuckCheckBaseDistance == float.MaxValue)
+            {
+                _stuckCheckBaseDistance = nearestDistance;
+                _noProgressSteps = 0;
+                return 0f;
+            }
+
+            // 진전 확인: 기준 거리 대비 stuckProgressMinimum 이상 가까워졌는가?
+            float progress = _stuckCheckBaseDistance - nearestDistance;
+            if (progress >= stuckProgressMinimum)
+            {
+                // 진전 있음 → 카운터 리셋
+                _noProgressSteps = 0;
+                _stuckCheckBaseDistance = nearestDistance;
+                return 0f;
+            }
+
+            // 진전 없음 → 카운터 증가
+            _noProgressSteps++;
+
+            if (_noProgressSteps >= stuckThreshold)
+            {
+                // Stuck 판정 → 페널티 부과 + 카운터 리셋
+                _noProgressSteps = 0;
+                _stuckCheckBaseDistance = nearestDistance; // 새 기준 설정
+                return stuckPenalty;
+            }
+
+            return 0f;
+        }
+
+        /// <summary>
+        /// [논문 기반] Idle 페널티 - 개별 에이전트 속도가 매우 낮으면 페널티
+        /// Stage2, Stage3에서 활성화 (개별 보상)
+        /// </summary>
+        public float CalculateIdlePenalty(AgentState agent)
+        {
+            if (currentStage == TrainingStage.Stage1_Formation)
+                return 0f;
+
+            if (agent.speed < idleSpeedThreshold)
+            {
+                return idlePenalty;
+            }
+
+            return 0f;
         }
 
         /// <summary>
@@ -333,13 +508,12 @@ namespace BoatAttack
             }
 
             // Stage2, Stage3: 기존 페널티 적용
-            // 1. 대형 붕괴 체크
             if (distance > maxFormationDistance || headingDiff > maxFormationAngleDiff)
             {
                 totalPenalty += formationBreakPenalty;
             }
 
-            // 2. 시간 패널티
+            // 시간 패널티
             totalPenalty += timePenalty;
 
             return totalPenalty;
@@ -362,7 +536,6 @@ namespace BoatAttack
                 transform = agent.transform
             };
 
-            // Rigidbody에서 속도 가져오기
             Rigidbody rb = agent.GetComponent<Rigidbody>();
             if (rb != null)
             {
@@ -378,11 +551,89 @@ namespace BoatAttack
         }
 
         /// <summary>
+        /// Web 위치에서 가장 가까운 적까지의 거리
+        /// </summary>
+        public float GetNearestEnemyDistance(GameObject[] enemyShips, Vector3 referencePos)
+        {
+            float minDist = float.MaxValue;
+
+            if (enemyShips == null) return minDist;
+
+            foreach (var enemy in enemyShips)
+            {
+                if (enemy == null || !enemy.activeInHierarchy) continue;
+
+                float dist = Vector3.Distance(referencePos, enemy.transform.position);
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                }
+            }
+
+            return minDist;
+        }
+
+        /// <summary>
+        /// Web 위치에서 가장 가까운 적의 상대 위치 (관측용)
+        /// </summary>
+        public Vector3 GetNearestEnemyRelativePosition(GameObject[] enemyShips, Vector3 referencePos)
+        {
+            float minDist = float.MaxValue;
+            Vector3 nearestRelative = Vector3.zero;
+
+            if (enemyShips == null) return nearestRelative;
+
+            foreach (var enemy in enemyShips)
+            {
+                if (enemy == null || !enemy.activeInHierarchy) continue;
+
+                Vector3 relative = enemy.transform.position - referencePos;
+                float dist = relative.magnitude;
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                    nearestRelative = relative;
+                }
+            }
+
+            return nearestRelative;
+        }
+
+        /// <summary>
+        /// 포획 보상 계산 (기본 보상 + 거리 보너스)
+        /// Stage2, Stage3에서만 활성화
+        /// </summary>
+        public float CalculateCaptureReward(Vector3 enemyPos, Vector3 motherShipPos)
+        {
+            if (currentStage == TrainingStage.Stage1_Formation)
+                return 0f;
+
+            float reward = captureReward;
+            float distanceFromMotherShip = Vector3.Distance(enemyPos, motherShipPos);
+            float distanceFactor = Mathf.Clamp01(distanceFromMotherShip / captureDistanceBonusRange);
+            reward += captureDistanceBonus * distanceFactor;
+            return reward;
+        }
+
+        /// <summary>
+        /// 모선 충돌 페널티 반환 (Stage2, Stage3에서만 활성화)
+        /// </summary>
+        public float GetMotherShipCollisionPenalty()
+        {
+            if (currentStage == TrainingStage.Stage1_Formation)
+                return 0f;
+            return motherShipCollisionPenalty;
+        }
+
+        /// <summary>
         /// 리셋 (에피소드 시작 시)
         /// </summary>
         public void Reset()
         {
             _lastEnemyToWebDistance = float.MaxValue;
+            _lastProgressDistance = float.MaxValue;
+            _noProgressSteps = 0;
+            _stuckCheckBaseDistance = float.MaxValue;
         }
     }
 }

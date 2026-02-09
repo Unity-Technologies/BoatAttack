@@ -22,7 +22,7 @@ namespace BoatAttack
         public GameObject[] enemyShips = new GameObject[5];
 
         [Tooltip("최대 관측 가능한 적군 수")]
-        public int maxEnemyCount = 5;
+        public int maxEnemyCount = 1;
 
         [Header("Target Settings")]
         public DefenseAgent partnerAgent;
@@ -115,7 +115,7 @@ namespace BoatAttack
             _episodeEnded = false;
             _totalReward = 0f;
             _lastStepReward = 0f;
-            _prevThrottle = 0f;
+            _prevThrottle = maxThrottle;  // 감속 학습: 기본 전진 속도로 초기화
             _prevSteering = 0f;
             _throttleDelta = 0f;
             _steeringDelta = 0f;
@@ -123,13 +123,13 @@ namespace BoatAttack
 
         /// <summary>
         /// 관측 수집 (상대 좌표 기반)
-        /// 자신(4) + 팀원(4) + 적군(4×maxEnemyCount) + 모선(3) = 31개
+        /// 자신(4) + 팀원(4) + 모선(3) + Web기준 가장 가까운 적(5) = 16개
         /// </summary>
         public override void CollectObservations(VectorSensor sensor)
         {
             if (_engine == null || _engine.RB == null)
             {
-                int totalObservations = 4 + 4 + (4 * maxEnemyCount) + 3;
+                int totalObservations = 4 + 4 + 3 + 5;
                 for (int i = 0; i < totalObservations; i++)
                     sensor.AddObservation(0f);
                 return;
@@ -160,38 +160,7 @@ namespace BoatAttack
                 for (int i = 0; i < 4; i++) sensor.AddObservation(0f);
             }
 
-            // 3. 적군 (4 × maxEnemyCount) - 거리순 정렬
-            var sortedEnemies = new List<(GameObject enemy, float distance)>();
-            for (int i = 0; i < enemyShips.Length && i < maxEnemyCount; i++)
-            {
-                if (enemyShips[i] != null && enemyShips[i].activeInHierarchy)
-                {
-                    float dist = Vector3.Distance(myPos, enemyShips[i].transform.position);
-                    sortedEnemies.Add((enemyShips[i], dist));
-                }
-            }
-            sortedEnemies.Sort((a, b) => a.distance.CompareTo(b.distance));
-
-            for (int i = 0; i < maxEnemyCount; i++)
-            {
-                if (i < sortedEnemies.Count)
-                {
-                    GameObject enemy = sortedEnemies[i].enemy;
-                    Vector3 relativeToEnemy = enemy.transform.position - myPos;
-                    sensor.AddObservation(Vector3.Dot(relativeToEnemy, myRight) / 100f);
-                    sensor.AddObservation(Vector3.Dot(relativeToEnemy, myForward) / 100f);
-                    sensor.AddObservation(Mathf.DeltaAngle(myAngle, enemy.transform.eulerAngles.y) / 180f);
-
-                    Rigidbody enemyRb = enemy.GetComponent<Rigidbody>();
-                    sensor.AddObservation(enemyRb != null ? enemyRb.velocity.magnitude / 20f : 0f);
-                }
-                else
-                {
-                    for (int j = 0; j < 4; j++) sensor.AddObservation(0f);
-                }
-            }
-
-            // 4. 모선 (3개)
+            // 3. 모선 (3개)
             if (motherShip != null)
             {
                 Vector3 relativePos = motherShip.transform.position - myPos;
@@ -202,6 +171,47 @@ namespace BoatAttack
             else
             {
                 for (int i = 0; i < 3; i++) sensor.AddObservation(0f);
+            }
+
+            // 4. Web 기준 가장 가까운 적 (5개: right, forward, 거리, 헤딩, 속도)
+            // → 그물을 어디로 움직여야 하는지 직접적인 신호
+            if (webObject != null && enemyShips != null)
+            {
+                Vector3 webPos = webObject.transform.position;
+                float nearestDist = float.MaxValue;
+                Vector3 nearestRelative = Vector3.zero;
+                GameObject nearestEnemy = null;
+
+                foreach (var enemy in enemyShips)
+                {
+                    if (enemy == null || !enemy.activeInHierarchy) continue;
+                    Vector3 rel = enemy.transform.position - webPos;
+                    float dist = rel.magnitude;
+                    if (dist < nearestDist)
+                    {
+                        nearestDist = dist;
+                        nearestRelative = rel;
+                        nearestEnemy = enemy;
+                    }
+                }
+
+                if (nearestEnemy != null)
+                {
+                    sensor.AddObservation(Vector3.Dot(nearestRelative, myRight) / 200f);
+                    sensor.AddObservation(Vector3.Dot(nearestRelative, myForward) / 200f);
+                    sensor.AddObservation(nearestDist / 200f);
+                    sensor.AddObservation(Mathf.DeltaAngle(myAngle, nearestEnemy.transform.eulerAngles.y) / 180f);
+                    Rigidbody enemyRb = nearestEnemy.GetComponent<Rigidbody>();
+                    sensor.AddObservation(enemyRb != null ? enemyRb.velocity.magnitude / 20f : 0f);
+                }
+                else
+                {
+                    for (int i = 0; i < 5; i++) sensor.AddObservation(0f);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 5; i++) sensor.AddObservation(0f);
             }
         }
 

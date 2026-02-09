@@ -67,9 +67,9 @@ namespace BoatAttack
         [Tooltip("폭발 시 보상 (성공 보상)")]
         public float explosionReward = 50f;
         
-        [Tooltip("폭발 효과 크기 배율")]
-        [Range(5f, 50f)]
-        public float explosionScale = 23f;
+        [Tooltip("폭발 효과 크기 배율 (100 = 1.0배, 200 = 2.0배, 500 = 5.0배)")]
+        [Range(100f, 500f)]
+        public float explosionScale = 200f;
         
         [Header("Collision Detection")]
         [Tooltip("충돌 감지 방식: true=Trigger 사용 (보트 Collider의 Is Trigger 활성화 필요), false=물리 Collision 사용")]
@@ -173,18 +173,37 @@ namespace BoatAttack
             _smoothSteering = 0f;
             _hasExploded = false; // 폭발 상태 초기화
             
+            // 게임 오브젝트 활성화 (비활성화되어 있을 수 있음)
+            if (!gameObject.activeSelf)
+            {
+                gameObject.SetActive(true);
+                Debug.Log($"[AttackAgent] OnEpisodeBegin: 게임 오브젝트 활성화됨");
+            }
+            
+            // AttackBoatDisabler 재활성화 (에피소드 재시작 시)
+            AttackBoatDisabler disabler = GetComponent<AttackBoatDisabler>();
+            if (disabler != null && !disabler.enabled)
+            {
+                disabler.enabled = true;
+                Debug.Log("[AttackAgent] OnEpisodeBegin: AttackBoatDisabler 재활성화됨");
+            }
+            
             // Waypoint 초기화 (에피소드 재시작 시)
             if (followWaypoints)
             {
                 InitializeWaypoint();
             }
             
-            // 배 위치는 AttackBoatManager에서 재생성 시 설정되므로 여기서는 리셋하지 않음
-            // 단, Rigidbody 속도 및 각속도만 리셋
+            // 배 위치 리셋 (초기 위치로 복원)
+            transform.position = new Vector3(0f, 0.8f, 0f);
+            transform.rotation = Quaternion.identity;
+            
+            // Rigidbody 속도 및 각속도 리셋
             if (_engine != null && _engine.RB != null)
             {
                 _engine.RB.velocity = Vector3.zero;
                 _engine.RB.angularVelocity = Vector3.zero;
+                _engine.RB.WakeUp(); // Rigidbody 깨우기 (Sleep 상태일 수 있음)
             }
             
             _lastPosition = transform.position;
@@ -194,7 +213,7 @@ namespace BoatAttack
                 _lastDistance = Vector3.Distance(transform.position, targetMotherShip.transform.position);
             }
             
-            Debug.Log($"[AttackAgent] OnEpisodeBegin: 배 위치 = {transform.position}");
+            Debug.Log($"[AttackAgent] OnEpisodeBegin: 배 위치 = {transform.position}, 활성화 상태 = {gameObject.activeSelf}");
         }
 
         public override void CollectObservations(VectorSensor sensor)
@@ -631,6 +650,14 @@ namespace BoatAttack
 
             Debug.Log($"[AttackAgent] HandleMotherShipCollision 호출! 폭발 처리 시작. MotherShip: {motherShip.name}");
             
+            // AttackBoatDisabler가 게임 오브젝트를 파괴하지 않도록 비활성화
+            AttackBoatDisabler disabler = GetComponent<AttackBoatDisabler>();
+            if (disabler != null)
+            {
+                disabler.enabled = false;
+                Debug.Log("[AttackAgent] AttackBoatDisabler 비활성화됨 (재활성화를 위해 파괴 방지)");
+            }
+            
             // 폭발 처리 (explosionPrefab이 없어도 진행)
             TriggerExplosion();
             
@@ -666,20 +693,29 @@ namespace BoatAttack
             Debug.Log($"[AttackAgent] TriggerExplosion 호출! 폭발 효과 생성 위치: {transform.position}");
             _hasExploded = true;
 
-            // 폭발 효과 생성 검증
-            if (explosionPrefab == null)
-            {
-                Debug.LogError("[AttackAgent] TriggerExplosion: explosionPrefab이 null입니다! Inspector에서 War FX 폭발 효과 Prefab을 할당해주세요.");
-                Debug.LogError("[AttackAgent] 경로 예시: Assets/JMO Assets/WarFX/_Effects/Explosions/WFX_Explosion.prefab");
-                return;
-            }
-
             // 폭발 효과 생성 위치 (선박 위치, Y축은 약간 위로)
             Vector3 explosionPosition = transform.position;
             explosionPosition.y += 0.5f; // 폭발 효과가 선박 위에 보이도록
             
-            // War FX 폭발 효과 생성
-            GameObject explosion = Instantiate(explosionPrefab, explosionPosition, Quaternion.identity);
+            GameObject explosion = null;
+            
+            // 폭발 효과 생성 검증 및 생성
+            if (explosionPrefab == null)
+            {
+                Debug.LogWarning("[AttackAgent] TriggerExplosion: explosionPrefab이 null입니다! 기본 폭발 효과를 생성합니다.");
+                Debug.LogWarning("[AttackAgent] Inspector에서 War FX 폭발 효과 Prefab을 할당해주세요.");
+                Debug.LogWarning("[AttackAgent] 경로 예시: Assets/JMO Assets/WarFX/_Effects/Explosions/WFX_Explosion.prefab");
+                
+                // 기본 폭발 효과 생성 (간단한 파티클 시스템)
+                explosion = CreateDefaultExplosion(explosionPosition);
+            }
+            else
+            {
+                // War FX 폭발 효과 생성 (씬 루트에 생성하여 게임 오브젝트와 독립적으로 동작)
+                explosion = Instantiate(explosionPrefab, explosionPosition, Quaternion.identity);
+                // 부모를 null로 설정하여 게임 오브젝트가 비활성화되어도 폭발 효과가 보이도록 함
+                explosion.transform.SetParent(null);
+            }
             
             // 폭발 효과 활성화 확인
             if (explosion != null)
@@ -687,7 +723,7 @@ namespace BoatAttack
                 explosion.SetActive(true);
                 
                 // 폭발 효과 크기 조정 (100 = 1.0배, 200 = 2.0배, 500 = 5.0배)
-                float scaleMultiplier = explosionScale;
+                float scaleMultiplier = explosionScale / 100f; // 100-500 범위를 1.0-5.0으로 변환
                 explosion.transform.localScale = Vector3.one * scaleMultiplier;
                 
                 // 모든 ParticleSystem의 크기와 속도도 조정 (더 큰 폭발 효과)
@@ -727,17 +763,88 @@ namespace BoatAttack
                 Debug.Log($"[AttackAgent] - 위치: {explosionPosition}");
                 Debug.Log($"[AttackAgent] - 크기 배율: {explosionScale}% ({scaleMultiplier}x)");
                 Debug.Log($"[AttackAgent] - 활성화 상태: {explosion.activeSelf}");
+                Debug.Log($"[AttackAgent] - 부모: {(explosion.transform.parent == null ? "없음 (씬 루트)" : explosion.transform.parent.name)}");
                 Debug.Log($"[AttackAgent] - ParticleSystem 개수: {particleSystems.Length}");
+                
+                // ParticleSystem이 재생 중인지 확인
+                foreach (var ps in particleSystems)
+                {
+                    if (ps != null && ps.isPlaying)
+                    {
+                        Debug.Log($"[AttackAgent] - ParticleSystem '{ps.name}' 재생 중");
+                    }
+                    else if (ps != null)
+                    {
+                        Debug.LogWarning($"[AttackAgent] - ParticleSystem '{ps.name}' 재생 중이 아님! isPlaying={ps.isPlaying}");
+                    }
+                }
                 
                 if (particleSystems.Length == 0)
                 {
                     Debug.LogWarning("[AttackAgent] 폭발 효과에 ParticleSystem이 없습니다! Prefab이 올바른지 확인하세요.");
                 }
+                
+                // 에디터에서 폭발 효과가 보이도록 강제로 재생 시작
+                #if UNITY_EDITOR
+                foreach (var ps in particleSystems)
+                {
+                    if (ps != null && !ps.isPlaying)
+                    {
+                        ps.Play();
+                        Debug.Log($"[AttackAgent] - ParticleSystem '{ps.name}' 강제 재생 시작");
+                    }
+                }
+                #endif
             }
             else
             {
                 Debug.LogError("[AttackAgent] 폭발 효과 생성 실패! Instantiate가 null을 반환했습니다.");
             }
+        }
+        
+        /// <summary>
+        /// 기본 폭발 효과 생성 (explosionPrefab이 없을 때 사용)
+        /// </summary>
+        private GameObject CreateDefaultExplosion(Vector3 position)
+        {
+            GameObject explosionObj = new GameObject("DefaultExplosion");
+            explosionObj.transform.position = position;
+            // 부모를 null로 설정하여 게임 오브젝트와 독립적으로 동작
+            explosionObj.transform.SetParent(null);
+            
+            // 기본 파티클 시스템 생성
+            ParticleSystem ps = explosionObj.AddComponent<ParticleSystem>();
+            var main = ps.main;
+            main.startLifetime = 2f;
+            main.startSpeed = 10f;
+            main.startSize = 2f;
+            main.startColor = Color.red;
+            main.maxParticles = 100;
+            main.simulationSpace = ParticleSystemSimulationSpace.World;
+            
+            var emission = ps.emission;
+            emission.rateOverTime = 0;
+            emission.SetBursts(new ParticleSystem.Burst[] {
+                new ParticleSystem.Burst(0f, 50)
+            });
+            
+            var shape = ps.shape;
+            shape.shapeType = ParticleSystemShapeType.Sphere;
+            shape.radius = 1f;
+            
+            var velocityOverLifetime = ps.velocityOverLifetime;
+            velocityOverLifetime.enabled = true;
+            velocityOverLifetime.space = ParticleSystemSimulationSpace.Local;
+            velocityOverLifetime.x = new ParticleSystem.MinMaxCurve(-10f, 10f);
+            velocityOverLifetime.y = new ParticleSystem.MinMaxCurve(5f, 15f);
+            velocityOverLifetime.z = new ParticleSystem.MinMaxCurve(-10f, 10f);
+            
+            // 자동으로 파괴되도록 설정
+            Destroy(explosionObj, 3f);
+            
+            Debug.Log("[AttackAgent] 기본 폭발 효과 생성 완료 (explosionPrefab을 Inspector에 할당하면 더 나은 효과를 볼 수 있습니다)");
+            
+            return explosionObj;
         }
 
         void Update()
