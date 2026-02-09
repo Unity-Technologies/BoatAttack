@@ -21,11 +21,17 @@ namespace BoatAttack
         
         private void Start()
         {
-            // 환경 컨트롤러 자동 찾기 (멀티 환경 호환)
+            // 환경 컨트롤러 자동 찾기 (멀티 환경 호환 - 루트까지 탐색)
             if (envController == null)
             {
-                Transform envRoot = transform.parent != null ? transform.parent : transform;
-                envController = envRoot.GetComponentInChildren<DefenseEnvController>();
+                Transform current = transform;
+                while (current != null)
+                {
+                    envController = current.GetComponentInChildren<DefenseEnvController>();
+                    if (envController != null) break;
+                    current = current.parent;
+                }
+
                 if (envController == null)
                 {
                     Debug.LogWarning("[MotherShipCollisionDetector] DefenseEnvController를 찾을 수 없습니다!");
