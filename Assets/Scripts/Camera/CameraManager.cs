@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 using UnityEngine.UI;
 using Cinemachine;
@@ -28,7 +29,10 @@ namespace BoatAttack
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard == null) return;
+            
+            if (keyboard.spaceKey.wasPressedThisFrame)
             {
                 if (_camModes == CameraModes.Cutscene)
                     StaticCams();
@@ -36,14 +40,23 @@ namespace BoatAttack
                     PlayCutscene();
             }
 
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            if (keyboard.leftArrowKey.wasPressedThisFrame)
                 NextStaticCam();
 
-            if (Input.GetKeyDown(KeyCode.RightArrow))
+            if (keyboard.rightArrowKey.wasPressedThisFrame)
                 PrevStaticCam();
 
-            if (Input.GetKeyDown(KeyCode.H) || (Input.touchCount > 0 && Input.touches[0].tapCount == 2))
+            // H 키 또는 터치 이벤트 (터치는 Input System에서 별도 처리 필요)
+            if (keyboard.hKey.wasPressedThisFrame)
                 UI.SetActive(!UI.activeSelf);
+            
+            // 터치 이벤트는 Touchscreen.current 사용 (필요시)
+            // if (Touchscreen.current != null && Touchscreen.current.touches.Count > 0)
+            // {
+            //     var touch = Touchscreen.current.touches[0];
+            //     if (touch.tapCount.ReadValue() == 2)
+            //         UI.SetActive(!UI.activeSelf);
+            // }
         }
         public void PlayCutscene()
         {

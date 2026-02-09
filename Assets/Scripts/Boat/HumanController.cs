@@ -8,6 +8,11 @@ namespace BoatAttack
     /// </summary>
     public class HumanController : BaseController
     {
+        [Header("Input Settings")]
+        [Range(0.1f, 2.0f)]
+        [Tooltip("조종 감도 조절 (낮을수록 느림, 높을수록 빠름)")]
+        public float steeringSensitivity = 0.3f;
+
         private InputControls _controls;
 
         private float _throttle;
@@ -69,8 +74,16 @@ namespace BoatAttack
 
         void FixedUpdate()
         {
+            // 학습 모드일 때는 플레이어 입력 무시
+            if (GameModeManager.IsTrainingMode)
+            {
+                return;
+            }
+
             engine.Accelerate(_throttle);
-            engine.Turn(_steering);
+            // 감도 조절 적용 (결과값을 -1~1 범위로 제한)
+            var adjustedSteering = Mathf.Clamp(_steering * steeringSensitivity, -1f, 1f);
+            engine.Turn(adjustedSteering);
         }
     }
 }

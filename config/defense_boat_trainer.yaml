@@ -1,0 +1,78 @@
+behaviors:
+  DefenseAgent:
+    trainer_type: ppo
+
+    hyperparameters:
+      # 학습률
+      learning_rate: 0.0003
+      learning_rate_schedule: linear
+
+      # 배치 및 버퍼 설정
+      batch_size: 1024
+      buffer_size: 10240
+
+      # PPO 하이퍼파라미터
+      beta: 0.005              # 엔트로피 계수 (탐험 유도)
+      epsilon: 0.2             # PPO 클리핑
+      lambd: 0.95              # GAE lambda
+      num_epoch: 3             # 업데이트 에포크 수
+
+    network_settings:
+      # 네트워크 구조
+      normalize: true
+      hidden_units: 256        # 은닉 유닛 (AttackAgent보다 큼)
+      num_layers: 2            # 레이어 수
+      vis_encode_type: simple
+
+    reward_signals:
+      extrinsic:
+        gamma: 0.99            # 할인율 (장기 보상 중시)
+        strength: 1.0
+
+    # 훈련 설정
+    keep_checkpoints: 5
+    max_steps: 5000000         # 500만 스텝 (3-5일 훈련)
+    time_horizon: 64
+    summary_freq: 10000
+    checkpoint_interval: 50000
+
+    # 자체 플레이 (선택적, 고급 기능)
+    # self_play:
+    #   save_steps: 20000
+    #   team_change: 100000
+    #   swap_steps: 10000
+    #   window: 10
+    #   play_against_latest_model_ratio: 0.5
+    #   initial_elo: 1200.0
+
+# 환경 설정
+env_settings:
+  env_path: null
+  env_args: null
+  base_port: 5005
+  num_envs: 1
+  num_areas: 1
+  seed: -1
+  max_lifetime_restarts: 10
+  restarts_rate_limit_n: 1
+  restarts_rate_limit_period_s: 60
+
+# 엔진 설정
+engine_settings:
+  width: 84
+  height: 84
+  quality_level: 5
+  time_scale: 20
+  target_frame_rate: -1
+  capture_frame_rate: 60
+  no_graphics: false
+
+# 체크포인트 설정
+checkpoint_settings:
+  run_id: defense_boat_v1
+  initialize_from: null
+  load_model: false
+  resume: false
+  force: false
+  train_model: true
+  inference: false

@@ -49,7 +49,7 @@ namespace BoatAttack
         {
             for (var i = _lrs.Count - 1; i >= 0; i--)
             {
-                DestroyImmediate(_lrs[i]); // kill wake objects
+                Destroy(_lrs[i]); // kill wake objects
             }
             _lrs.Clear();
         }
