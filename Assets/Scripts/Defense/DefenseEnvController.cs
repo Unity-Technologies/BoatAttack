@@ -654,6 +654,7 @@ namespace BoatAttack
                 float lastCollisionTime = _collisionCooldownTimes[enemyBoat];
                 if (currentTime - lastCollisionTime < _collisionCooldown)
                 {
+                    Debug.Log($"[DefenseEnvController] 그물 충돌 무시 (쿨다운): {enemyBoat.name}");
                     return;
                 }
             }
@@ -666,9 +667,17 @@ namespace BoatAttack
 
             float reward = rewardCalculator.captureReward;
 
+            // 그물로 적군 포획 로그 출력
+            Debug.Log($"[DefenseEnvController] ========== 그물로 적군 포획! ==========");
+            Debug.Log($"[DefenseEnvController] 포획된 적군: {enemyBoat.name}");
+            Debug.Log($"[DefenseEnvController] 적군 위치: {enemyBoat.transform.position}");
+            Debug.Log($"[DefenseEnvController] 통합 충돌 횟수: {_totalCollisionCount}/{maxCollisionCount}");
+            Debug.Log($"[DefenseEnvController] 포획 보상: {reward}");
+            
             // 통합 충돌 횟수가 maxCollisionCount 이상이면 에피소드 종료
             if (_totalCollisionCount >= maxCollisionCount)
             {
+                Debug.Log($"[DefenseEnvController] 최대 충돌 횟수 도달! 에피소드 종료");
                 RestartEpisode("WebCollisionLimit", reward);
                 return;
             }
@@ -677,17 +686,28 @@ namespace BoatAttack
             if (m_AgentGroup != null)
             {
                 m_AgentGroup.AddGroupReward(reward);
+                Debug.Log($"[DefenseEnvController] 그룹 보상 추가: {reward}");
             }
             else
             {
                 if (defenseAgent1 != null)
+                {
                     defenseAgent1.AddReward(reward);
+                    Debug.Log($"[DefenseEnvController] DefenseAgent1 보상 추가: {reward}");
+                }
                 if (defenseAgent2 != null)
+                {
                     defenseAgent2.AddReward(reward);
+                    Debug.Log($"[DefenseEnvController] DefenseAgent2 보상 추가: {reward}");
+                }
             }
+            
+            Debug.Log($"[DefenseEnvController] 적군 선박 리셋 시작: {enemyBoat.name}");
             
             // 적군 선박을 원점으로 리셋 (모선 충돌과 동일한 메커니즘 사용)
             ResetSingleAttackBoat(enemyBoat);
+
+            Debug.Log($"[DefenseEnvController] 적군 선박 리셋 완료: {enemyBoat.name} -> {enemyBoat.transform.position}");
 
             // 아군 선박 위치 리셋은 에피소드 종료 시에만 수행 (mid-episode 리셋 비활성화)
             // ResetDefenseAgentsToOrigin();
@@ -696,7 +716,10 @@ namespace BoatAttack
             if (_webDetector != null)
             {
                 _webDetector.ResetDetector();
+                Debug.Log($"[DefenseEnvController] WebDetector 리셋 완료");
             }
+            
+            Debug.Log($"[DefenseEnvController] ========================================");
         }
 
         /// <summary>

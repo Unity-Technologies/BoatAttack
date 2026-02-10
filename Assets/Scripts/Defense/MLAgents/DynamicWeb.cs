@@ -228,10 +228,12 @@ namespace BoatAttack
         {
             if (other.CompareTag("attack_boat"))
             {
+                Debug.Log($"[DynamicWeb] Trigger 충돌 감지: {other.gameObject.name}");
                 HandleAttackBoatCollision(other.gameObject);
             }
             else if (IsDefenseShip(other.gameObject))
             {
+                Debug.Log($"[DynamicWeb] 아군 선박과 그물 충돌: {other.gameObject.name}");
                 HandleAllyWebCollision(other.gameObject);
             }
         }
@@ -303,10 +305,21 @@ namespace BoatAttack
                 Transform envRoot = transform.parent != null ? transform.parent : transform;
                 envController = envRoot.GetComponentInChildren<DefenseEnvController>();
                 if (envController == null)
+                {
+                    Debug.LogWarning("[DynamicWeb] DefenseEnvController를 찾을 수 없습니다!");
                     return;
+                }
             }
 
+            Debug.Log($"[DynamicWeb] ========== 그물 충돌 감지 (Collision)! ==========");
+            Debug.Log($"[DynamicWeb] 적군 선박: {attackBoat.name}");
+            Debug.Log($"[DynamicWeb] 적군 위치: {attackBoat.transform.position}");
+            Debug.Log($"[DynamicWeb] 그물 위치: {transform.position}");
+            Debug.Log($"[DynamicWeb] DefenseEnvController에 포획 알림 전송");
+            
             envController.OnEnemyHitWeb(attackBoat);
+            
+            Debug.Log($"[DynamicWeb] ========================================");
         }
 
         /// <summary>

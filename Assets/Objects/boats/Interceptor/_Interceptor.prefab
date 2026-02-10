@@ -436,12 +436,17 @@ PrefabInstance:
     - target: {fileID: 54710712322113256, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
       propertyPath: m_Drag
-      value: 0.1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 54710712322113256, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
       propertyPath: m_Mass
-      value: 2500
+      value: 6000
+      objectReference: {fileID: 0}
+    - target: {fileID: 54710712322113256, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
+        type: 3}
+      propertyPath: m_AngularDrag
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 114135153223430406, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
@@ -541,22 +546,22 @@ PrefabInstance:
     - target: {fileID: 2901399632790975270, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9934388
+      value: 0.99343884
       objectReference: {fileID: 0}
     - target: {fileID: 2901399632790975270, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.11436519
+      value: 0.114365116
       objectReference: {fileID: 0}
     - target: {fileID: 2901399632790975270, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.00000002564023
+      value: -0.000000028812792
       objectReference: {fileID: 0}
     - target: {fileID: 2901399632790975270, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.0000000029517164
+      value: 0.0000000033105607
       objectReference: {fileID: 0}
     - target: {fileID: 4301521246144889673, guid: fc3ffb83d6eafb1489a5b23bc82d25b6,
         type: 3}
@@ -670,7 +675,7 @@ MonoBehaviour:
   angularVelocityControlGain: 1
   maxLinearAcceleration: 5
   maxAngularAcceleration: 45
-  baseThrottle: 0.5
+  maxThrottle: 1
   minThrottle: 0.5
   steeringSensitivity: 0.3
   inputSmoothing: 0.2

@@ -42,24 +42,38 @@ namespace BoatAttack
         {
             // 이미 트리거된 경우 무시
             if (_hasTriggered)
+            {
+                if (enableDebugLog)
+                {
+                    Debug.Log($"[WebCollisionDetector] 이미 트리거됨, 무시: {other.gameObject.name}");
+                }
                 return;
+            }
 
             // attack_boat 태그 확인
             if (other.CompareTag(enemyTag))
             {
                 _hasTriggered = true;
 
-                if (enableDebugLog)
-                {
-                    Debug.Log($"[WebCollisionDetector] 적군 포획! {other.gameObject.name}");
-                }
-
                 // 적군 선박 참조
                 GameObject enemyBoat = other.gameObject;
+
+                if (enableDebugLog)
+                {
+                    Debug.Log($"[WebCollisionDetector] ========== 그물 충돌 감지! ==========");
+                    Debug.Log($"[WebCollisionDetector] 적군 선박: {enemyBoat.name}");
+                    Debug.Log($"[WebCollisionDetector] 적군 위치: {enemyBoat.transform.position}");
+                    Debug.Log($"[WebCollisionDetector] 그물 위치: {transform.position}");
+                    Debug.Log($"[WebCollisionDetector] 그물 크기: {transform.localScale}");
+                }
 
                 // DefenseEnvController를 통해 적군과 아군 모두 원점으로 리셋 처리 (에피소드 종료 없음)
                 if (envController != null)
                 {
+                    if (enableDebugLog)
+                    {
+                        Debug.Log($"[WebCollisionDetector] DefenseEnvController에 포획 알림 전송");
+                    }
                     envController.OnEnemyHitWeb(enemyBoat);
                 }
                 else
@@ -76,6 +90,29 @@ namespace BoatAttack
                     GameObject effect = Instantiate(captureEffectPrefab, transform.position, Quaternion.identity);
                     effect.transform.localScale = Vector3.one * effectScale;
                     Destroy(effect, 3f);
+                    if (enableDebugLog)
+                    {
+                        Debug.Log($"[WebCollisionDetector] 포획 효과 생성: {effect.name}");
+                    }
+                }
+                else
+                {
+                    if (enableDebugLog)
+                    {
+                        Debug.LogWarning("[WebCollisionDetector] captureEffectPrefab이 할당되지 않았습니다!");
+                    }
+                }
+                
+                if (enableDebugLog)
+                {
+                    Debug.Log($"[WebCollisionDetector] ========================================");
+                }
+            }
+            else
+            {
+                if (enableDebugLog)
+                {
+                    Debug.Log($"[WebCollisionDetector] 충돌 객체는 적군이 아님: {other.gameObject.name} (태그: {other.tag})");
                 }
             }
         }
