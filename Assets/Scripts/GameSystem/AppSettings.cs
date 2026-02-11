@@ -225,11 +225,21 @@ namespace BoatAttack
             while (!clean.isDone) { yield return null; }
 
             // load new scene
-            var load = new AsyncOperation();
+            AsyncOperation load = null;
 #if UNITY_EDITOR
             if (buildIndex == -1)
             {
-                load = EditorSceneManager.LoadSceneAsyncInPlayMode(scenePath,
+                // EditorSceneManager.LoadSceneAsyncInPlayMode requires a full path with .unity extension
+                var fullPath = scenePath;
+                if (!fullPath.StartsWith("Assets/"))
+                {
+                    fullPath = "Assets/" + fullPath;
+                }
+                if (!fullPath.EndsWith(".unity"))
+                {
+                    fullPath += ".unity";
+                }
+                load = EditorSceneManager.LoadSceneAsyncInPlayMode(fullPath,
                     new LoadSceneParameters(LoadSceneMode.Single));
             }
             else
@@ -239,6 +249,11 @@ namespace BoatAttack
 #else
             load = SceneManager.LoadSceneAsync(scenePath);
 #endif
+            if (load == null)
+            {
+                Debug.LogError($"Failed to load scene: {scenePath}");
+                yield break;
+            }
             while (!load.isDone)
             {
                 Instance.loadingScreenObject.SendMessage("SetLoad", load.progress * 0.5f + 0.5f);

@@ -12,22 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b17284ebf5e80436eb6089f8c7459dab, type: 3}
   m_Name: WaterSurfaceData
   m_EditorClassIdentifier: 
-  _waterMaxVisibility: 9
+  _waterMaxVisibility: 4.5
   _absorptionRamp:
     serializedVersion: 2
-    key0: {r: 1, g: 1, b: 1, a: 1}
-    key1: {r: 0.8117647, g: 1, b: 1, a: 1}
-    key2: {r: 0.13510147, g: 0.8679245, b: 0.8679245, a: 0}
-    key3: {r: 0.021626905, g: 0.49048996, b: 0.509434, a: 0}
-    key4: {r: 0, g: 0.275, b: 0.44, a: 0}
-    key5: {r: 0, g: 0, b: 0, a: 0}
+    key0: {r: 0.13510147, g: 0.8679245, b: 0.8679245, a: 1}
+    key1: {r: 0.021626905, g: 0.49048996, b: 0.509434, a: 1}
+    key2: {r: 0.05304379, g: 0.06483533, b: 0.0754717, a: 0}
+    key3: {r: 0, g: 0.275, b: 0.44, a: 0}
+    key4: {r: 0.0034180656, g: 0.2614573, b: 0.4165103, a: 0}
+    key5: {r: 0.10346207, g: 0.22408374, b: 0.8773585, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 0
-    ctime1: 488
-    ctime2: 2338
-    ctime3: 16925
-    ctime4: 34547
+    ctime0: 2338
+    ctime1: 2891
+    ctime2: 12914
+    ctime3: 34547
+    ctime4: 47802
     ctime5: 65535
     ctime6: 0
     ctime7: 0
@@ -40,6 +40,7 @@ MonoBehaviour:
     atime6: 0
     atime7: 0
     m_Mode: 0
+    m_ColorSpace: 0
     m_NumColorKeys: 6
     m_NumAlphaKeys: 2
   _scatterRamp:
@@ -69,6 +70,7 @@ MonoBehaviour:
     atime6: 0
     atime7: 0
     m_Mode: 0
+    m_ColorSpace: -1
     m_NumColorKeys: 3
     m_NumAlphaKeys: 2
   _waves:

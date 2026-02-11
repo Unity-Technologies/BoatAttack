@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.AI;
@@ -26,13 +26,50 @@ namespace BoatAttack
 
         private WaypointGroup.Waypoint[] _wPs;
 
+        [Header("Auto Start")]
+        [Tooltip("레이스 시작 없이도 자동으로 움직이기 시작합니다")]
+        public bool autoStart = false;
+        
+        [Tooltip("자동 시작 대기 시간 (초)")]
+        public float autoStartDelay = 1f;
+
         private void Start ()
         {
             RaceManager.raceStarted += StartRace;
+            
+            // 자동 시작 모드일 때
+            if (autoStart)
+            {
+                StartCoroutine(AutoStartCoroutine());
+            }
+        }
+
+        private IEnumerator AutoStartCoroutine()
+        {
+            // WaypointGroup이 준비될 때까지 대기
+            while (WaypointGroup.Instance == null)
+            {
+                yield return null;
+            }
+            
+            yield return new WaitForSeconds(autoStartDelay);
+            
+            // 레이스가 시작되지 않았어도 움직이기 시작
+            if (!RaceManager.RaceStarted)
+            {
+                Debug.Log($"[AiController] {gameObject.name}: 자동 시작 모드로 움직이기 시작");
+                StartRace(true);
+            }
         }
 
         private void StartRace(bool start)
         {
+            if (WaypointGroup.Instance == null)
+            {
+                Debug.LogWarning($"[AiController] {gameObject.name}: WaypointGroup.Instance가 null입니다!");
+                return;
+            }
+            
             AssignWp(WaypointGroup.Instance.GetWaypoint(0));
             InvokeRepeating(nameof(CalculatePath), 1f, 1f);
         }

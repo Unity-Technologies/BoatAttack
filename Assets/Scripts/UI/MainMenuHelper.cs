@@ -71,6 +71,22 @@ namespace BoatAttack.UI
 
         public void SetSinglePlayerName(string playerName) => RaceManager.RaceData.boats[0].boatName = playerName;
 
+        /// <summary>
+        /// Defense 플레이 씬 로드 (키보드 조작 가능)
+        /// </summary>
+        public void LoadDefensePlay()
+        {
+            AppSettings.LoadScene("scenes/ml_agents/defense_play");
+        }
+
+        /// <summary>
+        /// Defense 학습 씬 로드 (ML-Agents 학습용)
+        /// </summary>
+        public void LoadDefenseTraining()
+        {
+            AppSettings.LoadScene("scenes/ml_agents/defense_training");
+        }
+
         private void UpdatePrimaryColor(int index) => UpdateBoatColor(index, true);
 
         private void UpdateTrimColor(int index) => UpdateBoatColor(index, false);

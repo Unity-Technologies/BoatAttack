@@ -32,15 +32,21 @@ public static class LocalToWorldJob
 
     public static void SetupJob(int guid, Vector3[] positions, ref NativeArray<float3> output)
     {
+        // 이미 존재하는 키면 먼저 정리 (멀티 환경 학습 시 중복 방지)
+        if (Data.ContainsKey(guid))
+        {
+            Cleanup(guid);
+        }
+
         var jobData = new TransformLocalToWorld
         {
             PositionsWorld = output,
             PositionsLocal = new NativeArray<float3>(positions.Length, Allocator.Persistent)
         };
-        
+
         for (var i = 0; i < positions.Length; i++)
             jobData.PositionsLocal[i] = positions[i];
-        
+
         Data.Add(guid, jobData);
     }
 
