@@ -22,6 +22,9 @@ namespace BoatAttack
         [Tooltip("적 접근 보상 (Web-적 거리 1m 감소당)")]
         public float approachRewardPerMeter = 0.001f;
 
+        [Tooltip("헤딩 정렬 보상 (에이전트가 적을 향할수록)")]
+        public float headingAlignmentReward = 0.0005f;
+
         [Tooltip("시간 페널티 (매 스텝)")]
         public float timePenalty = -0.0001f;
 
@@ -79,10 +82,55 @@ namespace BoatAttack
                 _prevWebToEnemyDist = closestDist;
             }
 
-            // 3. 시간 페널티
+            // 3. 헤딩 정렬: 에이전트가 적을 향하고 있으면 보상 (직선 경로 유도)
+            if (enemyShips != null)
+            {
+                float align1 = GetHeadingAlignment(agent1, enemyShips);
+                float align2 = GetHeadingAlignment(agent2, enemyShips);
+                float avgAlignment = (align1 + align2) * 0.5f;
+                if (avgAlignment > 0f)
+                {
+                    reward += headingAlignmentReward * avgAlignment;
+                }
+            }
+
+            // 4. 시간 페널티
             reward += timePenalty;
 
             return reward;
+        }
+
+        /// <summary>
+        /// 에이전트 헤딩과 가장 가까운 적 방향의 정렬도 (-1~1)
+        /// 1=정면, 0=수직, -1=등짐
+        /// </summary>
+        private float GetHeadingAlignment(AgentState agent, GameObject[] enemies)
+        {
+            float minDist = float.MaxValue;
+            Vector3 closestPos = Vector3.zero;
+            foreach (var enemy in enemies)
+            {
+                if (enemy == null || !enemy.activeInHierarchy) continue;
+                float dist = Vector3.Distance(agent.position, enemy.transform.position);
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                    closestPos = enemy.transform.position;
+                }
+            }
+            if (minDist >= float.MaxValue) return 0f;
+
+            // heading(euler Y) → forward 벡터
+            float rad = agent.heading * Mathf.Deg2Rad;
+            Vector3 forward = new Vector3(Mathf.Sin(rad), 0f, Mathf.Cos(rad));
+
+            // 적 방향 (수평면)
+            Vector3 toEnemy = closestPos - agent.position;
+            toEnemy.y = 0f;
+            if (toEnemy.sqrMagnitude < 0.01f) return 0f;
+            toEnemy.Normalize();
+
+            return Vector3.Dot(forward, toEnemy);
         }
 
         /// <summary>
