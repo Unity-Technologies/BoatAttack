@@ -20251,7 +20251,7 @@ PrefabInstance:
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
       propertyPath: minThrottle
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
@@ -35001,30 +35001,15 @@ MonoBehaviour:
   defenseRandomAngleRange: 40
   enableEnemyPathRandomization: 1
   enableRandomPathAssignment: 1
-  captureReward: 1
-  captureDistanceBonus: 0.5
-  captureDistanceBonusRange: 500
-  motherShipDefenseReward: 0.5
-  motherShipDefenseRadius: 1000
-  boundaryBreachPenalty: -0.1
-  boundary2km: 2000
-  boundary1km: 1000
-  motherShipCollisionPenalty: -1.75
   explosionPrefab: {fileID: 100010, guid: e0609132424a24844b1d53ad3d704fd9, type: 3}
   explosionScale: 23
   explosionDuration: 2
-  collisionPenalty: -1
   endEpisodeOnAllEnemiesDestroyed: 1
   maxAllyDistance: 40
   minAllyDistance: 4
-  allyDistancePenalty: -2
-  positionSwapPenalty: -1
   environmentRoot: {fileID: 0}
   _currentEpisodeReward: 0
   _lastStepReward: 0
-  _cooperativeReward: 0
-  _tacticalReward: 0
-  _safetyPenalty: 0
   _currentStep: 0
   _totalCollisions: 0
 --- !u!114 &578015964
@@ -35039,39 +35024,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45b0120affbd8f34e82e117897879b13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentStage: 0
-  stage1HeadingReward: 0.01
-  stage1SpeedSyncReward: 0.01
-  stage1DistanceReward: 0.01
-  stage1SpeedReward: 0.05
-  stage1SpeedRewardMultiplier: 4
-  stage1IndividualSpeedReward: 0.004
-  actionSmoothnessCoeff: 0.002
-  stage1OptimalDistance: 25
-  stage1SpeedThreshold: 2
-  stage1FormationDistancePenalty: -0.01
-  stage1MaxDistance: 100
-  stage1FormationAnglePenalty: -0.01
-  stage1MaxAngleDiff: 90
-  stationaryPenalty: -0.005
-  minSpeed: 0
-  netTensionReward: 0.0005
-  netMaxLength: 50
-  netOptimalMinRatio: 0.9
-  netOptimalMaxRatio: 0.95
-  perpendicularInterceptReward: 0.0005
-  perpendicularAngleTolerance: 15
-  trackingGainReward: 0.0002
-  enemyApproachReward: 0.003
-  enemyApproachMaxDistance: 200
-  enemyApproachMinDistance: 20
-  speedReward: 0.0003
-  speedRewardThreshold: 10
-  collisionPenalty: -1
-  formationBreakPenalty: -0.05
-  maxFormationDistance: 150
-  maxFormationAngleDiff: 90
+  formationReward: 0.001
+  optimalDistance: 50
+  distanceTolerance: 25
+  approachRewardPerMeter: 0.001
   timePenalty: -0.001
+  captureReward: 1
+  motherShipHitPenalty: -1
+  collisionPenalty: -1
 --- !u!1 &581192965
 GameObject:
   m_ObjectHideFlags: 0
@@ -35579,30 +35539,15 @@ MonoBehaviour:
   defenseRandomAngleRange: 40
   enableEnemyPathRandomization: 1
   enableRandomPathAssignment: 1
-  captureReward: 1
-  captureDistanceBonus: 0.5
-  captureDistanceBonusRange: 500
-  motherShipDefenseReward: 0.5
-  motherShipDefenseRadius: 1000
-  boundaryBreachPenalty: -0.1
-  boundary2km: 2000
-  boundary1km: 1000
-  motherShipCollisionPenalty: -1.75
   explosionPrefab: {fileID: 100010, guid: e0609132424a24844b1d53ad3d704fd9, type: 3}
   explosionScale: 23
   explosionDuration: 2
-  collisionPenalty: -1
   endEpisodeOnAllEnemiesDestroyed: 1
   maxAllyDistance: 40
   minAllyDistance: 4
-  allyDistancePenalty: -2
-  positionSwapPenalty: -1
   environmentRoot: {fileID: 0}
   _currentEpisodeReward: 0
   _lastStepReward: 0
-  _cooperativeReward: 0
-  _tacticalReward: 0
-  _safetyPenalty: 0
   _currentStep: 0
   _totalCollisions: 0
 --- !u!114 &605353166
@@ -35617,39 +35562,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45b0120affbd8f34e82e117897879b13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentStage: 0
-  stage1HeadingReward: 0.01
-  stage1SpeedSyncReward: 0.01
-  stage1DistanceReward: 0.01
-  stage1SpeedReward: 0.05
-  stage1SpeedRewardMultiplier: 4
-  stage1IndividualSpeedReward: 0.004
-  actionSmoothnessCoeff: 0.002
-  stage1OptimalDistance: 25
-  stage1SpeedThreshold: 2
-  stage1FormationDistancePenalty: -0.01
-  stage1MaxDistance: 100
-  stage1FormationAnglePenalty: -0.01
-  stage1MaxAngleDiff: 90
-  stationaryPenalty: -0.005
-  minSpeed: 0
-  netTensionReward: 0.0005
-  netMaxLength: 50
-  netOptimalMinRatio: 0.9
-  netOptimalMaxRatio: 0.95
-  perpendicularInterceptReward: 0.0005
-  perpendicularAngleTolerance: 15
-  trackingGainReward: 0.0002
-  enemyApproachReward: 0.003
-  enemyApproachMaxDistance: 200
-  enemyApproachMinDistance: 20
-  speedReward: 0.0003
-  speedRewardThreshold: 10
-  collisionPenalty: -1
-  formationBreakPenalty: -0.05
-  maxFormationDistance: 150
-  maxFormationAngleDiff: 90
+  formationReward: 0.001
+  optimalDistance: 50
+  distanceTolerance: 25
+  approachRewardPerMeter: 0.001
   timePenalty: -0.001
+  captureReward: 1
+  motherShipHitPenalty: -1
+  collisionPenalty: -1
 --- !u!1 &620950804 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1185602264756993871, guid: e70416e3bc35d4004a9981d0ac102ba5,
@@ -79375,7 +79295,7 @@ PrefabInstance:
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
       propertyPath: minThrottle
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2560287575307401612, guid: 405c4bc591de844a3a100e1538790229,
         type: 3}
@@ -115630,39 +115550,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45b0120affbd8f34e82e117897879b13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentStage: 0
-  stage1HeadingReward: 0.01
-  stage1SpeedSyncReward: 0.01
-  stage1DistanceReward: 0.01
-  stage1SpeedReward: 0.05
-  stage1SpeedRewardMultiplier: 4
-  stage1IndividualSpeedReward: 0.004
-  actionSmoothnessCoeff: 0.002
-  stage1OptimalDistance: 25
-  stage1SpeedThreshold: 2
-  stage1FormationDistancePenalty: -0.01
-  stage1MaxDistance: 100
-  stage1FormationAnglePenalty: -0.01
-  stage1MaxAngleDiff: 90
-  stationaryPenalty: -0.005
-  minSpeed: 0.5
-  netTensionReward: 0.0005
-  netMaxLength: 50
-  netOptimalMinRatio: 0.9
-  netOptimalMaxRatio: 0.95
-  perpendicularInterceptReward: 0.0005
-  perpendicularAngleTolerance: 15
-  trackingGainReward: 0.0002
-  enemyApproachReward: 0.003
-  enemyApproachMaxDistance: 200
-  enemyApproachMinDistance: 20
-  speedReward: 0.0003
-  speedRewardThreshold: 10
-  collisionPenalty: -1
-  formationBreakPenalty: -0.05
-  maxFormationDistance: 150
-  maxFormationAngleDiff: 90
+  formationReward: 0.001
+  optimalDistance: 50
+  distanceTolerance: 25
+  approachRewardPerMeter: 0.001
   timePenalty: -0.001
+  captureReward: 1
+  motherShipHitPenalty: -1
+  collisionPenalty: -1
 --- !u!114 &1396138363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115700,30 +115595,15 @@ MonoBehaviour:
   defenseRandomAngleRange: 40
   enableEnemyPathRandomization: 0
   enableRandomPathAssignment: 0
-  captureReward: 1
-  captureDistanceBonus: 0.5
-  captureDistanceBonusRange: 500
-  motherShipDefenseReward: 0.5
-  motherShipDefenseRadius: 1000
-  boundaryBreachPenalty: -0.1
-  boundary2km: 2000
-  boundary1km: 1000
-  motherShipCollisionPenalty: -1.75
   explosionPrefab: {fileID: 100010, guid: e0609132424a24844b1d53ad3d704fd9, type: 3}
   explosionScale: 23
   explosionDuration: 2
-  collisionPenalty: -1
   endEpisodeOnAllEnemiesDestroyed: 1
   maxAllyDistance: 40
   minAllyDistance: 4
-  allyDistancePenalty: -2
-  positionSwapPenalty: -1
   environmentRoot: {fileID: 0}
   _currentEpisodeReward: 0
   _lastStepReward: 0
-  _cooperativeReward: 0
-  _tacticalReward: 0
-  _safetyPenalty: 0
   _currentStep: 0
   _totalCollisions: 0
 --- !u!4 &1396138364
@@ -169214,30 +169094,15 @@ MonoBehaviour:
   defenseRandomAngleRange: 40
   enableEnemyPathRandomization: 1
   enableRandomPathAssignment: 1
-  captureReward: 1
-  captureDistanceBonus: 0.5
-  captureDistanceBonusRange: 500
-  motherShipDefenseReward: 0.5
-  motherShipDefenseRadius: 1000
-  boundaryBreachPenalty: -0.1
-  boundary2km: 2000
-  boundary1km: 1000
-  motherShipCollisionPenalty: -1.75
   explosionPrefab: {fileID: 100010, guid: e0609132424a24844b1d53ad3d704fd9, type: 3}
   explosionScale: 23
   explosionDuration: 2
-  collisionPenalty: -1
   endEpisodeOnAllEnemiesDestroyed: 1
   maxAllyDistance: 40
   minAllyDistance: 4
-  allyDistancePenalty: -2
-  positionSwapPenalty: -1
   environmentRoot: {fileID: 0}
   _currentEpisodeReward: 0
   _lastStepReward: 0
-  _cooperativeReward: 0
-  _tacticalReward: 0
-  _safetyPenalty: 0
   _currentStep: 0
   _totalCollisions: 0
 --- !u!114 &2063521764
@@ -169252,39 +169117,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45b0120affbd8f34e82e117897879b13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentStage: 0
-  stage1HeadingReward: 0.01
-  stage1SpeedSyncReward: 0.01
-  stage1DistanceReward: 0.01
-  stage1SpeedReward: 0.05
-  stage1SpeedRewardMultiplier: 4
-  stage1IndividualSpeedReward: 0.004
-  actionSmoothnessCoeff: 0.002
-  stage1OptimalDistance: 25
-  stage1SpeedThreshold: 2
-  stage1FormationDistancePenalty: -0.01
-  stage1MaxDistance: 100
-  stage1FormationAnglePenalty: -0.01
-  stage1MaxAngleDiff: 90
-  stationaryPenalty: -0.005
-  minSpeed: 0
-  netTensionReward: 0.0005
-  netMaxLength: 50
-  netOptimalMinRatio: 0.9
-  netOptimalMaxRatio: 0.95
-  perpendicularInterceptReward: 0.0005
-  perpendicularAngleTolerance: 15
-  trackingGainReward: 0.0002
-  enemyApproachReward: 0.003
-  enemyApproachMaxDistance: 200
-  enemyApproachMinDistance: 20
-  speedReward: 0.0003
-  speedRewardThreshold: 10
-  collisionPenalty: -1
-  formationBreakPenalty: -0.05
-  maxFormationDistance: 150
-  maxFormationAngleDiff: 90
+  formationReward: 0.001
+  optimalDistance: 50
+  distanceTolerance: 25
+  approachRewardPerMeter: 0.001
   timePenalty: -0.001
+  captureReward: 1
+  motherShipHitPenalty: -1
+  collisionPenalty: -1
 --- !u!1 &2065178981
 GameObject:
   m_ObjectHideFlags: 0
