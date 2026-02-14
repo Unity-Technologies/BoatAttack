@@ -82,22 +82,25 @@ namespace BoatAttack
                 _prevWebToEnemyDist = closestDist;
             }
 
-            // 3. 헤딩 정렬: 에이전트가 적을 향하고 있으면 보상 (직선 경로 유도)
-            if (enemyShips != null)
-            {
-                float align1 = GetHeadingAlignment(agent1, enemyShips);
-                float align2 = GetHeadingAlignment(agent2, enemyShips);
-                float avgAlignment = (align1 + align2) * 0.5f;
-                if (avgAlignment > 0f)
-                {
-                    reward += headingAlignmentReward * avgAlignment;
-                }
-            }
-
-            // 4. 시간 페널티
+            // 3. 시간 페널티
             reward += timePenalty;
 
             return reward;
+        }
+
+        /// <summary>
+        /// 개별 에이전트 헤딩 정렬 보상 계산 (그룹이 아닌 개별 보상으로 부여)
+        /// </summary>
+        public float CalculateIndividualHeadingReward(AgentState agent, GameObject[] enemyShips)
+        {
+            if (enemyShips == null) return 0f;
+
+            float alignment = GetHeadingAlignment(agent, enemyShips);
+            if (alignment > 0f)
+            {
+                return headingAlignmentReward * alignment;
+            }
+            return 0f;
         }
 
         /// <summary>

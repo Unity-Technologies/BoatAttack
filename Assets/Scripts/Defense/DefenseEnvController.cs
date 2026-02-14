@@ -132,6 +132,13 @@ namespace BoatAttack
         [Tooltip("아군 간 최소 허용 거리 (이 거리 미만 시 에피소드 종료)")]
         public float minAllyDistance = 4f;
 
+        [Header("Weather Randomization")]
+        [Tooltip("에피소드 시작 시 날씨(파도/바람) 랜덤화 활성화")]
+        public bool randomizeWeatherOnEpisode = false;
+
+        [Tooltip("환경 컨트롤러 (날씨 랜덤화용)")]
+        public EnvironmentController environmentController;
+
         [Header("Multi-Environment")]
         [Tooltip("환경 루트 Transform (Island Level 등). 비어있으면 부모 또는 자기 자신 사용")]
         public Transform environmentRoot;
@@ -471,7 +478,7 @@ namespace BoatAttack
             _currentStep = _resetTimer;
             _totalCollisions = _totalCollisionCount;
 
-            // 보상 부여
+            // 그룹 보상 부여 (대형 유지 + 적 접근 + 시간 페널티)
             if (Mathf.Abs(stepReward) > 0.0001f)
             {
                 if (m_AgentGroup != null)
@@ -486,6 +493,14 @@ namespace BoatAttack
                         defenseAgent2.AddReward(stepReward);
                 }
             }
+
+            // 개별 보상: 헤딩 정렬 (에이전트가 적을 향하면 보상)
+            float heading1 = rewardCalculator.CalculateIndividualHeadingReward(agent1State, enemyShips);
+            float heading2 = rewardCalculator.CalculateIndividualHeadingReward(agent2State, enemyShips);
+            if (heading1 > 0f && defenseAgent1 != null)
+                defenseAgent1.AddReward(heading1);
+            if (heading2 > 0f && defenseAgent2 != null)
+                defenseAgent2.AddReward(heading2);
         }
 
         #region 중앙 허브: 통합 에피소드 재시작 로직
@@ -595,8 +610,17 @@ namespace BoatAttack
             // Stage 설정 적용 (에피소드 시작 시마다)
             ApplyStageSettings();
 
+            // 날씨 랜덤화 (에피소드 시작 시)
+            if (randomizeWeatherOnEpisode && environmentController != null)
+            {
+                environmentController.RandomizeWeather();
+            }
+
             // 적군 경로 웨이포인트 랜덤화 (선박 리셋 전에 호출)
             RandomizeEnemyWaypoints();
+
+            // attack_boat의 대기 중인 Invoke 취소 (폭발 등)
+            CancelAttackBoatPendingActions();
 
             // 모든 선박 리셋
             ResetPositionsOnly();
@@ -1651,6 +1675,35 @@ namespace BoatAttack
             float randomX = originalPos.x + randomRadius * Mathf.Cos(randomAngle);
             float randomZ = originalPos.z + randomRadius * Mathf.Sin(randomAngle);
             return new Vector3(randomX, originalPos.y, randomZ);
+        }
+
+        /// <summary>
+        /// 모든 attack_boat의 대기 중인 Invoke/코루틴 취소 (에피소드 리셋 시)
+        /// AttackBoatDisabler 등의 지연된 동작이 리셋 후에도 실행되는 것을 방지
+        /// </summary>
+        private void CancelAttackBoatPendingActions()
+        {
+            foreach (var boat in _attackBoats)
+            {
+                if (boat == null || !boat.activeSelf) continue;
+
+                // AttackBoatDisabler의 Invoke 취소
+                var disabler = boat.GetComponent<AttackBoatDisabler>();
+                if (disabler != null)
+                {
+                    disabler.CancelInvoke();
+                }
+
+                // 모든 MonoBehaviour의 Invoke 취소
+                var behaviours = boat.GetComponents<MonoBehaviour>();
+                foreach (var mb in behaviours)
+                {
+                    if (mb != null && mb.enabled)
+                    {
+                        mb.CancelInvoke();
+                    }
+                }
+            }
         }
 
         /// <summary>
