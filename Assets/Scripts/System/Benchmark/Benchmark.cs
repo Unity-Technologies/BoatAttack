@@ -34,7 +34,9 @@ namespace BoatAttack.Benchmark
         public static int CurrentRunIndex;
         public static int CurrentRunFrame;
         private int _totalRunFrames;
+        #pragma warning disable CS0414
         private bool _running = false;
+        #pragma warning restore CS0414
 
         // Bench results
         private readonly List<PerfBasic> _perfData = new List<PerfBasic>();
