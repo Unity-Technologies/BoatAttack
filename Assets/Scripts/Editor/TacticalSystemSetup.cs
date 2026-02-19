@@ -5,10 +5,11 @@ using UnityEngine.UI;
 namespace BoatAttack
 {
     /// <summary>
-    /// 전술 시스템 자동 세팅 에디터 스크립트 (v4)
-    /// - 레이더: MaskableGraphic 기반, 삼각형 마커, 섬 지형
-    /// - 환경: SeaStateBar + WindCompass
-    /// - 선박 스펙: 3D 프리뷰 (RenderTexture)
+    /// 전술 시스템 자동 세팅 에디터 스크립트 (v5)
+    /// - Page 0: 레이더 전용 (풀스크린 레이더 + 컨트롤)
+    /// - Page 1: 환경 정보 (SeaState 바 + Wind 나침반)
+    /// - Page 2: 아군 선박 스펙 (3D 프리뷰)
+    /// - Page 3: 적군 선박 스펙 (3D 프리뷰)
     /// </summary>
     public static class TacticalSystemSetup
     {
@@ -40,13 +41,43 @@ namespace BoatAttack
             SetupFullUI(env, envCtrl);
 
             EditorUtility.DisplayDialog("Setup Complete",
-                "전술 시스템 v4 세팅 완료!\n\n" +
-                "- 레이더: 삼각형 마커 + 섬 지형 + 범위 숨김\n" +
-                "- 환경: SeaState 바 + Wind 나침반\n" +
-                "- 선박 스펙: 3D 프리뷰\n\n" +
-                "Tab/Enter로 페이지 전환\n" +
+                "전술 시스템 v5 세팅 완료!\n\n" +
+                "- Page 0: 레이더 (풀스크린)\n" +
+                "- Page 1: 환경 (SeaState + Wind)\n" +
+                "- Page 2: 아군 선박 스펙 (3D)\n" +
+                "- Page 3: 적군 선박 스펙 (3D)\n\n" +
+                "[Tab] 페이지 전환\n" +
+                "[Enter] 게임 모드 (UI 숨김 + 미니 레이더)\n" +
+                "[Esc] 이전 페이지 / UI 복귀\n\n" +
                 "Island 태그 추가 필요!\n" +
                 "Ctrl+S로 씬 저장하세요.", "OK");
+        }
+
+        [MenuItem("BoatAttack/Tag Islands", false, 105)]
+        public static void TagIslands()
+        {
+            int count = 0;
+            // "Island Level" 이름으로 시작하는 오브젝트 검색
+            foreach (var go in Object.FindObjectsOfType<GameObject>())
+            {
+                if (go.name.StartsWith("Island Level") || go.name.Contains("Island"))
+                {
+                    // Terrain 또는 MeshFilter가 있는 경우만
+                    if (go.GetComponent<Terrain>() != null ||
+                        go.GetComponentInChildren<MeshFilter>() != null)
+                    {
+                        if (go.tag != "Island")
+                        {
+                            Undo.RecordObject(go, "Tag Island");
+                            go.tag = "Island";
+                            EditorUtility.SetDirty(go);
+                            count++;
+                        }
+                    }
+                }
+            }
+            EditorUtility.DisplayDialog("Tag Islands",
+                $"{count}개 오브젝트에 Island 태그 적용 완료.\nCtrl+S로 씬 저장하세요.", "OK");
         }
 
         [MenuItem("BoatAttack/Remove Tactical UI", false, 110)]
@@ -102,41 +133,59 @@ namespace BoatAttack
 
             canvasObj.AddComponent<GraphicRaycaster>();
 
-            if (Object.FindObjectOfType<UnityEngine.EventSystems.EventSystem>() == null)
+            // EventSystem 중복 방지 (비활성 포함 검색)
+            var existingES = Object.FindObjectsOfType<UnityEngine.EventSystems.EventSystem>(true);
+            if (existingES == null || existingES.Length == 0)
             {
                 var esObj = new GameObject("EventSystem");
                 esObj.AddComponent<UnityEngine.EventSystems.EventSystem>();
+#if ENABLE_INPUT_SYSTEM
+                esObj.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
+#else
                 esObj.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+#endif
                 Undo.RegisterCreatedObjectUndo(esObj, "Create EventSystem");
             }
 
             var pm = canvasObj.AddComponent<TacticalPageManager>();
 
-            // Page 0: Tactical Command
-            var page0 = CreateFullscreenPage(canvasObj.transform, "Page_TacticalCommand");
-            var uiCtrl = page0.AddComponent<TacticalUIController>();
+            // TacticalUIController는 Canvas에 (항상 활성)
+            var uiCtrl = canvasObj.AddComponent<TacticalUIController>();
             uiCtrl.envController = env;
             uiCtrl.environmentController = envCtrl;
-            BuildTacticalCommandPage(page0, uiCtrl, env);
 
-            // Page 1: Friendly Ship Spec
-            var page1 = CreateFullscreenPage(canvasObj.transform, "Page_FriendlySpec");
-            var fSpec = page1.AddComponent<ShipSpecPanel>();
+            // Page 0: Radar (풀스크린 레이더)
+            var page0 = CreateFullscreenPage(canvasObj.transform, "Page_Radar");
+            BuildRadarPage(page0, uiCtrl, env);
+
+            // Page 1: Environment
+            var page1 = CreateFullscreenPage(canvasObj.transform, "Page_Environment");
+            BuildEnvironmentPage(page1, uiCtrl, envCtrl);
+
+            // Page 2: Friendly Ship Spec
+            var page2 = CreateFullscreenPage(canvasObj.transform, "Page_FriendlySpec");
+            var fSpec = page2.AddComponent<ShipSpecPanel>();
             fSpec.envController = env;
             fSpec.isEnemy = false;
-            BuildShipSpecPage(page1, fSpec, env, "FRIENDLY SHIP PARAMETER", ACCENT_CYAN, false);
+            BuildShipSpecPage(page2, fSpec, env, "FRIENDLY SHIP PARAMETER", ACCENT_CYAN, false);
 
-            // Page 2: Enemy Ship Spec
-            var page2 = CreateFullscreenPage(canvasObj.transform, "Page_EnemySpec");
-            var eSpec = page2.AddComponent<ShipSpecPanel>();
+            // Page 3: Enemy Ship Spec
+            var page3 = CreateFullscreenPage(canvasObj.transform, "Page_EnemySpec");
+            var eSpec = page3.AddComponent<ShipSpecPanel>();
             eSpec.envController = env;
             eSpec.isEnemy = true;
-            BuildShipSpecPage(page2, eSpec, env, "ENEMY SHIP PARAMETER", ACCENT_RED, true);
+            BuildShipSpecPage(page3, eSpec, env, "ENEMY SHIP PARAMETER", ACCENT_RED, true);
 
             // PageManager
-            pm.pages = new[] { page0, page1, page2 };
-            pm.pageNames = new[] { "TACTICAL COMMAND", "FRIENDLY SHIP SPEC", "ENEMY SHIP SPEC" };
-            CreateIndicatorBar(canvasObj.transform, pm);
+            pm.pages = new[] { page0, page1, page2, page3 };
+            pm.pageNames = new[] { "RADAR", "ENVIRONMENT", "FRIENDLY SHIP", "ENEMY SHIP" };
+            var indicatorObj = CreateIndicatorBar(canvasObj.transform, pm);
+            pm.indicatorBar = indicatorObj;
+
+            // 게임 모드용 미니 레이더 오버레이 (Canvas 직속, 시작 시 숨김)
+            var radarOverlay = BuildMiniRadarOverlay(canvasObj.transform, env);
+            pm.radarOverlay = radarOverlay;
+            radarOverlay.SetActive(false);
 
             // SetDirty
             EditorUtility.SetDirty(pm);
@@ -147,31 +196,27 @@ namespace BoatAttack
         }
 
         // ================================================================
-        // Page 0: Tactical Command
+        // Page 0: Tactical Command (레이더 좌상단 소형)
         // ================================================================
 
-        static void BuildTacticalCommandPage(GameObject page, TacticalUIController uiCtrl, DefenseEnvController env)
+        static void BuildRadarPage(GameObject page, TacticalUIController uiCtrl, DefenseEnvController env)
         {
-            // 왼쪽 패널 (0~0.42)
-            var leftPanel = CreatePanel(page.transform, "LeftPanel",
-                new Vector2(0, 0), new Vector2(0.42f, 1),
-                new Vector2(15, 15), new Vector2(-15, -50), BG_PANEL);
+            page.AddComponent<Image>().color = BG_DARK;
 
-            CreateLabel(leftPanel.transform, "Title", "TACTICAL COMMAND",
-                new Vector2(0, 1), new Vector2(1, 1), new Vector2(15, -15), new Vector2(-15, 20),
-                20, FontStyle.Bold, ACCENT_GREEN);
+            CreateLabel(page.transform, "Title", "TACTICAL COMMAND",
+                new Vector2(0, 1), new Vector2(1, 1), new Vector2(20, -10), new Vector2(-20, 25),
+                22, FontStyle.Bold, ACCENT_GREEN);
 
-            // 레이더 배경
-            var radarBg = CreatePanel(leftPanel.transform, "RadarBg",
-                new Vector2(0.03f, 0.32f), new Vector2(0.97f, 0.92f),
+            // === 좌상단: 소형 레이더 (화면의 약 1/5) ===
+            var radarBg = CreatePanel(page.transform, "RadarBg",
+                new Vector2(0.02f, 0.52f), new Vector2(0.38f, 0.95f),
                 Vector2.zero, Vector2.zero, new Color(0.03f, 0.06f, 0.03f, 0.95f));
 
-            // RadarDisplay (MaskableGraphic - 자체가 레이더 그래픽)
             var radarObj = new GameObject("RadarDisplay");
             radarObj.transform.SetParent(radarBg.transform, false);
             var radarRt = radarObj.AddComponent<RectTransform>();
-            radarRt.anchorMin = new Vector2(0.05f, 0.03f);
-            radarRt.anchorMax = new Vector2(0.95f, 0.97f);
+            radarRt.anchorMin = new Vector2(0.03f, 0.03f);
+            radarRt.anchorMax = new Vector2(0.97f, 0.97f);
             radarRt.offsetMin = Vector2.zero;
             radarRt.offsetMax = Vector2.zero;
 
@@ -180,102 +225,209 @@ namespace BoatAttack
             radar.radarRange = 1000f;
             uiCtrl.radarDisplay = radar;
 
-            // 하단 컨트롤
-            var ctrlArea = CreatePanel(leftPanel.transform, "Controls",
-                new Vector2(0, 0), new Vector2(1, 0.30f),
-                new Vector2(10, 10), new Vector2(-10, -5), new Color(0, 0, 0, 0));
+            // 레이더 하단 정보
+            var radarInfo = CreatePanel(page.transform, "RadarInfo",
+                new Vector2(0.02f, 0.44f), new Vector2(0.38f, 0.52f),
+                Vector2.zero, Vector2.zero, new Color(0.05f, 0.08f, 0.05f, 0.8f));
 
-            // 공격 모드 버튼
-            var btnRow = CreatePanel(ctrlArea.transform, "BtnRow",
-                new Vector2(0, 0.7f), new Vector2(1, 1),
-                new Vector2(5, 0), new Vector2(-5, 0), new Color(0, 0, 0, 0));
+            CreateLabel(radarInfo.transform, "RangeLabel", "RANGE",
+                new Vector2(0, 0), new Vector2(0.25f, 1),
+                new Vector2(8, 0), Vector2.zero, 10, FontStyle.Normal, TEXT_DIM);
 
-            uiCtrl.btnWaveAttack = CreateBtn(btnRow.transform, "BtnWave", "파상공격",
-                new Vector2(0, 0), new Vector2(0.32f, 1), new Color(0.15f, 0.45f, 0.15f, 1f));
-            uiCtrl.btnDiversionary = CreateBtn(btnRow.transform, "BtnDiv", "양동작전",
-                new Vector2(0.34f, 0), new Vector2(0.66f, 1), new Color(0.25f, 0.25f, 0.3f, 1f));
-            uiCtrl.btnConcentrated = CreateBtn(btnRow.transform, "BtnConc", "집중공격",
-                new Vector2(0.68f, 0), new Vector2(1, 1), new Color(0.25f, 0.25f, 0.3f, 1f));
+            uiCtrl.textRadarRange = CreateLabel(radarInfo.transform, "RangeVal", "1000m",
+                new Vector2(0.25f, 0), new Vector2(0.55f, 1),
+                Vector2.zero, Vector2.zero, 12, FontStyle.Bold, ACCENT_GREEN).GetComponent<Text>();
 
-            // 슬라이더
-            var slArea = CreatePanel(ctrlArea.transform, "Sliders",
-                new Vector2(0, 0), new Vector2(1, 0.68f),
-                new Vector2(5, 5), new Vector2(-5, -5), new Color(0, 0, 0, 0));
+            // 범례
+            CreateLabel(radarInfo.transform, "Legend",
+                "\u25B2 Friend  \u25B2 Enemy  \u25C6 MS",
+                new Vector2(0.55f, 0), new Vector2(1, 1),
+                Vector2.zero, Vector2.zero, 9, FontStyle.Normal, TEXT_DIM);
+
+            // === 우측: 공격 모드 + 슬라이더 ===
+            var ctrlPanel = CreatePanel(page.transform, "ControlPanel",
+                new Vector2(0.40f, 0.44f), new Vector2(0.98f, 0.95f),
+                Vector2.zero, Vector2.zero, BG_PANEL);
+
+            // 공격 모드
+            CreateLabel(ctrlPanel.transform, "ModeTitle", "ATTACK MODE",
+                new Vector2(0, 0.85f), new Vector2(0.4f, 0.98f),
+                new Vector2(12, 0), Vector2.zero, 14, FontStyle.Bold, TEXT_DIM);
+
+            uiCtrl.textAttackMode = CreateLabel(ctrlPanel.transform, "ModeVal", "파상공격",
+                new Vector2(0.4f, 0.85f), new Vector2(0.75f, 0.98f),
+                Vector2.zero, Vector2.zero, 14, FontStyle.Bold, ACCENT_YELLOW).GetComponent<Text>();
+
+            // 공격 모드 버튼 (가로 배치)
+            uiCtrl.btnWaveAttack = CreateBtn(ctrlPanel.transform, "BtnWave", "파상공격",
+                new Vector2(0.02f, 0.7f), new Vector2(0.33f, 0.84f), new Color(0.15f, 0.45f, 0.15f, 1f));
+            uiCtrl.btnDiversionary = CreateBtn(ctrlPanel.transform, "BtnDiv", "양동작전",
+                new Vector2(0.35f, 0.7f), new Vector2(0.66f, 0.84f), new Color(0.25f, 0.25f, 0.3f, 1f));
+            uiCtrl.btnConcentrated = CreateBtn(ctrlPanel.transform, "BtnConc", "집중공격",
+                new Vector2(0.68f, 0.7f), new Vector2(0.98f, 0.84f), new Color(0.25f, 0.25f, 0.3f, 1f));
+
+            // 구분선
+            CreatePanel(ctrlPanel.transform, "Divider1",
+                new Vector2(0.05f, 0.67f), new Vector2(0.95f, 0.675f),
+                Vector2.zero, Vector2.zero, new Color(0.3f, 0.3f, 0.4f, 0.5f));
+
+            // 파라미터 슬라이더
+            CreateLabel(ctrlPanel.transform, "ParamTitle", "PARAMETERS",
+                new Vector2(0, 0.56f), new Vector2(0.4f, 0.66f),
+                new Vector2(12, 0), Vector2.zero, 14, FontStyle.Bold, TEXT_DIM);
+
+            var slArea = CreatePanel(ctrlPanel.transform, "Sliders",
+                new Vector2(0.02f, 0.03f), new Vector2(0.98f, 0.55f),
+                Vector2.zero, Vector2.zero, new Color(0, 0, 0, 0));
 
             var (sl1, tx1) = MakeSlider(slArea.transform, "EnemyCount", "적군 수",
-                new Vector2(0, 0.66f), new Vector2(1, 1));
+                new Vector2(0, 0.68f), new Vector2(0.48f, 1));
             uiCtrl.sliderEnemyCount = sl1; uiCtrl.textEnemyCount = tx1;
 
             var (sl2, tx2) = MakeSlider(slArea.transform, "MSHits", "모선 피격",
-                new Vector2(0, 0.33f), new Vector2(1, 0.64f));
+                new Vector2(0.52f, 0.68f), new Vector2(1, 1));
             uiCtrl.sliderMothershipHits = sl2; uiCtrl.textMothershipHits = tx2;
 
             var (sl3, tx3) = MakeSlider(slArea.transform, "SimSpeed", "시뮬레이션",
-                new Vector2(0, 0), new Vector2(1, 0.31f));
+                new Vector2(0, 0.34f), new Vector2(0.48f, 0.66f));
             uiCtrl.sliderSimSpeed = sl3; uiCtrl.textSimSpeed = tx3;
 
-            // 오른쪽 패널 (0.44~1)
-            var rightPanel = CreatePanel(page.transform, "RightPanel",
-                new Vector2(0.44f, 0), new Vector2(1, 1),
-                new Vector2(15, 15), new Vector2(-15, -50), BG_PANEL);
+            // === 하단: 상태 요약 ===
+            var statusBar = CreatePanel(page.transform, "StatusBar",
+                new Vector2(0.02f, 0.02f), new Vector2(0.98f, 0.42f),
+                Vector2.zero, Vector2.zero, BG_PANEL);
 
-            CreateLabel(rightPanel.transform, "RTitle", "ENVIRONMENT",
-                new Vector2(0, 1), new Vector2(1, 1), new Vector2(15, -15), new Vector2(-15, 20),
-                18, FontStyle.Bold, ACCENT_GREEN);
+            CreateLabel(statusBar.transform, "StatusTitle", "STATUS",
+                new Vector2(0, 0.85f), new Vector2(0.3f, 1),
+                new Vector2(12, 0), Vector2.zero, 16, FontStyle.Bold, TEXT_DIM);
 
-            // --- 환경 정보 영역 (SeaStateBar + WindCompass) - 전체 패널 사용 ---
-            var envArea = CreatePanel(rightPanel.transform, "EnvArea",
-                new Vector2(0, 0), new Vector2(1, 0.92f),
-                new Vector2(10, 10), new Vector2(-10, -5), new Color(0.05f, 0.06f, 0.1f, 0.5f));
+            // 상태 정보 그리드
+            uiCtrl.textStatusFriendly = CreateLabel(statusBar.transform, "StatFriendly",
+                "FRIENDLY: 2 vessels",
+                new Vector2(0.02f, 0.6f), new Vector2(0.48f, 0.82f),
+                new Vector2(10, 0), Vector2.zero, 14, FontStyle.Normal, ACCENT_CYAN).GetComponent<Text>();
 
-            // Sea State 영역 (상단)
-            CreateLabel(envArea.transform, "SeaLabel", "SEA STATE",
-                new Vector2(0, 0.82f), new Vector2(0.5f, 0.95f),
-                new Vector2(10, 0), Vector2.zero, 14, FontStyle.Bold, TEXT_DIM);
+            uiCtrl.textStatusEnemy = CreateLabel(statusBar.transform, "StatEnemy",
+                "ENEMY: 0 vessels",
+                new Vector2(0.52f, 0.6f), new Vector2(0.98f, 0.82f),
+                new Vector2(10, 0), Vector2.zero, 14, FontStyle.Normal, ACCENT_RED).GetComponent<Text>();
 
+            uiCtrl.textStatusMothership = CreateLabel(statusBar.transform, "StatMS",
+                "MOTHERSHIP: Active",
+                new Vector2(0.02f, 0.35f), new Vector2(0.48f, 0.58f),
+                new Vector2(10, 0), Vector2.zero, 14, FontStyle.Normal, mothershipColor()).GetComponent<Text>();
+
+            uiCtrl.textStatusWeb = CreateLabel(statusBar.transform, "StatWeb",
+                "WEB: Deployed",
+                new Vector2(0.52f, 0.35f), new Vector2(0.98f, 0.58f),
+                new Vector2(10, 0), Vector2.zero, 14, FontStyle.Normal, ACCENT_GREEN).GetComponent<Text>();
+
+            uiCtrl.textStatusTime = CreateLabel(statusBar.transform, "StatTime",
+                "TIME: 0.0s",
+                new Vector2(0.02f, 0.1f), new Vector2(0.48f, 0.33f),
+                new Vector2(10, 0), Vector2.zero, 14, FontStyle.Normal, TEXT_BRIGHT).GetComponent<Text>();
+
+            uiCtrl.textStatusEpisode = CreateLabel(statusBar.transform, "StatEpisode",
+                "EPISODE: 0",
+                new Vector2(0.52f, 0.1f), new Vector2(0.98f, 0.33f),
+                new Vector2(10, 0), Vector2.zero, 14, FontStyle.Normal, TEXT_BRIGHT).GetComponent<Text>();
+        }
+
+        static Color mothershipColor() => new Color(0.85f, 0.85f, 1f, 1f);
+
+        // ================================================================
+        // Page 1: Environment
+        // ================================================================
+
+        static void BuildEnvironmentPage(GameObject page, TacticalUIController uiCtrl, EnvironmentController envCtrl)
+        {
+            page.AddComponent<Image>().color = BG_DARK;
+
+            CreateLabel(page.transform, "Title", "ENVIRONMENT",
+                new Vector2(0, 1), new Vector2(1, 1), new Vector2(20, -10), new Vector2(-20, 25),
+                22, FontStyle.Bold, ACCENT_GREEN);
+
+            // 좌측: Sea State
+            var seaPanel = CreatePanel(page.transform, "SeaPanel",
+                new Vector2(0.03f, 0.08f), new Vector2(0.48f, 0.92f),
+                Vector2.zero, Vector2.zero, BG_PANEL);
+
+            CreateLabel(seaPanel.transform, "SeaTitle", "SEA STATE",
+                new Vector2(0, 0.88f), new Vector2(1, 0.98f),
+                new Vector2(15, 0), Vector2.zero, 18, FontStyle.Bold, ACCENT_CYAN);
+
+            // Sea State 바 (큰 버전)
             var seaBarObj = new GameObject("SeaStateBar");
-            seaBarObj.transform.SetParent(envArea.transform, false);
+            seaBarObj.transform.SetParent(seaPanel.transform, false);
             var seaBarRt = seaBarObj.AddComponent<RectTransform>();
-            seaBarRt.anchorMin = new Vector2(0.03f, 0.7f);
-            seaBarRt.anchorMax = new Vector2(0.7f, 0.82f);
+            seaBarRt.anchorMin = new Vector2(0.05f, 0.7f);
+            seaBarRt.anchorMax = new Vector2(0.95f, 0.82f);
             seaBarRt.offsetMin = Vector2.zero;
             seaBarRt.offsetMax = Vector2.zero;
             var seaBar = seaBarObj.AddComponent<SeaStateBarUI>();
             uiCtrl.seaStateBar = seaBar;
 
-            var seaLabel = CreateLabel(envArea.transform, "SeaValue", "Calm",
-                new Vector2(0.72f, 0.7f), new Vector2(1, 0.82f),
-                new Vector2(5, 0), Vector2.zero, 15, FontStyle.Bold, ACCENT_GREEN);
-            uiCtrl.textSeaStateLabel = seaLabel.GetComponent<Text>();
+            uiCtrl.textSeaStateLabel = CreateLabel(seaPanel.transform, "SeaValue", "Calm",
+                new Vector2(0.05f, 0.58f), new Vector2(0.95f, 0.7f),
+                Vector2.zero, Vector2.zero, 28, FontStyle.Bold, ACCENT_GREEN).GetComponent<Text>();
 
-            // Wind 영역 (중앙 - 나침반, 확대)
-            CreateLabel(envArea.transform, "WindLabel", "WIND",
-                new Vector2(0, 0.55f), new Vector2(1, 0.68f),
-                new Vector2(10, 0), Vector2.zero, 14, FontStyle.Bold, TEXT_DIM);
+            // Sea State 세부 정보
+            CreateLabel(seaPanel.transform, "WaveHdr", "Wave Parameters",
+                new Vector2(0.05f, 0.45f), new Vector2(0.95f, 0.55f),
+                Vector2.zero, Vector2.zero, 14, FontStyle.Bold, TEXT_DIM);
 
+            uiCtrl.textWaveStrength = CreateLabel(seaPanel.transform, "WaveStr", "Strength: 0.0",
+                new Vector2(0.08f, 0.35f), new Vector2(0.95f, 0.44f),
+                Vector2.zero, Vector2.zero, 15, FontStyle.Normal, TEXT_BRIGHT).GetComponent<Text>();
+
+            uiCtrl.textWaveSpeed = CreateLabel(seaPanel.transform, "WaveSpd", "Speed: 0.0",
+                new Vector2(0.08f, 0.25f), new Vector2(0.95f, 0.34f),
+                Vector2.zero, Vector2.zero, 15, FontStyle.Normal, TEXT_BRIGHT).GetComponent<Text>();
+
+            uiCtrl.textWaveDirection = CreateLabel(seaPanel.transform, "WaveDir", "Direction: 0\u00b0",
+                new Vector2(0.08f, 0.15f), new Vector2(0.95f, 0.24f),
+                Vector2.zero, Vector2.zero, 15, FontStyle.Normal, TEXT_BRIGHT).GetComponent<Text>();
+
+            // 우측: Wind
+            var windPanel = CreatePanel(page.transform, "WindPanel",
+                new Vector2(0.52f, 0.08f), new Vector2(0.97f, 0.92f),
+                Vector2.zero, Vector2.zero, BG_PANEL);
+
+            CreateLabel(windPanel.transform, "WindTitle", "WIND",
+                new Vector2(0, 0.88f), new Vector2(1, 0.98f),
+                new Vector2(15, 0), Vector2.zero, 18, FontStyle.Bold, ACCENT_CYAN);
+
+            // Wind 나침반 (큰 버전)
             var compassObj = new GameObject("WindCompass");
-            compassObj.transform.SetParent(envArea.transform, false);
+            compassObj.transform.SetParent(windPanel.transform, false);
             var compassRt = compassObj.AddComponent<RectTransform>();
-            compassRt.anchorMin = new Vector2(0.15f, 0.08f);
-            compassRt.anchorMax = new Vector2(0.65f, 0.55f);
+            compassRt.anchorMin = new Vector2(0.1f, 0.3f);
+            compassRt.anchorMax = new Vector2(0.9f, 0.85f);
             compassRt.offsetMin = Vector2.zero;
             compassRt.offsetMax = Vector2.zero;
             var compass = compassObj.AddComponent<WindCompassUI>();
             uiCtrl.windCompass = compass;
 
-            var windText = CreateLabel(envArea.transform, "WindSpeed", "0 m/s",
-                new Vector2(0.68f, 0.25f), new Vector2(0.98f, 0.45f),
-                new Vector2(5, 0), Vector2.zero, 16, FontStyle.Bold, ACCENT_CYAN);
-            uiCtrl.textWindStrength = windText.GetComponent<Text>();
+            // 풍속/풍향 텍스트
+            uiCtrl.textWindStrength = CreateLabel(windPanel.transform, "WindSpeed", "0 m/s",
+                new Vector2(0.05f, 0.15f), new Vector2(0.5f, 0.28f),
+                Vector2.zero, Vector2.zero, 22, FontStyle.Bold, ACCENT_CYAN).GetComponent<Text>();
 
-            var windDir = CreateLabel(envArea.transform, "WindDir", "0\u00b0",
-                new Vector2(0.68f, 0.08f), new Vector2(0.98f, 0.25f),
-                new Vector2(5, 0), Vector2.zero, 14, FontStyle.Normal, TEXT_DIM);
-            uiCtrl.textWindDirection = windDir.GetComponent<Text>();
+            uiCtrl.textWindDirection = CreateLabel(windPanel.transform, "WindDir", "0\u00b0",
+                new Vector2(0.5f, 0.15f), new Vector2(0.95f, 0.28f),
+                Vector2.zero, Vector2.zero, 22, FontStyle.Bold, TEXT_BRIGHT).GetComponent<Text>();
+
+            CreateLabel(windPanel.transform, "WindSpeedLbl", "Wind Speed",
+                new Vector2(0.05f, 0.08f), new Vector2(0.5f, 0.15f),
+                Vector2.zero, Vector2.zero, 12, FontStyle.Normal, TEXT_DIM);
+
+            CreateLabel(windPanel.transform, "WindDirLbl", "Direction",
+                new Vector2(0.5f, 0.08f), new Vector2(0.95f, 0.15f),
+                Vector2.zero, Vector2.zero, 12, FontStyle.Normal, TEXT_DIM);
         }
 
         // ================================================================
-        // Page 1/2: Ship Spec (3D Preview)
+        // Page 2/3: Ship Spec (3D Preview)
         // ================================================================
 
         static void BuildShipSpecPage(GameObject page, ShipSpecPanel spec,
@@ -401,7 +553,7 @@ namespace BoatAttack
         // Indicator Bar + Nav Buttons
         // ================================================================
 
-        static void CreateIndicatorBar(Transform root, TacticalPageManager pm)
+        static GameObject CreateIndicatorBar(Transform root, TacticalPageManager pm)
         {
             var bar = CreatePanel(root, "PageIndicator",
                 new Vector2(0, 0), new Vector2(1, 0),
@@ -410,20 +562,22 @@ namespace BoatAttack
             pm.btnPrev = MakeNavBtn(bar.transform, "BtnPrev", "<",
                 new Vector2(0, 0), new Vector2(0.06f, 1));
 
-            pm.textPageIndicator = CreateLabel(bar.transform, "PageNum", "1/3",
+            pm.textPageIndicator = CreateLabel(bar.transform, "PageNum", "1/4",
                 new Vector2(0.07f, 0), new Vector2(0.18f, 1), new Vector2(10, 0), Vector2.zero,
                 16, FontStyle.Bold, ACCENT_GREEN).GetComponent<Text>();
 
-            pm.textPageName = CreateLabel(bar.transform, "PageName", "TACTICAL COMMAND",
+            pm.textPageName = CreateLabel(bar.transform, "PageName", "RADAR",
                 new Vector2(0.18f, 0), new Vector2(0.7f, 1), new Vector2(10, 0), Vector2.zero,
                 14, FontStyle.Normal, TEXT_BRIGHT).GetComponent<Text>();
 
-            CreateLabel(bar.transform, "Hint", "[Tab]/[Enter] Switch",
+            CreateLabel(bar.transform, "Hint", "[Tab] Page  [Enter] Game Mode",
                 new Vector2(0.7f, 0), new Vector2(0.93f, 1), Vector2.zero, Vector2.zero,
-                11, FontStyle.Normal, TEXT_DIM);
+                10, FontStyle.Normal, TEXT_DIM);
 
             pm.btnNext = MakeNavBtn(bar.transform, "BtnNext", ">",
                 new Vector2(0.94f, 0), new Vector2(1, 1));
+
+            return bar;
         }
 
         static Button MakeNavBtn(Transform parent, string name, string label,
@@ -452,6 +606,56 @@ namespace BoatAttack
             txt.GetComponent<Text>().alignment = TextAnchor.MiddleCenter;
 
             return btn;
+        }
+
+        // ================================================================
+        // Game Mode: Mini Radar Overlay
+        // ================================================================
+
+        static GameObject BuildMiniRadarOverlay(Transform canvasRoot, DefenseEnvController env)
+        {
+            // 전체 화면 상단에 고정되는 미니 레이더 패널
+            var overlay = new GameObject("RadarOverlay");
+            overlay.transform.SetParent(canvasRoot, false);
+            var rt = overlay.AddComponent<RectTransform>();
+            // 상단 중앙, 높이 200px 정도
+            rt.anchorMin = new Vector2(0.3f, 1);
+            rt.anchorMax = new Vector2(0.7f, 1);
+            rt.pivot = new Vector2(0.5f, 1f);
+            rt.offsetMin = new Vector2(0, -220);
+            rt.offsetMax = new Vector2(0, 0);
+
+            // 반투명 배경
+            var bgImg = overlay.AddComponent<Image>();
+            bgImg.color = new Color(0.03f, 0.06f, 0.03f, 0.7f);
+            bgImg.raycastTarget = false;
+
+            // 미니 레이더
+            var radarObj = new GameObject("MiniRadar");
+            radarObj.transform.SetParent(overlay.transform, false);
+            var radarRt = radarObj.AddComponent<RectTransform>();
+            radarRt.anchorMin = new Vector2(0.15f, 0.05f);
+            radarRt.anchorMax = new Vector2(0.85f, 0.85f);
+            radarRt.offsetMin = Vector2.zero;
+            radarRt.offsetMax = Vector2.zero;
+
+            var radar = radarObj.AddComponent<RadarDisplay>();
+            radar.envController = env;
+            radar.radarRange = 1000f;
+
+            // 상단 타이틀
+            CreateLabel(overlay.transform, "OverlayTitle", "RADAR",
+                new Vector2(0, 0.88f), new Vector2(1, 1),
+                new Vector2(10, 0), Vector2.zero,
+                12, FontStyle.Bold, ACCENT_GREEN);
+
+            // 하단 힌트
+            CreateLabel(overlay.transform, "OverlayHint", "[Enter] UI 복귀",
+                new Vector2(0, 0), new Vector2(1, 0.12f),
+                Vector2.zero, Vector2.zero,
+                10, FontStyle.Normal, TEXT_DIM).GetComponent<Text>().alignment = TextAnchor.MiddleCenter;
+
+            return overlay;
         }
 
         // ================================================================

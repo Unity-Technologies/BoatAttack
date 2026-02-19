@@ -49,7 +49,7 @@ namespace BoatAttack
         static int _instanceCounter = 0;
         int _instanceId;
 
-        Vector3 PreviewCenter => new Vector3(_instanceId * 60f, 500f, 0f);
+        Vector3 PreviewCenter => new Vector3(_instanceId * 500f, 500f, 0f);
 
         void Awake()
         {
@@ -97,7 +97,7 @@ namespace BoatAttack
             _previewCam.clearFlags = CameraClearFlags.SolidColor;
             _previewCam.backgroundColor = backgroundColor;
             _previewCam.nearClipPlane = 0.5f;
-            _previewCam.farClipPlane = 100f;
+            _previewCam.farClipPlane = 60f;
             _previewCam.fieldOfView = 30f;
             _previewCam.depth = -10;
 

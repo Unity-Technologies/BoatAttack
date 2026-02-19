@@ -4,9 +4,9 @@ using UnityEngine.UI;
 namespace BoatAttack
 {
     /// <summary>
-    /// 전술 UI 컨트롤러 - Figma 디자인 기반
-    /// 왼쪽 패널: 레이더, 공격 모드 버튼, 파라미터 슬라이더, 환경 정보
-    /// 오른쪽 패널: 선박 스펙 슬라이더, 시뮬레이션 속도
+    /// 전술 UI 컨트롤러
+    /// 레이더/환경/선박스펙 페이지의 데이터 바인딩 관리
+    /// Canvas에 상주하며 모든 페이지의 UI 요소 업데이트
     /// </summary>
     public class TacticalUIController : MonoBehaviour
     {
@@ -48,11 +48,30 @@ namespace BoatAttack
         public Slider sliderSimSpeed;
         public Text textSimSpeed;
 
+        [Header("=== Radar Info ===")]
+        [Tooltip("레이더 범위 표시")]
+        public Text textRadarRange;
+        [Tooltip("현재 공격 모드 텍스트")]
+        public Text textAttackMode;
+
+        [Header("=== Status Panel ===")]
+        public Text textStatusFriendly;
+        public Text textStatusEnemy;
+        public Text textStatusMothership;
+        public Text textStatusWeb;
+        public Text textStatusTime;
+        public Text textStatusEpisode;
+
         [Header("=== Environment Visuals ===")]
         [Tooltip("해상 상태 바")]
         public SeaStateBarUI seaStateBar;
         [Tooltip("해상 상태 라벨")]
         public Text textSeaStateLabel;
+
+        [Tooltip("파도 세부 정보")]
+        public Text textWaveStrength;
+        public Text textWaveSpeed;
+        public Text textWaveDirection;
 
         [Tooltip("바람 나침반")]
         public WindCompassUI windCompass;
@@ -60,13 +79,6 @@ namespace BoatAttack
         public Text textWindStrength;
         [Tooltip("풍향 텍스트")]
         public Text textWindDirection;
-
-        [Header("=== Environment Info (Fallback) ===")]
-        public Text textSeaState;
-        public Text textWindState;
-
-        [Tooltip("현재 공격 모드 텍스트")]
-        public Text textAttackMode;
 
         [Header("=== Mode Button Colors ===")]
         public Color activeButtonColor = new Color(0.2f, 0.8f, 0.2f, 1f);
@@ -150,6 +162,7 @@ namespace BoatAttack
         private void Update()
         {
             UpdateEnvironmentInfo();
+            UpdateStatusInfo();
         }
 
         #region Slider Callbacks
@@ -238,36 +251,82 @@ namespace BoatAttack
             {
                 seaStateBar.SetValue(environmentController.waveStrength);
                 if (textSeaStateLabel != null)
-                    textSeaStateLabel.text = $"Sea: {seaStateBar.GetSeaStateLabel()}";
+                    textSeaStateLabel.text = seaStateBar.GetSeaStateLabel();
             }
-            else if (textSeaState != null)
-            {
-                string seaLevel = GetSeaStateLabel(environmentController.waveStrength);
-                textSeaState.text = $"Sea: {seaLevel} (Wave {environmentController.waveStrength:F1})";
-            }
+
+            // 파도 세부 정보
+            if (textWaveStrength != null)
+                textWaveStrength.text = $"Strength: {environmentController.waveStrength:F1}";
+            if (textWaveSpeed != null)
+                textWaveSpeed.text = $"Speed: {environmentController.waveSpeed:F1}";
+            if (textWaveDirection != null)
+                textWaveDirection.text = $"Direction: {environmentController.waveDirection:F0}\u00b0";
 
             // 바람 나침반
             if (windCompass != null)
-            {
                 windCompass.SetWind(environmentController.windDirection, environmentController.windStrength);
-                if (textWindStrength != null)
-                    textWindStrength.text = $"{environmentController.windStrength:F0} m/s";
-                if (textWindDirection != null)
-                    textWindDirection.text = $"{environmentController.windDirection:F0}\u00b0";
-            }
-            else if (textWindState != null)
-            {
-                textWindState.text = $"Wind: {environmentController.windStrength:F0}m/s {environmentController.windDirection:F0}\u00b0";
-            }
+            if (textWindStrength != null)
+                textWindStrength.text = $"{environmentController.windStrength:F0} m/s";
+            if (textWindDirection != null)
+                textWindDirection.text = $"{environmentController.windDirection:F0}\u00b0";
+
+            // 레이더 범위
+            if (textRadarRange != null && radarDisplay != null)
+                textRadarRange.text = $"{radarDisplay.radarRange:F0}m";
         }
 
-        private string GetSeaStateLabel(float waveStrength)
+        #endregion
+
+        #region Status Info
+
+        private void UpdateStatusInfo()
         {
-            if (waveStrength < 0.5f) return "Calm";
-            if (waveStrength < 1.0f) return "Light";
-            if (waveStrength < 2.0f) return "Moderate";
-            if (waveStrength < 3.0f) return "Rough";
-            return "Storm";
+            if (envController == null) return;
+
+            if (textStatusFriendly != null)
+            {
+                int count = 0;
+                if (envController.defenseAgent1 != null) count++;
+                if (envController.defenseAgent2 != null) count++;
+                textStatusFriendly.text = $"FRIENDLY: {count} vessels";
+            }
+
+            if (textStatusEnemy != null)
+            {
+                int active = 0;
+                if (envController.enemyShips != null)
+                    foreach (var e in envController.enemyShips)
+                        if (e != null && e.activeInHierarchy) active++;
+                textStatusEnemy.text = $"ENEMY: {active} vessels";
+            }
+
+            if (textStatusMothership != null)
+            {
+                bool alive = envController.motherShip != null && envController.motherShip.activeInHierarchy;
+                textStatusMothership.text = alive ? "MOTHERSHIP: Active" : "MOTHERSHIP: --";
+            }
+
+            if (textStatusWeb != null)
+            {
+                bool hasWeb = envController.defenseAgent1 != null && envController.defenseAgent2 != null;
+                if (hasWeb)
+                {
+                    float dist = Vector3.Distance(
+                        envController.defenseAgent1.transform.position,
+                        envController.defenseAgent2.transform.position);
+                    textStatusWeb.text = $"WEB: {dist:F0}m";
+                }
+                else
+                {
+                    textStatusWeb.text = "WEB: --";
+                }
+            }
+
+            if (textStatusTime != null)
+                textStatusTime.text = $"TIME: {Time.time:F1}s";
+
+            if (textStatusEpisode != null)
+                textStatusEpisode.text = $"SPEED: {Time.timeScale:F1}x";
         }
 
         #endregion

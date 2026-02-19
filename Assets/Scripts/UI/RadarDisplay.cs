@@ -7,9 +7,10 @@ namespace BoatAttack
     /// <summary>
     /// CIC 스타일 원형 레이더 (MaskableGraphic 기반)
     /// - 삼각형 선박 마커 (방향 표시)
-    /// - 섬 지형 렌더링 (Island 태그)
+    /// - 섬 지형 렌더링 (Island 태그) - 공유 버텍스 그리드
     /// - 범위 밖 선박 자동 숨김
     /// - 원형 좌표계
+    /// - 65000 버텍스 제한 준수
     /// </summary>
     [RequireComponent(typeof(CanvasRenderer))]
     public class RadarDisplay : MaskableGraphic
@@ -50,12 +51,17 @@ namespace BoatAttack
         public int ringCount = 4;
 
         [Header("=== Island ===")]
-        [Tooltip("섬 메시 최대 삼각형 수")]
-        public int maxIslandTriangles = 300;
+        [Tooltip("지형 샘플 해상도 (낮을수록 가벼움)")]
+        public int terrainSamples = 6;
+        [Tooltip("섬 메시 최대 삼각형 수 (개별)")]
+        public int maxIslandTriangles = 15;
+        [Tooltip("전체 섬 최대 버텍스 수")]
+        public int maxTotalIslandVerts = 5000;
 
+        // 공유 버텍스 기반 섬 데이터
         struct IslandMeshData
         {
-            public Vector2[] vertices;
+            public Vector2[] vertices;  // XZ 월드좌표
             public int[] triangles;
         }
 
@@ -70,6 +76,7 @@ namespace BoatAttack
 
         List<IslandMeshData> _islandCache = new List<IslandMeshData>();
         List<ShipRenderData> _shipData = new List<ShipRenderData>();
+        int _totalIslandVerts;
 
         float _sweepAngle;
         Vector3 _radarWorldCenter;
@@ -77,6 +84,9 @@ namespace BoatAttack
         bool _islandsCached;
         bool _hasWebLine;
         Vector2 _webP1, _webP2;
+
+        // 레이더 기본 요소 버텍스 예산 (원, 격자, 링, 스위프, 마커 등)
+        const int RADAR_BASE_VERTS = 2000;
 
         protected override void Start()
         {
@@ -88,12 +98,17 @@ namespace BoatAttack
 
         void LateUpdate()
         {
-            if (envController == null) return;
-            if (!_islandsCached) CacheIslands();
-
-            CollectShipData();
             _sweepAngle += sweepSpeed * Time.unscaledDeltaTime;
             if (_sweepAngle >= 360f) _sweepAngle -= 360f;
+
+            if (envController == null)
+            {
+                SetVerticesDirty();
+                return;
+            }
+
+            if (!_islandsCached) CacheIslands();
+            CollectShipData();
             SetVerticesDirty();
         }
 
@@ -106,15 +121,10 @@ namespace BoatAttack
             float cx = rect.center.x;
             float cy = rect.center.y;
 
-            if (envController == null || _pixelRadius < 1f) return;
+            if (_pixelRadius < 1f) return;
 
-            if (envController.motherShip != null)
-                _radarWorldCenter = envController.motherShip.transform.position;
-
-            if (autoFitRange) CalculateAutoRange();
-
-            // 1. 배경 원
-            DrawFilledCircle(vh, cx, cy, _pixelRadius, bgCircleColor, 64);
+            // 1. 배경 원 (항상 표시)
+            DrawFilledCircle(vh, cx, cy, _pixelRadius, bgCircleColor, 32);
 
             // 2. 격자 (십자선)
             DrawLine(vh, cx - _pixelRadius * 0.9f, cy, cx + _pixelRadius * 0.9f, cy, 1f, gridColor);
@@ -124,14 +134,27 @@ namespace BoatAttack
             for (int i = 1; i <= ringCount; i++)
             {
                 float frac = (float)i / (ringCount + 1);
-                DrawCircleOutline(vh, cx, cy, _pixelRadius * frac, 1f, ringColor, 48);
+                DrawCircleOutline(vh, cx, cy, _pixelRadius * frac, 1f, ringColor, 24);
             }
-            DrawCircleOutline(vh, cx, cy, _pixelRadius - 1f, 1.5f, ringColor * 1.5f, 64);
+            DrawCircleOutline(vh, cx, cy, _pixelRadius - 1f, 1.5f, ringColor * 1.5f, 32);
 
-            // 4. 섬 지형
+            // 스위프 라인 (항상 표시)
+            float sweepRad = _sweepAngle * Mathf.Deg2Rad;
+            float sx = cx + Mathf.Sin(sweepRad) * _pixelRadius * 0.9f;
+            float sy = cy + Mathf.Cos(sweepRad) * _pixelRadius * 0.9f;
+            DrawLine(vh, cx, cy, sx, sy, 2f, sweepColor);
+
+            if (envController == null) return;
+
+            if (envController.motherShip != null)
+                _radarWorldCenter = envController.motherShip.transform.position;
+
+            if (autoFitRange) CalculateAutoRange();
+
+            // 4. 섬 지형 (버텍스 예산 체크 포함)
             DrawIslands(vh, cx, cy);
 
-            // 5. 웹 라인 (범위 내만)
+            // 5. 웹 라인
             if (_hasWebLine)
             {
                 float d1 = new Vector2(_webP1.x - cx, _webP1.y - cy).magnitude;
@@ -145,19 +168,13 @@ namespace BoatAttack
             {
                 Vector2 rp = WorldToLocal(ship.worldPos, cx, cy);
                 float dist = new Vector2(rp.x - cx, rp.y - cy).magnitude;
-                if (dist > _pixelRadius - 2f) continue; // 범위 밖 → 숨김
+                if (dist > _pixelRadius - 2f) continue;
 
                 if (ship.isMothership)
                     DrawDiamond(vh, rp.x, rp.y, ship.size, ship.markerColor);
                 else
                     DrawTriangleMarker(vh, rp.x, rp.y, ship.heading, ship.size, ship.markerColor);
             }
-
-            // 7. 스위프 라인
-            float sweepRad = _sweepAngle * Mathf.Deg2Rad;
-            float sx = cx + Mathf.Sin(sweepRad) * _pixelRadius * 0.9f;
-            float sy = cy + Mathf.Cos(sweepRad) * _pixelRadius * 0.9f;
-            DrawLine(vh, cx, cy, sx, sy, 2f, sweepColor);
         }
 
         #region Data Collection
@@ -237,6 +254,7 @@ namespace BoatAttack
         {
             _islandCache.Clear();
             _islandsCached = true;
+            _totalIslandVerts = 0;
 
             GameObject[] islands = null;
             try { islands = GameObject.FindGameObjectsWithTag("Island"); }
@@ -245,20 +263,50 @@ namespace BoatAttack
 
             foreach (var island in islands)
             {
-                var terrain = island.GetComponent<Terrain>();
-                if (terrain != null) { CacheTerrainIsland(terrain); continue; }
+                if (_totalIslandVerts >= maxTotalIslandVerts) break;
 
-                foreach (var mf in island.GetComponentsInChildren<MeshFilter>())
+                var terrain = island.GetComponent<Terrain>();
+                if (terrain != null)
                 {
-                    if (mf.sharedMesh != null) CacheMeshIsland(mf);
+                    CacheTerrainIsland(terrain);
+                    continue;
+                }
+
+                var meshFilters = island.GetComponentsInChildren<MeshFilter>();
+                if (meshFilters.Length > 0)
+                {
+                    foreach (var mf in meshFilters)
+                    {
+                        if (_totalIslandVerts >= maxTotalIslandVerts) break;
+                        if (mf.sharedMesh != null) CacheMeshIsland(mf);
+                    }
+                }
+                else
+                {
+                    // MeshFilter도 Terrain도 없으면 Renderer bounds 사용
+                    var renderer = island.GetComponentInChildren<Renderer>();
+                    if (renderer != null)
+                        CacheBoundsIsland(renderer.bounds);
                 }
             }
-            Debug.Log($"[RadarDisplay] 섬 {_islandCache.Count}개 캐시됨");
+            Debug.Log($"[RadarDisplay] 섬 {_islandCache.Count}개 캐시됨 (총 버텍스: {_totalIslandVerts})");
         }
 
         void CacheMeshIsland(MeshFilter mf)
         {
             var mesh = mf.sharedMesh;
+            if (mesh == null)
+                return;
+
+            // 메시가 읽기 불가능 → Renderer bounds로 사각형 폴백
+            if (!mesh.isReadable)
+            {
+                var renderer = mf.GetComponent<Renderer>();
+                if (renderer != null)
+                    CacheBoundsIsland(renderer.bounds);
+                return;
+            }
+
             var verts = mesh.vertices;
             var tris = mesh.triangles;
             var tf = mf.transform;
@@ -272,6 +320,8 @@ namespace BoatAttack
 
             for (int t = 0; t < totalTris; t += step)
             {
+                if (_totalIslandVerts + xzList.Count > maxTotalIslandVerts) break;
+
                 int i0 = tris[t * 3], i1 = tris[t * 3 + 1], i2 = tris[t * 3 + 2];
                 triList.Add(MapVert(i0, verts, tf, xzList, map));
                 triList.Add(MapVert(i1, verts, tf, xzList, map));
@@ -279,7 +329,57 @@ namespace BoatAttack
             }
 
             if (xzList.Count > 0)
+            {
                 _islandCache.Add(new IslandMeshData { vertices = xzList.ToArray(), triangles = triList.ToArray() });
+                _totalIslandVerts += xzList.Count;
+            }
+        }
+
+        /// <summary>
+        /// 메시 읽기 불가능 시 Renderer bounds로 불규칙 타원 생성
+        /// 자연스러운 섬 형태 (10 segments, sin 변조로 울퉁불퉁)
+        /// </summary>
+        void CacheBoundsIsland(Bounds b)
+        {
+            const int seg = 10;
+            if (_totalIslandVerts + seg + 1 > maxTotalIslandVerts) return;
+
+            float cx = (b.min.x + b.max.x) * 0.5f;
+            float cz = (b.min.z + b.max.z) * 0.5f;
+            float rx = (b.max.x - b.min.x) * 0.5f;
+            float rz = (b.max.z - b.min.z) * 0.5f;
+
+            // 너무 작은 바운드는 무시
+            if (rx < 1f && rz < 1f) return;
+
+            var verts = new Vector2[seg + 1];
+            verts[0] = new Vector2(cx, cz); // 중심점
+
+            // bounds 크기 기반 시드 → 섬마다 다른 형태
+            float seed = (cx * 0.13f + cz * 0.07f) % 6.28f;
+
+            for (int i = 0; i < seg; i++)
+            {
+                float angle = i * Mathf.PI * 2f / seg;
+                // 불규칙 변조: 0.8 ~ 1.0 범위로 들쭉날쭉
+                float wobble = 0.82f + 0.18f * Mathf.Sin(angle * 3f + seed)
+                                      + 0.08f * Mathf.Cos(angle * 5f + seed * 1.7f);
+                verts[i + 1] = new Vector2(
+                    cx + Mathf.Cos(angle) * rx * wobble,
+                    cz + Mathf.Sin(angle) * rz * wobble);
+            }
+
+            // Fan triangulation (중심 → 둘레)
+            var tris = new int[seg * 3];
+            for (int i = 0; i < seg; i++)
+            {
+                tris[i * 3] = 0;
+                tris[i * 3 + 1] = i + 1;
+                tris[i * 3 + 2] = (i + 1) % seg + 1;
+            }
+
+            _islandCache.Add(new IslandMeshData { vertices = verts, triangles = tris });
+            _totalIslandVerts += verts.Length;
         }
 
         int MapVert(int idx, Vector3[] verts, Transform tf, List<Vector2> list, Dictionary<int, int> map)
@@ -292,25 +392,66 @@ namespace BoatAttack
             return ni;
         }
 
+        /// <summary>
+        /// Terrain을 공유 버텍스 그리드로 캐시 (N*N 버텍스, 셀 단위 삼각형)
+        /// </summary>
         void CacheTerrainIsland(Terrain terrain)
         {
             var td = terrain.terrainData;
             var pos = terrain.transform.position;
-            int samples = 25;
-            var pts = new List<Vector2>();
+            int n = Mathf.Clamp(terrainSamples, 4, 20);
 
-            for (int z = 0; z < samples; z++)
+            // 버텍스 예산 체크
+            if (_totalIslandVerts + n * n > maxTotalIslandVerts)
+                n = Mathf.Max(4, (int)Mathf.Sqrt(maxTotalIslandVerts - _totalIslandVerts));
+
+            // 높이 그리드 + 공유 버텍스 생성
+            bool[,] isLand = new bool[n, n];
+            Vector2[] gridVerts = new Vector2[n * n];
+            int landCount = 0;
+
+            for (int z = 0; z < n; z++)
             {
-                for (int x = 0; x < samples; x++)
+                for (int x = 0; x < n; x++)
                 {
-                    float nx = (float)x / (samples - 1);
-                    float nz = (float)z / (samples - 1);
-                    if (td.GetInterpolatedHeight(nx, nz) > 0.5f)
-                        pts.Add(new Vector2(pos.x + nx * td.size.x, pos.z + nz * td.size.z));
+                    float nx = (float)x / (n - 1);
+                    float nz = (float)z / (n - 1);
+
+                    gridVerts[z * n + x] = new Vector2(
+                        pos.x + nx * td.size.x,
+                        pos.z + nz * td.size.z);
+
+                    isLand[x, z] = td.GetInterpolatedHeight(nx, nz) > 0.5f;
+                    if (isLand[x, z]) landCount++;
                 }
             }
-            if (pts.Count > 0)
-                _islandCache.Add(new IslandMeshData { vertices = pts.ToArray(), triangles = null });
+            if (landCount == 0) return;
+
+            // 셀 단위 삼각형 생성 (공유 버텍스 참조)
+            var tris = new List<int>();
+            for (int z = 0; z < n - 1; z++)
+            {
+                for (int x = 0; x < n - 1; x++)
+                {
+                    if (!isLand[x, z] && !isLand[x + 1, z] &&
+                        !isLand[x, z + 1] && !isLand[x + 1, z + 1])
+                        continue;
+
+                    int bl = z * n + x;
+                    int br = z * n + x + 1;
+                    int tl = (z + 1) * n + x;
+                    int tr = (z + 1) * n + x + 1;
+
+                    tris.Add(bl); tris.Add(tl); tris.Add(br);
+                    tris.Add(br); tris.Add(tl); tris.Add(tr);
+                }
+            }
+
+            if (tris.Count > 0)
+            {
+                _islandCache.Add(new IslandMeshData { vertices = gridVerts, triangles = tris.ToArray() });
+                _totalIslandVerts += gridVerts.Length;
+            }
         }
 
         #endregion
@@ -319,34 +460,27 @@ namespace BoatAttack
 
         void DrawIslands(VertexHelper vh, float cx, float cy)
         {
+            int vertBudget = 64000 - vh.currentVertCount;
+
             foreach (var island in _islandCache)
             {
-                if (island.triangles != null && island.triangles.Length > 0)
+                if (island.vertices.Length > vertBudget) break;
+
+                int baseIdx = vh.currentVertCount;
+                foreach (var v in island.vertices)
                 {
-                    int baseIdx = vh.currentVertCount;
-                    foreach (var v in island.vertices)
-                    {
-                        Vector2 rp = XZToLocal(v, cx, cy);
-                        AddVert(vh, rp.x, rp.y, islandColor);
-                    }
-                    for (int i = 0; i < island.triangles.Length; i += 3)
-                    {
-                        vh.AddTriangle(
-                            baseIdx + island.triangles[i],
-                            baseIdx + island.triangles[i + 1],
-                            baseIdx + island.triangles[i + 2]);
-                    }
+                    Vector2 rp = XZToLocal(v, cx, cy);
+                    AddVert(vh, rp.x, rp.y, islandColor);
                 }
-                else
+                for (int i = 0; i < island.triangles.Length; i += 3)
                 {
-                    float dot = Mathf.Max(2f, _pixelRadius * 0.015f);
-                    foreach (var v in island.vertices)
-                    {
-                        Vector2 rp = XZToLocal(v, cx, cy);
-                        if (new Vector2(rp.x - cx, rp.y - cy).magnitude < _pixelRadius - 2f)
-                            DrawFilledRect(vh, rp.x - dot, rp.y - dot, rp.x + dot, rp.y + dot, islandColor);
-                    }
+                    vh.AddTriangle(
+                        baseIdx + island.triangles[i],
+                        baseIdx + island.triangles[i + 1],
+                        baseIdx + island.triangles[i + 2]);
                 }
+
+                vertBudget -= island.vertices.Length;
             }
         }
 
