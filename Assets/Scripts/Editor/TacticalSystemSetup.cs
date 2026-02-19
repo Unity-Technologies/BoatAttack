@@ -614,28 +614,34 @@ namespace BoatAttack
 
         static GameObject BuildMiniRadarOverlay(Transform canvasRoot, DefenseEnvController env)
         {
-            // 전체 화면 상단에 고정되는 미니 레이더 패널
+            // 왼쪽 상단 소형 레이더
             var overlay = new GameObject("RadarOverlay");
             overlay.transform.SetParent(canvasRoot, false);
             var rt = overlay.AddComponent<RectTransform>();
-            // 상단 중앙, 높이 200px 정도
-            rt.anchorMin = new Vector2(0.3f, 1);
-            rt.anchorMax = new Vector2(0.7f, 1);
-            rt.pivot = new Vector2(0.5f, 1f);
-            rt.offsetMin = new Vector2(0, -220);
-            rt.offsetMax = new Vector2(0, 0);
+            rt.anchorMin = new Vector2(0, 1);
+            rt.anchorMax = new Vector2(0, 1);
+            rt.pivot = new Vector2(0, 1);
+            // 좌상단 기준 10px 여백, 180x200 크기
+            rt.offsetMin = new Vector2(0, -400);
+            rt.offsetMax = new Vector2(360, 0);
 
             // 반투명 배경
             var bgImg = overlay.AddComponent<Image>();
-            bgImg.color = new Color(0.03f, 0.06f, 0.03f, 0.7f);
+            bgImg.color = new Color(0.03f, 0.06f, 0.03f, 0.75f);
             bgImg.raycastTarget = false;
 
-            // 미니 레이더
+            // 타이틀 바
+            CreateLabel(overlay.transform, "OverlayTitle", "RADAR",
+                new Vector2(0, 0.9f), new Vector2(1, 1),
+                new Vector2(6, 0), Vector2.zero,
+                10, FontStyle.Bold, ACCENT_GREEN);
+
+            // 미니 레이더 (정사각형 영역)
             var radarObj = new GameObject("MiniRadar");
             radarObj.transform.SetParent(overlay.transform, false);
             var radarRt = radarObj.AddComponent<RectTransform>();
-            radarRt.anchorMin = new Vector2(0.15f, 0.05f);
-            radarRt.anchorMax = new Vector2(0.85f, 0.85f);
+            radarRt.anchorMin = new Vector2(0.05f, 0.08f);
+            radarRt.anchorMax = new Vector2(0.95f, 0.88f);
             radarRt.offsetMin = Vector2.zero;
             radarRt.offsetMax = Vector2.zero;
 
@@ -643,17 +649,11 @@ namespace BoatAttack
             radar.envController = env;
             radar.radarRange = 1000f;
 
-            // 상단 타이틀
-            CreateLabel(overlay.transform, "OverlayTitle", "RADAR",
-                new Vector2(0, 0.88f), new Vector2(1, 1),
-                new Vector2(10, 0), Vector2.zero,
-                12, FontStyle.Bold, ACCENT_GREEN);
-
             // 하단 힌트
-            CreateLabel(overlay.transform, "OverlayHint", "[Enter] UI 복귀",
-                new Vector2(0, 0), new Vector2(1, 0.12f),
+            CreateLabel(overlay.transform, "OverlayHint", "[Enter] UI",
+                new Vector2(0, 0), new Vector2(1, 0.08f),
                 Vector2.zero, Vector2.zero,
-                10, FontStyle.Normal, TEXT_DIM).GetComponent<Text>().alignment = TextAnchor.MiddleCenter;
+                8, FontStyle.Normal, TEXT_DIM).GetComponent<Text>().alignment = TextAnchor.MiddleCenter;
 
             return overlay;
         }
