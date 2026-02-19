@@ -5,33 +5,32 @@ using System.Collections.Generic;
 namespace BoatAttack
 {
     /// <summary>
-    /// 원형 레이더 디스플레이 - CIC 스타일 전장 시각화
-    /// 원형 좌표계, 선박 헤딩 표시, 스위프 라인, 거리 링
+    /// CIC 스타일 원형 레이더 (MaskableGraphic 기반)
+    /// - 삼각형 선박 마커 (방향 표시)
+    /// - 섬 지형 렌더링 (Island 태그)
+    /// - 범위 밖 선박 자동 숨김
+    /// - 원형 좌표계
     /// </summary>
-    public class RadarDisplay : MonoBehaviour
+    [RequireComponent(typeof(CanvasRenderer))]
+    public class RadarDisplay : MaskableGraphic
     {
         [Header("=== References ===")]
         public DefenseEnvController envController;
 
-        [Header("=== Radar Area ===")]
-        [Tooltip("레이더 영역 RectTransform (정사각형 권장)")]
-        public RectTransform radarRect;
+        [Header("=== Radar Settings ===")]
+        [Tooltip("레이더 탐지 반경 (미터)")]
+        public float radarRange = 1000f;
 
-        [Tooltip("레이더 표시 반경 (Unity 미터)")]
-        public float radarRange = 500f;
-
-        [Tooltip("모든 오브젝트 자동 맞춤")]
-        public bool autoFitRange = true;
+        [Tooltip("자동 범위 맞춤")]
+        public bool autoFitRange = false;
 
         [Range(1.1f, 2.0f)]
         public float autoFitMargin = 1.3f;
 
         [Header("=== Marker Size ===")]
-        public float friendlyMarkerSize = 14f;
-        public float enemyMarkerSize = 12f;
-        public float mothershipMarkerSize = 18f;
-        [Tooltip("방향 표시선 길이 배율 (마커 크기 대비)")]
-        public float headingLineScale = 2.0f;
+        public float friendlyMarkerSize = 16f;
+        public float enemyMarkerSize = 14f;
+        public float mothershipMarkerSize = 20f;
 
         [Header("=== Colors ===")]
         public Color friendlyColor = new Color(0.2f, 0.85f, 1f, 1f);
@@ -41,396 +40,455 @@ namespace BoatAttack
         public Color ringColor = new Color(0.15f, 0.4f, 0.15f, 0.4f);
         public Color sweepColor = new Color(0.2f, 1f, 0.3f, 0.25f);
         public Color gridColor = new Color(0.1f, 0.25f, 0.1f, 0.3f);
+        public Color bgCircleColor = new Color(0.02f, 0.04f, 0.02f, 0.95f);
+        public Color islandColor = new Color(0.12f, 0.25f, 0.1f, 0.7f);
 
         [Header("=== Sweep ===")]
-        [Tooltip("스위프 라인 회전 속도 (도/초)")]
         public float sweepSpeed = 60f;
 
         [Header("=== Range Rings ===")]
-        [Tooltip("거리 링 개수")]
-        public int ringCount = 3;
+        public int ringCount = 4;
 
-        // 마커 풀 (dot + headingLine 쌍)
-        private struct ShipMarker
+        [Header("=== Island ===")]
+        [Tooltip("섬 메시 최대 삼각형 수")]
+        public int maxIslandTriangles = 300;
+
+        struct IslandMeshData
         {
-            public RectTransform root;
-            public Image dot;
-            public Image headingLine;
+            public Vector2[] vertices;
+            public int[] triangles;
         }
 
-        private List<ShipMarker> _markerPool = new List<ShipMarker>();
-        private int _activeMarkerCount = 0;
-
-        // 웹 라인
-        private Image _webLine;
-
-        // 스위프 라인
-        private RectTransform _sweepLine;
-        private float _sweepAngle = 0f;
-
-        // 거리 링
-        private List<Image> _rings = new List<Image>();
-
-        // 십자선
-        private Image _crossH;
-        private Image _crossV;
-
-        // 레이더 반지름 (픽셀)
-        private float _radarPixelRadius;
-        private Vector3 _radarCenter;
-
-        private bool _initialized = false;
-
-        private void Start()
+        struct ShipRenderData
         {
-            BuildRadarOverlays();
-            _initialized = true;
+            public Vector3 worldPos;
+            public float heading;
+            public Color markerColor;
+            public float size;
+            public bool isMothership;
         }
 
-        private void LateUpdate()
+        List<IslandMeshData> _islandCache = new List<IslandMeshData>();
+        List<ShipRenderData> _shipData = new List<ShipRenderData>();
+
+        float _sweepAngle;
+        Vector3 _radarWorldCenter;
+        float _pixelRadius;
+        bool _islandsCached;
+        bool _hasWebLine;
+        Vector2 _webP1, _webP2;
+
+        protected override void Start()
         {
-            if (envController == null || radarRect == null) return;
+            base.Start();
+            color = Color.white;
+            raycastTarget = false;
+            CacheIslands();
+        }
 
-            if (!_initialized) return;
+        void LateUpdate()
+        {
+            if (envController == null) return;
+            if (!_islandsCached) CacheIslands();
 
-            _radarPixelRadius = Mathf.Min(radarRect.rect.width, radarRect.rect.height) * 0.5f;
+            CollectShipData();
+            _sweepAngle += sweepSpeed * Time.unscaledDeltaTime;
+            if (_sweepAngle >= 360f) _sweepAngle -= 360f;
+            SetVerticesDirty();
+        }
 
-            // 레이더 중심 = 모선 위치
+        protected override void OnPopulateMesh(VertexHelper vh)
+        {
+            vh.Clear();
+
+            Rect rect = rectTransform.rect;
+            _pixelRadius = Mathf.Min(rect.width, rect.height) * 0.5f;
+            float cx = rect.center.x;
+            float cy = rect.center.y;
+
+            if (envController == null || _pixelRadius < 1f) return;
+
             if (envController.motherShip != null)
-                _radarCenter = envController.motherShip.transform.position;
+                _radarWorldCenter = envController.motherShip.transform.position;
 
-            if (autoFitRange)
-                CalculateAutoRange();
+            if (autoFitRange) CalculateAutoRange();
 
-            // 스위프 애니메이션
-            AnimateSweep();
+            // 1. 배경 원
+            DrawFilledCircle(vh, cx, cy, _pixelRadius, bgCircleColor, 64);
 
-            // 마커 그리기
-            _activeMarkerCount = 0;
+            // 2. 격자 (십자선)
+            DrawLine(vh, cx - _pixelRadius * 0.9f, cy, cx + _pixelRadius * 0.9f, cy, 1f, gridColor);
+            DrawLine(vh, cx, cy - _pixelRadius * 0.9f, cx, cy + _pixelRadius * 0.9f, 1f, gridColor);
 
-            // 모선
+            // 3. 거리 링
+            for (int i = 1; i <= ringCount; i++)
+            {
+                float frac = (float)i / (ringCount + 1);
+                DrawCircleOutline(vh, cx, cy, _pixelRadius * frac, 1f, ringColor, 48);
+            }
+            DrawCircleOutline(vh, cx, cy, _pixelRadius - 1f, 1.5f, ringColor * 1.5f, 64);
+
+            // 4. 섬 지형
+            DrawIslands(vh, cx, cy);
+
+            // 5. 웹 라인 (범위 내만)
+            if (_hasWebLine)
+            {
+                float d1 = new Vector2(_webP1.x - cx, _webP1.y - cy).magnitude;
+                float d2 = new Vector2(_webP2.x - cx, _webP2.y - cy).magnitude;
+                if (d1 < _pixelRadius && d2 < _pixelRadius)
+                    DrawLine(vh, _webP1.x, _webP1.y, _webP2.x, _webP2.y, 2f, webLineColor);
+            }
+
+            // 6. 선박 마커
+            foreach (var ship in _shipData)
+            {
+                Vector2 rp = WorldToLocal(ship.worldPos, cx, cy);
+                float dist = new Vector2(rp.x - cx, rp.y - cy).magnitude;
+                if (dist > _pixelRadius - 2f) continue; // 범위 밖 → 숨김
+
+                if (ship.isMothership)
+                    DrawDiamond(vh, rp.x, rp.y, ship.size, ship.markerColor);
+                else
+                    DrawTriangleMarker(vh, rp.x, rp.y, ship.heading, ship.size, ship.markerColor);
+            }
+
+            // 7. 스위프 라인
+            float sweepRad = _sweepAngle * Mathf.Deg2Rad;
+            float sx = cx + Mathf.Sin(sweepRad) * _pixelRadius * 0.9f;
+            float sy = cy + Mathf.Cos(sweepRad) * _pixelRadius * 0.9f;
+            DrawLine(vh, cx, cy, sx, sy, 2f, sweepColor);
+        }
+
+        #region Data Collection
+
+        void CollectShipData()
+        {
+            _shipData.Clear();
+            _hasWebLine = false;
+
+            Rect rect = rectTransform.rect;
+            float cx = rect.center.x;
+            float cy = rect.center.y;
+
             if (envController.motherShip != null)
             {
-                var ms = envController.motherShip;
-                DrawShipMarker(ms.transform.position, ms.transform.eulerAngles.y,
-                    mothershipColor, mothershipMarkerSize, true);
+                _shipData.Add(new ShipRenderData
+                {
+                    worldPos = envController.motherShip.transform.position,
+                    heading = envController.motherShip.transform.eulerAngles.y,
+                    markerColor = mothershipColor,
+                    size = mothershipMarkerSize,
+                    isMothership = true
+                });
             }
 
-            // 아군
-            if (envController.defenseAgent1 != null)
+            AddShipAgent(envController.defenseAgent1, friendlyColor, friendlyMarkerSize);
+            AddShipAgent(envController.defenseAgent2, friendlyColor, friendlyMarkerSize);
+
+            if (envController.defenseAgent1 != null && envController.defenseAgent2 != null)
             {
-                DrawShipMarker(envController.defenseAgent1.transform.position,
-                    envController.defenseAgent1.transform.eulerAngles.y,
-                    friendlyColor, friendlyMarkerSize);
-            }
-            if (envController.defenseAgent2 != null)
-            {
-                DrawShipMarker(envController.defenseAgent2.transform.position,
-                    envController.defenseAgent2.transform.eulerAngles.y,
-                    friendlyColor, friendlyMarkerSize);
+                _webP1 = WorldToLocal(envController.defenseAgent1.transform.position, cx, cy);
+                _webP2 = WorldToLocal(envController.defenseAgent2.transform.position, cx, cy);
+                _hasWebLine = true;
             }
 
-            // 적군
             if (envController.enemyShips != null)
             {
                 foreach (var enemy in envController.enemyShips)
                 {
                     if (enemy != null && enemy.activeInHierarchy)
+                        AddShip(enemy, enemyColor, enemyMarkerSize);
+                }
+            }
+        }
+
+        void AddShipAgent(DefenseAgent agent, Color col, float size)
+        {
+            if (agent == null) return;
+            _shipData.Add(new ShipRenderData
+            {
+                worldPos = agent.transform.position,
+                heading = agent.transform.eulerAngles.y,
+                markerColor = col,
+                size = size,
+                isMothership = false
+            });
+        }
+
+        void AddShip(GameObject ship, Color col, float size)
+        {
+            if (ship == null) return;
+            _shipData.Add(new ShipRenderData
+            {
+                worldPos = ship.transform.position,
+                heading = ship.transform.eulerAngles.y,
+                markerColor = col,
+                size = size,
+                isMothership = false
+            });
+        }
+
+        #endregion
+
+        #region Island Cache
+
+        void CacheIslands()
+        {
+            _islandCache.Clear();
+            _islandsCached = true;
+
+            GameObject[] islands = null;
+            try { islands = GameObject.FindGameObjectsWithTag("Island"); }
+            catch (UnityException) { return; }
+            if (islands == null || islands.Length == 0) return;
+
+            foreach (var island in islands)
+            {
+                var terrain = island.GetComponent<Terrain>();
+                if (terrain != null) { CacheTerrainIsland(terrain); continue; }
+
+                foreach (var mf in island.GetComponentsInChildren<MeshFilter>())
+                {
+                    if (mf.sharedMesh != null) CacheMeshIsland(mf);
+                }
+            }
+            Debug.Log($"[RadarDisplay] 섬 {_islandCache.Count}개 캐시됨");
+        }
+
+        void CacheMeshIsland(MeshFilter mf)
+        {
+            var mesh = mf.sharedMesh;
+            var verts = mesh.vertices;
+            var tris = mesh.triangles;
+            var tf = mf.transform;
+
+            int totalTris = tris.Length / 3;
+            int step = Mathf.Max(1, totalTris / maxIslandTriangles);
+
+            var xzList = new List<Vector2>();
+            var triList = new List<int>();
+            var map = new Dictionary<int, int>();
+
+            for (int t = 0; t < totalTris; t += step)
+            {
+                int i0 = tris[t * 3], i1 = tris[t * 3 + 1], i2 = tris[t * 3 + 2];
+                triList.Add(MapVert(i0, verts, tf, xzList, map));
+                triList.Add(MapVert(i1, verts, tf, xzList, map));
+                triList.Add(MapVert(i2, verts, tf, xzList, map));
+            }
+
+            if (xzList.Count > 0)
+                _islandCache.Add(new IslandMeshData { vertices = xzList.ToArray(), triangles = triList.ToArray() });
+        }
+
+        int MapVert(int idx, Vector3[] verts, Transform tf, List<Vector2> list, Dictionary<int, int> map)
+        {
+            if (map.TryGetValue(idx, out int i)) return i;
+            Vector3 wp = tf.TransformPoint(verts[idx]);
+            int ni = list.Count;
+            list.Add(new Vector2(wp.x, wp.z));
+            map[idx] = ni;
+            return ni;
+        }
+
+        void CacheTerrainIsland(Terrain terrain)
+        {
+            var td = terrain.terrainData;
+            var pos = terrain.transform.position;
+            int samples = 25;
+            var pts = new List<Vector2>();
+
+            for (int z = 0; z < samples; z++)
+            {
+                for (int x = 0; x < samples; x++)
+                {
+                    float nx = (float)x / (samples - 1);
+                    float nz = (float)z / (samples - 1);
+                    if (td.GetInterpolatedHeight(nx, nz) > 0.5f)
+                        pts.Add(new Vector2(pos.x + nx * td.size.x, pos.z + nz * td.size.z));
+                }
+            }
+            if (pts.Count > 0)
+                _islandCache.Add(new IslandMeshData { vertices = pts.ToArray(), triangles = null });
+        }
+
+        #endregion
+
+        #region Draw Islands
+
+        void DrawIslands(VertexHelper vh, float cx, float cy)
+        {
+            foreach (var island in _islandCache)
+            {
+                if (island.triangles != null && island.triangles.Length > 0)
+                {
+                    int baseIdx = vh.currentVertCount;
+                    foreach (var v in island.vertices)
                     {
-                        DrawShipMarker(enemy.transform.position,
-                            enemy.transform.eulerAngles.y,
-                            enemyColor, enemyMarkerSize);
+                        Vector2 rp = XZToLocal(v, cx, cy);
+                        AddVert(vh, rp.x, rp.y, islandColor);
+                    }
+                    for (int i = 0; i < island.triangles.Length; i += 3)
+                    {
+                        vh.AddTriangle(
+                            baseIdx + island.triangles[i],
+                            baseIdx + island.triangles[i + 1],
+                            baseIdx + island.triangles[i + 2]);
+                    }
+                }
+                else
+                {
+                    float dot = Mathf.Max(2f, _pixelRadius * 0.015f);
+                    foreach (var v in island.vertices)
+                    {
+                        Vector2 rp = XZToLocal(v, cx, cy);
+                        if (new Vector2(rp.x - cx, rp.y - cy).magnitude < _pixelRadius - 2f)
+                            DrawFilledRect(vh, rp.x - dot, rp.y - dot, rp.x + dot, rp.y + dot, islandColor);
                     }
                 }
             }
-
-            // 웹 라인 (아군 2대 연결)
-            UpdateWebLine();
-
-            // 미사용 마커 숨기기
-            for (int i = _activeMarkerCount; i < _markerPool.Count; i++)
-                _markerPool[i].root.gameObject.SetActive(false);
-        }
-
-        #region Draw Ship Marker
-
-        private void DrawShipMarker(Vector3 worldPos, float heading, Color color, float size, bool isMothership = false)
-        {
-            // 원형 좌표 변환
-            Vector2 radarPos = WorldToRadar(worldPos);
-
-            // 원형 클리핑: 레이더 원 바깥이면 가장자리에 클램프
-            float dist = radarPos.magnitude;
-            float maxRadius = _radarPixelRadius - size;
-            if (dist > maxRadius && maxRadius > 0)
-            {
-                radarPos = radarPos.normalized * maxRadius;
-            }
-
-            ShipMarker marker = GetOrCreateMarker();
-
-            // 위치
-            marker.root.anchoredPosition = radarPos;
-
-            // 헤딩 회전 (Unity Y축 → UI Z축 역방향)
-            if (!isMothership)
-            {
-                marker.root.localRotation = Quaternion.Euler(0, 0, -heading);
-                marker.headingLine.gameObject.SetActive(true);
-            }
-            else
-            {
-                marker.root.localRotation = Quaternion.Euler(0, 0, 45f); // 모선은 다이아몬드
-                marker.headingLine.gameObject.SetActive(false);
-            }
-
-            // 크기
-            marker.dot.rectTransform.sizeDelta = new Vector2(size, size);
-
-            // 방향선 크기
-            float lineLen = size * headingLineScale;
-            marker.headingLine.rectTransform.sizeDelta = new Vector2(2f, lineLen);
-            marker.headingLine.rectTransform.anchoredPosition = new Vector2(0, size * 0.5f + lineLen * 0.5f);
-
-            // 색상
-            marker.dot.color = color;
-            marker.headingLine.color = new Color(color.r, color.g, color.b, 0.7f);
-
-            marker.root.gameObject.SetActive(true);
-        }
-
-        private ShipMarker GetOrCreateMarker()
-        {
-            if (_activeMarkerCount < _markerPool.Count)
-            {
-                return _markerPool[_activeMarkerCount++];
-            }
-
-            // Root
-            var rootObj = new GameObject($"Marker_{_markerPool.Count}");
-            rootObj.transform.SetParent(radarRect, false);
-            var rootRt = rootObj.AddComponent<RectTransform>();
-            rootRt.anchorMin = new Vector2(0.5f, 0.5f);
-            rootRt.anchorMax = new Vector2(0.5f, 0.5f);
-            rootRt.pivot = new Vector2(0.5f, 0.5f);
-            rootRt.sizeDelta = Vector2.zero;
-
-            // Dot (중심 마커)
-            var dotObj = new GameObject("Dot");
-            dotObj.transform.SetParent(rootObj.transform, false);
-            var dotRt = dotObj.AddComponent<RectTransform>();
-            dotRt.anchorMin = new Vector2(0.5f, 0.5f);
-            dotRt.anchorMax = new Vector2(0.5f, 0.5f);
-            dotRt.pivot = new Vector2(0.5f, 0.5f);
-            dotRt.anchoredPosition = Vector2.zero;
-            var dotImg = dotObj.AddComponent<Image>();
-            dotImg.raycastTarget = false;
-
-            // Heading Line (방향 표시선 - 위쪽으로 돌출)
-            var lineObj = new GameObject("HeadingLine");
-            lineObj.transform.SetParent(rootObj.transform, false);
-            var lineRt = lineObj.AddComponent<RectTransform>();
-            lineRt.anchorMin = new Vector2(0.5f, 0.5f);
-            lineRt.anchorMax = new Vector2(0.5f, 0.5f);
-            lineRt.pivot = new Vector2(0.5f, 0.5f);
-            var lineImg = lineObj.AddComponent<Image>();
-            lineImg.raycastTarget = false;
-
-            var marker = new ShipMarker
-            {
-                root = rootRt,
-                dot = dotImg,
-                headingLine = lineImg
-            };
-
-            _markerPool.Add(marker);
-            _activeMarkerCount++;
-            return marker;
-        }
-
-        #endregion
-
-        #region Web Line
-
-        private void UpdateWebLine()
-        {
-            if (envController.defenseAgent1 == null || envController.defenseAgent2 == null)
-            {
-                if (_webLine != null) _webLine.gameObject.SetActive(false);
-                return;
-            }
-
-            if (_webLine == null)
-            {
-                var lineObj = new GameObject("WebLine");
-                lineObj.transform.SetParent(radarRect, false);
-                lineObj.transform.SetAsFirstSibling(); // 마커 뒤에 렌더링
-                var rt = lineObj.AddComponent<RectTransform>();
-                rt.anchorMin = new Vector2(0.5f, 0.5f);
-                rt.anchorMax = new Vector2(0.5f, 0.5f);
-                rt.pivot = new Vector2(0.5f, 0.5f);
-                _webLine = lineObj.AddComponent<Image>();
-                _webLine.raycastTarget = false;
-                _webLine.color = webLineColor;
-            }
-
-            Vector2 p1 = WorldToRadar(envController.defenseAgent1.transform.position);
-            Vector2 p2 = WorldToRadar(envController.defenseAgent2.transform.position);
-
-            Vector2 mid = (p1 + p2) * 0.5f;
-            float length = Vector2.Distance(p1, p2);
-            float angle = Mathf.Atan2(p2.y - p1.y, p2.x - p1.x) * Mathf.Rad2Deg;
-
-            _webLine.rectTransform.anchoredPosition = mid;
-            _webLine.rectTransform.sizeDelta = new Vector2(length, 2f);
-            _webLine.rectTransform.localRotation = Quaternion.Euler(0, 0, angle);
-            _webLine.gameObject.SetActive(true);
-        }
-
-        #endregion
-
-        #region Sweep Animation
-
-        private void AnimateSweep()
-        {
-            if (_sweepLine == null) return;
-            _sweepAngle += sweepSpeed * Time.unscaledDeltaTime;
-            if (_sweepAngle >= 360f) _sweepAngle -= 360f;
-            _sweepLine.localRotation = Quaternion.Euler(0, 0, -_sweepAngle);
-        }
-
-        #endregion
-
-        #region Radar Overlays (rings, sweep, crosshair)
-
-        private void BuildRadarOverlays()
-        {
-            if (radarRect == null) return;
-
-            float pixelRadius = Mathf.Min(radarRect.rect.width, radarRect.rect.height) * 0.5f;
-
-            // 십자선
-            _crossH = CreateOverlayImage("CrossH", radarRect, Vector2.zero,
-                new Vector2(pixelRadius * 1.8f, 1f), gridColor);
-            _crossV = CreateOverlayImage("CrossV", radarRect, Vector2.zero,
-                new Vector2(1f, pixelRadius * 1.8f), gridColor);
-
-            // 거리 링
-            for (int i = 1; i <= ringCount; i++)
-            {
-                float frac = (float)i / (ringCount + 1);
-                float ringSize = pixelRadius * 2f * frac;
-
-                var ringObj = new GameObject($"Ring_{i}");
-                ringObj.transform.SetParent(radarRect, false);
-                ringObj.transform.SetAsFirstSibling();
-
-                var rt = ringObj.AddComponent<RectTransform>();
-                rt.anchorMin = new Vector2(0.5f, 0.5f);
-                rt.anchorMax = new Vector2(0.5f, 0.5f);
-                rt.pivot = new Vector2(0.5f, 0.5f);
-                rt.anchoredPosition = Vector2.zero;
-                rt.sizeDelta = new Vector2(ringSize, ringSize);
-
-                var img = ringObj.AddComponent<Image>();
-                img.color = ringColor;
-                img.fillCenter = false;
-                img.raycastTarget = false;
-                // Note: 원형 링 표시를 위해서는 원형 스프라이트 필요
-                // 기본 Image로는 사각형 테두리만 가능하므로 Outline으로 대체
-                var outline = ringObj.AddComponent<Outline>();
-                outline.effectColor = ringColor;
-                outline.effectDistance = new Vector2(1, 1);
-                img.color = new Color(0, 0, 0, 0); // 배경 투명
-
-                _rings.Add(img);
-            }
-
-            // 스위프 라인
-            var sweepObj = new GameObject("SweepLine");
-            sweepObj.transform.SetParent(radarRect, false);
-            _sweepLine = sweepObj.AddComponent<RectTransform>();
-            _sweepLine.anchorMin = new Vector2(0.5f, 0.5f);
-            _sweepLine.anchorMax = new Vector2(0.5f, 0.5f);
-            _sweepLine.pivot = new Vector2(0.5f, 0f); // 하단 중심 기준 회전
-            _sweepLine.anchoredPosition = Vector2.zero;
-            _sweepLine.sizeDelta = new Vector2(2f, pixelRadius * 0.9f);
-
-            var sweepImg = sweepObj.AddComponent<Image>();
-            sweepImg.color = sweepColor;
-            sweepImg.raycastTarget = false;
-        }
-
-        private Image CreateOverlayImage(string name, RectTransform parent,
-            Vector2 pos, Vector2 size, Color color)
-        {
-            var obj = new GameObject(name);
-            obj.transform.SetParent(parent, false);
-            obj.transform.SetAsFirstSibling();
-
-            var rt = obj.AddComponent<RectTransform>();
-            rt.anchorMin = new Vector2(0.5f, 0.5f);
-            rt.anchorMax = new Vector2(0.5f, 0.5f);
-            rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.anchoredPosition = pos;
-            rt.sizeDelta = size;
-
-            var img = obj.AddComponent<Image>();
-            img.color = color;
-            img.raycastTarget = false;
-            return img;
         }
 
         #endregion
 
         #region Coordinate Conversion
 
-        /// <summary>
-        /// 월드 좌표 → 레이더 로컬 좌표 (원형 좌표계)
-        /// </summary>
-        private Vector2 WorldToRadar(Vector3 worldPos)
+        Vector2 WorldToLocal(Vector3 wp, float cx, float cy)
         {
-            float dx = worldPos.x - _radarCenter.x;
-            float dz = worldPos.z - _radarCenter.z;
+            float scale = _pixelRadius / radarRange;
+            return new Vector2(cx + (wp.x - _radarWorldCenter.x) * scale,
+                               cy + (wp.z - _radarWorldCenter.z) * scale);
+        }
 
-            // 정규화
-            float nx = dx / radarRange;
-            float nz = dz / radarRange;
-
-            // 원형 레이더 → 픽셀 좌표 (z+ = 화면 위)
-            return new Vector2(nx * _radarPixelRadius, nz * _radarPixelRadius);
+        Vector2 XZToLocal(Vector2 xz, float cx, float cy)
+        {
+            float scale = _pixelRadius / radarRange;
+            return new Vector2(cx + (xz.x - _radarWorldCenter.x) * scale,
+                               cy + (xz.y - _radarWorldCenter.z) * scale);
         }
 
         #endregion
 
         #region Auto Range
 
-        private void CalculateAutoRange()
+        void CalculateAutoRange()
         {
-            float maxDist = 50f;
-
+            float maxDist = 100f;
             if (envController.defenseAgent1 != null)
-                maxDist = Mathf.Max(maxDist, HorizontalDist(envController.defenseAgent1.transform.position));
+                maxDist = Mathf.Max(maxDist, HDist(envController.defenseAgent1.transform.position));
             if (envController.defenseAgent2 != null)
-                maxDist = Mathf.Max(maxDist, HorizontalDist(envController.defenseAgent2.transform.position));
-
+                maxDist = Mathf.Max(maxDist, HDist(envController.defenseAgent2.transform.position));
             if (envController.enemyShips != null)
-            {
-                foreach (var enemy in envController.enemyShips)
-                {
-                    if (enemy != null && enemy.activeInHierarchy)
-                        maxDist = Mathf.Max(maxDist, HorizontalDist(enemy.transform.position));
-                }
-            }
-
-            radarRange = maxDist * autoFitMargin;
+                foreach (var e in envController.enemyShips)
+                    if (e != null && e.activeInHierarchy)
+                        maxDist = Mathf.Max(maxDist, HDist(e.transform.position));
+            radarRange = Mathf.Max(1000f, maxDist * autoFitMargin);
         }
 
-        private float HorizontalDist(Vector3 worldPos)
+        float HDist(Vector3 wp)
         {
-            float dx = worldPos.x - _radarCenter.x;
-            float dz = worldPos.z - _radarCenter.z;
-            return Mathf.Sqrt(dx * dx + dz * dz); // 원형이므로 유클리드 거리 사용
+            float dx = wp.x - _radarWorldCenter.x, dz = wp.z - _radarWorldCenter.z;
+            return Mathf.Sqrt(dx * dx + dz * dz);
+        }
+
+        #endregion
+
+        #region Drawing Primitives
+
+        void DrawTriangleMarker(VertexHelper vh, float px, float py, float heading, float size, Color col)
+        {
+            float rad = -heading * Mathf.Deg2Rad;
+            float cos = Mathf.Cos(rad), sin = Mathf.Sin(rad);
+
+            Vector2 tip = Rot(0, size * 0.6f, cos, sin);
+            Vector2 left = Rot(-size * 0.35f, -size * 0.35f, cos, sin);
+            Vector2 right = Rot(size * 0.35f, -size * 0.35f, cos, sin);
+
+            int idx = vh.currentVertCount;
+            AddVert(vh, px + tip.x, py + tip.y, col);
+            AddVert(vh, px + left.x, py + left.y, col * 0.7f);
+            AddVert(vh, px + right.x, py + right.y, col * 0.7f);
+            vh.AddTriangle(idx, idx + 1, idx + 2);
+        }
+
+        void DrawDiamond(VertexHelper vh, float px, float py, float size, Color col)
+        {
+            float h = size * 0.5f;
+            int idx = vh.currentVertCount;
+            AddVert(vh, px, py + h, col);
+            AddVert(vh, px + h, py, col);
+            AddVert(vh, px, py - h, col);
+            AddVert(vh, px - h, py, col);
+            vh.AddTriangle(idx, idx + 1, idx + 2);
+            vh.AddTriangle(idx, idx + 2, idx + 3);
+        }
+
+        Vector2 Rot(float x, float y, float cos, float sin)
+        {
+            return new Vector2(x * cos - y * sin, x * sin + y * cos);
+        }
+
+        void DrawFilledCircle(VertexHelper vh, float cx, float cy, float r, Color col, int seg)
+        {
+            int ci = AddVert(vh, cx, cy, col);
+            int fi = vh.currentVertCount;
+            for (int i = 0; i <= seg; i++)
+            {
+                float a = (float)i / seg * Mathf.PI * 2f;
+                AddVert(vh, cx + Mathf.Cos(a) * r, cy + Mathf.Sin(a) * r, col);
+                if (i > 0) vh.AddTriangle(ci, fi + i - 1, fi + i);
+            }
+        }
+
+        void DrawCircleOutline(VertexHelper vh, float cx, float cy, float r, float w, Color col, int seg)
+        {
+            for (int i = 0; i < seg; i++)
+            {
+                float a1 = (float)i / seg * Mathf.PI * 2f;
+                float a2 = (float)(i + 1) / seg * Mathf.PI * 2f;
+                DrawLine(vh,
+                    cx + Mathf.Cos(a1) * r, cy + Mathf.Sin(a1) * r,
+                    cx + Mathf.Cos(a2) * r, cy + Mathf.Sin(a2) * r,
+                    w, col);
+            }
+        }
+
+        void DrawLine(VertexHelper vh, float x1, float y1, float x2, float y2, float w, Color col)
+        {
+            float dx = x2 - x1, dy = y2 - y1;
+            float len = Mathf.Sqrt(dx * dx + dy * dy);
+            if (len < 0.001f) return;
+            float nx = -dy / len * w * 0.5f, ny = dx / len * w * 0.5f;
+
+            int idx = vh.currentVertCount;
+            AddVert(vh, x1 + nx, y1 + ny, col);
+            AddVert(vh, x1 - nx, y1 - ny, col);
+            AddVert(vh, x2 - nx, y2 - ny, col);
+            AddVert(vh, x2 + nx, y2 + ny, col);
+            vh.AddTriangle(idx, idx + 1, idx + 2);
+            vh.AddTriangle(idx, idx + 2, idx + 3);
+        }
+
+        void DrawFilledRect(VertexHelper vh, float l, float b, float r, float t, Color col)
+        {
+            int idx = vh.currentVertCount;
+            AddVert(vh, l, b, col);
+            AddVert(vh, r, b, col);
+            AddVert(vh, r, t, col);
+            AddVert(vh, l, t, col);
+            vh.AddTriangle(idx, idx + 1, idx + 2);
+            vh.AddTriangle(idx, idx + 2, idx + 3);
+        }
+
+        int AddVert(VertexHelper vh, float x, float y, Color col)
+        {
+            int idx = vh.currentVertCount;
+            UIVertex v = UIVertex.simpleVert;
+            v.position = new Vector3(x, y, 0);
+            v.color = col;
+            vh.AddVert(v);
+            return idx;
         }
 
         #endregion

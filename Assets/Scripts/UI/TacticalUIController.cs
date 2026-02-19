@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 namespace BoatAttack
 {
@@ -44,32 +43,26 @@ namespace BoatAttack
         public Slider sliderMothershipHits;
         public Text textMothershipHits;
 
-        [Header("=== Right Panel - Ship Spec Sliders ===")]
-        [Tooltip("아군 속도 슬라이더 (horsePower)")]
-        public Slider sliderFriendlySpeed;
-        public Text textFriendlySpeed;
-
-        [Tooltip("적군 속도 슬라이더")]
-        public Slider sliderEnemySpeed;
-        public Text textEnemySpeed;
-
-        [Tooltip("아군 선회력 슬라이더 (steeringTorque)")]
-        public Slider sliderFriendlyAngularSpeed;
-        public Text textFriendlyAngularSpeed;
-
-        [Tooltip("적군 선회력 슬라이더")]
-        public Slider sliderEnemyAngularSpeed;
-        public Text textEnemyAngularSpeed;
-
+        [Header("=== Simulation ===")]
         [Tooltip("시뮬레이션 속도 슬라이더 (Time.timeScale)")]
         public Slider sliderSimSpeed;
         public Text textSimSpeed;
 
-        [Header("=== Environment Info ===")]
-        [Tooltip("해상 상태 텍스트")]
-        public Text textSeaState;
+        [Header("=== Environment Visuals ===")]
+        [Tooltip("해상 상태 바")]
+        public SeaStateBarUI seaStateBar;
+        [Tooltip("해상 상태 라벨")]
+        public Text textSeaStateLabel;
 
-        [Tooltip("바람 상태 텍스트")]
+        [Tooltip("바람 나침반")]
+        public WindCompassUI windCompass;
+        [Tooltip("풍속 텍스트")]
+        public Text textWindStrength;
+        [Tooltip("풍향 텍스트")]
+        public Text textWindDirection;
+
+        [Header("=== Environment Info (Fallback) ===")]
+        public Text textSeaState;
         public Text textWindState;
 
         [Tooltip("현재 공격 모드 텍스트")]
@@ -83,24 +76,11 @@ namespace BoatAttack
         public enum AttackMode { Wave, Diversionary, Concentrated }
         private AttackMode _currentMode = AttackMode.Wave;
 
-        // 캐싱된 엔진 참조
-        private List<Engine> _friendlyEngines = new List<Engine>();
-        private List<Engine> _enemyEngines = new List<Engine>();
-
         private void Start()
         {
-            // 1. 엔진 캐시 먼저 (현재 값을 읽기 위해)
-            CacheEngines();
-
-            // 2. 현재 실제 값으로 슬라이더 초기화 (리스너 없이 - 값 덮어쓰기 방지)
             InitSliderValues();
-
-            // 3. 라벨 업데이트
             UpdateAllLabels();
-
-            // 4. 리스너 등록 (초기화 완료 후에만 - 이후 사용자 조작만 반영)
             BindSliderListeners();
-
             SetupButtons();
             SetAttackMode(AttackMode.Wave);
         }
@@ -137,38 +117,6 @@ namespace BoatAttack
                 sliderMothershipHits.value = envController != null ? envController.maxCollisionCount : 1;
             }
 
-            // 아군 속도 - 실제 Engine.horsePower에서 읽기
-            if (sliderFriendlySpeed != null)
-            {
-                sliderFriendlySpeed.minValue = 1000f;
-                sliderFriendlySpeed.maxValue = 15000f;
-                sliderFriendlySpeed.value = GetCurrentFriendlyHorsePower();
-            }
-
-            // 적군 속도 - 실제 Engine.horsePower에서 읽기
-            if (sliderEnemySpeed != null)
-            {
-                sliderEnemySpeed.minValue = 1000f;
-                sliderEnemySpeed.maxValue = 15000f;
-                sliderEnemySpeed.value = GetCurrentEnemyHorsePower();
-            }
-
-            // 아군 선회력 - 실제 Engine.steeringTorque에서 읽기
-            if (sliderFriendlyAngularSpeed != null)
-            {
-                sliderFriendlyAngularSpeed.minValue = 1f;
-                sliderFriendlyAngularSpeed.maxValue = 20f;
-                sliderFriendlyAngularSpeed.value = GetCurrentFriendlySteeringTorque();
-            }
-
-            // 적군 선회력 - 실제 Engine.steeringTorque에서 읽기
-            if (sliderEnemyAngularSpeed != null)
-            {
-                sliderEnemyAngularSpeed.minValue = 1f;
-                sliderEnemyAngularSpeed.maxValue = 20f;
-                sliderEnemyAngularSpeed.value = GetCurrentEnemySteeringTorque();
-            }
-
             // 시뮬레이션 속도 - 현재 Time.timeScale에서 읽기
             if (sliderSimSpeed != null)
             {
@@ -186,44 +134,8 @@ namespace BoatAttack
             if (sliderEnemyCount != null) sliderEnemyCount.onValueChanged.AddListener(OnEnemyCountChanged);
             if (sliderFriendlyCount != null) sliderFriendlyCount.onValueChanged.AddListener(OnFriendlyCountChanged);
             if (sliderMothershipHits != null) sliderMothershipHits.onValueChanged.AddListener(OnMothershipHitsChanged);
-            if (sliderFriendlySpeed != null) sliderFriendlySpeed.onValueChanged.AddListener(OnFriendlySpeedChanged);
-            if (sliderEnemySpeed != null) sliderEnemySpeed.onValueChanged.AddListener(OnEnemySpeedChanged);
-            if (sliderFriendlyAngularSpeed != null) sliderFriendlyAngularSpeed.onValueChanged.AddListener(OnFriendlyAngularSpeedChanged);
-            if (sliderEnemyAngularSpeed != null) sliderEnemyAngularSpeed.onValueChanged.AddListener(OnEnemyAngularSpeedChanged);
             if (sliderSimSpeed != null) sliderSimSpeed.onValueChanged.AddListener(OnSimSpeedChanged);
         }
-
-        #region Read Current Values from Engine
-
-        private float GetCurrentFriendlyHorsePower()
-        {
-            foreach (var eng in _friendlyEngines)
-                if (eng != null) return eng.horsePower;
-            return 5800f; // 엔진 못 찾으면 Engine.cs 기본값
-        }
-
-        private float GetCurrentEnemyHorsePower()
-        {
-            foreach (var eng in _enemyEngines)
-                if (eng != null) return eng.horsePower;
-            return 5800f;
-        }
-
-        private float GetCurrentFriendlySteeringTorque()
-        {
-            foreach (var eng in _friendlyEngines)
-                if (eng != null) return eng.steeringTorque;
-            return 5f;
-        }
-
-        private float GetCurrentEnemySteeringTorque()
-        {
-            foreach (var eng in _enemyEngines)
-                if (eng != null) return eng.steeringTorque;
-            return 5f;
-        }
-
-        #endregion
 
         private void SetupButtons()
         {
@@ -233,39 +145,6 @@ namespace BoatAttack
                 btnDiversionary.onClick.AddListener(() => SetAttackMode(AttackMode.Diversionary));
             if (btnConcentrated != null)
                 btnConcentrated.onClick.AddListener(() => SetAttackMode(AttackMode.Concentrated));
-        }
-
-        private void CacheEngines()
-        {
-            _friendlyEngines.Clear();
-            _enemyEngines.Clear();
-
-            if (envController == null) return;
-
-            // 아군 엔진
-            if (envController.defenseAgent1 != null)
-            {
-                var eng = envController.defenseAgent1.GetComponentInChildren<Engine>();
-                if (eng != null) _friendlyEngines.Add(eng);
-            }
-            if (envController.defenseAgent2 != null)
-            {
-                var eng = envController.defenseAgent2.GetComponentInChildren<Engine>();
-                if (eng != null) _friendlyEngines.Add(eng);
-            }
-
-            // 적군 엔진
-            if (envController.enemyShips != null)
-            {
-                foreach (var enemy in envController.enemyShips)
-                {
-                    if (enemy != null)
-                    {
-                        var eng = enemy.GetComponentInChildren<Engine>();
-                        if (eng != null) _enemyEngines.Add(eng);
-                    }
-                }
-            }
         }
 
         private void Update()
@@ -298,46 +177,6 @@ namespace BoatAttack
             if (envController != null)
                 envController.maxCollisionCount = hits;
             UpdateLabel(textMothershipHits, $"{hits}");
-        }
-
-        private void OnFriendlySpeedChanged(float value)
-        {
-            EnsureEnginesCached();
-            foreach (var eng in _friendlyEngines)
-            {
-                if (eng != null) eng.horsePower = value;
-            }
-            UpdateLabel(textFriendlySpeed, $"{value:F0}");
-        }
-
-        private void OnEnemySpeedChanged(float value)
-        {
-            EnsureEnginesCached();
-            foreach (var eng in _enemyEngines)
-            {
-                if (eng != null) eng.horsePower = value;
-            }
-            UpdateLabel(textEnemySpeed, $"{value:F0}");
-        }
-
-        private void OnFriendlyAngularSpeedChanged(float value)
-        {
-            EnsureEnginesCached();
-            foreach (var eng in _friendlyEngines)
-            {
-                if (eng != null) eng.steeringTorque = value;
-            }
-            UpdateLabel(textFriendlyAngularSpeed, $"{value:F1}");
-        }
-
-        private void OnEnemyAngularSpeedChanged(float value)
-        {
-            EnsureEnginesCached();
-            foreach (var eng in _enemyEngines)
-            {
-                if (eng != null) eng.steeringTorque = value;
-            }
-            UpdateLabel(textEnemyAngularSpeed, $"{value:F1}");
         }
 
         private void OnSimSpeedChanged(float value)
@@ -394,15 +233,29 @@ namespace BoatAttack
         {
             if (environmentController == null) return;
 
-            // 해상 상태
-            if (textSeaState != null)
+            // 해상 상태 바
+            if (seaStateBar != null)
+            {
+                seaStateBar.SetValue(environmentController.waveStrength);
+                if (textSeaStateLabel != null)
+                    textSeaStateLabel.text = $"Sea: {seaStateBar.GetSeaStateLabel()}";
+            }
+            else if (textSeaState != null)
             {
                 string seaLevel = GetSeaStateLabel(environmentController.waveStrength);
                 textSeaState.text = $"Sea: {seaLevel} (Wave {environmentController.waveStrength:F1})";
             }
 
-            // 바람 상태
-            if (textWindState != null)
+            // 바람 나침반
+            if (windCompass != null)
+            {
+                windCompass.SetWind(environmentController.windDirection, environmentController.windStrength);
+                if (textWindStrength != null)
+                    textWindStrength.text = $"{environmentController.windStrength:F0} m/s";
+                if (textWindDirection != null)
+                    textWindDirection.text = $"{environmentController.windDirection:F0}\u00b0";
+            }
+            else if (textWindState != null)
             {
                 textWindState.text = $"Wind: {environmentController.windStrength:F0}m/s {environmentController.windDirection:F0}\u00b0";
             }
@@ -431,28 +284,7 @@ namespace BoatAttack
             if (sliderEnemyCount != null) UpdateLabel(textEnemyCount, $"{Mathf.RoundToInt(sliderEnemyCount.value)}");
             if (sliderFriendlyCount != null) UpdateLabel(textFriendlyCount, $"{Mathf.RoundToInt(sliderFriendlyCount.value)}");
             if (sliderMothershipHits != null) UpdateLabel(textMothershipHits, $"{Mathf.RoundToInt(sliderMothershipHits.value)}");
-            if (sliderFriendlySpeed != null) UpdateLabel(textFriendlySpeed, $"{sliderFriendlySpeed.value:F0}");
-            if (sliderEnemySpeed != null) UpdateLabel(textEnemySpeed, $"{sliderEnemySpeed.value:F0}");
-            if (sliderFriendlyAngularSpeed != null) UpdateLabel(textFriendlyAngularSpeed, $"{sliderFriendlyAngularSpeed.value:F1}");
-            if (sliderEnemyAngularSpeed != null) UpdateLabel(textEnemyAngularSpeed, $"{sliderEnemyAngularSpeed.value:F1}");
             if (sliderSimSpeed != null) UpdateLabel(textSimSpeed, $"{sliderSimSpeed.value:F1}x");
-        }
-
-        /// <summary>
-        /// 엔진 캐시가 비어있으면 자동 재캐싱 (Start 실행 순서 문제 대응)
-        /// </summary>
-        private void EnsureEnginesCached()
-        {
-            if (_friendlyEngines.Count == 0 && _enemyEngines.Count == 0)
-                CacheEngines();
-        }
-
-        /// <summary>
-        /// 엔진 캐시 갱신 (런타임에 선박이 추가/제거된 경우)
-        /// </summary>
-        public void RefreshEngineCache()
-        {
-            CacheEngines();
         }
 
         #endregion

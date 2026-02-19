@@ -46,6 +46,10 @@ namespace BoatAttack
         public Text textCurrentHeading;
         public Text textShipName;
 
+        [Header("=== 3D Ship Preview ===")]
+        [Tooltip("3D 선박 프리뷰 렌더러")]
+        public ShipPreviewRenderer shipPreview;
+
         [Header("=== Ship Spec Defaults ===")]
         [Tooltip("연료 (표시용)")]
         public float fuelPercent = 100f;
