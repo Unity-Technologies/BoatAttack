@@ -353,6 +353,12 @@ namespace WaterSystem
             additionalCamData.renderShadows = false;
             additionalCamData.requiresColorOption = CameraOverrideOption.Off;
             additionalCamData.requiresDepthOption = CameraOverrideOption.Off;
+            // Depth-only camera: skip post-processing and the URP volume framework entirely.
+            // The volume framework can NRE on this very early render (during Water.OnEnable) if
+            // any VolumeComponent in the scene's profiles hasn't had OnEnable called yet, and
+            // we don't need any volume overrides for a depth capture anyway.
+            additionalCamData.renderPostProcessing = false;
+            additionalCamData.volumeLayerMask = 0;
 
             var t = _depthCam.transform;
             var depthExtra = 4.0f;

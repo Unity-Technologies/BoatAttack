@@ -15,12 +15,12 @@ namespace BoatAttack
         private float3[] _heights; // height sameple from water system
         private float3[] _normals; // height sameple from water system
         private Vector3[] _smoothPositions; // the smoothed position
-        private int _guid; // the objects GUID for wave height lookup
+        private EntityId _guid; // the objects GUID for wave height lookup
 
         // Use this for initialization
         private void Start()
         {
-            _guid = gameObject.GetInstanceID();
+            _guid = gameObject.GetEntityId();
 
             _heights = new float3[surfers.Length];
             _normals = new float3[surfers.Length];

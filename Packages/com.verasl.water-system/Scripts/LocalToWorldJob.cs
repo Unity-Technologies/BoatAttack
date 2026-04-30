@@ -7,7 +7,7 @@ using Unity.Mathematics;
 
 public static class LocalToWorldJob
 {
-    private static readonly Dictionary<int, TransformLocalToWorld> Data = new Dictionary<int, TransformLocalToWorld>();
+    private static readonly Dictionary<EntityId, TransformLocalToWorld> Data = new Dictionary<EntityId, TransformLocalToWorld>();
 
     [BurstCompile]
     struct LocalToWorldConvertJob : IJob
@@ -30,7 +30,7 @@ public static class LocalToWorldJob
         }
     }
 
-    public static void SetupJob(int guid, Vector3[] positions, ref NativeArray<float3> output)
+    public static void SetupJob(EntityId guid, Vector3[] positions, ref NativeArray<float3> output)
     {
         var jobData = new TransformLocalToWorld
         {
@@ -44,7 +44,7 @@ public static class LocalToWorldJob
         Data.Add(guid, jobData);
     }
 
-    public static void ScheduleJob(int guid, Matrix4x4 localToWorld)
+    public static void ScheduleJob(EntityId guid, Matrix4x4 localToWorld)
     {
         if (Data[guid].Processing)
             return;
@@ -61,13 +61,13 @@ public static class LocalToWorldJob
         JobHandle.ScheduleBatchedJobs();
     }
 
-    public static void CompleteJob(int guid)
+    public static void CompleteJob(EntityId guid)
     {
         Data[guid].Handle.Complete();
         Data[guid].Processing = false;
     }
 
-    public static void Cleanup(int guid)
+    public static void Cleanup(EntityId guid)
     {
         if (!Data.ContainsKey(guid)) return;
         Data[guid].Handle.Complete();

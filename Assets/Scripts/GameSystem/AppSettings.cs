@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using GameplayIngredients;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Rendering.Universal;
@@ -14,9 +13,27 @@ using UnityEditor.SceneManagement;
 
 namespace BoatAttack
 {
-    [ManagerDefaultPrefab(nameof(AppSettings))]
-    public class AppSettings : Manager
+    public class AppSettings : MonoBehaviour
     {
+        // Auto-instantiate the AppSettings prefab at game start. Replaces GameplayIngredients'
+        // [ManagerDefaultPrefab] attribute that previously drove this.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void Bootstrap()
+        {
+            if (Instance != null) return;
+
+            var prefab = Resources.Load<GameObject>(nameof(AppSettings));
+            if (prefab == null)
+            {
+                Debug.LogError($"AppSettings bootstrap failed: Resources/{nameof(AppSettings)}.prefab not found.");
+                return;
+            }
+
+            var go = Instantiate(prefab);
+            go.name = nameof(AppSettings);
+            DontDestroyOnLoad(go);
+        }
+
         public enum RenderRes
         {
             _Native,

@@ -15,11 +15,11 @@ public class BuoyManager : MonoBehaviour
     private float3[] _heights; // water height array(only size of 1 when simple or non-physical)
     private float3[] _normals; // water normal array(only used when non-physical and size of 1 also when simple)
 
-    private int _guid;
+    private EntityId _guid;
     // Start is called before the first frame update
     private void Start()
     {
-        _guid = gameObject.GetInstanceID();
+        _guid = gameObject.GetEntityId();
 
         _buoys = new Transform[transform.childCount - 1];
         _mesh = new Mesh();

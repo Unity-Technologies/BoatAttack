@@ -27,7 +27,7 @@ namespace WaterSystem
         private static NativeArray<float3> _wavePos;
         private static NativeArray<float3> _waveNormal;
         private static JobHandle _waterHeightHandle;
-        static readonly Dictionary<int, int2> Registry = new Dictionary<int, int2>();
+        static readonly Dictionary<EntityId, int2> Registry = new Dictionary<EntityId, int2>();
 
         public static void Init()
         {
@@ -61,7 +61,7 @@ namespace WaterSystem
             _waveNormal.Dispose();
         }
 
-        public static void UpdateSamplePoints(ref NativeArray<float3> samplePoints, int guid)
+        public static void UpdateSamplePoints(ref NativeArray<float3> samplePoints, EntityId guid)
         {
             CompleteJobs();
 
@@ -79,7 +79,7 @@ namespace WaterSystem
             }
         }
 
-        public static void GetData(int guid, ref float3[] outPos, ref float3[] outNorm)
+        public static void GetData(EntityId guid, ref float3[] outPos, ref float3[] outNorm)
         {
             if (!Registry.TryGetValue(guid, out var offsets)) return;
             
