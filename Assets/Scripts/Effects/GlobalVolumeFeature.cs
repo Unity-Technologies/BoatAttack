@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.RenderGraphModule;
 using UnityEngine.Rendering.Universal;
 
 //[DisallowMultipleRendererFeature] // once not internal, this needs to be here
@@ -16,14 +17,12 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
         private Volume qualityVol;
         public static GameObject volumeHolder;
 
-        // This method is called before executing the render pass.
-        // It can be used to configure render targets and their clear state. Also to create temporary render target textures.
-        // When empty this render pass will render to the active camera render target.
-        // You should never call CommandBuffer.SetRenderTarget. Instead call <c>ConfigureTarget</c> and <c>ConfigureClear</c>.
-        // The render pipeline will ensure target setup and clearing happens in a performant manner.
-        public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
+        // No rendering happens in this pass; we only perform the volume holder
+        // setup once per camera (the render graph calls RecordRenderGraph with
+        // the same cadence as the old OnCameraSetup).
+        public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)
         {
-            if(volumeHolder == null)
+            if (volumeHolder == null)
             {
                 volumeHolder = new GameObject("[DefaultVolume]");
                 vol = volumeHolder.AddComponent<Volume>();
@@ -38,26 +37,13 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
                 vol.sharedProfile = _baseProfile;
             }
 
-            if(qualityVol && _qualityProfiles != null)
+            if (qualityVol && _qualityProfiles != null)
             {
                 var index = QualitySettings.GetQualityLevel();
 
-                if(_qualityProfiles.Count >= index && _qualityProfiles[index] != null)
-                    qualityVol.sharedProfile = _qualityProfiles?[index];
+                if (_qualityProfiles.Count >= index && _qualityProfiles[index] != null)
+                    qualityVol.sharedProfile = _qualityProfiles[index];
             }
-        }
-
-        // Here you can implement the rendering logic.
-        // Use <c>ScriptableRenderContext</c> to issue drawing commands or execute command buffers
-        // https://docs.unity3d.com/ScriptReference/Rendering.ScriptableRenderContext.html
-        // You don't have to call ScriptableRenderContext.submit, the render pipeline will call it at specific points in the pipeline.
-        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
-        {
-        }
-
-        // Cleanup any allocated resources that were created during the execution of this render pass.
-        public override void OnCameraCleanup(CommandBuffer cmd)
-        {
         }
     }
 
@@ -84,7 +70,7 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
     // This method is called when setting up the renderer once per-camera.
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
-        if(GlobalVolumePass.volumeHolder == null)
+        if (GlobalVolumePass.volumeHolder == null)
         {
             var old = GameObject.Find("[DefaultVolume]");
             if (Application.isPlaying)
@@ -99,5 +85,3 @@ public class GlobalVolumeFeature : ScriptableRendererFeature
         renderer.EnqueuePass(m_ScriptablePass);
     }
 }
-
-
